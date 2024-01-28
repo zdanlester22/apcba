@@ -10,11 +10,9 @@ from sqlalchemy import or_
 import os
 
 
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_user:jLcGVdHxOSHxZZ6OUGfLOGrxCmtZb3Uz@dpg-cmr6pamd3nmc73ef4vg0-a.oregon-postgres.render.com/apcba'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -1039,9 +1037,4 @@ def add_schedule(section_id):
 
     return render_template('admin/add_schedule.html', form=form, section=section, subjects=subjects)
 
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
 
