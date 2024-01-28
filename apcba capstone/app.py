@@ -8,6 +8,8 @@ from datetime import datetime
 from werkzeug.security import check_password_hash
 from sqlalchemy import or_
 import os
+from app import app
+
 
 
 
