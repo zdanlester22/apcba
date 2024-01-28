@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enroll</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #333333;;
+            color: #2c3e50;
+            box-sizing: border-box;
+        }
+
+        .top-nav {
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            padding: 0 20px;
+            transition: background 0.3s ease;
+        }
+
+        .left {
+            display: flex;
+            align-items: center;
+        }
+
+        .left img {
+            width: 40px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .left h1 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #fff;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .link {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .link:hover {
+            color: #34495e;
+        }
+
+        .header {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+
+        .header img {
+            width: 40px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #ea8c4b;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 40px 20px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+        }
+
+        .courses1,
+        .courses2 {
+            flex: 1;
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .courses1::before,
+        .courses2::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: -1;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .courses1:hover::before,
+        .courses2:hover::before {
+            opacity: 1;
+        }
+
+        .courses1:hover,
+        .courses2:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .courses1 h1,
+        .courses2 h1 {
+            color: #ea8c4b;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .courses1 p,
+        .courses2 p {
+            margin: 0;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+
+        .courses1 a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ea8c4b;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .courses1 a:hover {
+            background-color: #ffaf7b;
+        }
+
+        footer {
+            height: 30px;   
+            color: white;
+            text-align: center;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer h2 {
+            font-weight: lighter;
+            font-size: 0.6em;
+            margin: 0;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .left h1 {
+                font-size: 1.2em;
+            }
+
+            .right {
+                margin-top: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .courses1,
+            .courses2 {
+                flex: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-nav">
+        <div class="left">
+        </div>
+        <div class="right">
+            <a href="{{ url_for('index') }}" class="link">Home</a>
+            <a href="{{ url_for('websiteabout') }}" class="link">About</a>
+            <a href="{{ url_for('websitecontact') }}" class="link">Contact</a>
+            <a href="{{ url_for('websiteenroll') }}" class="link">Enroll</a>
+        </div>
+    </div>
+
+    <div class="header">
+    </div>
+
+    <div class="container">
+        <div class="courses1">
+            <h1>FOR COLLEGE</h1>
+            <p>Bachelor in Science in Tourism Management</p>
+            <p>Bachelor in Education</p>
+            <p>Bachelor in Secondary Education</p>
+            <a href="{{ url_for('enrollies') }}" class="link">Enroll Here</a>
+        </div>
+
+        <div class="courses2">
+            <h1>FOR SHS</h1>
+            <p>STEM - Science, Technology and Engineering Mathematics</p>
+            <p>ABM - Accountancy, Business and Management</p>
+            <p>HUMSS - Humanities and Social Sciences</p>
+            <p>GAS - General Academic Strand</p>
+            <p>ICT - Information Communication and Technology</p>
+            <p>IA - Industrial Arts</p>
+            <p>HE - Home Economics</p>
+        </div>
+    </div>
+
+    <footer>
+        <h2>COLLEGE * SENIOR HIGH * SKILLS TRAINING</h2>
+    </footer>
+</body>
+
+</html>

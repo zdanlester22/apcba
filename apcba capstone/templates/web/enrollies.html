@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrollment Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 15px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .flash-messages {
+            list-style-type: none;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+        }
+
+        .flash-messages li {
+            margin-bottom: 10px;
+        }
+
+        .flash-messages .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border-color: #ebccd1;
+        }
+         .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-row label,
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            width: calc(33.33% - 10px); /* Adjust the width as needed */
+            box-sizing: border-box;
+        }
+
+        .form-row textarea {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="{{ url_for('websiteenroll') }}">
+        <h2>Enrollment Form</h2>
+
+        <!-- Your form fields here -->
+        <form method="post" action="{{ url_for('websiteenroll') }}">
+            <!-- Personal Information -->
+            <label for="name">Full Name:</label>
+            <input type="text" name="name" required><br>
+    
+            <label for="email">Email:</label>
+            <input type="email" name="email" required><br>
+    
+            <label for="level">Choose your level:</label>
+            <select name="level" required>
+                <option value="college">College</option>
+                <option value="senior_high">Senior High School</option>
+            </select><br>
+    
+            <!-- Additional Fields for Personal Information -->
+            <!-- Add more fields as needed -->
+    
+            <!-- Contact Information -->
+            <label for="address">Home Address:</label>
+            <input type="text" name="address" required><br>
+    
+            <label for="contact_number">Contact Number:</label>
+            <input type="tel" name="contact_number" required><br>
+    
+            <!-- Additional Fields for Contact Information -->
+            <!-- Add more fields as needed -->
+    
+            <!-- Educational Background -->
+            <label for="date_of_birth">Date of Birth:</label>
+            <input type="date" name="date_of_birth" required><br>
+    
+            <!-- Additional Fields for Educational Background -->
+            <!-- Add more fields as needed -->
+    
+            <!-- Legal Documentation -->
+            <label for="place_of_birth">Place of Birth:</label>
+            <input type="text" name="place_of_birth" required><br>
+    
+            <!-- Additional Fields for Legal Documentation -->
+            <!-- Add more fields as needed -->
+    
+            <!-- Parent/Guardian Information -->
+            <label for="parent_names">Parent/Guardian Names:</label>
+            <input type="text" name="parent_names" required><br>
+    
+            <label for="parent_contact_info">Parent/Guardian Contact Info:</label>
+            <input type="text" name="parent_contact_info" required><br>
+    
+            <label for="parent_occupation">Parent/Guardian Occupation:</label>
+            <input type="text" name="parent_occupation" required><br>
+    
+            <!-- Additional Fields for Parent/Guardian Information -->
+            <!-- Add more fields as needed -->
+    
+            <!-- Health Information -->
+            <label for="medical_history">Medical History:</label>
+            <textarea name="medical_history" rows="3" required></textarea><br>
+    
+            <label for="immunization_records">Immunization Records:</label>
+            <textarea name="immunization_records" rows="3" required></textarea><br>
+    
+            <label for="medical_certificate">Medical Certificate:</label>
+            <input type="file" name="medical_certificate" accept="application/pdf, image/*" required><br>
+    
+            <!-- Additional Fields for Health Information -->
+            <!-- Add more fields as needed -->
+    
+            <!-- Photographs -->
+            <label for="photos">Recent ID-size Photos:</label>
+            <input type="file" name="photos" accept="image/*" required><br>
+    
+            <!-- Additional Fields for Photographs -->
+            <!-- Add more fields as needed -->
+    
+            <!-- Additional Documentation -->
+            <label for="form_138">Form 138 (Report Card):</label>
+            <input type="file" name="form_138" accept="application/pdf, image/*" required><br>
+    
+            <label for="moral_character_certificate">Good Moral Character Certificate:</label>
+            <input type="file" name="moral_character_certificate" accept="application/pdf, image/*" required><br>
+    
+            <!-- Additional Fields for Additional Documentation -->
+            <!-- Add more fields as needed -->
+    
+            <!-- Special Needs or Accommodations -->
+            <label for="special_needs">Special Needs or Accommodations:</label>
+            <textarea name="special_needs" rows="3"></textarea><br>
+    
+            <!-- Submit Button -->
+            <input type="submit" value="Submit">
+        </form>
+    
+    </form>
+</body>
+</html>

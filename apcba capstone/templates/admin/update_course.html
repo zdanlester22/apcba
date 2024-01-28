@@ -1,0 +1,38 @@
+{% block content %}
+  <h2 style="text-align: center;">Update Course</h2>
+  <form method="POST" action="{{ url_for('update_course', course_id=course.id) }}" style="max-width: 400px; margin: auto;">
+    {{ form.hidden_tag() }}
+    
+    <div style="margin-bottom: 15px;">
+      <label for="course_type" style="display: block; margin-bottom: 5px; font-weight: bold;">Course Type</label>
+      <input type="text" name="course_type" id="course_type" value="{{ course.course_type }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label for="abbreviation" style="display: block; margin-bottom: 5px; font-weight: bold;">Abbreviation</label>
+      <input type="text" name="abbreviation" id="abbreviation" value="{{ course.abbreviation }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label for="title" style="display: block; margin-bottom: 5px; font-weight: bold;">Title</label>
+      <input type="text" name="title" id="title" value="{{ course.title }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label for="school_year" style="display: block; margin-bottom: 5px; font-weight: bold;">School Year</label>
+      <input type="text" name="school_year" id="school_year" value="{{ course.school_year }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label for="semesters" style="display: block; margin-bottom: 5px; font-weight: bold;">Semesters</label>
+      <input type="text" name="semesters" id="semesters" value="{{ course.semesters }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label for="is_active" style="display: block; margin-bottom: 5px; font-weight: bold;">Is Active</label>
+      <input type="checkbox" name="is_active" id="is_active" {% if course.is_active %}checked{% endif %} style="margin-top: 5px;">
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="background-color: #e07b00; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s;">Update Course</button>
+  </form>
+{% endblock %}

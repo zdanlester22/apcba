@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Add your head content here -->
+</head>
+<style>
+  /* Add your custom CSS styles here */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  th, td {
+    padding: 8px;
+    text-align: center;  /* Center align the content */
+    border: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  .alert {
+    margin-bottom: 20px;
+  }
+</style>
+<body>
+  {% block content %}
+
+  <h2>Record Grades for {{ student.name }}</h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="alert alert-info">
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" action="{{ url_for('view_grades', student_id=student.id) }}">
+    {{ form.csrf_token }}
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Abbreviation</th>
+          <th>Subject</th>
+          <th>Unit</th>
+          <th>Period 1</th>
+          <th>Period 2</th>
+          <th>Period 3</th>
+          <th>Final Grade</th>
+          <th>Pass/Fail</th>
+          <th>Action</th> <!-- Add a new column for the "Update" button -->
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for subject in subjects %}
+          <tr>
+            <td>{{ subject.abbreviation }}</td>
+            <td>{{ subject.title }}</td>
+            <td>{{ subject.unit }}</td>
+            <td>
+              <input type="text" class="form-control" id="period_1_{{ subject.id }}" name="period_1_{{ subject.id }}" />
+            </td>
+            <td>
+              <input type="text" class="form-control" id="period_2_{{ subject.id }}" name="period_2_{{ subject.id }}" />
+            </td>
+            <td>
+              <input type="text" class="form-control" id="period_3_{{ subject.id }}" name="period_3_{{ subject.id }}" />
+            </td>
+            <td>
+              <input type="text" class="form-control" id="final_grade_{{ subject.id }}" name="final_grade_{{ subject.id }}" />
+            </td>
+            <td>
+              <input type="checkbox" class="form-check-input" id="is_passed_{{ subject.id }}" name="is_passed_{{ subject.id }}" />
+            </td>
+            <td>
+              <button type="button" class="btn btn-warning" onclick="updateSubject('{{ subject.id }}')">Update</button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+    <button type="submit" class="btn btn-primary">Record Grades</button>
+  </form>
+
+  <script src="{{ url_for('static', filename='your_wasm_script.js') }}"></script>
+</body>
+
+{% endblock %}
+
+<!-- Include any additional scripts here -->
+</html>

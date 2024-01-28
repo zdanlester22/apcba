@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color:rgb(27, 34, 40);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #303030;
+            color: #ffffff;
+            text-align: center;
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        header img {
+            max-width: 15%;
+            margin-bottom: 10px;
+            animation: scaleIn 0.3s ease-in-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.5);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-top: 1%;
+            animation: slideInDown 0.3s ease-in-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-50%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            text-align: center;
+            color: #fffafa;
+            font-size: 2rem;
+            margin: 2% 0;
+            animation: fadeInUp 0.3s ease-in-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(50%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin: 2% 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #ffffff;
+            background-color: #ea8c4b;
+            padding: 1.5% 3%;
+            font-size: 1rem;
+            border-radius: 25px;
+            margin: 1%;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out, slideInLeft 0.3s ease-in-out;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-50%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        a:hover {
+            background-color: #d3733f;
+            transform: scale(1.05);
+        }
+
+        a:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            transition: left 0.3s ease-in-out;
+            z-index: -1;
+        }
+
+        a:hover:before {
+            left: 100%;
+        }
+
+        @media only screen and (max-width: 600px) {
+            header img {
+                max-width: 50%;
+            }
+
+            header h1 {
+                font-size: 4vw;
+            }
+
+            h2 {
+                font-size: 3vw;
+            }
+
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            a {
+                font-size: 3vw;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='images/icon.png') }}" alt="APCBA Logo">
+        <h1>Asia Pacific College of<br>Business and Arts</h1>
+    </header>
+    <h2>Student Portal Login</h2>
+    <div class="container">
+        <a href="{{ url_for('index') }}">Website</a>
+        <a href="{{ url_for('login') }}" class="b">Admin</a>
+        <a href="{{ url_for('login') }}">Teachers</a>
+        <a href="{{ url_for('login') }}" class="d">Students</a>
+        <a href="{{ url_for('index') }}">Enrollment</a>
+    </div>
+</body>
+
+</html>

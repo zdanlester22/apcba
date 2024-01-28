@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APCBA Portal V1.0 - Student Portal Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333;
+            padding: 15px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1; 
+        }
+
+        h1 {
+            color: antiquewhite;
+            margin: 0;
+            margin-left: -20px;
+        }
+
+        .arrow-button {
+            background-color: #e07b00;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-left: 15px;
+        }
+
+        .arrow-button:hover {
+            background-color: #d17700;
+            transform: scale(1.05);
+        }
+
+        nav {
+            background-color: #444;
+            overflow: auto;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        nav a {
+            display: inline-block;
+            color: #fff;
+            text-align: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin: 5px;
+            border-radius: 5px;
+            width: 100px;
+            white-space: nowrap;
+        }
+
+        nav a:hover {
+            background-color: #555;
+        }
+
+        main {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .link {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 15px;
+            background-color: #ff8c00;
+            border: 2px solid #ff8c00;
+            text-decoration: none;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100px;
+        }
+
+        .link:hover {
+            background-color: #e07b00;
+            transform: scale(1.05);
+        }
+
+        .bot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .module-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .form-group button {
+            background-color: #ff8c00;
+            color: #fff;
+           padding: 15px 20px;
+            border: none;
+           border-radius: 5px;
+           font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+           margin: 0 auto; /* Center the button horizontally */
+           display: block; /* Ensure the button takes full width */
+         } 
+
+.form-group button:hover {
+    background-color: #d17000;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Asia Pacific College of Business and Arts <br>Asianites Management System</h1>
+        </div>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
+        <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+        <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
+        <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
+        <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
+        <a href="{{ url_for('register') }}" class="link"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+        <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
+        <a href="{{ url_for('enroll') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrolled</a>
+    </nav>
+
+    <main class="bot">
+      {% block content %}
+      <h2>Module Management</h2>
+      
+      <form method="POST" enctype="multipart/form-data" class="module-form">
+        {{ form_module.hidden_tag() }}
+        
+        <div class="form-group">
+            <label for="title">Title:</label>
+            {{ form_module.title }}
+        </div>
+        
+        <div class="form-group">
+            <label for="year">Year:</label>
+            {{ form_module.year }}
+        </div>
+        
+        <div class="form-group">
+            <label for="course_id">Course:</label>
+            {{ form_module.course_id }}
+        </div>
+        
+        <div class="form-group">
+            <label for="pdf_file">PDF File:</label>
+            {{ form_module.pdf_file }}
+        </div>
+        
+        <div class="form-group">
+            <button type="submit">Create Module</button>
+        </div>
+      </form>
+      
+      <h3>Existing Modules</h3>
+      <ul>
+        {% for module in modules %}
+          <li>
+            {{ module.title }} - {{ module.year }} - {{ module.course.title }}
+            <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endblock %}
+    </main>
+</body>
+</html>

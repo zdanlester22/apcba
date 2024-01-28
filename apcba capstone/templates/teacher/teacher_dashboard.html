@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APCBA Portal V1.0 - Student Portal Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333;
+            padding: 15px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-content img {
+            margin-left: 200px;
+        }
+
+        .icon {
+            display: block;
+            width: 60px;
+            position: absolute;
+            left: 15px;
+        }
+
+        h1 {
+            color: antiquewhite;
+            margin: 0;
+        }
+
+        nav {
+            background-color: #444;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        nav a {
+            display: inline-block;
+            color: #fff;
+            text-align: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin: 5px;
+            border-radius: 5px;
+            width: 100px;
+        }
+
+        nav a:hover {
+            background-color: #555;
+        }
+
+        main {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .link {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 15px;
+            background-color: #ff8c00;
+            border: 2px solid #ff8c00;
+            text-decoration: none;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100px;
+        }
+
+        .link:hover {
+            background-color: #e07b00;
+            transform: scale(1.05);
+        }
+
+        .separator {
+            border-top: 2px solid #ddd;
+            margin: 30px 0;
+        }
+
+        .profile-section {
+            float: right;
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #333;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-section img {
+            width: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .profile-section p {
+            font-size: 14px;
+            color: #fff;
+            margin: 0;
+        }
+
+        .login-button {
+            display: block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #ff8c00;
+            border: 2px solid #ff8c00;
+            text-decoration: none;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-button:hover {
+            background-color: #e07b00;
+            transform: scale(1.05);
+        }
+
+        .login-prompt {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+            color: #fff;
+        }
+
+        .bot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center both horizontally and vertically */
+        }
+
+        .announcement-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%; 
+            max-width: 600px;
+            margin-left: 150px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .announcements {
+            width: 100%; 
+            max-width: 600px; 
+            margin-left: 110px;
+        }
+
+        .announcement-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            list-style: none;
+            text-align: left; /* Align text to the left */
+        }
+
+        .announcement-item p {
+            margin: 10px 0;
+        }
+
+        .announcement-item small {
+            display: block;
+            color: #888;
+        }
+
+        .update-delete-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .update-delete-buttons a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 12px; /* Adjusted size */
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .update-delete-buttons a.update-button {
+            background-color: #2ecc71;
+        }
+
+        .update-delete-buttons a.delete-button {
+            background-color: #e74c3c;
+        }
+
+        .update-delete-buttons a:hover {
+            transform: scale(1.05);
+        }
+        .textcenter{
+            margin-left: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Portal Icon" class="icon">
+            <h1>APCBA Portal V1.0 <br> Student Portal Management System</h1>
+        </div>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('dashboard') }}" class="link">Dashboard</a>
+        <a href="{{ url_for('certificate') }}" class="link">Certificates</a>
+        <a href="#" class="link">Grades</a>
+        <a href="{{ url_for('account') }}" class="link">Profile</a>
+        <a href="" class="link">Enroll_user</a>
+        <a href="#" class="link">Help Desk</a>
+        
+        
+    </nav>
+
+    <main>
+        <div class="profile-section">
+            <img src="{{ url_for('static', filename='images/default-profile-pic.jpg') }}" alt="Profile Picture">
+            <p>User Name</p>
+            <div class="login-prompt">Please log in.</div>
+            <a href="#" class="login-button">Login</a>
+        </div>
+
+        <div class="bot">
+            
+
+            <div class="announcements">
+                <h2 class="textcenter">Announcements</h2>
+                <ul>
+                    {% for announcement in announcements %}
+                        <li class="announcement-item">
+                            <strong>{{ announcement.title }}</strong>
+                            <p>{{ announcement.content }}</p>
+                            <small>Posted by {{ announcement.author.username }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                            
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

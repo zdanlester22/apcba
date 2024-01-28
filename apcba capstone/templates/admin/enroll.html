@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- Include jQuery from CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .enrollment-box {
+      display: none;
+      width: 60%; /* Adjusted width */
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      text-align: center; /* Center the content */
+    }
+
+    .show-box {
+      display: block;
+    }
+
+    .show-button, .hide-button {
+      display: block;
+      margin-bottom: 20px; /* Added margin */
+    }
+
+    .hide-button {
+      display: none;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    /* Added styles for the table */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+      text-align: center; /* Center the table content */
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  {% block content %}
+  <button class="show-button" onclick="showForm()">Show Form</button>
+  <div class="enrollment-box" id="enrollment-box">
+    <span class="close-button" onclick="hideForm()">X</span>
+    <h2>Enroll Student</h2>
+    <form method="post" action="{{ url_for('enroll') }}">
+      {{ form.hidden_tag() }}
+
+      <!-- Select2 for student_id -->
+      <div class="form-group row">
+        <label for="{{ form.student_id.id }}" class="col-sm-4 col-form-label">{{ form.student_id.label }}</label>
+        <div class="col-sm-8">
+          {{ form.student_id(class="form-control select2") }}
+        </div>
+      </div>
+
+      <!-- Select2 for course_id -->
+      <div class="form-group row">
+        <label for="{{ form.course_id.id }}" class="col-sm-4 col-form-label">{{ form.course_id.label }}</label>
+        <div class="col-sm-8">
+          {{ form.course_id(class="form-control select2") }}
+        </div>
+      </div>
+
+      <!-- Select2 for section_id -->
+      <div class="form-group row">
+        <label for="{{ form.section_id.id }}" class="col-sm-4 col-form-label">{{ form.section_id.label }}</label>
+        <div class="col-sm-8">
+          {{ form.section_id(class="form-control select2") }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="{{ form.is_approved.id }}" class="col-sm-4 col-form-label">{{ form.is_approved.label }}</label>
+        <div class="col-sm-8">
+          {{ form.is_approved(class="form-check-input") }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-12">
+          <button type="submit" class="btn btn-primary">Enroll</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {% for enrollment in existing_enrollments %}
+    <table>
+      <tr>
+        <th>Student Name</th>
+        <th>Course Title</th>
+        <th>Section Name</th>
+      </tr>
+      <tr>
+        <td>{{ enrollment.student.name }}</td>
+        <td>{{ enrollment.enrolled_course_rel.title }}</td>
+        <td>{{ enrollment.enrolled_section_rel.name }}</td>
+      </tr>
+    </table>
+  {% endfor %}
+
+  <script>
+    // Initialize Select2 for the specified fields
+    $(document).ready(function() {
+      $('.select2').select2();
+    });
+
+    function showForm() {
+      $("#enrollment-box").addClass("show-box");
+      $(".show-button").addClass("hide-button");
+    }
+
+    function hideForm() {
+      $("#enrollment-box").removeClass("show-box");
+      $(".show-button").removeClass("hide-button");
+    }
+  </script>
+  {% endblock %}
+</body>
+</html>

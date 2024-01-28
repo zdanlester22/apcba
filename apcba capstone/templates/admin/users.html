@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APCBA Portal V1.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #333;
+            padding: 15px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: antiquewhite;
+            margin: 0;
+        }
+
+        nav {
+    background-color: #444;
+    overflow-x: auto;  /* Add horizontal scrollbar if needed */
+    white-space: nowrap;  /* Prevent button wrapping to the next line */
+    text-align: center;
+}
+
+nav a {
+    display: inline-block;
+    color: #fff;
+    text-align: center;
+    padding: 15px 10px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    margin: 5px;
+    min-width: 100px;  /* Set a minimum width for the buttons */
+}
+
+        nav a:hover {
+            background-color: #555;
+        }
+
+        main {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .bot {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .bot h2 {
+            color: #333;
+        }
+
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #444;
+            color: #fff;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .link {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 15px;
+            background-color: #ff8c00;
+            border: 2px solid #ff8c00;
+            text-decoration: none;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .link:hover {
+            background-color: #e07b00;
+            transform: scale(1.05);
+        }
+
+        .enroll-form {
+            display: none;
+        }
+    </style>
+   <script>
+        function toggleEnrollForm(clickedElement) {
+            var enrollForm = document.getElementById('enroll-form');
+            var teacherIdInput = document.getElementById('teacher-id-input');
+
+            // Retrieve user ID from the clicked element's data attribute
+            var userId = clickedElement.getAttribute('data-user-id');
+
+            // Set the user ID to the teacher ID input field
+            teacherIdInput.value = userId;
+
+            // Toggle the visibility of the enroll form
+            enrollForm.style.display = enrollForm.style.display === 'none' ? 'block' : 'none';
+
+            
+        }
+
+        function toggleStudentEnrollForm(clickedElement) {
+        var studentEnrollForm = document.getElementById('student-enroll-form');
+        var studentIdInput = document.getElementById('student-id-input');
+
+        // Retrieve user ID from the clicked element's data attribute
+        var userId = clickedElement.getAttribute('data-user-id');
+
+        // Set the user ID to the student ID input field
+        studentIdInput.value = userId;
+
+        // Toggle the visibility of the enroll form for students
+        studentEnrollForm.style.display = studentEnrollForm.style.display === 'none' ? 'block' : 'none';
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Asia Pacific College of Business and Arts <br> Asianites Management System</h1>
+        </div>
+    </header>
+    <nav>
+        <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
+        <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+        <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
+        <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
+        <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
+        <a href="{{ url_for('register') }}" class="link"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+        <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
+        <a href="{{ url_for('enroll') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrolled</a>
+        
+    </nav>
+
+    <main>
+        <div class="bot">
+            <h2>List of user</h2>
+            <form method="GET" action="{{ url_for('users') }}">
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Search users">
+                <button type="submit">Search</button>
+            </form>
+            <BR>
+                <table>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Password</th>
+                        <th>Role</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                        <th>Enroll</th>
+                    </tr>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.contact }}</td>
+                        <td>{{ user.password }}</td>
+                        <td>{{ user.role }}</td>
+                        <td><a href="{{ url_for('update_user', user_id=user.id) }}" class="link">Update</a></td>
+                        <td><a href="{{ url_for('delete_user', user_id=user.id) }}" class="link">Delete</a></td>
+                        {% if user.role == 'teacher' %}
+                        <td><a href="#" class="link" onclick="toggleEnrollForm(this)" data-user-id="{{ user.id }}">Verify </a></td>
+                    {% elif user.role == 'student' %}
+                        <td><a href="#" class="link" onclick="toggleStudentEnrollForm(this)" data-user-id="{{ user.id }}">Verify</a></td>
+                    {% else %}
+                        <td></td> <!-- Empty cell for users without the 'teacher' or 'student' role -->
+                    {% endif %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div id="enroll-form" class="enroll-form" style="display: none;">
+                <h2>Enroll</h2>
+                <form method="POST" action="{{ url_for('users') }}">
+                    {{ teacher_form.hidden_tag() }}
+    
+                    <!-- Add an input field for the teacher's user ID -->
+                    <input type="hidden" id="teacher-id-input" name="teacher_id">
+    
+                    <label for="name">Name:</label>
+                    {{ teacher_form.name(class="your-css-class") }}
+                    <button type="submit" class="link">Add Teacher</button>
+                </form>
+        </div>
+        <div id="student-enroll-form" class="enroll-form" style="display: none;">
+            <h2>Enroll Student</h2>
+            <form method="POST" action="{{ url_for('users') }}">
+                {{ student_form.hidden_tag() }}
+        
+                <!-- Add an input field for the student's user ID -->
+                <input type="hidden" id="student-id-input" name="student_id">
+        
+                <label for="name">Name:</label>
+                {{ student_form.name(class="your-css-class") }}
+                <button type="submit" class="link">Enroll Student</button>
+            </form>
+        </div>
+        
+    </main>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #333333;;
+            color: #2c3e50;
+            box-sizing: border-box;
+        }
+
+        .top-nav {
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            transition: background 0.3s ease;
+        }
+
+        .left {
+            display: flex;
+            align-items: center;
+        }
+
+        .left img {
+            width: 40px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .left h1 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #2c3e50;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .link {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .link:hover {
+            color: #34495e;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 40px 20px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            margin-top: 30px;
+        }
+
+        .about1,
+        .about2 {
+            flex: 1;
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .about1:hover,
+        .about2:hover {
+            transform: scale(1.05);
+        }
+
+        .about1 h1,
+        .about2 h1 {
+            color: #ea8c4b;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .about1 img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            object-fit: cover;
+        }
+
+        .about1 img:hover {
+            transform: scale(1.05);
+        }
+
+        .about1 h2 {
+            font-size: 1.2em;
+            color: #555;
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .about1:hover h2 {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about2 p {
+            margin: 10px 0;
+            font-size: 1em;
+            color: #555;
+        }
+
+        footer {
+            height: 30px;
+            color: #fff;
+            text-align: center;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer h2 {
+            font-weight: lighter;
+            font-size: 0.6em;
+            margin: 0;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .left h1 {
+                font-size: 1.2em;
+            }
+
+            .right {
+                margin-top: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .about1,
+            .about2 {
+                flex: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-nav">
+        <div class="left">
+        </div>
+        <div class="right">
+            <a href="{{ url_for('index') }}" class="link">Home</a>
+            <a href="{{ url_for('websiteabout') }}" class="link">About</a>
+            <a href="{{ url_for('websitecontact') }}" class="link">Contact</a>
+            <a href="{{ url_for('websiteenroll') }}" class="link">Enroll</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="about1">
+            <h1>College & University</h1>
+            <img src="{{ url_for('static', filename='images/map.png') }}" alt="Map">
+            <h2>Manzano St. Pob Norte, Rizal, Philippines, 3133</h2>
+            <h2>Address</h2>
+        </div>
+        <div class="about2">
+            <h1>Basic Info</h1>
+            <p>Rated (30 reviews)</p>
+            <p>Open Hours - Closed Hours</p>
+            <p>Price Range - $ Price</p>
+            <p>Pickup Services</p>
+        </div>
+    </div>
+
+    <footer>
+        <h2>COLLEGE * SENIOR HIGH * SKILLS TRAINING</h2>
+    </footer>
+
+</body>
+
+</html>

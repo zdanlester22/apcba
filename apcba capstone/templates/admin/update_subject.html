@@ -1,0 +1,28 @@
+
+
+{% block content %}
+  <h2>Update Subject</h2>
+  <form method="POST" action="{{ url_for('update_subject', subject_id=subject.id) }}">
+    {{ form.hidden_tag() }}
+    
+    <!-- Add your subject form fields here -->
+    <div>
+      {{ form.abbreviation.label }}
+      {{ form.abbreviation(value=subject.abbreviation) }}
+    </div>
+    <div>
+      {{ form.title.label }}
+      {{ form.title(value=subject.title) }}
+    </div>
+    <div>
+      {{ form.unit.label }}
+      {{ form.unit(value=subject.unit) }}
+    </div>
+    <div>
+      {{ form.course_id.label }}
+      {{ form.course_id(value=subject.course_id) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Subject</button>
+  </form>
+{% endblock %}

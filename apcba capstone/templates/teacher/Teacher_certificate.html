@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- student_dashboard.html -->
+
+    <center>
+      <form action="{{ url_for('certificate') }}" method="get">
+          {{ form.csrf_token }}
+          {{ form.title.label }} {{ form.title }}
+          <button type="submit">Filter</button>
+      </form>
+    </center>
+
+    <h3>Your Certificates</h3>
+    {% if certificates %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>PDF</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for certificate in certificates %}
+                    <tr>
+                        <td>{{ certificate.title }}</td>
+                        <td>
+                            <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download PDF</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You don't have any certificates yet.</p>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</body>
+</html>
