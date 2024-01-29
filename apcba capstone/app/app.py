@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
-from .models import db, User, Announcement, Certificate, user_account, Course, Subject, Section,Teacher,Student, Module, Enrollment, Enrollies, Grades, Schedule
+from models import db, User, Announcement, Certificate, user_account, Course, Subject, Section,Teacher,Student, Module, Enrollment, Enrollies, Grades, Schedule
 from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, RegistrationForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm
 from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, GradeForm, ScheduleForm
 from datetime import datetime
@@ -10,11 +10,11 @@ from sqlalchemy import or_
 import os
 
 
-
-
-
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_user:jLcGVdHxOSHxZZ6OUGfLOGrxCmtZb3Uz@dpg-cmr6pamd3nmc73ef4vg0-a.oregon-postgres.render.com/apcba'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -1039,4 +1039,9 @@ def add_schedule(section_id):
 
     return render_template('admin/add_schedule.html', form=form, section=section, subjects=subjects)
 
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
 
