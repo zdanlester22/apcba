@@ -16,7 +16,7 @@ def create_app():
     login_manager.login_view = 'auth.login'  # Assuming your login route is in the 'auth' blueprint
 
     # Importing models here to avoid circular import
-    from .models import db, User, Announcement, Certificate, user_account, Course, Subject, Section, Teacher, Student, Module, Enrollment, Enrollies, Grades, Schedule
+    from .models import  User, Announcement, Certificate, user_account, Course, Subject, Section, Teacher, Student, Module, Enrollment, Enrollies, Grades, Schedule
 
     # Import and register routes from auth.py
     from .routes import auth as auth_blueprint
@@ -27,4 +27,3 @@ def create_app():
         db.create_all()
 
     return app
-
