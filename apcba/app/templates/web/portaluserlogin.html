@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Portal</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'JetBrains Mono', monospace;
             background-color:rgb(27, 34, 40);
             margin: 0;
             padding: 0;
@@ -94,7 +95,7 @@
         a {
             text-decoration: none;
             color: #ffffff;
-            background-color: #ea8c4b;
+            background-color: #2a235e;
             padding: 1.5% 3%;
             font-size: 1rem;
             border-radius: 25px;
@@ -119,7 +120,7 @@
         }
 
         a:hover {
-            background-color: #d3733f;
+            background-color: #352d72;
             transform: scale(1.05);
         }
 
@@ -176,7 +177,7 @@
         <a href="{{ url_for('login') }}" class="b">Admin</a>
         <a href="{{ url_for('login') }}">Teachers</a>
         <a href="{{ url_for('login') }}" class="d">Students</a>
-        <a href="{{ url_for('index') }}">Enrollment</a>
+        <a href="{{ url_for('websiteenroll') }}">Enrollment</a>
     </div>
 </body>
 

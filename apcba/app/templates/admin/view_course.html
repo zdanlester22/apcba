@@ -7,36 +7,75 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
        body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f5f5f5;
         }
 
         header {
-            background-color: #333;
+            background-color: #222;
             padding: 15px;
             text-align: center;
             color: #fff;
             position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .header-content {
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-grow: 2; 
         }
 
         h1 {
             color: antiquewhite;
-            margin: 0;
+            font-size: 3vh;
+            margin-right: 60px;
+        }
+
+        .arrow-button {
+            background-color: #37332f;
+            color: #fff;
+            border: none;
+            padding: 2px 4px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-left: 10px;
+        }
+
+        .arrow-button::before {
+            content: '\25C0'; /* Unicode character for a large left-pointing triangle */
+            font-family: 'Font Awesome 5 Free';
+            margin-right: 5px;
+            font-size: 1.3em; /* Adjust the size as needed */
+        }
+
+        .arrow-button:hover {
+            transform: scale(1.50);
         }
 
         nav {
-            background-color: #444;
+            background-color: #2f2e2e;
+            padding: 3px;
             overflow: auto;
             white-space: nowrap;
             text-align: center;
+            scrollbar-width: thin; /* Firefox */
+        }
+
+        nav::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        nav::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
         }
 
         nav a {
@@ -63,22 +102,21 @@
 
         .link {
             display: inline-block;
-            margin: 10px;
-            padding: 10px 15px;
-            background-color: #ff8c00;
-            border: 2px solid #ff8c00;
+            margin: 5px;
+            padding: 8px 13px;
+            background-color: #2a235e;
             text-decoration: none;
             color: #fff;
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 11px;
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100px;
+            font-weight: bold;
         }
 
         .link:hover {
-            background-color: #d17000;
+            background-color: #e07b00;
             transform: scale(1.05);
         }
 
@@ -89,299 +127,142 @@
             justify-content: center;
         }
 
-        .form {
-            margin-top: 20px;
-            width: 100%;
-            max-width: 600px;
+        h2 {
             margin-left: auto;
             margin-right: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-            text-align: center; /* Align form elements to the center */
+            margin-top: 0;
         }
 
-        .larger-form {
-            width: 80%; /* Adjust the width as needed */
-            max-width: 600px; /* Set a maximum width if desired */
-            height: 80vh; /* Adjust the height as needed */
-            overflow-y: auto; /* Add scrollbars if the content is too tall */
+        img {
+            height: 50px;
+            margin-right: 5px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        /* Add the following styles for form elements */
+        form {
+            margin-top: 20px;
+            margin-left: 20px;
             margin-right: 20px;
-            align-items: center;
-        }
-
-        .form-control-label {
-            display: block;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .form-control-file {
-            width: auto; /* Adjust width for file input */
-        }
-
-        .btn-primary {
             display: inline-block;
-            padding: 8px 18px;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            text-decoration: none;
-            background-color: #ff8c00;
-            color: #fff;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-            cursor: pointer;
-            border: none;
-            margin: 10px; /* Adjusted margin */
         }
 
-        .btn-primary:hover {
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        select {
+            width: 150px;
+            padding: 8px;
+            margin-bottom: 10px;
+
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"],
+        button[type="button"] {
+            background-color: #2a235e;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 14px;
+        }
+
+        button[type="submit"]:hover,
+        button[type="button"]:hover {
             background-color: #e07b00;
             transform: scale(1.05);
         }
 
-        .table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-
-        .table th, .table td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-
-        .table th {
-            background-color: #f2f2f2;
-        }
-
+        /* Style the modal */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
+            z-index: 1;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
+            overflow: auto;
             background-color: rgba(0, 0, 0, 0.5);
         }
 
         .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        /* Add table styles */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        /* Style for inactive courses */
-        .inactive-course {
-            background-color: #fdd;
-        }
-
-        /* Updated style for buttons */
-        button {
-            display: inline-block;
-            padding: 10px 15px;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        .add-course-btn {
-            background-color: #ff8c00;
-            color: #fff;
-            border: none;
-        }
-
-        .add-course-btn:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
-        }
-
-        button[type="submit"] {
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        /* Add Course Modal Styles */
-        #add-course-modal {
-            z-index: 1;
-        }
-
-        #add-course-modal .modal-content {
             background-color: #fff;
+            margin: 10% auto;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #add-course-modal form {
-            text-align: left;
-            padding: 30px;
-            width: 200px;
-        }
-
-        #add-course-modal label {
-            display: block;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-            padding: 10px;
-        }
-
-        #add-course-modal input[type="submit"] {
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        #add-course-modal input[type="submit"]:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
-
-        /* Add Subject Modal Styles */
-        #add-subject-form {
-            z-index: 1;
-            padding: 30px;
-        }
-
-        #add-subject-form .modal-content {
-            padding: 50px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: rgba(0, 0, 0, 0.8); /* Dark semi-transparent background */
-        }
-
-        #add-subject-form form {
-            text-align: left;
-            padding: 30px;
-        }
-
-        #add-subject-form label {
-            display: block;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-            padding: 20px;
-        }
-
-        #add-subject-form input[type="submit"] {
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+        /* Add the following styles for the table */
+        table {
+            width: 97%;
+            border-collapse: collapse;
+            margin-top: 20px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        #add-subject-form input[type="submit"]:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-
+        th, td {
+            border: 1px solid #c7b9b9;
+            padding: 8px;
+            text-align: left;
         }
-
-        /* Updated Add Subject Button Styles */
-        .add-subject-btn {
-            display: inline-block;
-            margin: 10px;
-            padding: 8px 12px;
-            background-color: #ff8c00;
-            border: 2px solid #ff8c00;
-            text-decoration: none;
+        th{
+            background-color: #444;
             color: #fff;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 80px;
         }
+        .add-subject-btn {
+    background-color: #2a235e; /* Change the background color as needed */
+    color: #fff;
+    border: none;
+    padding: 10px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 14px;
+}
 
-        .add-subject-btn:hover {
-            background-color: #d17000;
-            transform: scale(1.05);
-        }
-
+.add-subject-btn:hover {
+    background-color: #e07b00;
+    transform: scale(1.05);
+}
+    </style>    
     </style>
 </head>
 <body>
     <header>
+        <a href="{{ url_for('portaluserlogin') }}" class="arrow-button"></a>
         <div class="header-content">
-            <h1>Asia Pacific College of Business and Arts <br>Asianites Management System</h1>
+            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo">
+            <h1>APCBA Portal V1.0</h1>
         </div>
     </header>
 
     <nav>
-        <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
-        <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
-        <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
-        <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
-        <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
-        <a href="{{ url_for('register') }}" class="link"><i class="fas fa-user-plus"></i> Register</a>
-        <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
-        <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
-        <a href="{{ url_for('enroll') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrolled</a>
+        <nav>
+            <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+            <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
+            <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
+            <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
+            <a href="{{ url_for('register') }}" class="link"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+            <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
+            <a href="{{ url_for('enroll') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrolled</a>
+        </nav>
     </nav>
-
-    <br>
-
-    <!-- Updated form with centered buttons -->
     <form method="get" action="{{ url_for('view_course') }}" class="form">
         {{ filter_form.hidden_tag() }}
     

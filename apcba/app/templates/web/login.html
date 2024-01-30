@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <title>Login - Asia Pacific College of Business and Arts</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'JetBrains Mono', monospace;
             background-image: url("{{ url_for('static', filename='images/icon.png') }}");
             background-repeat: no-repeat;
             background-size: 35%;
@@ -31,17 +32,6 @@
             position: fixed;
             top: 0;
             z-index: 1000;
-            opacity: 0; /* Initial opacity set to 0 */
-            animation: fadeIn 1s ease-in-out forwards; /* Animation applied */
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
         }
 
         h1 {
@@ -63,8 +53,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            opacity: 0; /* Initial opacity set to 0 */
-            animation: fadeIn 1s ease-in-out forwards; /* Animation applied */
         }
 
         label {
@@ -96,12 +84,10 @@
             border: 1px solid #ccc;
             border-radius: 10px;
             padding-left: 30px;
-            opacity: 0; /* Initial opacity set to 0 */
-            animation: fadeIn 1s ease-in-out forwards; /* Animation applied */
         }
 
         input[type="submit"] {
-            background-color: #ea8c4b;
+            background-color: #31296b;
             color: #fff;
             cursor: pointer;
             padding: 12px;
@@ -119,7 +105,9 @@
                 width: 80%;
             }
         }
-
+        input::placeholder {
+    font-size: 11px; 
+}
     </style>
 </head>
 
@@ -134,12 +122,12 @@
         <div class="input-container">
             <label for="username">{{ form.username.label }}</label>
             <img src="{{ url_for('static', filename='images/uname.png') }}" alt="Username Icon">
-            {{ form.username(required=True) }}
+            {{ form.username(required=True, placeholder='Enter your username') }}
         </div>
         <div class="input-container">
             <label for="password">{{ form.password.label }}</label>
             <img src="{{ url_for('static', filename='images/pass.png') }}" alt="Password Icon">
-            {{ form.password(required=True) }}<br>
+            {{ form.password(required=True, placeholder='Enter your password') }}<br>
         </div>
         {{ form.submit() }}
     </form>

@@ -3,18 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Update Announcement</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2a235e;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #2a235e;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-left: 100px;
+
+        }
+
+        input[type="submit"]:hover {
+            background-color: #e07b00;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
-    <!-- update_announcement.html -->
-
-<h2>Update Announcement</h2>
-<form method="post">
-    {{ form.hidden_tag() }}
-    {{ form.title.label }} {{ form.title }}
-    {{ form.content.label }} {{ form.content }}
-    {{ form.submit }}
-</form>
-
+    <form method="post">
+        <h2>Update Announcement</h2>
+        {{ form.hidden_tag() }}
+        <label for="{{ form.title.id }}">{{ form.title.label }}</label>
+        {{ form.title }}
+        <label for="{{ form.content.id }}">{{ form.content.label }}</label>
+        {{ form.content }}
+        <input type="submit" value="Update"> <!-- Change the value here -->
+    </form>
 </body>
 </html>

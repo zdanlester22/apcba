@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APCBA Portal V1.0</title>
+    <title>APCBA Portal V1.0 - Student Portal Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
@@ -11,44 +11,86 @@
             margin: 0;
             padding: 0;
             background-color: #f5f5f5;
-            color: #333;
         }
 
         header {
-            background-color: #333;
+            background-color: #222;
             padding: 15px;
             text-align: center;
             color: #fff;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .header-content {
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-grow: 2; 
         }
 
         h1 {
             color: antiquewhite;
-            margin: 0;
+            font-size: 3vh;
+            margin-right: 60px;
         }
 
+        .arrow-button {
+        background-color: #37332f;
+        color: #fff;
+        border: none;
+        padding: 2px 4px;
+        text-decoration: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        margin-left: 10px;
+          }
+
+
+        .arrow-button::before {
+    content: '\25C0'; /* Unicode character for a large left-pointing triangle */
+    font-family: 'Font Awesome 5 Free';
+    margin-right: 5px;
+    font-size: 1.3em; /* Adjust the size as needed */
+}
+.arrow-button:hover {
+    transform: scale(1.50);
+}
+
+
         nav {
-            background-color: #444;
-            overflow-x: auto; /* Enable horizontal scrolling */
-            white-space: nowrap; /* Prevent button text from wrapping */
+            background-color: #2f2e2e;
+            padding: 3px;
+            overflow: auto;
+            white-space: nowrap;
             text-align: center;
+            scrollbar-width: thin; /* Firefox */
         }
+
+        nav::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        nav::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
+        }
+
 
         nav a {
             display: inline-block;
             color: #fff;
             text-align: center;
-            padding: 10px 15px; 
+            padding: 10px 15px;
             text-decoration: none;
             transition: background-color 0.3s;
-            border-radius: 5px;
             margin: 5px;
+            border-radius: 5px;
             width: 100px;
+            white-space: nowrap;
         }
 
         nav a:hover {
@@ -60,58 +102,19 @@
             text-align: center;
         }
 
-        .bot {
-            text-align: center;
-            margin-top: 20px;
-            background-color: whitesmoke;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            display: inline-block;
-            justify-content: center;
-            padding: 50px;
-        }
-
-        .bot h2 {
-            color: #333;
-            font-size: 3.5vh;
-        }
-
-        table {
-            margin: auto;
-            border-collapse: collapse;
-            width: 100%;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #444;
-            color: #fff;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
         .link {
             display: inline-block;
-            margin: 10px;
-            padding: 10px 15px;
-            background-color: #ff8c00;
-            border: 2px solid #ff8c00;
+            margin: 5px;
+            padding: 8px 13px;
+            background-color: #2a235e;
             text-decoration: none;
             color: #fff;
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 11px;
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100;
+            width: 100px;
+            font-weight: bold;
         }
 
         .link:hover {
@@ -119,95 +122,125 @@
             transform: scale(1.05);
         }
 
-        form {
+        .bot {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 20px;
+            justify-content: center;
         }
 
-        label {
-            margin-bottom: 10px;
-            font-size: 16px;
+
+        h2 {
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
         }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
+        img{
+            height: 50px;
+            margin-right: 5px;
         }
+        form {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 50px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        width: 500px;
+        
+    }
 
-        button {
-            background-color: #ff8c00;
-            color: #fff;
-            padding: 15px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    label {
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #333;
+    }
 
-        button:hover {
-            background-color: #e07b00;
-        }
+    input[type="text"],
+    input[type="tel"],
+    input[type="password"],
+    select {
+        width: 75%;
+        padding: 7px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 30px;
+        font-size: 12px;
+        transition: border-color 0.3s;
+    }
 
-        @media only screen and (max-width: 768px) {
-            h1 {
-                font-size: 14px;
-            }
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    input[type="password"]:focus,
+    select:focus {
+        border-color: #4CAF50;
+    }
 
-            nav a {
-                padding: 10px 5px; 
-                width: 80px;
-            }
+    /* Add styles for the submit button */
+    button[type="submit"] {
+        background-color: #2a235e;
+        color: #fff;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 15px;
+        transition: background-color 0.3s;
+    }
 
-            .link {
-                padding: 10px 10px;
-                width: 80px;
-            }
-        }
+    button[type="submit"]:hover {
+        background-color: #e07b00;
+        transform: scale(1.1);
+    }
     </style>
 </head>
 <body>
     <header>
+        <a href="{{ url_for('portaluserlogin') }}" class="arrow-button"></a>
         <div class="header-content">
-            <h1>Asia Pacific College of Business and Arts <br> Asianites Management System</h1>
+            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo">
+            <h1>APCBA Portal V1.0</h1>
         </div>
     </header>
 
     <nav>
-        <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
-        <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
-        <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
-        <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
-        <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
-        <a href="{{ url_for('register') }}" class="link"><i class="fas fa-user-plus"></i> Register</a>
-        <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
-        <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
-        <a href="{{ url_for('enroll') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrolled</a>
-        
+        <nav>
+            <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+            <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
+            <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
+            <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
+            <a href="{{ url_for('register') }}" class="link"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+            <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
+            <a href="{{ url_for('enroll') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrolled</a>
+        </nav>
     </nav>
-
     <main>
         <div class="bot">
            {% block content %}
-    <h2>Register Users</h2>
-    <form method="post" action="{{ url_for('register') }}" id="registrationForm">
-        {{ form.csrf_token }}
-        {{ form.username.label }} {{ form.username() }}
-        {{ form.name.label }} {{ form.name() }}
-        {{ form.contact.label }} {{ form.contact() }}
-        {{ form.password.label }} {{ form.password() }}
-        {{ form.role.label }} {{ form.role() }}
-        <br>
-        <button type="submit">Register</button>
-    </form>
+           <form method="post" action="{{ url_for('register') }}" id="registrationForm">
+            <h2>Register Users</h2>
+            {{ form.csrf_token }}
+        
+            <!-- Adding placeholders to form fields -->
+            {{ form.username.label }} {{ form.username(placeholder="Enter your username") }}
+            {{ form.name.label }} {{ form.name(placeholder="Enter your full name") }}
+            {{ form.contact.label }} {{ form.contact(placeholder="Enter your contact number") }}
+            {{ form.password.label }} {{ form.password(placeholder="Enter your password") }}
+            
+            <!-- Adding a default role for the select field -->
+            {{ form.role.label }} {{ form.role(default="Select a role") }}
+        
+            <br>
+            <button type="submit">Register</button>
+        </form>
+        
 
 {% endblock %}
 </body>

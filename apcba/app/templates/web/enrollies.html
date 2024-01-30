@@ -1,47 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enrollment Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #2a235e;
             margin: 0;
             padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            color: #fff;
         }
 
         form {
             max-width: 600px;
-            background-color: #fff;
+            background-color: #574f8d;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
+            margin-top:1000px;
         }
 
         h2 {
-            color: #333;
+            color: #fff;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
         }
 
-        input, select, textarea {
+        input,
+        select,
+        textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
+            background-color: #fff;
+            color: #333;
         }
 
         textarea {
@@ -52,37 +60,21 @@
             background-color: #4caf50;
             color: #fff;
             border: none;
-            padding: 15px 20px;
+            padding: 12px 17px;
             font-size: 16px;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 10px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         input[type="submit"]:hover {
             background-color: #45a049;
         }
 
-        .flash-messages {
-            list-style-type: none;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #dff0d8;
-            color: #3c763d;
-            border: 1px solid #d6e9c6;
-            border-radius: 4px;
-        }
-
-        .flash-messages li {
-            margin-bottom: 10px;
-        }
-
-        .flash-messages .error {
-            background-color: #f2dede;
-            color: #a94442;
-            border-color: #ebccd1;
-        }
-         .form-row {
+        .form-row {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             margin-bottom: 15px;
         }
@@ -90,113 +82,165 @@
         .form-row label,
         .form-row input,
         .form-row select,
-        .form-row textarea {
-            width: calc(33.33% - 10px); /* Adjust the width as needed */
+        .form-row textarea,
+        .form-row [type="file"] {
+            width: calc(33.33% - 10px);
             box-sizing: border-box;
         }
 
         .form-row textarea {
             width: 100%;
         }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .back-button a {
+            color: #fff;
+        }
+
+        .back-button:hover {
+            transform: scale(1.5);
+        }
     </style>
 </head>
+
 <body>
+    <div class="back-button">
+        <a href="{{ url_for('websiteenroll') }}"><i class="fas fa-arrow-left"></i></a>
+    </div>
     <form method="post" action="{{ url_for('websiteenroll') }}">
         <h2>Enrollment Form</h2>
 
-        <!-- Your form fields here -->
-        <form method="post" action="{{ url_for('websiteenroll') }}">
-            <!-- Personal Information -->
+        <!-- Personal Information -->
+        <div class="form-row">
             <label for="name">Full Name:</label>
-            <input type="text" name="name" required><br>
-    
+            <input type="text" name="name" required>
+        </div>
+
+        <div class="form-row">
             <label for="email">Email:</label>
-            <input type="email" name="email" required><br>
-    
+            <input type="email" name="email" required>
+        </div>
+
+        <div class="form-row">
             <label for="level">Choose your level:</label>
             <select name="level" required>
                 <option value="college">College</option>
                 <option value="senior_high">Senior High School</option>
-            </select><br>
-    
-            <!-- Additional Fields for Personal Information -->
-            <!-- Add more fields as needed -->
-    
-            <!-- Contact Information -->
+            </select>
+        </div>
+
+        <!-- Additional Fields for Personal Information -->
+        <!-- Add more fields as needed -->
+
+        <!-- Contact Information -->
+        <div class="form-row">
             <label for="address">Home Address:</label>
-            <input type="text" name="address" required><br>
-    
+            <input type="text" name="address" required>
+        </div>
+
+        <div class="form-row">
             <label for="contact_number">Contact Number:</label>
-            <input type="tel" name="contact_number" required><br>
-    
-            <!-- Additional Fields for Contact Information -->
-            <!-- Add more fields as needed -->
-    
-            <!-- Educational Background -->
+            <input type="tel" name="contact_number" required>
+        </div>
+
+        <!-- Additional Fields for Contact Information -->
+        <!-- Add more fields as needed -->
+
+        <!-- Educational Background -->
+        <div class="form-row">
             <label for="date_of_birth">Date of Birth:</label>
-            <input type="date" name="date_of_birth" required><br>
-    
-            <!-- Additional Fields for Educational Background -->
-            <!-- Add more fields as needed -->
-    
-            <!-- Legal Documentation -->
+            <input type="date" name="date_of_birth" required>
+        </div>
+
+        <!-- Additional Fields for Educational Background -->
+        <!-- Add more fields as needed -->
+
+        <!-- Legal Documentation -->
+        <div class="form-row">
             <label for="place_of_birth">Place of Birth:</label>
-            <input type="text" name="place_of_birth" required><br>
-    
-            <!-- Additional Fields for Legal Documentation -->
-            <!-- Add more fields as needed -->
-    
-            <!-- Parent/Guardian Information -->
+            <input type="text" name="place_of_birth" required>
+        </div>
+
+        <!-- Additional Fields for Legal Documentation -->
+        <!-- Add more fields as needed -->
+
+        <!-- Parent/Guardian Information -->
+        <div class="form-row">
             <label for="parent_names">Parent/Guardian Names:</label>
-            <input type="text" name="parent_names" required><br>
-    
+            <input type="text" name="parent_names" required>
+        </div>
+
+        <div class="form-row">
             <label for="parent_contact_info">Parent/Guardian Contact Info:</label>
-            <input type="text" name="parent_contact_info" required><br>
-    
+            <input type="text" name="parent_contact_info" required>
+        </div>
+
+        <div class="form-row">
             <label for="parent_occupation">Parent/Guardian Occupation:</label>
-            <input type="text" name="parent_occupation" required><br>
-    
-            <!-- Additional Fields for Parent/Guardian Information -->
-            <!-- Add more fields as needed -->
-    
-            <!-- Health Information -->
+            <input type="text" name="parent_occupation" required>
+        </div>
+
+        <!-- Additional Fields for Parent/Guardian Information -->
+        <!-- Add more fields as needed -->
+
+        <!-- Health Information -->
+        <div class="form-row">
             <label for="medical_history">Medical History:</label>
-            <textarea name="medical_history" rows="3" required></textarea><br>
-    
+            <textarea name="medical_history" rows="3" required></textarea>
+        </div>
+
+        <div class="form-row">
             <label for="immunization_records">Immunization Records:</label>
-            <textarea name="immunization_records" rows="3" required></textarea><br>
-    
+            <textarea name="immunization_records" rows="3" required></textarea>
+        </div>
+
+        <div class="form-row">
             <label for="medical_certificate">Medical Certificate:</label>
-            <input type="file" name="medical_certificate" accept="application/pdf, image/*" required><br>
-    
-            <!-- Additional Fields for Health Information -->
-            <!-- Add more fields as needed -->
-    
-            <!-- Photographs -->
+            <input type="file" name="medical_certificate" accept="application/pdf, image/*" required>
+        </div>
+
+        <!-- Additional Fields for Health Information -->
+        <!-- Add more fields as needed -->
+
+        <!-- Photographs -->
+        <div class="form-row">
             <label for="photos">Recent ID-size Photos:</label>
-            <input type="file" name="photos" accept="image/*" required><br>
-    
-            <!-- Additional Fields for Photographs -->
-            <!-- Add more fields as needed -->
-    
-            <!-- Additional Documentation -->
+            <input type="file" name="photos" accept="image/*" required>
+        </div>
+
+        <!-- Additional Fields for Photographs -->
+        <!-- Add more fields as needed -->
+
+        <!-- Additional Documentation -->
+        <div class="form-row">
             <label for="form_138">Form 138 (Report Card):</label>
-            <input type="file" name="form_138" accept="application/pdf, image/*" required><br>
-    
+            <input type="file" name="form_138" accept="application/pdf, image/*" required>
+        </div>
+
+        <div class="form-row">
             <label for="moral_character_certificate">Good Moral Character Certificate:</label>
-            <input type="file" name="moral_character_certificate" accept="application/pdf, image/*" required><br>
-    
-            <!-- Additional Fields for Additional Documentation -->
-            <!-- Add more fields as needed -->
-    
-            <!-- Special Needs or Accommodations -->
+            <input type="file" name="moral_character_certificate" accept="application/pdf, image/*" required>
+        </div>
+
+        <!-- Additional Fields for Additional Documentation -->
+        <!-- Add more fields as needed -->
+
+        <!-- Special Needs or Accommodations -->
+        <div class="form-row">
             <label for="special_needs">Special Needs or Accommodations:</label>
-            <textarea name="special_needs" rows="3"></textarea><br>
-    
-            <!-- Submit Button -->
+            <textarea name="special_needs" rows="3"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-row">
             <input type="submit" value="Submit">
-        </form>
-    
+        </div>
     </form>
 </body>
+
 </html>
