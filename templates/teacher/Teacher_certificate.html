@@ -3,299 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        header {
-            background-color: #222;
-            padding: 15px;
-            text-align: center;
-            color: #fff;
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 2; 
-        }
-
-        h1 {
-            color: antiquewhite;
-            font-size: 3vh;
-            margin-right: 60px;
-        }
-
-        .arrow-button {
-        background-color: #37332f;
-        color: #fff;
-        border: none;
-        padding: 2px 4px;
-        text-decoration: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        margin-left: 10px;
-          }
-
-
-        .arrow-button::before {
-    content: '\25C0'; /* Unicode character for a large left-pointing triangle */
-    font-family: 'Font Awesome 5 Free';
-    margin-right: 5px;
-    font-size: 1.3em; /* Adjust the size as needed */
-}
-.arrow-button:hover {
-    transform: scale(1.50);
-}
-
-
-        nav {
-            background-color: #2f2e2e;
-            padding: 3px;
-            overflow: auto;
-            white-space: nowrap;
-            text-align: center;
-            scrollbar-width: thin; /* Firefox */
-        }
-
-        nav::-webkit-scrollbar {
-            height: 10px;
-        }
-
-        nav::-webkit-scrollbar-thumb {
-            background-color: #555;
-            border-radius: 10px;
-        }
-
-
-        nav a {
-            display: inline-block;
-            color: #fff;
-            text-align: center;
-            padding: 10px 15px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-            margin: 5px;
-            border-radius: 5px;
-            width: 100px;
-            white-space: nowrap;
-        }
-
-        nav a:hover {
-            background-color: #555;
-        }
-
-        main {
-            margin: 20px;
-            text-align: center;
-        }
-
-        .link {
-            display: inline-block;
-            margin: 5px;
-            padding: 8px 13px;
-            background-color: #2a235e;
-            text-decoration: none;
-            color: #fff;
-            font-size: 11px;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100px;
-            font-weight: bold;
-        }
-
-        .link:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
-        }
-
-        .bot {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-
-        h2 {
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 0;
-        }
-
-        img{
-            height: 50px;
-            margin-right: 5px;
-        }
-        .form { 
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Adding background shadow */
-            padding: 50px;
-            border-radius: 50px;
-            background-color: #fff;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-control-label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 30px;
-        }
-
-        .form-control-file {
-            margin-left: 70px;
-            padding: 10px;
-        }
-
-        .btn-primary {
-            background-color: #2a235e;
-            color: #fff;
-            padding: 10px 15px;
-            border: none; 
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-
-        }
-
-        .btn-primary:hover {
-            background-color: #e07b00;
-        }
-
-        /* Additional styles for the filter form */
-        .filter-form {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .filter-form label {
-            margin-right: 5px;
-            font-weight: bold;
-        }
-
-        .filter-form input {
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-        }
-
-        .filter-form button {
-            background-color: #2a235e;
-            color: #fff;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .filter-form button:hover {
-            background-color: #e07b00;
-        }
-
-        /* Additional styles for the table */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .table th, .table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .table th {
-            background-color: #2a235e;
-            color: #fff;
-        }
-
-        .table a {
-            text-decoration: none;
-            color: #2a235e;
-            margin-right: 10px;
-        }
-    </style>
+    <title>Document</title>
 </head>
 <body>
-    <header>
-        <a href="{{ url_for('portaluserlogin') }}" class="arrow-button"></a>
-        <div class="header-content">
-            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo">
-            <h1>APCBA Portal V1.0</h1>
-        </div>
-    </header>
+    <!-- student_dashboard.html -->
 
-    <nav>
-        <nav>
-            <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
-            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
-        </nav>
-    </nav>
-    <main class="bot">   
-        <h3>Certificates</h3>
-        <center>
-            <form action="{{ url_for('certificate') }}" method="get">
-                {{ form.csrf_token }}
-                {{ form.title.label }} {{ form.title(placeholder="Enter Certificate Title") }}
-                <button type="submit">Filter</button>
-            </form>
-        </center>
-        {% if certificates %}
-            <table class="table">
-                <thead>
+    <center>
+      <form action="{{ url_for('certificate') }}" method="get">
+          {{ form.csrf_token }}
+          {{ form.title.label }} {{ form.title }}
+          <button type="submit">Filter</button>
+      </form>
+    </center>
+
+    <h3>Your Certificates</h3>
+    {% if certificates %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>PDF</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for certificate in certificates %}
                     <tr>
-                        <th>Title</th>
-                        <th>PDF</th>
-                        <th>Actions</th>
+                        <td>{{ certificate.title }}</td>
+                        <td>
+                            <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download PDF</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for certificate in certificates %}
-                        <tr>
-                            <td>{{ certificate.title }}</td>
-                            <td>
-                                <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download PDF</a>
-                            </td>
-                            <td>
-                
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No certificates available.</p>
-        {% endif %}
-    </main>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You don't have any certificates yet.</p>
+    {% endif %}
 
+    {% block content %}{% endblock %}
 </body>
 </html>

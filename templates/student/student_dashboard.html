@@ -263,13 +263,13 @@
 
     <nav>
         <nav>
-            <a href="{{ url_for('student_dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a href="{{ url_for('account') }}" class="link"><i class="fas fa-book"></i> Profile</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Grades</a>
             <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
-            <a href="" class="link"><i class="fas fa-book"></i> Schedule</a>
-            <a href="" class="link"><i class="fas fa-book"></i> Modules</a>
-            <a href="" class="link"><i class="fas fa-book"></i> Password</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Schedule</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Password</a>
         </nav>
     </nav>
     <div class="bot">

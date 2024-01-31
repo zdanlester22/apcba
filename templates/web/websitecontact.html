@@ -4,58 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>Contact</title>
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #333333;;
+            font-family: 'JetBrains Mono', monospace;
+            background-color:#2a235e ;
             color: #2c3e50;
             box-sizing: border-box;
         }
 
-        .top-nav {
-            height: 70px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            transition: background 0.3s ease;
+        .back-button {
+            margin-top: 10px;
+            margin-left: 20px; /* Adjust the margin as needed */
         }
 
-        .left {
-            display: flex;
-            align-items: center;
-        }
-
-        .left img {
-            width: 40px;
-            height: auto;
-            margin-right: 10px;
-        }
-
-        .left h1 {
-            margin: 0;
-            font-size: 1.5em;
-            color: #fff;
-            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        .right {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .link {
-            color: white;
+        .back-button a {
+            color: #fcf7f7;
+            padding: 20px;
+            border-radius: 5px;
             text-decoration: none;
-            font-size: 1.1em;
-            transition: color 0.3s ease;
+            transition: transform 0.2s;
         }
 
-        .link:hover {
-            color: #34495e;
+        .back-button a:hover {
+            transform: scale(1.2);
         }
 
         .container {
@@ -63,7 +38,6 @@
             flex-wrap: wrap;
             justify-content: space-around;
             padding: 40px 20px;
-            border: 1px solid #ddd;
             border-radius: 30px;
             margin-top: 30px;
         }
@@ -72,13 +46,12 @@
         .contact2 {
             flex: 1;
             text-align: center;
-            background: #fff;
-            padding: 30px; /* Adjusted padding */
+            padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin: 20px;
             overflow: hidden;
             transition: transform 0.3s ease;
+            margin-left: 20px;
         }
 
         .contact1:hover,
@@ -88,7 +61,7 @@
 
         .contact1 h1,
         .contact2 h1 {
-            color: #ea8c4b;
+            color: #fff;
             font-size: 2.5em;
             margin-bottom: 20px;
             text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
@@ -98,43 +71,13 @@
         .contact2 p {
             margin: 0;
             font-size: 1em;
-            color: #707070;
-        }
-
-        footer {
-            height: 30px;
-            background-color: #333333;
-            color: white;
-            text-align: center;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        footer h2 {
-            font-weight: lighter;
-            font-size: 0.6em;
-            margin: 0;
+            color: #fff;
         }
 
         /* Responsive Styles */
         @media (max-width: 768px) {
-            .top-nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .left h1 {
-                font-size: 1.2em;
-            }
-
-            .right {
-                margin-top: 10px;
+            .back-button {
+                margin-left: 10px;
             }
 
             .container {
@@ -147,25 +90,23 @@
                 margin: 10px 0;
             }
         }
+        img{
+            width: 100%;
+            max-width: 500px;
+            border-radius: 50px;
+            margin-left: 100px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="top-nav">
-        
-        <div class="left">
-           
-        </div>
-     
-        <div class="right">
-            <a href="{{ url_for('index') }}" class="link">Home</a>
-            <a href="{{ url_for('websiteabout') }}" class="link">About</a>
-            <a href="{{ url_for('websitecontact') }}" class="link">Contact</a>
-            <a href="{{ url_for('websiteenroll') }}" class="link">Enroll</a>
-        </div>
+    <div class="back-button">
+        <a href="{{ url_for('index') }}"><i class="fas fa-arrow-left"></i></a>
     </div>
 
     <div class="container">
+        <img class="background-image" src="{{ url_for('static', filename='images/contact.jpg') }}" alt="Background Image">
+        <span>
         <div class="contact1">
             <h1>Main Campus</h1>
             <p>Manzano St., Pob. Norte, Rizal, Nueva Ecija<br>
@@ -178,10 +119,8 @@
                 0975-022-8140/ 0922-7774652<br>
                 asiapacificcollegebongabon@gmail.com</p>
         </div>
+    </span>
     </div>
-    <footer>
-        <h2>COLLEGE * SENIOR HIGH * SKILLS TRAINING</h2>
-    </footer>
 </body>
 
 </html>

@@ -17,7 +17,7 @@
             overflow: hidden;
             height: 50px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 0 20px;
             font-weight: 100;
@@ -37,39 +37,19 @@
             font-weight: 700; /* Increased font weight for the logo text */
         }
 
-        .topnav .links {
-            display: flex;
-            margin-left: 70px;
-       
-        }
-
-        .topnav .links a {
-            text-decoration: none;
-            padding: 14px;
-            display: inline-block;
-            font-weight: 100;
-            font-size: 2.2vh;
-            color: #fff;
-       
-
-        }
-
-        .topnav .student-portal img {
-            height: 30px; /* Adjust the height as needed */
-            margin-right: 10px;
-        }
-
         .image-container {
             display: flex;
             justify-content: space-between;
             padding: 20px;
             margin-top: 100px;
+            margin-left: 50px;
+            margin-right: 50px;
         }
 
         .image-container img {
-            height: 280px;
+            height: 250px;
             border-radius: 50px;
-            border: 1px solid white;
+            border: 2x solid white;
             position: relative;
             transition: transform 0.3s ease-in-out;
         }
@@ -102,7 +82,7 @@
         }
 
         .image-container a:nth-child(1):after {
-            content: "Home Page";
+            content: "Admission Page";
         }
 
         .image-container a:nth-child(2):after {
@@ -114,7 +94,7 @@
         }
 
         .image-container a:nth-child(4):after {
-            content: "Admission Page";
+            content: "Student Portal";
         }
 
         .text {
@@ -125,26 +105,10 @@
         .text h1 {
             color: #fff;
             font-size: 5vh;
-            font-weight: 700;
+
       
         }
-        .student-portal{
-          display: flex;
-        }
-        .student-portal image{
-          height: 50px;
-          border-radius: 50px;
-        }
-        
-        .student-portal a{
-          text-decoration: none;
-          color: #fff;
-          margin-top: 5px;
-          font-size: 14px;
-        }
-        .student-portal a:hover{
-          transform: scale(1.1);
-        }
+
         @media screen and (max-width: 600px) {
         /* Adjustments for smaller screens */
 
@@ -181,16 +145,6 @@
         <img src="{{ url_for('static', filename='images/icon.png') }}">
         <p>APCBA</p>
     </div>
-    <div class="links">
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
-        <a href="#">Admission</a>
-    </div>
-    <div class="student-portal">
-        <img src="{{ url_for('static', filename='images/portal.png') }}">
-        <a href="{{ url_for('portaluserlogin') }}" class="port">Student Portal</a>
-    </div>
 </div>
 
 <div class="text">
@@ -198,18 +152,18 @@
 </div>
 
 <div class="image-container">
-  <a href="{{ url_for('index') }}" class="home">
-      <img src="{{ url_for('static', filename='images/home.jpg') }}">
-  </a>
+    <a href="{{ url_for('websiteenroll') }}" class="enroll">
+        <img src="{{ url_for('static', filename='images/enroll.jpg') }}">
+    </a>
   <a href="{{ url_for('websiteabout') }}" class="about">
       <img src="{{ url_for('static', filename='images/about.jpg') }}">
   </a>
   <a href="{{ url_for('websitecontact') }}" class="contact">
       <img src="{{ url_for('static', filename='images/contact.jpg') }}">
   </a>
-  <a href="{{ url_for('websiteenroll') }}" class="enroll">
-      <img src="{{ url_for('static', filename='images/enroll.jpg') }}">
-  </a>
+  <a href="{{ url_for('portaluserlogin') }}" class="home">
+    <img src="{{ url_for('static', filename='images/portal.jpg') }}">
+</a>
 </div>
 
 <!-- Your webpage content goes here -->

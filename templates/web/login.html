@@ -39,7 +39,7 @@
 
         label {
             display: block;
-            color: #333; /* Dark text color */
+            color: #fff; /* Dark text color */
             font-size: 13px;
         }
 
@@ -50,17 +50,17 @@
 
         .input-container img {
             position: absolute;
-            height: 18px;
+            height: 16px;
             left: 10px;
             top: 50%;
             transform: translateY(-50%);
             opacity: 0.8;
-            margin-top: 11px;
-            margin-left: 12px;
+            margin-top: 13px;
+            margin-left: 95px;
         }
 
         input {
-            width: calc(100% - 30px); /* Adjusted width to accommodate the icon */
+            width: calc(100% - 50px); /* Adjusted width to accommodate the icon */
             padding: 12px;
             box-sizing: border-box;
             border: none;
@@ -69,21 +69,26 @@
             margin-top: 8px;
             padding-left: 30px; /* Added padding for text to avoid overlapping with icon */
             font-size: 14px; /* Adjusted font size for better readability on smaller screens */
+            width: 200px;
         }
 
         input[type="submit"] {
             background-color: #302875;
             color: #fff;
             cursor: pointer;
-            padding: 10px;
+            padding: 8px;
             border: none;
             border-radius: 50px;
             width: 100%; /* Occupy 100% of the width */
-            max-width: 300px; /* Maximum width for larger screens */
+            max-width: 200px; /* Maximum width for larger screens */
+            font-weight: bold;
         }
 
+
+
         input[type="submit"]:hover {
-            background-color: #ff4500; /* Darker shade on hover */  
+            background-color: #352d72;
+            transform: scale(1.05);
         }
 
         @media (max-width: 400px) {
@@ -98,7 +103,7 @@
         }
 
         img {
-            height: 220px;
+            height: 210px;
             margin-bottom: 5px;
         }
     </style>
