@@ -191,7 +191,7 @@ class EnrolliesForm(FlaskForm):
                         validators=[DataRequired()])
     address = StringField('Home Address', validators=[DataRequired()])
     contact_number = StringField('Contact Number', validators=[DataRequired()])
-    date_of_birth = DateField('Date of Birth', validators=[DataRequired()])
+    date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
     place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
     gender = StringField('Gender', validators=[DataRequired()])
     nationality = StringField('Nationality', validators=[DataRequired()])
@@ -203,12 +203,6 @@ class EnrolliesForm(FlaskForm):
     parent_names = StringField('Names of Parents/Guardians', validators=[DataRequired()])
     parent_contact_info = StringField('Contact Information of Parents/Guardians', validators=[DataRequired()])
     parent_occupation = StringField('Occupation of Parents/Guardians', validators=[DataRequired()])
-    medical_history = TextAreaField('Medical History', validators=[DataRequired()])
-    immunization_records = TextAreaField('Immunization Records', validators=[DataRequired()])
-    medical_certificate = FileField('Medical Certificate', validators=[DataRequired()])
-    photos = FileField('Recent ID-size Photos')
-    form_138 = FileField('Form 138 (Report Card) or Permanent Record')
-    moral_character_certificate = FileField('Good Moral Character Certificate')
     special_needs = TextAreaField('Special Needs or Accommodations')
 
 class GradeForm(FlaskForm):

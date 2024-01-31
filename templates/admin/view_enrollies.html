@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrollies List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: auto;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .page-title {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #030958;
+            color: #fff;
+            margin: 0;
+        }
+
+        .enrollies-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        .enrollies-table th,
+        .enrollies-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .enrollies-table th {
+            background-color: #030958;
+            color: #fff;
+        }
+
+        .enrollies-table tbody tr:nth-child(even) {
+            background-color: #ecf0f1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="page-title">Enrollies List</h1>
+        <table class="enrollies-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Level</th>
+                    <th>Address</th>
+                    <th>Contact</th>
+                    <th>Birthday</th>
+                    <th>Place of Birth</th>
+                    <th>Gender</th>
+                    <th>Nationality</th>
+                    <th>Religion</th>
+                    <th>Previous School</th>
+                    <th>Grade Last Completed</th>
+                    <th>Academic Achievements</th>
+                    <th>Proof of Address</th>
+                    <th>Parents Name</th>
+                    <th>Parent Contact</th>
+                    <th>Parent Occupation</th>
+                    <th>Special Needs</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enrollies in enrollies_list %}
+                <tr>
+                    <td>{{ enrollies.name }}</td>
+                    <td>{{ enrollies.email }}</td>
+                    <!-- Add more data cells as needed -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

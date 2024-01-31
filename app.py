@@ -52,7 +52,7 @@ def student_dashboard():
 def enrollies():
     form = EnrolliesForm()
 
-    if request.method == 'POST' and form.validate_on_submit():
+    if form.validate_on_submit():
         new_enrollies = Enrollies(
             name=form.name.data,
             email=form.email.data,
@@ -72,7 +72,6 @@ def enrollies():
             parent_contact_info=form.parent_contact_info.data,
             parent_occupation=form.parent_occupation.data,
             special_needs=form.special_needs.data
-            # Add more fields as needed
         )
 
         try:
@@ -81,8 +80,18 @@ def enrollies():
             return redirect(url_for('enrollies'))
         except Exception as e:
             db.session.rollback()
+            app.logger.error(f"Error during enrollment: {str(e)}")
 
-    return render_template('web/enrollies.html', form=form)
+    enrollies_list = Enrollies.query.all()
+
+    return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list)
+
+
+
+@app.route('/admin/view_enrollies')
+def view_enrollies():
+    enrollies_list = Enrollies.query.all()
+    return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list)
 
 @app.route('/admin/users', methods=['GET', 'POST'])
 @login_required
