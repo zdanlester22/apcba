@@ -144,32 +144,30 @@
 
         .announcements {
             margin-top: 20px;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            margin-left: 120px;
-            margin-right: 120px;
+            margin-left: 10px;
+            margin-right: 10px;
         }
 
         .announcement-item {
-            border-bottom: 1px solid #ccc;
-            padding: 15px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             margin-bottom: 15px;
-        }
-
-        .announcement-item:last-child {
-            border-bottom: none;
+            padding: 25px;
         }
 
         .announcement-item strong {
-            font-size: 18px;
-            color: #2a235e;
+            font-size: 17px;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
         }
 
         .announcement-item p {
             color: #555;
             margin-top: 10px;
+            line-height: 1.5;
+            font-size: 15px;
         }
 
         .announcement-item small {
@@ -177,12 +175,86 @@
             display: block;
             margin-top: 10px;
         }
+
+        .announcement-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .announcements h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 3vh;
+            margin-left: 25px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            visibility: hidden;
+        }
+
+        .logout-buttons {
+            margin-top: 20px;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background-color: #e07b00;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .btn-cancel {
+            padding: 10px 20px;
+            background-color: #555;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        @media screen and (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header-content {
+                margin-top: 15px;
+            }
+
+            h1 {
+                margin-right: 0;
+            }
+
+            .logout-form {
+                width: 80%;
+            }
+        }
     </style>
 </head>
 
 <body>
     <header>
-        <a href="{{ url_for('portaluserlogin') }}" class="arrow-button"></a>
+        <a href="javascript:void(0);" class="arrow-button" onclick="showLogoutForm()"></a>
         <div class="header-content">
             <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo">
             <h1>APCBA Portal V1.0</h1>
@@ -192,29 +264,61 @@
     <nav>
         <nav>
             <a href="{{ url_for('student_dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('account') }}" class="link"><i class="fas fa-book"></i> Profile</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Grades</a>
             <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
-            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+            <a href="" class="link"><i class="fas fa-book"></i> Schedule</a>
+            <a href="" class="link"><i class="fas fa-book"></i> Modules</a>
+            <a href="" class="link"><i class="fas fa-book"></i> Password</a>
         </nav>
     </nav>
     <div class="bot">
         <div class="announcements">
-            {% if announcements %}
-                <ul>
-                    {% for announcement in announcements %}
-                        <li class="announcement-item">
-                            <strong>{{ announcement.title }}</strong>
-                            <p>{{ announcement.content }}</p>
-                            <small>Posted by {{ announcement.author.username }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No announcements available.</p>
-            {% endif %}
+            <h1>School Announcements</h1>
+            {% for announcement in announcements %}
+            <div class="announcement-item">
+                <strong>{{ announcement.title }}</strong>
+                <p>{{ announcement.content }}</p>
+                <small>Posted by {{ announcement.author.username }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+            </div>
+            {% endfor %}
         </div>
     </div>
-    
+
+    <!-- Logout Overlay and Form -->
+    <div class="overlay" id="logoutOverlay">
+        <div class="logout-form">
+            <p>Logout?</p>
+            <div class="logout-buttons">
+                <button class="btn-logout" onclick="logout()">Yes</button>
+                <button class="btn-cancel" onclick="cancelLogout()">No</button>
+            </div>
+        </div>
     </div>
+
+    <script>
+    function showLogoutForm() {
+        var overlay = document.getElementById("logoutOverlay");
+        overlay.style.display = "flex";
+        document.querySelector('.logout-form').style.visibility = 'visible';
+    }
+
+    function logout() {
+        // Redirect to the login page
+        window.location.href = "{{ url_for('login') }}";
+    }
+
+    function cancelLogout() {
+        hideLogoutForm();
+    }
+
+    function hideLogoutForm() {
+        var overlay = document.getElementById("logoutOverlay");
+        overlay.style.display = "none";
+        document.querySelector('.logout-form').style.visibility = 'hidden';
+    }
+</script>
+
 </body>
 
 </html>
