@@ -77,41 +77,39 @@ class user_account(db.Model):
     emergency_contact_address = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
 
-    
-
 
 class Announcement(db.Model):
     __tablename__ = 'announcement'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+    timestamp = db.Column(db.TIMESTAMP, default=db.func.current_timestamp())
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     author = db.relationship('User', backref='announcements')
 
+
 class Certificate(db.Model):
     __tablename__ = 'certificate'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
     pdf = db.Column(db.String(100), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
-
 class Section(db.Model):
     __tablename__ = 'sections'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     course = db.relationship('Course', back_populates='sections', lazy=True)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))  # Correct the foreign key reference
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))  
     teacher = db.relationship('Teacher', back_populates='section', uselist=False)
     subjects = db.relationship('Subject', back_populates='section', lazy=True)
 
 
 class Subject(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     abbreviation = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     unit = db.Column(db.Integer)
@@ -121,28 +119,28 @@ class Subject(db.Model):
     section = db.relationship('Section', back_populates='subjects')
     grades = db.relationship('Grades', back_populates='subject', lazy=True)
     schedules = db.relationship('Schedule', back_populates='subject', lazy=True)
-   
+
 
 class Teacher(db.Model):
     __tablename__ = 'teacher'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    section = db.relationship('Section', back_populates='teacher', uselist=False) 
+    section = db.relationship('Section', back_populates='teacher', uselist=False)
 
 
-    
-  
 class Module(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(255), nullable=False)
     year = db.Column(db.Integer, nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     course = db.relationship('Course', backref='modules')
     pdf_filename = db.Column(db.String(255), nullable=False)
 
+
 class Enrollment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'enrollment'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
@@ -153,9 +151,9 @@ class Enrollment(db.Model):
     enrolled_section_rel = db.relationship('Section', backref='enrollments_section')
 
 
-
 class Enrollies(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'enrollies'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     level = db.Column(db.String(20), nullable=False)
@@ -173,29 +171,21 @@ class Enrollies(db.Model):
     parent_names = db.Column(db.String(200))
     parent_contact_info = db.Column(db.String(30))
     parent_occupation = db.Column(db.String(100))
-    medical_history = db.Column(db.String(255))
-    immunization_records = db.Column(db.String(255))
-    medical_certificate = db.Column(db.String(255))
-    photos = db.Column(db.String(255))
-    form_138 = db.Column(db.String(255))
-    moral_character_certificate = db.Column(db.String(255))
     special_needs = db.Column(db.String(255))
 
-    
 
 class Student(db.Model):
     __tablename__ = 'student'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     grades = db.relationship('Grades', back_populates='student', lazy=True)
-
     enrollments = db.relationship('Enrollment', backref='student', lazy=True)
 
 
-
 class Course(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'course'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     course_type = db.Column(db.String(20), nullable=False)
     abbreviation = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=False)
@@ -209,7 +199,8 @@ class Course(db.Model):
 
 
 class Grades(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'grades'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
     period_1 = db.Column(db.String(5))
@@ -217,19 +208,22 @@ class Grades(db.Model):
     period_3 = db.Column(db.String(5))
     final_grade = db.Column(db.String(5))
     is_passed = db.Column(db.Boolean, default=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.TIMESTAMP, default=datetime.utcnow)
 
     student = db.relationship('Student', back_populates='grades')
     subject = db.relationship('Subject', back_populates='grades')
 
 
 class Schedule(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'schedule'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     day_of_week = db.Column(db.String(20), nullable=False)
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
     subject = db.relationship('Subject', back_populates='schedules', lazy=True)
+
+
 
 
 

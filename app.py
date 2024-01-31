@@ -12,7 +12,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_user:jLcGVdHxOSHxZZ6OUGfLOGrxCmtZb3Uz@dpg-cmr6pamd3nmc73ef4vg0-a.oregon-postgres.render.com/apcba'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_uhvw_user:MYUzSsCKpa8teEJC40w12oXdtqHlTqD2@dpg-cmt5evv109ks73a2sj10-a.oregon-postgres.render.com/apcba_uhvw'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 login_manager = LoginManager(app)
@@ -71,12 +71,6 @@ def enrollies():
             parent_names=form.parent_names.data,
             parent_contact_info=form.parent_contact_info.data,
             parent_occupation=form.parent_occupation.data,
-            medical_history=form.medical_history.data,
-            immunization_records=form.immunization_records.data,
-            medical_certificate=form.medical_certificate.data,
-            photos=form.photos.data,
-            form_138=form.form_138.data,
-            moral_character_certificate=form.moral_character_certificate.data,
             special_needs=form.special_needs.data
             # Add more fields as needed
         )
@@ -84,12 +78,9 @@ def enrollies():
         try:
             db.session.add(new_enrollies)
             db.session.commit()
-            flash('Enrollment submitted successfully', 'success')
             return redirect(url_for('enrollies'))
         except Exception as e:
             db.session.rollback()
-            flash(f'Error submitting enrollment: {str(e)}', 'error')
-            print(f'Database Commit Error: {str(e)}')  # Add this line for debugging
 
     return render_template('web/enrollies.html', form=form)
 

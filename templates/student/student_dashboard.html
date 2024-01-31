@@ -191,23 +191,29 @@
 
     <nav>
         <nav>
-            <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('student_dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
         </nav>
     </nav>
     <div class="bot">
         <div class="announcements">
-            <ul>
-                {% for announcement in announcements %}
-                    <li class="announcement-item">
-                        <strong>{{ announcement.title }}</strong>
-                        <p>{{ announcement.content }}</p>
-                        <small>Posted by {{ announcement.author.username }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-                    </li>
-                {% endfor %}
-            </ul>
+            {% if announcements %}
+                <ul>
+                    {% for announcement in announcements %}
+                        <li class="announcement-item">
+                            <strong>{{ announcement.title }}</strong>
+                            <p>{{ announcement.content }}</p>
+                            <small>Posted by {{ announcement.author.username }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No announcements available.</p>
+            {% endif %}
         </div>
+    </div>
+    
     </div>
 </body>
 

@@ -105,21 +105,16 @@ class UserAccountForm(FlaskForm):
     father_middle_name = StringField("Father's Middle Name", validators=[DataRequired()])
     father_occupation = StringField("Father's Occupation", validators=[DataRequired()])
     father_contact_no = StringField("Father's Contact No.", validators=[DataRequired()])
-    
     mother_last_name = StringField("Mother's Last Name", validators=[DataRequired()])
     mother_first_name = StringField("Mother's First Name", validators=[DataRequired()])
     mother_middle_name = StringField("Mother's Middle Name", validators=[DataRequired()])
     mother_occupation = StringField("Mother's Occupation", validators=[DataRequired()])
     mother_contact_no = StringField("Mother's Contact No.", validators=[DataRequired()])
-    
     num_brothers = IntegerField('No. of Brothers', validators=[DataRequired()])
     num_sisters = IntegerField('No. of Sisters', validators=[DataRequired()])
-    
     guardian_occupation = StringField('Guardian Occupation', validators=[DataRequired()])
     guardian_relationship = StringField('Guardian Relationship', validators=[DataRequired()])
     guardian_contact_no = StringField('Guardian Contact No.', validators=[DataRequired()])
-    
-    # Emergency Contact
     emergency_contact_name = StringField('Emergency Contact Name', validators=[DataRequired()])
     emergency_contact_relationship = StringField('Emergency Contact Relationship', validators=[DataRequired()])
     emergency_contact_no = StringField('Emergency Contact No.', validators=[DataRequired()])

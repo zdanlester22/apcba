@@ -110,9 +110,9 @@
 
 <body>
     <div class="back-button">
-        <a href="{{ url_for('websiteenroll') }}"><i class="fas fa-arrow-left"></i></a>
+        <a href="{{ url_for('enrollies') }}"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <form method="post" action="{{ url_for('websiteenroll') }}">
+    <form method="post" action="{{ url_for('enrollies') }}">
         <h2>Enrollment Form</h2>
 
         <!-- Personal Information -->
@@ -184,53 +184,6 @@
             <label for="parent_occupation">Parent/Guardian Occupation:</label>
             <input type="text" name="parent_occupation" required>
         </div>
-
-        <!-- Additional Fields for Parent/Guardian Information -->
-        <!-- Add more fields as needed -->
-
-        <!-- Health Information -->
-        <div class="form-row">
-            <label for="medical_history">Medical History:</label>
-            <textarea name="medical_history" rows="3" required></textarea>
-        </div>
-
-        <div class="form-row">
-            <label for="immunization_records">Immunization Records:</label>
-            <textarea name="immunization_records" rows="3" required></textarea>
-        </div>
-
-        <div class="form-row">
-            <label for="medical_certificate">Medical Certificate:</label>
-            <input type="file" name="medical_certificate" accept="application/pdf, image/*" required>
-        </div>
-
-        <!-- Additional Fields for Health Information -->
-        <!-- Add more fields as needed -->
-
-        <!-- Photographs -->
-        <div class="form-row">
-            <label for="photos">Recent ID-size Photos:</label>
-            <input type="file" name="photos" accept="image/*" required>
-        </div>
-
-        <!-- Additional Fields for Photographs -->
-        <!-- Add more fields as needed -->
-
-        <!-- Additional Documentation -->
-        <div class="form-row">
-            <label for="form_138">Form 138 (Report Card):</label>
-            <input type="file" name="form_138" accept="application/pdf, image/*" required>
-        </div>
-
-        <div class="form-row">
-            <label for="moral_character_certificate">Good Moral Character Certificate:</label>
-            <input type="file" name="moral_character_certificate" accept="application/pdf, image/*" required>
-        </div>
-
-        <!-- Additional Fields for Additional Documentation -->
-        <!-- Add more fields as needed -->
-
-        <!-- Special Needs or Accommodations -->
         <div class="form-row">
             <label for="special_needs">Special Needs or Accommodations:</label>
             <textarea name="special_needs" rows="3"></textarea>
