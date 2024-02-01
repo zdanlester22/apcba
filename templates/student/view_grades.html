@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grades</title>
+</head>
+<body>
+    <h1>{{ student.name }}'s Grades</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Period 1</th>
+                <th>Period 2</th>
+                <th>Period 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grades %}
+            <tr>
+                <td>{{ grade.subject.name }}</td>
+                <td>{{ grade.period_1 }}</td>
+                <td>{{ grade.period_2 }}</td>
+                <td>{{ grade.period_3 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

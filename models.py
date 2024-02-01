@@ -104,8 +104,9 @@ class Section(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     course = db.relationship('Course', back_populates='sections', lazy=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))  
-    teacher = db.relationship('Teacher', back_populates='section', uselist=False)
+    teacher = db.relationship('Teacher', back_populates='sections', uselist=False)
     subjects = db.relationship('Subject', back_populates='section', lazy=True)
+
 
 
 class Subject(db.Model):
@@ -126,7 +127,7 @@ class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    section = db.relationship('Section', back_populates='teacher', uselist=False)
+    sections = db.relationship('Section', back_populates='teacher', uselist=False)
 
 
 class Module(db.Model):

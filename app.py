@@ -176,13 +176,14 @@ def view_students():
         db.session.query(Student, Section.name.label('section_name'))
         .outerjoin(Enrollment, Student.id == Enrollment.student_id)
         .add_columns(Student.student_id, Student.id, Student.name, db.func.count(Enrollment.id).label('enrollment_count'))
-        .group_by(Student.student_id)
+        .group_by(Student.student_id, Student.id, Student.name, Section.name)
         .all()
     )
 
     sections_data = Section.query.all()
 
     return render_template('admin/view_students.html', students=students_data, sections=sections_data)
+
 
 
 @app.route('/admin/students/update/<int:student_id>', methods=['GET', 'POST'])
@@ -421,14 +422,14 @@ def certificate():
     # Choose the appropriate template based on the user's role
     if current_user.role == 'student':
         title_filter = request.args.get('title', default='', type=str)
-        certificates = Certificate.query.filter_by(user_id=current_user.id).filter(Certificate.title.ilike(f'%{title_filter}%')).order_by(Certificate.id.desc()).all()
+        certificates = Certificate.query.filter_by(user_id=current_user.id).order_by(Certificate.id.desc()).all()
         template = 'student/student_certificate.html'
     elif current_user.role == 'teacher':
         title_filter = request.args.get('title', default='', type=str)
-        certificates = Certificate.query.filter(Certificate.title.ilike(f'%{title_filter}%')).order_by(Certificate.id.desc()).all()
+        certificates = Certificate.query.order_by(Certificate.id.desc()).all()
         template = 'teacher/teacher_certificate.html'
     elif current_user.role == 'admin':
-        # Filter certificates based on the title for admins
+        # Filter certificates based on the title
         title_filter = request.args.get('title', default='', type=str)
         certificates = Certificate.query.filter(Certificate.title.ilike(f'%{title_filter}%')).order_by(Certificate.id.desc()).all()
         template = 'admin/certificate.html'
@@ -438,7 +439,6 @@ def certificate():
         return redirect(url_for('dashboard'))
 
     return render_template(template, user=current_user, form=form, certificates=certificates)
-
 
 
 @app.route('/admin/update_certificate/<int:certificate_id>', methods=['GET', 'POST'])
@@ -816,6 +816,11 @@ def manage_section():
     if form_section.validate_on_submit():
         selected_teacher_id = form_section.teacher_id.data
 
+        # Validate that the selected teacher ID exists
+        if not Teacher.query.get(selected_teacher_id):
+            flash('Invalid teacher selected!', 'danger')
+            return redirect(url_for('manage_section'))
+
         new_section = Section(
             name=form_section.name.data,
             capacity=form_section.capacity.data,
@@ -832,7 +837,7 @@ def manage_section():
             for subject in subjects_from_course:
                 subject.section_id = new_section.id
                 db.session.add(subject)
-        
+
         db.session.commit()
 
         flash('Section created successfully!', 'success')
@@ -842,6 +847,7 @@ def manage_section():
 
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
                            form_section=form_section)
+
 
 
 @app.route('/view_subjects', methods=['GET'])
@@ -901,16 +907,8 @@ def view_modules():
     # Fetch and display existing modules
     modules = Module.query.all()
 
-    # Check the role of the current user
-    if current_user.role == 'teacher':
-        return render_template('teacher/view_modules.html', form_module=form_module, modules=modules)
-    elif current_user.role == 'student':
-        return render_template('student/view_modules.html', form_module=form_module, modules=modules)
-    elif current_user.role == 'admin':
-        return render_template('admin/view_modules.html', form_module=form_module, modules=modules)
-    else:
-        # Handle other roles or redirect to an error page
-        return render_template('error.html', message='Unauthorized access')
+    return render_template('admin/view_modules.html', form_module=form_module, modules=modules)
+
 
 @app.route('/download_module/<pdf_filename>')
 @login_required
@@ -1018,6 +1016,18 @@ def view_grades(student_id):
 
     return render_template('admin/view_grades.html', student=student, subjects=subjects, form=form)
 
+app.route('/student_view_grades/<int:student_id>', methods=['GET'])
+@login_required
+def student_view_grades(student_id):
+    student = Student.query.get_or_404(student_id)
+    subjects = Subject.query.all()
+
+    # Retrieve the grades for the specific student
+    grades = Grades.query.filter_by(student_id=student_id).all()
+
+    return render_template('student/view_grades.html', student=student, subjects=subjects, grades=grades)
+
+
 
 ###############################################################################################################################################################
 
@@ -1047,6 +1057,20 @@ def add_schedule(section_id):
             current_app.logger.error(f"Error adding schedules: {str(e)}")
 
     return render_template('admin/add_schedule.html', form=form, section=section, subjects=subjects)
+
+
+@app.route('/view_schedule/<int:student_id>', methods=['GET'])
+@login_required
+def view_schedule(student_id):
+    # Assuming student_id is the user's ID
+    student = Student.query.get_or_404(student_id)
+
+    # Assuming there is a relationship between Student and Schedule models
+    schedules = student.schedules.all()
+
+    return render_template('student/view_schedule.html', student=student, schedules=schedules)
+
+
 
 
 if __name__ == '__main__':

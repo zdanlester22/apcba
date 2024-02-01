@@ -160,6 +160,47 @@
         tr:hover {
             background-color: #f5f5f5;
         }
+
+        /* Add this style to adjust the font size of the title */
+.page-title {
+    font-size: 2em; /* Adjust the font size as needed */
+}
+
+.container {
+    margin: 20px;
+    text-align: center;
+    overflow-x: auto; /* Allow horizontal scrolling */
+}
+
+.enrollies-table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%; /* Use 100% of the container */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    table-layout: fixed; /* Use fixed layout to prevent column width issues */
+}
+
+.enrollies-table th,
+.enrollies-table td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflow content */
+    text-overflow: ellipsis; /* Display ellipsis for overflow text */
+    font-size: xx-small;
+}
+
+.enrollies-table th {
+    background-color: #444;
+    color: #fff;
+}
+
+.enrollies-table tr:hover {
+    background-color: #f5f5f5;
+}
+
     </style>
 </head>
 <body>

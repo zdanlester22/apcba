@@ -269,8 +269,8 @@
             <a href="{{ url_for('account') }}" class="link"><i class="fas fa-book"></i> Profile</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
             <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
-            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Schedule</a>
-            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+            <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="fas fa-certificate"></i> Grades</a>
+            <a href="{{ url_for('view_schedule', student_id=current_user.id) }}" class="link"><i class="fas fa-calendar"></i> View Schedule</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Password</a>
         </nav>
     </nav>
