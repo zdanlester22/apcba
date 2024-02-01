@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APCBA Portal V1.0 - Student Portal Management System</title>
-     <!-- Include jQuery -->
-     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-     <!-- Include jquery.ph-locations plugin -->
-     <script src="https://f001.backblazeb2.com/file/buonzz-assets/jquery.ph-locations-v1.0.0.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,33 +15,71 @@
         }
 
         header {
-            background-color: #333;
+            background-color: #222;
             padding: 15px;
             text-align: center;
             color: #fff;
             position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .header-content {
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-grow: 2;
         }
 
         h1 {
             color: antiquewhite;
-            margin: 0;
+            font-size: 3vh;
+            margin-right: 60px;
         }
 
-        h2 {
-            text-align: center;
+        .arrow-button {
+            background-color: #37332f;
+            color: #fff;
+            border: none;
+            padding: 2px 4px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-left: 10px;
+        }
+
+        .arrow-button::before {
+            content: '\25C0';
+            /* Unicode character for a large left-pointing triangle */
+            font-family: 'Font Awesome 5 Free';
+            margin-right: 5px;
+            font-size: 1.3em;
+            /* Adjust the size as needed */
+        }
+
+        .arrow-button:hover {
+            transform: scale(1.50);
         }
 
         nav {
-            background-color: #444;
-            overflow-x: auto;
+            background-color: #2f2e2e;
+            padding: 3px;
+            overflow: auto;
             white-space: nowrap;
             text-align: center;
+            scrollbar-width: thin;
+            /* Firefox */
+        }
+
+        nav::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        nav::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
         }
 
         nav a {
@@ -57,6 +92,7 @@
             margin: 5px;
             border-radius: 5px;
             width: 100px;
+            white-space: nowrap;
         }
 
         nav a:hover {
@@ -70,18 +106,17 @@
 
         .link {
             display: inline-block;
-            margin: 10px;
-            padding: 10px 15px;
-            background-color: #ff8c00;
-            border: 2px solid #ff8c00;
+            margin: 5px;
+            padding: 8px 13px;
+            background-color: #2a235e;
             text-decoration: none;
             color: #fff;
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 11px;
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100px;
+            font-weight: bold;
         }
 
         .link:hover {
@@ -89,334 +124,443 @@
             transform: scale(1.05);
         }
 
-        .separator {
-            border-top: 2px solid #ddd;
-            margin: 30px 0;
+        .bot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h2 {
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+        }
+
+        img {
+            height: 50px;
+            margin-right: 5px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            visibility: hidden;
+        }
+
+        .logout-buttons {
+            margin-top: 20px;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background-color: #e07b00;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .btn-cancel {
+            padding: 10px 20px;
+            background-color: #555;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .form-container {
+            max-width: 700px;
+            margin-top: 20px;
+            margin-right: 100px;
         }
 
         form {
             background-color: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, .2);
-            width: 80%;
-            max-width: 400px;
-            margin: 0 auto;
+            padding: 70px;
+            border-radius: 10px;
             text-align: left;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h3 {
+            color: #333;
+            border-bottom: 2px solid #828080;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .form-row div {
+            flex: 1;
+            margin-right: 10px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-size: 14px;
+            margin-bottom: 5px;
+            font-size: 2vh;
+            font-weight: 500;
         }
 
-        input {
-            width: calc(100% - 16px);
-            padding: 10px;
-            margin-bottom: 12px;
-            box-sizing: border-box;
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
             border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 12px;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
 
-        input[type="submit"] {
-            background-color: #4caf50;
+        button {
+            padding: 10px 20px;
+            background-color: #2a235e;
             color: #fff;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        .form-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .form-row div {
-            width: calc(50% - 10px);
-        }
-
-        @media (max-width: 400px) {
-            nav {
-                overflow-x: hidden;
-            }
-
-            form {
-                width: 90%;
-            }
+        button:hover {
+            background-color: #e07b00;
+            transform: scale(1.05);
         }
     </style>
 </head>
+
 <body>
     <header>
+        <a href="javascript:void(0);" class="arrow-button" onclick="showLogoutForm()"></a>
         <div class="header-content">
-            <h1>Asia Pacific College of Business and Arts <br>Asianites Management System</h1>
+            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo">
+            <h1>APCBA Portal V1.0</h1>
         </div>
     </header>
 
     <nav>
-        <a href="{{ url_for('dashboard') }}" class="link">Dashboard</a>
-        <a href="{{ url_for('certificate') }}" class="link">Certificates</a>
-        <a href="#" class="link">Grades</a>
-        <a href="{{ url_for('account') }}" class="link">Profile</a>
-        <a href="{{ url_for('view_course') }}" class="link">Courses</a>
-        <a href="{{ url_for('manage_section') }}" class="link">Sections</a>
-        <a href="{{ url_for('register') }}" class="link">Add User</a>
-        <a href="{{ url_for('users') }}" class="link">User</a>
+        <nav>
+            <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Profile</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Grades</a>
+            <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Schedule</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Password</a>
+        </nav>
     </nav>
 
-    <div>
-        <h2>Profile</h2>
-        <center>{% block content %} </center> 
-        <form method="post" action="{{ url_for('account') }}">
-            {{ form.hidden_tag() }}
-            
-            <!-- Personal Information -->
-            <h3>Personal Information</h3>
-            <div class="form-row">
-                <div>
-                    {{ form.last_name.label }}
-                    {{ form.last_name(size=20, required=True) }}
+    <div class="bot">
+        <!-- CONTENT DITO OH -->
+        <div class="form-container">
+            <form method="post" action="{{ url_for('account') }}">
+                {{ form.hidden_tag() }}
+                
+                <!-- Profile Section -->
+                <h3>Profile</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.last_name.label }}</label>
+                        {{ form.last_name(size=20, required=True, placeholder='Last Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.first_name.label }}</label>
+                        {{ form.first_name(size=20, required=True, placeholder='First Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.middle_name.label }}</label>
+                        {{ form.middle_name(size=20, required=True, placeholder='Middle Name') }}
+                    </div>
                 </div>
-                <div>
-                    {{ form.first_name.label }}
-                    {{ form.first_name(size=20, required=True) }}
+                
+                <!-- Personal Information -->
+                <h3>Personal Information</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.place_of_birth.label }}</label>
+                        {{ form.place_of_birth(size=20, required=True, placeholder='Place of Birth') }}
+                    </div>
+                    <div>
+                        <label>{{ form.age.label }}</label>
+                        {{ form.age(size=20, required=True, placeholder='Age') }}
+                    </div>
+                    <div>
+                        <label>{{ form.gender.label }}</label>
+                        {{ form.gender(required=True) }}
+                    </div>
+                    <div>
+                        <label>{{ form.civil_status.label }}</label>
+                        {{ form.civil_status(size=20, required=True, placeholder='Civil Status') }}
+                    </div>
+                    <div>
+                        <label>{{ form.nationality.label }}</label>
+                        {{ form.nationality(size=20, required=True, placeholder='Nationality') }}
+                    </div>
                 </div>
-                <div>
-                    {{ form.middle_name.label }}
-                    {{ form.middle_name(size=20, required=True) }}
+
+                <!-- Current Address -->
+                <h3>Current Address</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.current_country.label }}</label>
+                        {{ form.current_country(size=20, required=True, placeholder='Country') }}
+                    </div>
+                    <div>
+                        <label>{{ form.current_region.label }}</label>
+                        {{ form.current_region(size=20, required=True, placeholder='Region') }}
+                    </div>
+                    <div>
+                        <label>{{ form.current_province.label }}</label>
+                        {{ form.current_province(size=20, required=True, placeholder='Province') }}
+                    </div>
+                    <div>
+                        <label>{{ form.current_municipality.label }}</label>
+                        {{ form.current_municipality(size=20, required=True, placeholder='Municipality') }}
+                    </div>
+                    <div>
+                        <label>{{ form.current_complete_address.label }}</label>
+                        {{ form.current_complete_address(rows=4, required=True, placeholder='Complete Address') }}
+                    </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div>
-                    {{ form.place_of_birth.label }}
-                    {{ form.place_of_birth(size=20, required=True) }}
+
+                <!-- Permanent Address -->
+                <h3>Permanent Address</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.permanent_country.label }}</label>
+                        {{ form.permanent_country(size=20, required=True, placeholder='Country') }}
+                    </div>
+                    <div>
+                        <label>{{ form.permanent_region.label }}</label>
+                        {{ form.permanent_region(size=20, required=True, placeholder='Region') }}
+                    </div>
+                    <div>
+                        <label>{{ form.permanent_province.label }}</label>
+                        {{ form.permanent_province(size=20, required=True, placeholder='Province') }}
+                    </div>
+                    <div>
+                        <label>{{ form.permanent_municipality.label }}</label>
+                        {{ form.permanent_municipality(size=20, required=True, placeholder='Municipality') }}
+                    </div>
+                    <div>
+                        <label>{{ form.permanent_complete_address.label }}</label>
+                        {{ form.permanent_complete_address(rows=4, required=True, placeholder='Complete Address') }}
+                    </div>
                 </div>
-                <div>
-                    {{ form.age.label }}
-                    {{ form.age(size=20, required=True) }}
+
+                <!-- Contact Information -->
+                <h3>Contact Information</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.school_issued_mobile.label }}</label>
+                        {{ form.school_issued_mobile(size=20, required=True, placeholder='School Issued Mobile') }}
+                    </div>
+                    <div>
+                        <label>{{ form.school_email.label }}</label>
+                        {{ form.school_email(size=20, required=True, placeholder='School Email') }}
+                    </div>
+                    <div>
+                        <label>{{ form.personal_country_code.label }}</label>
+                        {{ form.personal_country_code(size=20, required=True, placeholder='Personal Country Code') }}
+                    </div>
+                    <!-- Repeat the above pattern for other contact information fields -->
                 </div>
-                <div>
-                    {{ form.gender.label }}
-                    {{ form.gender(required=True) }}
+
+                <!-- Religion and Social Media -->
+                <h3>Religion and Social Media</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.religion.label }}</label>
+                        {{ form.religion(size=20, required=True, placeholder='Religion') }}
+                    </div>
+                    <div>
+                        <label>{{ form.facebook.label }}</label>
+                        {{ form.facebook(size=20, placeholder='Facebook') }}
+                    </div>
+                    <div>
+                        <label>{{ form.twitter.label }}</label>
+                        {{ form.twitter(size=20, placeholder='Twitter') }}
+                    </div>
                 </div>
-                <div>
-                    {{ form.civil_status.label }}
-                    {{ form.civil_status(size=20, required=True) }}
+
+                <!-- Educational Data -->
+                <h3>Educational Data</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.school_level.label }}</label>
+                        {{ form.school_level(size=20, required=True, placeholder='School Level') }}
+                    </div>
+                    <div>
+                        <label>{{ form.school_name.label }}</label>
+                        {{ form.school_name(size=20, required=True, placeholder='School Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.course.label }}</label>
+                        {{ form.course(size=20, required=True, placeholder='Course') }}
+                    </div>
+                    <div>
+                        <label>{{ form.year_graduated.label }}</label>
+                        {{ form.year_graduated(size=20, placeholder='Year Graduated') }}
+                    </div>
+                    <div>
+                        <label>{{ form.last_school_attended.label }}</label>
+                        {{ form.last_school_attended(size=20, required=True, placeholder='Last School Attended') }}
+                    </div>
                 </div>
-                <div>
-                    {{ form.nationality.label }}
-                    {{ form.nationality(size=20, required=True) }}
+
+                <!-- Economic Data -->
+                <h3>Economic Data</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.father_last_name.label }}</label>
+                        {{ form.father_last_name(size=20, required=True, placeholder='Father Last Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.father_first_name.label }}</label>
+                        {{ form.father_first_name(size=20, required=True, placeholder='Father First Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.father_middle_name.label }}</label>
+                        {{ form.father_middle_name(size=20, required=True, placeholder='Father Middle Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.father_occupation.label }}</label>
+                        {{ form.father_occupation(size=20, required=True, placeholder='Father Occupation') }}
+                    </div>
+                    <div>
+                        <label>{{ form.father_contact_no.label }}</label>
+                        {{ form.father_contact_no(size=20, required=True, placeholder='Father Contact No') }}
+                    </div>
                 </div>
-            </div>
-            
 
-<!-- Current Address -->
-<h3>Current Address</h3>
+                <!-- Mother's Information -->
+                <h3>Mother's Information</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.mother_last_name.label }}</label>
+                        {{ form.mother_last_name(size=20, required=True, placeholder='Mother Last Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.mother_first_name.label }}</label>
+                        {{ form.mother_first_name(size=20, required=True, placeholder='Mother First Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.mother_middle_name.label }}</label>
+                        {{ form.mother_middle_name(size=20, required=True, placeholder='Mother Middle Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.mother_occupation.label }}</label>
+                        {{ form.mother_occupation(size=20, required=True, placeholder='Mother Occupation') }}
+                    </div>
+                    <div>
+                        <label>{{ form.mother_contact_no.label }}</label>
+                        {{ form.mother_contact_no(size=20, required=True, placeholder='Mother Contact No') }}
+                    </div>
+                </div>
 
-<div class="form-row">
-    {{ form.current_country.label }}
-    {{ form.current_country(size=20, required=True) }}
-</div>
+                <!-- Guardian Information -->
+                <h3>Guardian Information</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.guardian_occupation.label }}</label>
+                        {{ form.guardian_occupation(size=20, required=True, placeholder='Guardian Occupation') }}
+                    </div>
+                    <div>
+                        <label>{{ form.guardian_relationship.label }}</label>
+                        {{ form.guardian_relationship(size=20, required=True, placeholder='Guardian Relationship') }}
+                    </div>
+                    <div>
+                        <label>{{ form.guardian_contact_no.label }}</label>
+                        {{ form.guardian_contact_no(size=20, required=True, placeholder='Guardian Contact No') }}
+                    </div>
+                </div>
 
-<div class="form-row">
-    {{ form.current_region.label }}
-    {{ form.current_region(size=20, required=True) }}
-</div>
-
-<div class="form-row">
-    {{ form.current_province.label }}
-    {{ form.current_province(size=20, required=True) }}
-</div>
-
-<div class="form-row">
-    {{ form.current_municipality.label }}
-    {{ form.current_municipality(size=20, required=True) }}
-</div>
-
-<div class="form-row">
-    {{ form.current_complete_address.label }}
-    {{ form.current_complete_address(rows=4, required=True) }}
-</div>
-
-<!-- Permanent Address -->
-<h3>Permanent Address</h3>
-
-<div class="form-row">
-    {{ form.permanent_country.label }}
-    {{ form.permanent_country(size=20, required=True) }}
-</div>
-
-<div class="form-row">
-    {{ form.permanent_region.label }}
-    {{ form.permanent_region(size=20, required=True) }}
-</div>
-
-<div class="form-row">
-    {{ form.permanent_province.label }}
-    {{ form.permanent_province(size=20, required=True) }}
-</div>
-
-<div class="form-row">
-    {{ form.permanent_municipality.label }}
-    {{ form.permanent_municipality(size=20, required=True) }}
-</div>
-
-<div class="form-row">
-    {{ form.permanent_complete_address.label }}
-    {{ form.permanent_complete_address(rows=4, required=True) }}
-</div>
-
-            
-            <!-- Contact Information -->
-            <h3>Contact Information</h3>
-            <div class="form-row">
-                {{ form.school_issued_mobile.label }}
-                {{ form.school_issued_mobile(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.school_email.label }}
-                {{ form.school_email(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.personal_country_code.label }}
-                {{ form.personal_country_code(size=20, required=True) }}
-            </div>
-            <!-- Repeat the above pattern for other contact information fields -->
-            
-            <!-- Religion and Social Media -->
-            <h3>Religion and Social Media</h3>
-            <div class="form-row">
-                {{ form.religion.label }}
-                {{ form.religion(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.facebook.label }}
-                {{ form.facebook(size=20) }}
-            </div>
-            <div class="form-row">
-                {{ form.twitter.label }}
-                {{ form.twitter(size=20) }}
-            </div>
-            
-            <!-- Educational Data -->
-            <h3>Educational Data</h3>
-            <div class="form-row">
-                {{ form.school_level.label }}
-                {{ form.school_level(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.school_name.label }}
-                {{ form.school_name(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.course.label }}
-                {{ form.course(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.year_graduated.label }}
-                {{ form.year_graduated(size=20) }}
-            </div>
-            <div class="form-row">
-                {{ form.last_school_attended.label }}
-                {{ form.last_school_attended(size=20, required=True) }}
-            </div>
-            
-            <!-- Economic Data -->
-            <h3>Economic Data</h3>
-            <div class="form-row">
-                {{ form.father_last_name.label }}
-                {{ form.father_last_name(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.father_first_name.label }}
-                {{ form.father_first_name(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.father_middle_name.label }}
-                {{ form.father_middle_name(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.father_occupation.label }}
-                {{ form.father_occupation(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.father_contact_no.label }}
-                {{ form.father_contact_no(size=20, required=True) }}
-            </div>
-
-            <!-- Mother's Information -->
-            <h3>Mother's Information</h3>
-            <div class="form-row">
-                {{ form.mother_last_name.label }}
-                {{ form.mother_last_name(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.mother_first_name.label }}
-                {{ form.mother_first_name(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.mother_middle_name.label }}
-                {{ form.mother_middle_name(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.mother_occupation.label }}
-                {{ form.mother_occupation(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.mother_contact_no.label }}
-                {{ form.mother_contact_no(size=20, required=True) }}
-            </div>
-
-            <!-- Guardian Information -->
-            <h3>Guardian Information</h3>
-            <div class="form-row">
-                {{ form.guardian_occupation.label }}
-                {{ form.guardian_occupation(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.guardian_relationship.label }}
-                {{ form.guardian_relationship(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.guardian_contact_no.label }}
-                {{ form.guardian_contact_no(size=20, required=True) }}
-            </div>
-            
-            <!-- Emergency Contact -->
-            <h3>Emergency Contact</h3>
-            <div class="form-row">
-                {{ form.emergency_contact_name.label }}
-                {{ form.emergency_contact_name(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.emergency_contact_relationship.label }}
-                {{ form.emergency_contact_relationship(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.emergency_contact_no.label }}
-                {{ form.emergency_contact_no(size=20, required=True) }}
-            </div>
-            <div class="form-row">
-                {{ form.emergency_contact_address.label }}
-                {{ form.emergency_contact_address(size=20, required=True) }}
-            </div>
-            
-            <div>
-                <button type="submit">Submit</button>
-            </div>
-        </form>
-        <center> {% endblock %} </center> 
+                <!-- Emergency Contact -->
+                <h3>Emergency Contact</h3>
+                <div class="form-row">
+                    <div>
+                        <label>{{ form.emergency_contact_name.label }}</label>
+                        {{ form.emergency_contact_name(size=20, required=True, placeholder='Emergency Contact Name') }}
+                    </div>
+                    <div>
+                        <label>{{ form.emergency_contact_relationship.label }}</label>
+                        {{ form.emergency_contact_relationship(size=20, required=True, placeholder='Emergency Contact Relationship') }}
+                    </div>
+                    <div>
+                        <label>{{ form.emergency_contact_no.label }}</label>
+                        {{ form.emergency_contact_no(size=20, required=True, placeholder='Emergency Contact No') }}
+                    </div>
+                    <div>
+                        <label>{{ form.emergency_contact_address.label }}</label>
+                        {{ form.emergency_contact_address(size=20, required=True, placeholder='Emergency Contact Address') }}
+                    </div>
+                </div>
+                
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    
+    <!-- Logout Overlay and Form -->
+    <div class="overlay" id="logoutOverlay">
+        <div class="logout-form">
+            <p>Logout?</p>
+            <div class="logout-buttons">
+                <button class="btn-logout" onclick="logout()">Yes</button>
+                <button class="btn-cancel" onclick="cancelLogout()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLogoutForm() {
+            var overlay = document.getElementById("logoutOverlay");
+            overlay.style.display = "flex";
+            document.querySelector('.logout-form').style.visibility = 'visible';
+        }
+
+        function logout() {
+            // Redirect to the login page
+            window.location.href = "{{ url_for('login') }}";
+        }
+
+        function cancelLogout() {
+            hideLogoutForm();
+        }
+
+        function hideLogoutForm() {
+            var overlay = document.getElementById("logoutOverlay");
+            overlay.style.display = "none";
+            document.querySelector('.logout-form').style.visibility = 'hidden';
+        }
+    </script>
+
 </body>
+
 </html>
