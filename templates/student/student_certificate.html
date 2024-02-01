@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +28,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-grow: 2;
+            flex-grow: 2; 
         }
 
         h1 {
@@ -39,27 +38,28 @@
         }
 
         .arrow-button {
-            background-color: #37332f;
-            color: #fff;
-            border: none;
-            padding: 2px 4px;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            margin-left: 10px;
-        }
+        background-color: #37332f;
+        color: #fff;
+        border: none;
+        padding: 2px 4px;
+        text-decoration: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+        margin-left: 10px;
+          }
+
 
         .arrow-button::before {
-            content: '\25C0';
-            font-family: 'Font Awesome 5 Free';
-            margin-right: 5px;
-            font-size: 1.3em;
-        }
+    content: '\25C0'; /* Unicode character for a large left-pointing triangle */
+    font-family: 'Font Awesome 5 Free';
+    margin-right: 5px;
+    font-size: 1.3em; /* Adjust the size as needed */
+}
+.arrow-button:hover {
+    transform: scale(1.50);
+}
 
-        .arrow-button:hover {
-            transform: scale(1.50);
-        }
 
         nav {
             background-color: #2f2e2e;
@@ -67,11 +67,7 @@
             overflow: auto;
             white-space: nowrap;
             text-align: center;
-            scrollbar-width: thin;
-        }
-        img{
-            height: 50px;
-            margin-right: 5px;
+            scrollbar-width: thin; /* Firefox */
         }
 
         nav::-webkit-scrollbar {
@@ -82,6 +78,7 @@
             background-color: #555;
             border-radius: 10px;
         }
+
 
         nav a {
             display: inline-block;
@@ -132,232 +129,179 @@
             justify-content: center;
         }
 
-        form {
-            margin-bottom: 20px;
+
+        h2 {
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
         }
 
-        form label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-size: 16px;
-            color: #333;
+        img{
+            height: 50px;
+            margin-right: 5px;
         }
-
-        form input {
-            width: 300px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            margin-top: 30px;
-        }
-
-        form button {
-            padding: 10px 20px;
-            background-color: #2a235e;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        form button:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
-        }
-
-        h3 {
-            margin-top: 20px;
-            font-size: 24px;
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #2a235e;
-            color: #fff;
-        }
-
-        a {
-            color: #2a235e;
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #fff;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logout-form {
+        .form { 
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Adding background shadow */
+            padding: 50px;
+            border-radius: 50px;
             background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            visibility: hidden;
         }
 
-        .logout-buttons {
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+        }
+
+        .form-control-file {
+            margin-left: 70px;
+            padding: 10px;
+        }
+
+        .btn-primary {
+            background-color: #2a235e;
+            color: #fff;
+            padding: 10px 15px;
+            border: none; 
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+        }
+
+        .btn-primary:hover {
+            background-color: #e07b00;
+        }
+
+        /* Additional styles for the filter form */
+        .filter-form {
             margin-top: 20px;
+            text-align: center;
         }
 
-        .btn-logout,
-        .btn-cancel {
-            padding: 10px 20px;
+        .filter-form label {
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .filter-form input {
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+        }
+
+        .filter-form button {
+            background-color: #2a235e;
+            color: #fff;
+            padding: 8px 15px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 0 10px;
+            transition: background-color 0.3s;
         }
 
-        .btn-logout {
+        .filter-form button:hover {
             background-color: #e07b00;
+        }
+
+        /* Additional styles for the table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #2a235e;
             color: #fff;
         }
 
-        .btn-cancel {
-            background-color: #555;
-            color: #fff;
-        }
-        p{
-            color: #555;
-            font-size: 13px;
-        }
-
-        @media screen and (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .header-content {
-                margin-top: 15px;
-            }
-
-            h1 {
-                margin-right: 0;
-            }
-
-            .logout-form {
-                width: 80%;
-            }
+        .table a {
+            text-decoration: none;
+            color: #2a235e;
+            margin-right: 10px;
         }
     </style>
 </head>
-
 <body>
     <header>
-        <a href="javascript:void(0);" class="arrow-button" onclick="showLogoutForm()"></a>
+        <a href="{{ url_for('portaluserlogin') }}" class="arrow-button"></a>
         <div class="header-content">
             <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo">
             <h1>APCBA Portal V1.0</h1>
         </div>
     </header>
 
-    <nav>
+ <nav>
         <nav>
             <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a href="{{ url_for('account') }}" class="link"><i class="fas fa-book"></i> Profile</a>
-            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Grades</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
             <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Schedule</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Password</a>
         </nav>
     </nav>
-    <div class="bot">
+    <main class="bot">  
+        {% block content %}
         <h3>Certificates</h3>
+      
         <center>
-            <form action="{{ url_for('certificate') }}" method="get">
-                {{ form.csrf_token }}
-                {{ form.title.label }} {{ form.title(placeholder="Enter Certificate Title") }}
-                <button type="submit">Filter</button>
-            </form>
+          <form action="{{ url_for('certificate') }}" method="get">
+            {{ form.csrf_token }}
+            {{ form.title.label }} {{ form.title(placeholder="Enter Certificate Title") }}
+            <button type="submit">Filter</button>
+          </form>
         </center>
+      
         {% if certificates %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>PDF</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for certificate in certificates %}
-                        <tr>
-                            <td>{{ certificate.title }}</td>
-                            <td>
-                                <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download PDF</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>PDF</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for certificate in certificates %}
+                <tr>
+                  <td>{{ certificate.title }}</td>
+                  <td>
+                    <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download PDF</a>
+                  </td>
+                  <!-- Add any additional actions or information here -->
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         {% else %}
-            <p>No certificates available.</p>
+          <p>No certificates available.</p>
         {% endif %}
-  
-    </div>
-
-    <!-- Logout Overlay and Form -->
-    <div class="overlay" id="logoutOverlay">
-        <div class="logout-form">
-            <p>Logout?</p>
-            <div class="logout-buttons">
-                <button class="btn-logout" onclick="logout()">Yes</button>
-                <button class="btn-cancel" onclick="cancelLogout()">No</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function showLogoutForm() {
-            var overlay = document.getElementById("logoutOverlay");
-            overlay.style.display = "flex";
-            document.querySelector('.logout-form').style.visibility = 'visible';
-        }
-
-        function logout() {
-            // Redirect to the login page
-            window.location.href = "{{ url_for('login') }}";
-        }
-
-        function cancelLogout() {
-            hideLogoutForm();
-        }
-
-        function hideLogoutForm() {
-            var overlay = document.getElementById("logoutOverlay");
-            overlay.style.display = "none";
-            document.querySelector('.logout-form').style.visibility = 'hidden';
-        }
-    </script>
+      {% endblock %}
+    </main>
 
 </body>
-
 </html>

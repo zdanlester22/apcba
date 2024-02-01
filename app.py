@@ -421,14 +421,14 @@ def certificate():
     # Choose the appropriate template based on the user's role
     if current_user.role == 'student':
         title_filter = request.args.get('title', default='', type=str)
-        certificates = Certificate.query.filter_by(user_id=current_user.id).order_by(Certificate.id.desc()).all()
+        certificates = Certificate.query.filter_by(user_id=current_user.id).filter(Certificate.title.ilike(f'%{title_filter}%')).order_by(Certificate.id.desc()).all()
         template = 'student/student_certificate.html'
     elif current_user.role == 'teacher':
         title_filter = request.args.get('title', default='', type=str)
-        certificates = Certificate.query.order_by(Certificate.id.desc()).all()
+        certificates = Certificate.query.filter(Certificate.title.ilike(f'%{title_filter}%')).order_by(Certificate.id.desc()).all()
         template = 'teacher/teacher_certificate.html'
     elif current_user.role == 'admin':
-        # Filter certificates based on the title
+        # Filter certificates based on the title for admins
         title_filter = request.args.get('title', default='', type=str)
         certificates = Certificate.query.filter(Certificate.title.ilike(f'%{title_filter}%')).order_by(Certificate.id.desc()).all()
         template = 'admin/certificate.html'
@@ -438,6 +438,7 @@ def certificate():
         return redirect(url_for('dashboard'))
 
     return render_template(template, user=current_user, form=form, certificates=certificates)
+
 
 
 @app.route('/admin/update_certificate/<int:certificate_id>', methods=['GET', 'POST'])
@@ -900,8 +901,16 @@ def view_modules():
     # Fetch and display existing modules
     modules = Module.query.all()
 
-    return render_template('admin/view_modules.html', form_module=form_module, modules=modules)
-
+    # Check the role of the current user
+    if current_user.role == 'teacher':
+        return render_template('teacher/view_modules.html', form_module=form_module, modules=modules)
+    elif current_user.role == 'student':
+        return render_template('student/view_modules.html', form_module=form_module, modules=modules)
+    elif current_user.role == 'admin':
+        return render_template('admin/view_modules.html', form_module=form_module, modules=modules)
+    else:
+        # Handle other roles or redirect to an error page
+        return render_template('error.html', message='Unauthorized access')
 
 @app.route('/download_module/<pdf_filename>')
 @login_required

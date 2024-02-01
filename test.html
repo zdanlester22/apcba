@@ -142,50 +142,7 @@
             margin-right: 5px;
         }
 
-        .announcements {
-            margin-top: 20px;
-            margin-left: 10px;
-            margin-right: 10px;
-        }
 
-        .announcement-item {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-bottom: 15px;
-            padding: 25px;
-        }
-
-        .announcement-item strong {
-            font-size: 17px;
-            color: #333;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .announcement-item p {
-            color: #555;
-            margin-top: 10px;
-            line-height: 1.5;
-            font-size: 15px;
-        }
-
-        .announcement-item small {
-            color: #777;
-            display: block;
-            margin-top: 10px;
-        }
-
-        .announcement-item:hover {
-            background-color: #f5f5f5;
-        }
-
-        .announcements h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 3vh;
-            margin-left: 25px;
-        }
 
         .overlay {
             position: fixed;
@@ -273,39 +230,18 @@
         </nav>
     </nav>
     <div class="bot">
-        <center>
-            <form action="{{ url_for('certificate') }}" method="get">
-                {{ form.csrf_token }}
-                {{ form.title.label }} {{ form.title }}
-                <button type="submit">Filter</button>
-            </form>
-          </center>
+        {% block content %}
+        <h1>Student - View Modules</h1>
       
-          <h3>Your Certificates</h3>
-          {% if certificates %}
-              <table class="table">
-                  <thead>
-                      <tr>
-                          <th>Title</th>
-                          <th>PDF</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {% for certificate in certificates %}
-                          <tr>
-                              <td>{{ certificate.title }}</td>
-                              <td>
-                                  <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download PDF</a>
-                              </td>
-                          </tr>
-                      {% endfor %}
-                  </tbody>
-              </table>
-          {% else %}
-              <p>You don't have any certificates yet.</p>
-          {% endif %}
-      
-          {% block content %}{% endblock %}
+        {# Display existing modules #}
+        <h2>Available Modules:</h2>
+        <ul>
+          {% for module in modules %}
+            <li>{{ module.title }} - {{ module.year }} - {{ module.course.title }}</li>
+            <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a>
+          {% endfor %}
+        </ul>
+      {% endblock %}
     </div>
 
     <!-- Logout Overlay and Form -->

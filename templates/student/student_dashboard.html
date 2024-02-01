@@ -154,6 +154,8 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             margin-bottom: 15px;
             padding: 25px;
+            max-width: 700px;
+            width: 600px;
         }
 
         .announcement-item strong {
@@ -265,7 +267,7 @@
         <nav>
             <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a href="{{ url_for('account') }}" class="link"><i class="fas fa-book"></i> Profile</a>
-            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Grades</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
             <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Schedule</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
@@ -274,7 +276,6 @@
     </nav>
     <div class="bot">
         <div class="announcements">
-            <h1>School Announcements</h1>
             {% for announcement in announcements %}
             <div class="announcement-item">
                 <strong>{{ announcement.title }}</strong>
