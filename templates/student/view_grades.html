@@ -1,14 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Grades</title>
-</head>
-<body>
-    <h1>{{ student.name }}'s Grades</h1>
+
+
+<div class="container">
+    <h1 class="page-title">Student Grades</h1>
     
-    <table>
+    <!-- Display student, section, and course information -->
+    <div class="info-section">
+        <p><strong>Student:</strong> {{ student.name }}</p>
+        {% if section %}
+            <p><strong>Section:</strong> {{ section.name }}</p>
+        {% endif %}
+        {% if course %}
+            <p><strong>Course:</strong> {{ course.name }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Display grades -->
+    <table class="grades-table">
         <thead>
             <tr>
                 <th>Subject</th>
@@ -19,14 +26,15 @@
         </thead>
         <tbody>
             {% for grade in grades %}
-            <tr>
-                <td>{{ grade.subject.name }}</td>
-                <td>{{ grade.period_1 }}</td>
-                <td>{{ grade.period_2 }}</td>
-                <td>{{ grade.period_3 }}</td>
-            </tr>
+                <tr>
+                    <td>{{ grade.subject.name }}</td>
+                    <td>{{ grade.period_1 }}</td>
+                    <td>{{ grade.period_2 }}</td>
+                    <td>{{ grade.period_3 }}</td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+</div>
+
+<!-- ... (remaining HTML code) -->

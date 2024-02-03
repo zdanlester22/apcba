@@ -1,3 +1,5 @@
+<!-- web/enrollies.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -161,47 +163,118 @@
             background-color: #f5f5f5;
         }
 
-        /* Add this style to adjust the font size of the title */
-.page-title {
-    font-size: 2em; /* Adjust the font size as needed */
-}
+        .page-title {
+            font-size: 2em; /* Adjust the font size as needed */
+        }
 
-.container {
-    margin: 20px;
-    text-align: center;
-    overflow-x: auto; /* Allow horizontal scrolling */
-}
+        .container {
+            margin: 20px;
+            text-align: center;
+            overflow-x: auto; /* Allow horizontal scrolling */
+        }
 
-.enrollies-table {
-    border-collapse: collapse;
-    width: 100%;
-    max-width: 100%; /* Use 100% of the container */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    table-layout: fixed; /* Use fixed layout to prevent column width issues */
-}
+        .enrollies-table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 100%; /* Use 100% of the container */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            table-layout: fixed; /* Use fixed layout to prevent column width issues */
+        }
 
-.enrollies-table th,
-.enrollies-table td {
-    padding: 15px;
-    text-align: left;
-    border: 1px solid #ddd;
-    white-space: nowrap; /* Prevent text wrapping */
-    overflow: hidden; /* Hide overflow content */
-    text-overflow: ellipsis; /* Display ellipsis for overflow text */
-    font-size: xx-small;
-}
+        .enrollies-table th,
+        .enrollies-table td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflow content */
+            text-overflow: ellipsis; /* Display ellipsis for overflow text */
+        
+        }
 
-.enrollies-table th {
-    background-color: #444;
-    color: #fff;
-}
+        .enrollies-table th {
+            background-color: #444;
+            color: #fff;
+        }
 
-.enrollies-table tr:hover {
-    background-color: #f5f5f5;
-}
+        .enrollies-table tr:hover {
+            background-color: #f5f5f5;
+        }
 
+        .additional-info {
+            display: none;
+        }
+
+        .show-info-btn {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
+    <script>
+        function toggleInfo(enrollieId) {
+            var modal = document.getElementById('myModal');
+            var modalContent = document.getElementById('modal-content');
+            var span = document.getElementsByClassName('close')[0];
+            var additionalInfo = document.getElementById(`additional-info-${enrollieId}`);
+            
+            // Display modal
+            modal.style.display = 'block';
+
+            // Populate modal content
+            modalContent.innerHTML = additionalInfo.innerHTML;
+
+            // Close modal when the close button is clicked
+            span.onclick = function() {
+                modal.style.display = 'none';
+            };
+
+            // Close modal when clicking outside the modal content
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -235,31 +308,44 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Level</th>
-                    <th>Address</th>
-                    <th>Contact</th>
-                    <th>Birthday</th>
-                    <th>Place of Birth</th>
-                    <th>Gender</th>
-                    <th>Nationality</th>
-                    <th>Religion</th>
-                    <th>Previous School</th>
-                    <th>Grade Last Completed</th>
-                    <th>Academic Achievements</th>
-                    <th>Proof of Address</th>
-                    <th>Parents Name</th>
-                    <th>Parent Contact</th>
-                    <th>Parent Occupation</th>
-                    <th>Special Needs</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for enrollies in enrollies_list %}
                 <tr>
-                    <td>{{ enrollies.name }}</td>
+                    <td>
+                        <span class="show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</span>
+                        {{ enrollies.name }}
+                    </td>
                     <td>{{ enrollies.email }}</td>
-                    <!-- Add more data cells as needed -->
+                    <td>
+                        <a href="{{ url_for('archive_enrollie', enrollie_id=enrollies.id) }}" class="archive-btn">Archive</a>
+                    </td>
                 </tr>
+                <div id="myModal" class="modal">
+                    <div id="modal-content" class="modal-content">
+                        <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+                        <strong>Additional Information:</strong><br>
+                        <strong>Level:</strong> {{ enrollies.level }}<br>
+                        <strong>Address:</strong> {{ enrollies.address }}<br>
+                        <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
+                        <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
+                        <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
+                        <strong>Gender:</strong> {{ enrollies.gender }}<br>
+                        <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
+                        <strong>Religion:</strong> {{ enrollies.religion }}<br>
+                        <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
+                        <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
+                        <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
+                        <strong>Proof of Address:</strong> {{ enrollies.proof_of_address }}<br>
+                        <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
+                        <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
+                        <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
+                        <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
+                                        
+                    </div>
+                </div>
                 {% endfor %}
             </tbody>
         </table>

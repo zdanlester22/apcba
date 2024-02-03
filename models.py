@@ -19,6 +19,7 @@ class User(UserMixin, db.Model):
 
     # Establishing a one-to-one relationship with user_account
     user_account = db.relationship('user_account', backref='user', uselist=False, lazy=True)
+    student = db.relationship('Student', backref='user', uselist=False)
 
 
 class user_account(db.Model):
@@ -98,15 +99,14 @@ class Certificate(db.Model):
 
 class Section(db.Model):
     __tablename__ = 'sections'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     course = db.relationship('Course', back_populates='sections', lazy=True)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))  
-    teacher = db.relationship('Teacher', back_populates='sections', uselist=False)
-    subjects = db.relationship('Subject', back_populates='section', lazy=True)
-
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.teacher_id'))
+    teacher = db.relationship('Teacher', back_populates='section', uselist=False)
+    subjects = db.relationship('Subject', back_populates='section', lazy=True)  # Added this line
 
 
 class Subject(db.Model):
@@ -122,12 +122,14 @@ class Subject(db.Model):
     schedules = db.relationship('Schedule', back_populates='subject', lazy=True)
 
 
+
 class Teacher(db.Model):
     __tablename__ = 'teacher'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    sections = db.relationship('Section', back_populates='teacher', uselist=False)
+    section = db.relationship('Section', back_populates='teacher', uselist=False)  # Using 'section' instead of 'sections'
+    
 
 
 class Module(db.Model):
@@ -173,6 +175,7 @@ class Enrollies(db.Model):
     parent_contact_info = db.Column(db.String(30))
     parent_occupation = db.Column(db.String(100))
     special_needs = db.Column(db.String(255))
+    is_archived = db.Column(db.Boolean, default=False)
 
 
 class Student(db.Model):

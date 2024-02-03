@@ -112,134 +112,64 @@
     <div class="back-button">
         <a href="{{ url_for('websiteenroll') }}"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <form method="post" action="{{ url_for('websiteenroll') }}">
-        <h2>Enrollment Form</h2>
-
-        <!-- Personal Information -->
-        <div class="form-row">
-            <label for="name">Full Name:</label>
-            <input type="text" name="name" required>
-        </div>
-
-        <div class="form-row">
-            <label for="email">Email:</label>
-            <input type="email" name="email" required>
-        </div>
-
-        <div class="form-row">
-            <label for="level">Choose your level:</label>
-            <select name="level" required>
-                <option value="college">College</option>
-                <option value="senior_high">Senior High School</option>
-            </select>
-        </div>
-
-        <!-- Additional Fields for Personal Information -->
-        <!-- Add more fields as needed -->
-
-        <!-- Contact Information -->
-        <div class="form-row">
-            <label for="address">Home Address:</label>
-            <input type="text" name="address" required>
-        </div>
-
-        <div class="form-row">
-            <label for="contact_number">Contact Number:</label>
-            <input type="tel" name="contact_number" required>
-        </div>
-
-        <!-- Additional Fields for Contact Information -->
-        <!-- Add more fields as needed -->
-
-        <!-- Educational Background -->
-        <div class="form-row">
-            <label for="date_of_birth">Date of Birth:</label>
-            <input type="date" name="date_of_birth" required>
-        </div>
-
-        <!-- Additional Fields for Educational Background -->
-        <!-- Add more fields as needed -->
-
-        <!-- Legal Documentation -->
-        <div class="form-row">
-            <label for="place_of_birth">Place of Birth:</label>
-            <input type="text" name="place_of_birth" required>
-        </div>
-
-        <!-- Additional Fields for Legal Documentation -->
-        <!-- Add more fields as needed -->
-
-        <!-- Parent/Guardian Information -->
-        <div class="form-row">
-            <label for="parent_names">Parent/Guardian Names:</label>
-            <input type="text" name="parent_names" required>
-        </div>
-
-        <div class="form-row">
-            <label for="parent_contact_info">Parent/Guardian Contact Info:</label>
-            <input type="text" name="parent_contact_info" required>
-        </div>
-
-        <div class="form-row">
-            <label for="parent_occupation">Parent/Guardian Occupation:</label>
-            <input type="text" name="parent_occupation" required>
-        </div>
-
-        <!-- Additional Fields for Parent/Guardian Information -->
-        <!-- Add more fields as needed -->
-
-        <!-- Health Information -->
-        <div class="form-row">
-            <label for="medical_history">Medical History:</label>
-            <textarea name="medical_history" rows="3" required></textarea>
-        </div>
-
-        <div class="form-row">
-            <label for="immunization_records">Immunization Records:</label>
-            <textarea name="immunization_records" rows="3" required></textarea>
-        </div>
-
-        <div class="form-row">
-            <label for="medical_certificate">Medical Certificate:</label>
-            <input type="file" name="medical_certificate" accept="application/pdf, image/*" required>
-        </div>
-
-        <!-- Additional Fields for Health Information -->
-        <!-- Add more fields as needed -->
-
-        <!-- Photographs -->
-        <div class="form-row">
-            <label for="photos">Recent ID-size Photos:</label>
-            <input type="file" name="photos" accept="image/*" required>
-        </div>
-
-        <!-- Additional Fields for Photographs -->
-        <!-- Add more fields as needed -->
-
-        <!-- Additional Documentation -->
-        <div class="form-row">
-            <label for="form_138">Form 138 (Report Card):</label>
-            <input type="file" name="form_138" accept="application/pdf, image/*" required>
-        </div>
-
-        <div class="form-row">
-            <label for="moral_character_certificate">Good Moral Character Certificate:</label>
-            <input type="file" name="moral_character_certificate" accept="application/pdf, image/*" required>
-        </div>
-
-        <!-- Additional Fields for Additional Documentation -->
-        <!-- Add more fields as needed -->
-
-        <!-- Special Needs or Accommodations -->
-        <div class="form-row">
-            <label for="special_needs">Special Needs or Accommodations:</label>
-            <textarea name="special_needs" rows="3"></textarea>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="form-row">
-            <input type="submit" value="Submit">
-        </div>
+    <form method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+    
+        <label for="name">Name:</label>
+        {{ form.name() }}
+        
+        <label for="email">Email:</label>
+        {{ form.email() }}
+        
+        <label for="level">Level:</label>
+        {{ form.level() }}
+    
+        <label for="address">Address:</label>
+        {{ form.address() }}
+    
+        <label for="contact_number">Contact Number:</label>
+        {{ form.contact_number() }}
+    
+        <label for="date_of_birth">Date of Birth:</label>
+        {{ form.date_of_birth() }}
+    
+        <label for="place_of_birth">Place of Birth:</label>
+        {{ form.place_of_birth() }}
+    
+        <label for="gender">Gender:</label>
+        {{ form.gender() }}
+    
+        <label for="nationality">Nationality:</label>
+        {{ form.nationality() }}
+    
+        <label for="religion">Religion:</label>
+        {{ form.religion() }}
+    
+        <label for="previous_school_info">Previous School Info:</label>
+        {{ form.previous_school_info() }}
+    
+        <label for="grade_last_completed">Grade Last Completed:</label>
+        {{ form.grade_last_completed() }}
+    
+        <label for="academic_achievements">Academic Achievements:</label>
+        {{ form.academic_achievements() }}
+    
+        <label for="proof_of_address">Proof of Address:</label>
+        {{ form.proof_of_address() }}
+    
+        <label for="parent_names">Parent Names:</label>
+        {{ form.parent_names() }}
+    
+        <label for="parent_contact_info">Parent Contact Info:</label>
+        {{ form.parent_contact_info() }}
+    
+        <label for="parent_occupation">Parent Occupation:</label>
+        {{ form.parent_occupation() }}
+    
+        <label for="special_needs">Special Needs:</label>
+        {{ form.special_needs() }}
+    
+        <button type="submit">Enroll</button>
     </form>
 </body>
 

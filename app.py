@@ -12,7 +12,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_uhvw_user:MYUzSsCKpa8teEJC40w12oXdtqHlTqD2@dpg-cmt5evv109ks73a2sj10-a.oregon-postgres.render.com/apcba_uhvw'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/apcba'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 login_manager = LoginManager(app)
@@ -53,45 +53,61 @@ def enrollies():
     form = EnrolliesForm()
 
     if form.validate_on_submit():
-        new_enrollies = Enrollies(
-            name=form.name.data,
-            email=form.email.data,
-            level=form.level.data,
-            address=form.address.data,
-            contact_number=form.contact_number.data,
-            date_of_birth=form.date_of_birth.data,
-            place_of_birth=form.place_of_birth.data,
-            gender=form.gender.data,
-            nationality=form.nationality.data,
-            religion=form.religion.data,
-            previous_school_info=form.previous_school_info.data,
-            grade_last_completed=form.grade_last_completed.data,
-            academic_achievements=form.academic_achievements.data,
-            proof_of_address=form.proof_of_address.data,
-            parent_names=form.parent_names.data,
-            parent_contact_info=form.parent_contact_info.data,
-            parent_occupation=form.parent_occupation.data,
-            special_needs=form.special_needs.data
-        )
-
         try:
+            new_enrollies = Enrollies(
+                name=form.name.data,
+                email=form.email.data,
+                level=form.level.data,
+                address=form.address.data,
+                contact_number=form.contact_number.data,
+                date_of_birth=form.date_of_birth.data,
+                place_of_birth=form.place_of_birth.data,
+                gender=form.gender.data,
+                nationality=form.nationality.data,
+                religion=form.religion.data,
+                previous_school_info=form.previous_school_info.data,
+                grade_last_completed=form.grade_last_completed.data,
+                academic_achievements=form.academic_achievements.data,
+                proof_of_address=form.proof_of_address.data,
+                parent_names=form.parent_names.data,
+                parent_contact_info=form.parent_contact_info.data,
+                parent_occupation=form.parent_occupation.data,
+                special_needs=form.special_needs.data
+            )
+
             db.session.add(new_enrollies)
             db.session.commit()
+
+            flash('Enrollment successful!', 'success')
             return redirect(url_for('enrollies'))
+
         except Exception as e:
             db.session.rollback()
             app.logger.error(f"Error during enrollment: {str(e)}")
+            flash('Error during enrollment. Please try again.', 'danger')
 
     enrollies_list = Enrollies.query.all()
 
     return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list)
 
 
-
 @app.route('/admin/view_enrollies')
 def view_enrollies():
-    enrollies_list = Enrollies.query.all()
+    enrollies_list = Enrollies.query.filter_by(is_archived=False).all()
     return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list)
+
+@app.route('/admin/view_archived_enrollies')
+def view_archived_enrollies():
+    archived_enrollies_list = Enrollies.query.filter_by(is_archived=True).all()
+    return render_template('admin/view_archived_enrollies.html', archived_enrollies_list=archived_enrollies_list)
+
+@app.route('/admin/archive_enrollie/<int:enrollie_id>')
+def archive_enrollie(enrollie_id):
+    enrollie = Enrollies.query.get(enrollie_id)
+    if enrollie:
+        enrollie.is_archived = True
+        db.session.commit()
+    return redirect(url_for('view_enrollies'))
 
 @app.route('/admin/users', methods=['GET', 'POST'])
 @login_required
@@ -738,11 +754,6 @@ def view_course():
 
 
 
-
-
-
-
-
 @app.route('/update_course/<int:course_id>', methods=['GET', 'POST'])
 @login_required
 def update_course(course_id):
@@ -816,11 +827,6 @@ def manage_section():
     if form_section.validate_on_submit():
         selected_teacher_id = form_section.teacher_id.data
 
-        # Validate that the selected teacher ID exists
-        if not Teacher.query.get(selected_teacher_id):
-            flash('Invalid teacher selected!', 'danger')
-            return redirect(url_for('manage_section'))
-
         new_section = Section(
             name=form_section.name.data,
             capacity=form_section.capacity.data,
@@ -837,7 +843,7 @@ def manage_section():
             for subject in subjects_from_course:
                 subject.section_id = new_section.id
                 db.session.add(subject)
-
+        
         db.session.commit()
 
         flash('Section created successfully!', 'success')
@@ -847,6 +853,7 @@ def manage_section():
 
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
                            form_section=form_section)
+
 
 
 
@@ -1016,16 +1023,16 @@ def view_grades(student_id):
 
     return render_template('admin/view_grades.html', student=student, subjects=subjects, form=form)
 
-app.route('/student_view_grades/<int:student_id>', methods=['GET'])
+@app.route('/grades/student_view', methods=['GET'])
 @login_required
-def student_view_grades(student_id):
-    student = Student.query.get_or_404(student_id)
-    subjects = Subject.query.all()
-
-    # Retrieve the grades for the specific student
-    grades = Grades.query.filter_by(student_id=student_id).all()
-
-    return render_template('student/view_grades.html', student=student, subjects=subjects, grades=grades)
+def student_view_grades():
+    if current_user.is_authenticated and current_user.role == 'student':
+        student = current_user.student
+        grades = Grades.query.filter_by(student_id=student.id).all()
+        return render_template('student/view_grades.html', student=student, grades=grades)
+    else:
+        flash('You are not associated with a student profile.', 'warning')
+        return redirect(url_for('dashboard'))
 
 
 
