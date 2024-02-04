@@ -230,18 +230,40 @@
         </nav>
     </nav>
     <div class="bot">
-        {% block content %}
-        <h1>Student - View Modules</h1>
-      
-        {# Display existing modules #}
-        <h2>Available Modules:</h2>
-        <ul>
-          {% for module in modules %}
-            <li>{{ module.title }} - {{ module.year }} - {{ module.course.title }}</li>
-            <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a>
-          {% endfor %}
-        </ul>
-      {% endblock %}
+        <h1 class="page-title">Student Grades</h1>
+    
+    <!-- Display student, section, and course information -->
+    <div class="info-section">
+        <p><strong>Student:</strong> {{ student.name }}</p>
+        {% if section %}
+            <p><strong>Section:</strong> {{ section.name }}</p>
+        {% endif %}
+        {% if course %}
+            <p><strong>Course:</strong> {{ course.name }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Display grades -->
+    <table class="grades-table">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Period 1</th>
+                <th>Period 2</th>
+                <th>Period 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grades %}
+                <tr>
+                    <td>{{ grade.subject.name }}</td>
+                    <td>{{ grade.period_1 }}</td>
+                    <td>{{ grade.period_2 }}</td>
+                    <td>{{ grade.period_3 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     </div>
 
     <!-- Logout Overlay and Form -->

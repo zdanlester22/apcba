@@ -8,19 +8,21 @@
     <style>
         body {
             margin: 0;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #2a235e;
             color: #fff;
         }
 
         .topnav {
             overflow: hidden;
-            height: 50px;
+            height: 40px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             padding: 0 20px;
             font-weight: 100;
+            background-color: #d7cfcf;
+            color: #555;
         }
 
         .topnav .logo {
@@ -29,12 +31,17 @@
         }
 
         .topnav .logo img {
-            height: 30px; /* Adjust the height as needed */
-            margin-right: 10px;
+            height: 30px;
+            margin-right: 5px;
         }
 
         .topnav .logo p {
-            font-weight: 700; /* Increased font weight for the logo text */
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
+        .topnav .datetime {
+            font-size: 14px;
         }
 
         .image-container {
@@ -44,6 +51,7 @@
             margin-top: 100px;
             margin-left: 50px;
             margin-right: 50px;
+            margin-bottom: 100px;
         }
 
         .image-container img {
@@ -99,43 +107,99 @@
 
         .text {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 70px;
         }
 
         .text h1 {
-            color: #fff;
-            font-size: 5vh;
+            color: #333;
+            font-size: 6vh;
+        }
 
-      
+        .news-con {
+            height: 350px;
+            width: 1100px; /* Adjusted the width to match the image width */
+            background-color: #FFF;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+            overflow: hidden; /* Ensure the content stays within the container */
+            border-radius: 30px;
+        }
+
+        .news {
+            display: flex;
+            height: 270px;
+            width: 3300px; /* Total width of all images (550px * 6) */
+            animation: moveLeftToRight 15s linear infinite; /* Adjust the duration as needed */
+            overflow: hidden; /* Ensure the content stays within the container */
+        }
+
+        .news img {
+            height: 400px;
+            margin-top: 13px;
+            margin-left: 50px;
+        }
+
+        @keyframes moveLeftToRight {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-3300px); /* Total width of all images (550px * 6) */
+            }
         }
 
         @media screen and (max-width: 600px) {
-        /* Adjustments for smaller screens */
+            .topnav {
+                flex-direction: column;
+                align-items: center;
+            }
 
-        .topnav {
-            flex-direction: column;
-            align-items: center;
-        }
+            .topnav .links {
+                margin: 20px 0;
+            }
 
-        .topnav .links {
-            margin: 20px 0;
-        }
-        .image-container {
-            flex-direction: column;
-            align-items: center;
-        }
+            .image-container {
+                flex-direction: column;
+                align-items: center;
+            }
 
-        .image-container img {
-            height: auto;
-            width: 100%;
-            margin-bottom: 20px;
+            .image-container img {
+                height: auto;
+                width: 100%;
+                margin-bottom: 20px;
+            }
         }
 
         .text h1 {
-            font-size: 4vh;
+            font-size: 5vh;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-bottom: 120px;
         }
-    }
-     
+
+        .news img {
+            animation: moveLeftToRight 100s linear infinite; /* Duplicate the animation for smaller screens */
+            border-radius: 50%;
+            color: #FFF;
+            height: 250px;
+        }
+        .news-con h1{
+            color: rgb(237, 240, 240);
+            text-align: center;
+            background-color: #cf601b;
+            margin-top: 0px;
+            font-size: 20px;
+            padding: 1%;
+
+            
+        }
+        .datetime{
+            font-weight: 500;
+        }
+        .text img{
+            height: 250px;
+        }
     </style>
 </head>
 <body>
@@ -145,28 +209,73 @@
         <img src="{{ url_for('static', filename='images/icon.png') }}">
         <p>APCBA</p>
     </div>
+
+    <div class="datetime">
+        <!-- Display the date and time here using JavaScript -->
+    </div>
 </div>
 
 <div class="text">
+    <img src="{{ url_for('static', filename='images/icon.png') }}">
     <h1>Asia Pacific College of Business and Arts <br> Official School Website</h1>
+</div>
+
+<div class="news-con">
+    <h1>Courses Offered!!</h1>
+    <div class="news">
+        <img src="{{ url_for('static', filename='images/stem.jpg') }}">
+        <img src="{{ url_for('static', filename='images/abm.jpg') }}">
+        <img src="{{ url_for('static', filename='images/it.jpg') }}">
+        <img src="{{ url_for('static', filename='images/arts.jpg') }}">
+        <img src="{{ url_for('static', filename='images/tourism.jpg') }}">
+        <img src="{{ url_for('static', filename='images/educ.jpg') }}">
+        <img src="{{ url_for('static', filename='images/stem.jpg') }}">
+        <img src="{{ url_for('static', filename='images/abm.jpg') }}">
+        <img src="{{ url_for('static', filename='images/it.jpg') }}">
+        <img src="{{ url_for('static', filename='images/arts.jpg') }}">
+        <img src="{{ url_for('static', filename='images/tourism.jpg') }}">
+        <img src="{{ url_for('static', filename='images/educ.jpg') }}">
+    </div>
 </div>
 
 <div class="image-container">
     <a href="{{ url_for('websiteenroll') }}" class="enroll">
         <img src="{{ url_for('static', filename='images/enroll.jpg') }}">
     </a>
-  <a href="{{ url_for('websiteabout') }}" class="about">
-      <img src="{{ url_for('static', filename='images/about.jpg') }}">
-  </a>
-  <a href="{{ url_for('websitecontact') }}" class="contact">
-      <img src="{{ url_for('static', filename='images/contact.jpg') }}">
-  </a>
-  <a href="{{ url_for('portaluserlogin') }}" class="home">
-    <img src="{{ url_for('static', filename='images/portal.jpg') }}">
-</a>
+    <a href="{{ url_for('websiteabout') }}" class="about">
+        <img src="{{ url_for('static', filename='images/about.jpg') }}">
+    </a>
+    <a href="{{ url_for('websitecontact') }}" class="contact">
+        <img src="{{ url_for('static', filename='images/contact.jpg') }}">
+    </a>
+    <a href="{{ url_for('portaluserlogin') }}" class="home">
+        <img src="{{ url_for('static', filename='images/portal.jpg') }}">
+    </a>
+</div>
+<div class="helpdesk">
+    <h1>Help Desk is Under Development!!!</h1>
 </div>
 
-<!-- Your webpage content goes here -->
+<script>
+    function updateDateTime() {
+        const datetimeElement = document.querySelector('.datetime');
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            timeZone: 'Asia/Manila', // Set the timezone to Philippines
+        };
+        const dateTimeString = new Date().toLocaleString('en-US', options);
+        datetimeElement.textContent = dateTimeString;
+    }
+
+    setInterval(updateDateTime, 1000); // Update every second
+    updateDateTime(); // Initial update
+</script>
 
 </body>
 </html>

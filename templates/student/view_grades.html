@@ -1,7 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APCBA Portal V1.0 - Student Portal Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #222;
+            padding: 15px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 2;
+        }
+
+        h1 {
+            color: antiquewhite;
+            font-size: 3vh;
+            margin-right: 60px;
+        }
+
+        .arrow-button {
+            background-color: #37332f;
+            color: #fff;
+            border: none;
+            padding: 2px 4px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-left: 10px;
+        }
+
+        .arrow-button::before {
+            content: '\25C0';
+            /* Unicode character for a large left-pointing triangle */
+            font-family: 'Font Awesome 5 Free';
+            margin-right: 5px;
+            font-size: 1.3em;
+            /* Adjust the size as needed */
+        }
+
+        .arrow-button:hover {
+            transform: scale(1.50);
+        }
+
+        nav {
+            background-color: #2f2e2e;
+            padding: 3px;
+            overflow: auto;
+            white-space: nowrap;
+            text-align: center;
+            scrollbar-width: thin;
+            /* Firefox */
+        }
+
+        nav::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        nav::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
+        }
+
+        nav a {
+            display: inline-block;
+            color: #fff;
+            text-align: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin: 5px;
+            border-radius: 5px;
+            width: 100px;
+            white-space: nowrap;
+        }
+
+        nav a:hover {
+            background-color: #555;
+        }
+
+        main {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .link {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 13px;
+            background-color: #2a235e;
+            text-decoration: none;
+            color: #fff;
+            font-size: 11px;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100px;
+            font-weight: bold;
+        }
+
+        .link:hover {
+            background-color: #e07b00;
+            transform: scale(1.05);
+        }
+
+        .bot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff; /* Add a background color */
+    padding: 20px; /* Add padding for spacing */
+    margin: 20px; /* Add margin for spacing */
+    border-radius: 10px; /* Add border-radius for rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-title {
+    color: #2a235e; /* Set the color for the page title */
+    font-size: 24px; /* Set the font size for the page title */
+    margin-bottom: 15px; /* Add margin to separate the title from content */
+}
+
+        h2 {
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+        }
+
+        img {
+            height: 50px;
+            margin-right: 5px;
+        }
 
 
-<div class="container">
-    <h1 class="page-title">Student Grades</h1>
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            visibility: hidden;
+        }
+
+        .logout-buttons {
+            margin-top: 20px;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background-color: #e07b00;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .btn-cancel {
+            padding: 10px 20px;
+            background-color: #555;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        @media screen and (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header-content {
+                margin-top: 15px;
+            }
+
+            h1 {
+                margin-right: 0;
+            }
+
+            .logout-form {
+                width: 80%;
+            }
+        }
+        .grades-table {
+    width: 75%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grades-table th, .grades-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.grades-table th {
+    background-color: #2a235e;
+    color: #fff;
+    font-weight: bold;
+}
+
+.grades-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.grades-table tbody tr:hover {
+    background-color: #e5e5e5;
+}
+.bot h1{
+    color: #333;
+    font-size: 6vh;
+    margin-left: 70px;
+    border-bottom: 2px solid gray;
+    width: 100%;
+}
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="javascript:void(0);" class="arrow-button" onclick="showLogoutForm()"></a>
+        <div class="header-content">
+            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo">
+            <h1>APCBA Portal V1.0</h1>
+        </div>
+    </header>
+
+    <nav>
+        <nav>
+            <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('account') }}" class="link"><i class="fas fa-book"></i> Profile</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+            <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
+            <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="fas fa-certificate"></i> View Grades</a>
+            <a href="{{ url_for('view_schedule', student_id=current_user.id) }}" class="link"><i class="fas fa-calendar"></i> Schedule</a>
+            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Password</a>
+        </nav>
+    </nav>
+    <div class="bot">
+        <h1 class="page-title">Grades</h1>
     
     <!-- Display student, section, and course information -->
     <div class="info-section">
@@ -35,6 +312,42 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
+    </div>
 
-<!-- ... (remaining HTML code) -->
+    <!-- Logout Overlay and Form -->
+    <div class="overlay" id="logoutOverlay">
+        <div class="logout-form">
+            <p>Logout?</p>
+            <div class="logout-buttons">
+                <button class="btn-logout" onclick="logout()">Yes</button>
+                <button class="btn-cancel" onclick="cancelLogout()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function showLogoutForm() {
+        var overlay = document.getElementById("logoutOverlay");
+        overlay.style.display = "flex";
+        document.querySelector('.logout-form').style.visibility = 'visible';
+    }
+
+    function logout() {
+        // Redirect to the login page
+        window.location.href = "{{ url_for('login') }}";
+    }
+
+    function cancelLogout() {
+        hideLogoutForm();
+    }
+
+    function hideLogoutForm() {
+        var overlay = document.getElementById("logoutOverlay");
+        overlay.style.display = "none";
+        document.querySelector('.logout-form').style.visibility = 'hidden';
+    }
+</script>
+
+</body>
+
+</html>
