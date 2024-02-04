@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:wght@700&display=swap" rel="stylesheet">
     <title>APCBA</title>
     <style>
         body {
@@ -16,14 +19,15 @@
 
         .topnav {
             overflow: hidden;
-            height: 40px;
+            height: 110px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
-            font-weight: 100;
-            background-color: #d7cfcf;
-            color: #555;
+            padding: 15px;
+            font-weight: 900;
+            background-color: #cf601b;
+            color: #fcf5f5;
+            font-family: 'Inria Serif', serif;
         }
 
         .topnav .logo {
@@ -32,17 +36,23 @@
         }
 
         .topnav .logo img {
-            height: 30px;
-            margin-right: 5px;
+            height: 100px;
+            margin-left: 100PX;
+            margin-right: 30px;
+       
         }
 
         .topnav .logo p {
-            font-weight: 700;
             margin-right: 10px;
+            font-size: 37PX;
+            font-family: 'Inria Serif', serif;
+
+ 
         }
 
         .topnav .datetime {
             font-size: 14px;
+     
         }
 
         .image-container {
@@ -196,30 +206,105 @@
             
         }
         .datetime{
-            font-weight: 500;
+            font-weight: 400;
+            margin-top: -55px;
+            margin-right: 120px;
+        
         }
         .text img{
             height: 250px;
+    
         }
+        .toplink{
+            height: 50px;
+            background-color: #cf601b;
+            border-top: 1px solid #FFF;
+            border-bottom: 1px solid #FFF;
+        }
+        .linkers{
+            max-width: 630px;
+            width: 100%;
+            background-color: #cf601b;
+            height: 20px;
+            margin-left: 70px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .linkers a{
+            text-decoration: none;
+            color: #fff;
+            margin-left: 50px;
+            font-size: smaller;
+            font-weight: 500;
+            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+            font-family: 'Inria Serif', serif;
+        }
+        .linkers a:hover{
+            color: #2a235e;
+
+        }
+        .text {
+    text-align: center;
+    position: relative; /* Add relative positioning to the .text container */
+}
+
+.text h1 {
+    color: #2a235e;
+    font-size: 50px;
+    position: relative; /* Add relative positioning to the heading */
+    z-index: 2; /* Set a higher z-index for the heading to bring it to the front */
+    border: 4px solid #2a235e;
+    width: 600px;
+    background-color: #FFf;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 30px;
+}
+
+.text img {
+    margin-top: -392px;
+    height: 700px;
+    max-width: 1400px;
+    width: 100%;
+    position: relative; /* Add relative positioning to the image */
+    z-index: 1; /* Set a lower z-index for the image */
+    border-bottom: 2px solid #fff;
+}
+ 
     </style>
 </head>
 <body>
+<div class="top">
+    <div class="topnav">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/icon.png') }}">
+            <p>ASIA PACIFIC COLLEGE OF<BR>
+                BUSINESS AND ARTS
+            </p>
+        </div>
     
-<div class="topnav">
-    <div class="logo">
-        <img src="{{ url_for('static', filename='images/icon.png') }}">
-        <p>APCBA</p>
+        <div class="datetime">
+            <!-- Display the date and time here using JavaScript -->
+        </div>
     </div>
+    <div class="toplink">
+        <div class="linkers">
+            <a href="{{ url_for('websiteabout') }}" class="about">ABOUT US</a>
+            <a href="" class="home">NEWS</a>
+            <a href="{{ url_for('portaluserlogin') }}" class="home">STUDENT PORTAL</a>
+            <a href="" class="home">HELP DESK</a>
+            <a href="{{ url_for('websitecontact') }}" class="contact">CONTACT US</a>
+        </div>
 
-    <div class="datetime">
-        <!-- Display the date and time here using JavaScript -->
     </div>
 </div>
 
 
+
 <div class="text">
-    <img src="{{ url_for('static', filename='images/icon.png') }}">
-    <h1>Asia Pacific College of Business and Arts <br> Official School Website</h1>
+    <h1>
+        Conquer challenges,<br> embrace success ahead!</h1>
+    <img src="{{ url_for('static', filename='images/apacaba.jpg') }}"> 
 </div>
 
 <div class="news-con">
@@ -253,9 +338,6 @@
     <a href="{{ url_for('portaluserlogin') }}" class="home">
         <img src="{{ url_for('static', filename='images/portal.jpg') }}">
     </a>
-</div>
-<div class="helpdesk">
-    <h1>Help Desk is Under Development!!!</h1>
 </div>
 
 <script>

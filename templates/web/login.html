@@ -23,6 +23,7 @@
         h1 {
             margin: 0;
             font-size: 1.8em;
+            font-weight: 800;
         }
 
         form {
@@ -30,7 +31,7 @@
             color: #333; /* Dark text color */
             padding: 25px;
             border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             width: 100%; /* Occupy 100% of the screen */
             text-align: center;
             margin-top: 7px;
@@ -56,7 +57,7 @@
             top: 50%;
             transform: translateY(-50%);
             opacity: 0.8;
-            margin-top: 13px;
+            margin-top: 9px;
             margin-left: 95px;
         }
 
@@ -77,9 +78,9 @@
             background-color: #302875;
             color: #fff;
             cursor: pointer;
-            padding: 8px;
+            padding: 10px;
             border: none;
-            border-radius: 50px;
+            border-radius: 10px;
             width: 100%; /* Occupy 100% of the width */
             max-width: 200px; /* Maximum width for larger screens */
             font-weight: bold;
@@ -91,6 +92,7 @@
         input[type="submit"]:hover {
             background-color: #352d72;
             transform: scale(1.05);
+            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
 
         @media (max-width: 400px) {
@@ -107,6 +109,18 @@
         img {
             height: 210px;
             margin-bottom: 5px;
+        }
+        a{
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+            font-size: 11px;
+            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        a:hover{
+            font-size: 13px;
+            opacity: 100%;
+            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+           
         }
     </style>
 </head>
@@ -128,6 +142,7 @@
             {{ form.password(required=True, placeholder='Enter your password') }}<br>
         </div>
         {{ form.submit() }}
+        <p><a href="">Forgot Password?</a></p>
     </form>
 </body>
 
