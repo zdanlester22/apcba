@@ -276,13 +276,17 @@
     </nav>
     <div class="bot">
         <div class="announcements">
-            {% for announcement in announcements %}
-            <div class="announcement-item">
-                <strong>{{ announcement.title }}</strong>
-                <p>{{ announcement.content }}</p>
-                <small>Posted by {{ announcement.author.username }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-            </div>
-            {% endfor %}
+            {% if announcements %}
+                {% for announcement in announcements %}
+                    <div class="announcement-item">
+                        <strong>{{ announcement.title }}</strong>
+                        <p>{{ announcement.content }}</p>
+                        <small>Posted by {{ announcement.author.username }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No announcements available.</p>
+            {% endif %}
         </div>
     </div>
 

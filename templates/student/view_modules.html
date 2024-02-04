@@ -264,19 +264,24 @@
         {% block content %}
 
       
-        {# Display existing modules #}
-        <ul>
-            {% for module in modules %}
-            <li>
-                <strong>{{ module.title }}</strong><br>
-                Course: {{ module.course.title }}
-                Year: {{ module.year }}<br>
-                <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endblock %}
-    </div>
+        <div class="container">
+            {# Display existing modules #}
+            {% if modules %}
+                <ul>
+                    {% for module in modules %}
+                        <li>
+                            <strong>{{ module.title }}</strong><br>
+                            Course: {{ module.course.title }}
+                            Year: {{ module.year }}<br>
+                            <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No modules available.</p>
+            {% endif %}
+        </div>
+    {% endblock %}
 
     <!-- Logout Overlay and Form -->
     <div class="overlay" id="logoutOverlay">

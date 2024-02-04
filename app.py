@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
-from models import db, User, Announcement, Certificate, user_account, Course, Subject, Section,Teacher,Student, Module, Enrollment, Enrollies, Grades, Schedule
+from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Enrollment, Enrollies, Grades, Schedule
 from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, RegistrationForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm
 from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, GradeForm, ScheduleForm
 from datetime import datetime
@@ -521,10 +521,9 @@ def account():
     if form.validate_on_submit():
         if not current_user.user_account:
             # If the user doesn't have a user_account, create a new one
-            user_account_instance = user_account(
-                full_name=form.last_name.data + ", " + form.first_name.data + " " + form.middle_name.data,
+            user_account_instance = UserAccount(
                 age=form.age.data,
-                birthday=form.age.data, 
+                birthday=form.birthday.data,
                 place_of_birth=form.place_of_birth.data,
                 gender=form.gender.data,
                 civil_status=form.civil_status.data,
@@ -579,9 +578,8 @@ def account():
             db.session.add(user_account_instance)
         else:
             # If the user has a user_account, update it
-            current_user.user_account.full_name = form.last_name.data + ", " + form.first_name.data + " " + form.middle_name.data
             current_user.user_account.age = form.age.data
-            current_user.user_account.birthday = form.age.data  # Assuming birthday is an IntegerField
+            current_user.user_account.birthday = form.birthday.data
             current_user.user_account.place_of_birth = form.place_of_birth.data
             current_user.user_account.gender = form.gender.data
             current_user.user_account.civil_status = form.civil_status.data
@@ -639,8 +637,8 @@ def account():
 
     # Populate form with current user account information if it exists
     if current_user.user_account:
-        form.last_name.data, form.first_name.data, form.middle_name.data = current_user.user_account.full_name.split(", ")
         form.age.data = current_user.user_account.age
+        form.birthday.data = current_user.user_account.birthday
         form.place_of_birth.data = current_user.user_account.place_of_birth
         form.gender.data = current_user.user_account.gender
         form.civil_status.data = current_user.user_account.civil_status
@@ -880,7 +878,7 @@ def view_subjects():
 ################################################################################################################################################################################################################    
 
 
-@app.route('/modules', methods=['GET', 'POST'])
+@app.route('/view_modules', methods=['GET', 'POST'])
 @login_required
 def view_modules():
     form_module = ModuleForm()
@@ -914,13 +912,19 @@ def view_modules():
     # Fetch and display existing modules
     modules = Module.query.all()
 
-    return render_template('admin/view_modules.html', form_module=form_module, modules=modules)
+    # Determine the user role and render the appropriate template
+    if current_user.role == 'admin':
+        template = 'admin/view_modules.html'
+    elif current_user.role == 'teacher':
+        template = 'teacher/view_modules.html'
+    elif current_user.role == 'student':
+        template = 'student/view_modules.html'
+    else:
+        flash('Unauthorized access!', 'danger')
+        return redirect(url_for('index'))
 
+    return render_template(template, form_module=form_module, modules=modules)
 
-@app.route('/download_module/<pdf_filename>')
-@login_required
-def download_module(pdf_filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], pdf_filename)
 
 ###################################################################################ENROLLMENT###############################################################################################################
 
