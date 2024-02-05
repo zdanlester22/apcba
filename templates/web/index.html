@@ -15,8 +15,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #2a235e;
             color: #fff;
-        }
-
+        }     
         .topnav {
             overflow: hidden;
             height: 110px;
@@ -39,6 +38,7 @@
             height: 100px;
             margin-left: 100PX;
             margin-right: 30px;
+            border-radius: 50%;
        
         }
 
@@ -135,7 +135,6 @@
             margin-top: 50px;
             overflow: hidden; /* Ensure the content stays within the container */
             border-radius: 30px;
-            border: 1px solid #fff;
         }
 
         .news {
@@ -187,15 +186,14 @@
             font-size: 5vh;
             color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin-bottom: 120px
+            margin-bottom: 120px;
         }
 
         .news img {
             animation: moveLeftToRight 100s linear infinite; /* Duplicate the animation for smaller screens */
-            border-radius: 20%;
+            border-radius: 50%;
             color: #FFF;
             height: 250px;
-            margin-left: 90px;
         }
         .news-con h1{
             color: rgb(237, 240, 240);
@@ -250,27 +248,14 @@
     position: relative; /* Add relative positioning to the .text container */
 }
 
-.text h1 {
-    color: #2a235e;
-    font-size: 50px;
-    position: relative; /* Add relative positioning to the heading */
-    z-index: 2; /* Set a higher z-index for the heading to bring it to the front */
-    border: 4px solid #2a235e;
-    width: 600px;
-    background-color: #FFf;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 30px;
-}
 
 .text img {
-    margin-top: -392px;
+    margin-top: -120px;
     height: 700px;
     max-width: 1400px;
     width: 100%;
     position: relative; /* Add relative positioning to the image */
     z-index: 1; /* Set a lower z-index for the image */
-    border-bottom: 2px solid #fff;
 }
  
     </style>
@@ -279,7 +264,7 @@
 <div class="top">
     <div class="topnav">
         <div class="logo">
-            <img src="{{ url_for('static', filename='images/icon.png') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}">
             <p>ASIA PACIFIC COLLEGE OF<BR>
                 BUSINESS AND ARTS
             </p>
@@ -294,7 +279,7 @@
             <a href="{{ url_for('websiteabout') }}" class="about">ABOUT US</a>
             <a href="" class="home">NEWS</a>
             <a href="{{ url_for('portaluserlogin') }}" class="home">STUDENT PORTAL</a>
-            <a href="" class="home">HELP DESK</a>
+            <a href="{{ url_for('websiteenroll') }}" class="enroll">ENROLL</a>
             <a href="{{ url_for('websitecontact') }}" class="contact">CONTACT US</a>
         </div>
 
@@ -304,9 +289,8 @@
 
 
 <div class="text">
-    <h1>
-        Conquer challenges,<br> embrace success ahead!</h1>
-    <img src="{{ url_for('static', filename='images/apacaba.jpg') }}"> 
+    <h1></h1>
+    <img src="{{ url_for('static', filename='images/sh.jpg') }}"> 
 </div>
 
 <div class="news-con">
