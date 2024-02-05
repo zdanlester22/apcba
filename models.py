@@ -75,8 +75,6 @@ class UserAccount(db.Model):
     emergency_contact_relationship = db.Column(db.String(255), nullable=False)
     emergency_contact_no = db.Column(db.String(20), nullable=False)
     emergency_contact_address = db.Column(db.String(255), nullable=False)
-
-    # Foreign key to associate the UserAccount with the User
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 

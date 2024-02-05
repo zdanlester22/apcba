@@ -30,18 +30,6 @@
 
   <h2>Record Grades for {{ student.name }}</h2>
 
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <div class="alert alert-info">
-        <ul>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-  {% endwith %}
-
   <form method="post" action="{{ url_for('view_grades', student_id=student.id) }}">
     {{ form.csrf_token }}
     

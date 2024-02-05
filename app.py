@@ -90,7 +90,6 @@ def enrollies():
 
     return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list)
 
-
 @app.route('/admin/view_enrollies')
 def view_enrollies():
     enrollies_list = Enrollies.query.filter_by(is_archived=False).all()
@@ -200,8 +199,6 @@ def view_students():
 
     return render_template('admin/view_students.html', students=students_data, sections=sections_data)
 
-
-
 @app.route('/admin/students/update/<int:student_id>', methods=['GET', 'POST'])
 @login_required
 def update_student(student_id):
@@ -228,9 +225,6 @@ def update_student(student_id):
 
     return render_template('admin/update_student.html', form=form, student=student_to_update)
 
-
-
-
 @app.route('/admin/students/delete/<int:student_id>', methods=['GET', 'POST'])
 @login_required
 def delete_student(student_id):
@@ -248,8 +242,6 @@ def delete_student(student_id):
     flash('Student deleted successfully.', 'success')
 
     return redirect(url_for('view_students'))
-
-
 
 @app.route('/web/login', methods=['GET', 'POST'])
 def login():
@@ -272,7 +264,6 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -301,8 +292,6 @@ def dashboard():
 
     return render_template(template, user=current_user, form=form, announcements=announcements,)
 
-
-
 @app.route('/admin/update_announcement/<int:announcement_id>', methods=['GET', 'POST'])
 @login_required
 def update_announcement(announcement_id):
@@ -323,7 +312,6 @@ def update_announcement(announcement_id):
 
     return render_template('admin/update_announcement.html', form=form, announcement=announcement)
 
-
 @app.route('/admin/delete_announcement/<int:announcement_id>')
 @login_required
 def delete_announcement(announcement_id):
@@ -337,7 +325,6 @@ def delete_announcement(announcement_id):
     db.session.commit()
     flash('Announcement deleted successfully!', 'success')
     return redirect(url_for('dashboard'))
-
 
 @app.route('/admin/register', methods=['GET', 'POST'])
 @login_required
@@ -368,7 +355,6 @@ def register():
 
     return render_template('admin/register.html', form=form)
 
-
 @app.route('/update/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def update_user(user_id):
@@ -396,7 +382,6 @@ def update_user(user_id):
 
     return render_template('admin/update_user.html', form=form, user=user_to_update)
 
-
 @app.route('/delete/<int:user_id>')
 @login_required
 def delete_user(user_id):
@@ -413,7 +398,6 @@ def delete_user(user_id):
     db.session.commit()
     flash(f'User deleted successfully!', 'success')
     return redirect(url_for('dashboard'))
-
 
 @app.route('/certificate', methods=['GET', 'POST'])
 @login_required
@@ -456,7 +440,6 @@ def certificate():
 
     return render_template(template, user=current_user, form=form, certificates=certificates)
 
-
 @app.route('/admin/update_certificate/<int:certificate_id>', methods=['GET', 'POST'])
 @login_required
 def update_certificate(certificate_id):
@@ -484,7 +467,6 @@ def update_certificate(certificate_id):
 
     return render_template('admin/update_certificate.html', form=form, certificate=certificate)
 
-
 @app.route('/admin/delete_certificate/<int:certificate_id>')
 @login_required
 def delete_certificate(certificate_id):
@@ -511,188 +493,26 @@ def download_certificate(certificate_id):
     certificate_path = os.path.join('uploads', 'documents', certificate.pdf)
     return send_file(certificate_path, as_attachment=True)
 
-# account
-
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    form = UserAccountForm()
+    form = UserAccountForm(obj=current_user.user_account)
 
     if form.validate_on_submit():
         if not current_user.user_account:
-            # If the user doesn't have a user_account, create a new one
-            user_account_instance = UserAccount(
-                age=form.age.data,
-                birthday=form.birthday.data,
-                place_of_birth=form.place_of_birth.data,
-                gender=form.gender.data,
-                civil_status=form.civil_status.data,
-                nationality=form.nationality.data,
-                current_country=form.current_country.data,
-                current_region=form.current_region.data,
-                current_province=form.current_province.data,
-                current_municipality=form.current_municipality.data,
-                current_complete_address=form.current_complete_address.data,
-                permanent_country=form.permanent_country.data,
-                permanent_region=form.permanent_region.data,
-                permanent_province=form.permanent_province.data,
-                permanent_municipality=form.permanent_municipality.data,
-                permanent_complete_address=form.permanent_complete_address.data,
-                school_issued_mobile=form.school_issued_mobile.data,
-                school_email=form.school_email.data,
-                personal_country_code=form.personal_country_code.data,
-                personal_tel_no=form.personal_tel_no.data,
-                personal_mobile_1=form.personal_mobile_1.data,
-                personal_mobile_2=form.personal_mobile_2.data,
-                personal_mobile_3=form.personal_mobile_3.data,
-                personal_email=form.personal_email.data,
-                religion=form.religion.data,
-                facebook=form.facebook.data,
-                twitter=form.twitter.data,
-                school_level=form.school_level.data,
-                school_name=form.school_name.data,
-                course=form.course.data,
-                year_graduated=form.year_graduated.data,
-                last_school_attended=form.last_school_attended.data,
-                father_last_name=form.father_last_name.data,
-                father_first_name=form.father_first_name.data,
-                father_middle_name=form.father_middle_name.data,
-                father_occupation=form.father_occupation.data,
-                father_contact_no=form.father_contact_no.data,
-                mother_last_name=form.mother_last_name.data,
-                mother_first_name=form.mother_first_name.data,
-                mother_middle_name=form.mother_middle_name.data,
-                mother_occupation=form.mother_occupation.data,
-                mother_contact_no=form.mother_contact_no.data,
-                num_brothers=form.num_brothers.data,
-                num_sisters=form.num_sisters.data,
-                guardian_occupation=form.guardian_occupation.data,
-                guardian_relationship=form.guardian_relationship.data,
-                guardian_contact_no=form.guardian_contact_no.data,
-                emergency_contact_name=form.emergency_contact_name.data,
-                emergency_contact_relationship=form.emergency_contact_relationship.data,
-                emergency_contact_no=form.emergency_contact_no.data,
-                emergency_contact_address=form.emergency_contact_address.data,
-                user=current_user  # Associate the user_account with the current user
-            )
+            user_account_instance = UserAccount()
+            form.populate_obj(user_account_instance)
+            user_account_instance.user = current_user
             db.session.add(user_account_instance)
         else:
-            # If the user has a user_account, update it
-            current_user.user_account.age = form.age.data
-            current_user.user_account.birthday = form.birthday.data
-            current_user.user_account.place_of_birth = form.place_of_birth.data
-            current_user.user_account.gender = form.gender.data
-            current_user.user_account.civil_status = form.civil_status.data
-            current_user.user_account.nationality = form.nationality.data
-            current_user.user_account.current_country = form.current_country.data
-            current_user.user_account.current_region = form.current_region.data
-            current_user.user_account.current_province = form.current_province.data
-            current_user.user_account.current_municipality = form.current_municipality.data
-            current_user.user_account.current_complete_address = form.current_complete_address.data
-            current_user.user_account.permanent_country = form.permanent_country.data
-            current_user.user_account.permanent_region = form.permanent_region.data
-            current_user.user_account.permanent_province = form.permanent_province.data
-            current_user.user_account.permanent_municipality = form.permanent_municipality.data
-            current_user.user_account.permanent_complete_address = form.permanent_complete_address.data
-            current_user.user_account.school_issued_mobile = form.school_issued_mobile.data
-            current_user.user_account.school_email = form.school_email.data
-            current_user.user_account.personal_country_code = form.personal_country_code.data
-            current_user.user_account.personal_tel_no = form.personal_tel_no.data
-            current_user.user_account.personal_mobile_1 = form.personal_mobile_1.data
-            current_user.user_account.personal_mobile_2 = form.personal_mobile_2.data
-            current_user.user_account.personal_mobile_3 = form.personal_mobile_3.data
-            current_user.user_account.personal_email = form.personal_email.data
-            current_user.user_account.religion = form.religion.data
-            current_user.user_account.facebook = form.facebook.data
-            current_user.user_account.twitter = form.twitter.data
-            current_user.user_account.school_level = form.school_level.data
-            current_user.user_account.school_name = form.school_name.data
-            current_user.user_account.course = form.course.data
-            current_user.user_account.year_graduated = form.year_graduated.data
-            current_user.user_account.last_school_attended = form.last_school_attended.data
-            current_user.user_account.father_last_name = form.father_last_name.data
-            current_user.user_account.father_first_name = form.father_first_name.data
-            current_user.user_account.father_middle_name = form.father_middle_name.data
-            current_user.user_account.father_occupation = form.father_occupation.data
-            current_user.user_account.father_contact_no = form.father_contact_no.data
-            current_user.user_account.mother_last_name = form.mother_last_name.data
-            current_user.user_account.mother_first_name = form.mother_first_name.data
-            current_user.user_account.mother_middle_name = form.mother_middle_name.data
-            current_user.user_account.mother_occupation = form.mother_occupation.data
-            current_user.user_account.mother_contact_no = form.mother_contact_no.data
-            current_user.user_account.num_brothers = form.num_brothers.data
-            current_user.user_account.num_sisters = form.num_sisters.data
-            current_user.user_account.guardian_occupation = form.guardian_occupation.data
-            current_user.user_account.guardian_relationship = form.guardian_relationship.data
-            current_user.user_account.guardian_contact_no = form.guardian_contact_no.data
-            current_user.user_account.emergency_contact_name = form.emergency_contact_name.data
-            current_user.user_account.emergency_contact_relationship = form.emergency_contact_relationship.data
-            current_user.user_account.emergency_contact_no = form.emergency_contact_no.data
-            current_user.user_account.emergency_contact_address = form.emergency_contact_address.data
-            # Update other fields in the model based on the form
+            form.populate_obj(current_user.user_account)
 
         db.session.commit()
         flash('User account information submitted successfully!', 'success')
         return redirect(url_for('account'))
 
-    # Populate form with current user account information if it exists
-    if current_user.user_account:
-        form.age.data = current_user.user_account.age
-        form.birthday.data = current_user.user_account.birthday
-        form.place_of_birth.data = current_user.user_account.place_of_birth
-        form.gender.data = current_user.user_account.gender
-        form.civil_status.data = current_user.user_account.civil_status
-        form.nationality.data = current_user.user_account.nationality
-        form.current_country.data = current_user.user_account.current_country
-        form.current_region.data = current_user.user_account.current_region
-        form.current_province.data = current_user.user_account.current_province
-        form.current_municipality.data = current_user.user_account.current_municipality
-        form.current_complete_address.data = current_user.user_account.current_complete_address
-        form.permanent_country.data = current_user.user_account.permanent_country
-        form.permanent_region.data = current_user.user_account.permanent_region
-        form.permanent_province.data = current_user.user_account.permanent_province
-        form.permanent_municipality.data = current_user.user_account.permanent_municipality
-        form.permanent_complete_address.data = current_user.user_account.permanent_complete_address
-        form.school_issued_mobile.data = current_user.user_account.school_issued_mobile
-        form.school_email.data = current_user.user_account.school_email
-        form.personal_country_code.data = current_user.user_account.personal_country_code
-        form.personal_tel_no.data = current_user.user_account.personal_tel_no
-        form.personal_mobile_1.data = current_user.user_account.personal_mobile_1
-        form.personal_mobile_2.data = current_user.user_account.personal_mobile_2
-        form.personal_mobile_3.data = current_user.user_account.personal_mobile_3
-        form.personal_email.data = current_user.user_account.personal_email
-        form.religion.data = current_user.user_account.religion
-        form.facebook.data = current_user.user_account.facebook
-        form.twitter.data = current_user.user_account.twitter
-        form.school_level.data = current_user.user_account.school_level
-        form.school_name.data = current_user.user_account.school_name
-        form.course.data = current_user.user_account.course
-        form.year_graduated.data = current_user.user_account.year_graduated
-        form.last_school_attended.data = current_user.user_account.last_school_attended
-        form.father_last_name.data = current_user.user_account.father_last_name
-        form.father_first_name.data = current_user.user_account.father_first_name
-        form.father_middle_name.data = current_user.user_account.father_middle_name
-        form.father_occupation.data = current_user.user_account.father_occupation
-        form.father_contact_no.data = current_user.user_account.father_contact_no
-        form.mother_last_name.data = current_user.user_account.mother_last_name
-        form.mother_first_name.data = current_user.user_account.mother_first_name
-        form.mother_middle_name.data = current_user.user_account.mother_middle_name
-        form.mother_occupation.data = current_user.user_account.mother_occupation
-        form.mother_contact_no.data = current_user.user_account.mother_contact_no
-        form.num_brothers.data = current_user.user_account.num_brothers
-        form.num_sisters.data = current_user.user_account.num_sisters
-        form.guardian_occupation.data = current_user.user_account.guardian_occupation
-        form.guardian_relationship.data = current_user.user_account.guardian_relationship
-        form.guardian_contact_no.data = current_user.user_account.guardian_contact_no
-        form.emergency_contact_name.data = current_user.user_account.emergency_contact_name
-        form.emergency_contact_relationship.data = current_user.user_account.emergency_contact_relationship
-        form.emergency_contact_no.data = current_user.user_account.emergency_contact_no
-        form.emergency_contact_address.data = current_user.user_account.emergency_contact_address
-        # Populate other fields in the form with data from the user_account model
-
     return render_template('account.html', form=form)
 #######################################################################################################################################################################################
-
 @app.route('/courses', methods=['GET', 'POST'])
 @login_required
 def view_course():
@@ -750,8 +570,6 @@ def view_course():
 
     return render_template('admin/view_course.html', courses=courses, form_course=form_course, form_subject=form_subject, filter_form=filter_form)
 
-
-
 @app.route('/update_course/<int:course_id>', methods=['GET', 'POST'])
 @login_required
 def update_course(course_id):
@@ -775,7 +593,6 @@ def update_course(course_id):
 
     return render_template('admin/update_course.html', form=form, course=course)
 
-
 @app.route('/update_subject/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
 def update_subject(subject_id):
@@ -797,11 +614,7 @@ def update_subject(subject_id):
         return redirect(url_for('view_course'))
 
     return render_template('admin/update_subject.html', form=form, subject=subject)
-
-
-
 ##########################################################################################################################################################################################
-
 @app.route('/sections', methods=['GET', 'POST'])
 @login_required
 def manage_section():
@@ -852,9 +665,6 @@ def manage_section():
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
                            form_section=form_section)
 
-
-
-
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
@@ -873,11 +683,7 @@ def view_subjects():
     current_app.logger.info(f"Number of subjects found: {len(subjects)}")
 
     return render_template('admin/view_subjects.html', subjects=subjects)
-
-
 ################################################################################################################################################################################################################    
-
-
 @app.route('/view_modules', methods=['GET', 'POST'])
 @login_required
 def view_modules():
@@ -924,10 +730,7 @@ def view_modules():
         return redirect(url_for('index'))
 
     return render_template(template, form_module=form_module, modules=modules)
-
-
 ###################################################################################ENROLLMENT###############################################################################################################
-
 @app.route('/enroll', methods=['GET', 'POST'])
 @login_required
 def enroll():
@@ -977,7 +780,6 @@ def enroll():
             flash('Enrollment successful.', 'success')
 
     return render_template('admin/enroll.html', form=form, student_form=student_form, existing_enrollments=existing_enrollments)
-
 ###########################################################################################################################################################################################################
 @app.route('/grades/<int:student_id>', methods=['GET', 'POST'])
 @login_required
@@ -1033,15 +835,15 @@ def student_view_grades():
     if current_user.is_authenticated and current_user.role == 'student':
         student = current_user.student
         grades = Grades.query.filter_by(student_id=student.id).all()
-        return render_template('student/view_grades.html', student=student, grades=grades)
+
+        # Fetch subject information for each grade
+        subjects = [grade.subject for grade in grades]
+
+        return render_template('student/view_grades.html', student=student, grades=grades, subjects=subjects)
     else:
         flash('You are not associated with a student profile.', 'warning')
         return redirect(url_for('dashboard'))
-
-
-
 ###############################################################################################################################################################
-
 @app.route('/add_schedule/<int:section_id>', methods=['GET', 'POST'])
 @login_required
 def add_schedule(section_id):
@@ -1066,22 +868,26 @@ def add_schedule(section_id):
         except Exception as e:
             db.session.rollback()
             current_app.logger.error(f"Error adding schedules: {str(e)}")
-
+   
     return render_template('admin/add_schedule.html', form=form, section=section, subjects=subjects)
 
-
-@app.route('/view_schedule/<int:student_id>', methods=['GET'])
+@app.route('/view_schedule/<int:student_id>/<int:section_id>/<int:course_id>', methods=['GET'])
 @login_required
-def view_schedule(student_id):
-    # Assuming student_id is the user's ID
+def view_schedule(student_id, section_id, course_id):
+    section = Section.query.get_or_404(section_id)
     student = Student.query.get_or_404(student_id)
+    course = Course.query.get_or_404(course_id)
 
-    # Assuming there is a relationship between Student and Schedule models
-    schedules = student.schedules.all()
+    # Query the Enrollment model to get the schedules for the specific student, section, and course
+    enrollment = Enrollment.query.filter_by(student_id=student.id, section_id=section.id, course_id=course.id).first()
 
-    return render_template('student/view_schedule.html', student=student, schedules=schedules)
+    if enrollment:
+        schedules = Schedule.query.filter_by(subject__section_id=section.id).all()
+        return render_template('student/view_schedule.html', student=student, section=section, course=course, schedules=schedules)
+    else:
+        return render_template('student/view_schedule.html', student=student, section=section, course=course, schedules=[])
 
-
+# The above assumes that you have a 'Course' model and you need to pass the 'course_id' to the enrollment.
 
 
 if __name__ == '__main__':

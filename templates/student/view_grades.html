@@ -291,28 +291,36 @@
         {% endif %}
     </div>
 
-    <!-- Display grades -->
     <table class="grades-table">
         <thead>
             <tr>
-                <th>Subject</th>
-                <th>Period 1</th>
-                <th>Period 2</th>
-                <th>Period 3</th>
+              <th>Subject</th>
+              <th>Period 1</th>
+              <th>Period 2</th>
+              <th>Period 3</th>
+              <th>Final Grade</th>
+              <th>Passed</th>
+              <th>Action</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             {% for grade in grades %}
-                <tr>
-                    <td>{{ grade.subject.name }}</td>
-                    <td>{{ grade.period_1 }}</td>
-                    <td>{{ grade.period_2 }}</td>
-                    <td>{{ grade.period_3 }}</td>
-                </tr>
+              <tr>
+                <td>{{ grade.subject.name }}</td>
+                <td>{{ grade.period_1 }}</td>
+                <td>{{ grade.period_2 }}</td>
+                <td>{{ grade.period_3 }}</td>
+                <td>{{ grade.final_grade }}</td>
+                <td>{{ "Pass" if grade.is_passed else "Fail" if grade else 'N/A' }}</td>
+              </tr>
             {% endfor %}
-        </tbody>
-    </table>
+          </tbody>
+        </table>
+    
+    
+    
     </div>
+    
 
     <!-- Logout Overlay and Form -->
     <div class="overlay" id="logoutOverlay">

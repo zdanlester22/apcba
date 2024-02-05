@@ -2,34 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Schedule</title>
-    <!-- Add your CSS or style links here -->
+    <!-- Add any necessary CSS styles or links to your stylesheet -->
 </head>
 <body>
-    <h1>Schedule for {{ student.name }}</h1>
+    <h1>Class Schedule</h1>
+    <p><strong>Section:</strong> {{ section.name }}</p>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Day of Week</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <!-- Add more columns if needed -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for schedule in schedules %}
+    {% if schedules %}
+        <table border="1">
+            <thead>
                 <tr>
-                    <td>{{ schedule.day_of_week }}</td>
-                    <td>{{ schedule.start_time }}</td>
-                    <td>{{ schedule.end_time }}</td>
-                    <!-- Add more cells if needed -->
+                    <th>Day</th>
+                    <th>Time</th>
+                    <th>Subject</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for schedule in schedules %}
+                    <tr>
+                        <td>{{ schedule.day_of_week }}</td>
+                        <td>{{ schedule.start_time }} - {{ schedule.end_time }}</td>
+                        <td>{{ schedule.subject.name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No schedules found for this section.</p>
+    {% endif %}
 
-    <!-- Add your additional content or styling here -->
+    <!-- Add any additional content or formatting as needed -->
+
+    <!-- Add any necessary JavaScript scripts or links to your script file -->
+</body>
+</html>
+<!-- Assuming this is in the 'templates/student/' directory -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Schedule</title>
+    <!-- Add any necessary CSS styles or links to your stylesheet -->
+</head>
+<body>
+    <h1>Student Schedule</h1>
+    
+    <p><strong>Student Name:</strong> {{ student.name }}</p>
+    <p><strong>Section:</strong> {{ section.name }}</p>
+    <p><strong>Course:</strong> {{ course.name }}</p>
+
+    {% if schedules %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Time</th>
+                    <th>Subject</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for schedule in schedules %}
+                    <tr>
+                        <td>{{ schedule.day_of_week }}</td>
+                        <td>{{ schedule.start_time }} - {{ schedule.end_time }}</td>
+                        <td>{{ schedule.subject.name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No schedules found for this student in the selected section and course.</p>
+    {% endif %}
+
+    <!-- Add any additional content or formatting as needed -->
+
+    <!-- Add a link to go back to another page -->
+    <a href="{{ url_for('index') }}">Back to Home</a>
+
+    <!-- Add any necessary JavaScript scripts or links to your script file -->
 </body>
 </html>
