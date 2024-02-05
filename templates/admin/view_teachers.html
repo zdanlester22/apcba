@@ -59,24 +59,30 @@
         .arrow-button:hover {
             transform: scale(1.50);
         }
-
         nav {
-            background-color: #2f2e2e;
-            padding: 3px;
-            overflow: auto;
-            white-space: nowrap;
-            text-align: center;
-            scrollbar-width: thin; /* Firefox */
-        }
+    background-color: #2f2e2e;
+    padding: 3px;
+    overflow: auto;
+    white-space: nowrap;
+    text-align: center;
+}
 
-        nav::-webkit-scrollbar {
-            height: 10px;
-        }
+/* Styling for Webkit Scrollbar */
+nav::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+}
 
-        nav::-webkit-scrollbar-thumb {
-            background-color: #555;
-            border-radius: 10px;
-        }
+nav::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 10px;
+    transition: background-color 0.3s ease; /* Add animation transition */
+}
+
+/* Hover effect for scrollbar thumb */
+nav:hover::-webkit-scrollbar-thumb {
+    background-color: #777;
+}
 
         nav a {
             display: inline-block;
