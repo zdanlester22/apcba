@@ -101,6 +101,7 @@ def view_archived_enrollies():
     return render_template('admin/view_archived_enrollies.html', archived_enrollies_list=archived_enrollies_list)
 
 @app.route('/admin/archive_enrollie/<int:enrollie_id>')
+@login_required
 def archive_enrollie(enrollie_id):
     enrollie = Enrollies.query.get(enrollie_id)
     if enrollie:
@@ -834,15 +835,28 @@ def view_grades(student_id):
 def student_view_grades():
     if current_user.is_authenticated and current_user.role == 'student':
         student = current_user.student
+        
+        # Retrieve grades for the current student
         grades = Grades.query.filter_by(student_id=student.id).all()
 
-        # Fetch subject information for each grade
-        subjects = [grade.subject for grade in grades]
+        # Retrieve enrollments for the current student
+        enrollments = Enrollment.query.filter_by(student_id=student.id).all()
 
-        return render_template('student/view_grades.html', student=student, grades=grades, subjects=subjects)
+        # Debugging: Print the number of grades retrieved
+        print("Number of grades:", len(grades))
+        print("Number of enrollments:", len(enrollments))
+
+        if not grades:
+            flash('No grades available for this student.', 'info')
+
+        if not enrollments:
+            flash('No enrollments found for this student.', 'info')
+
+        return render_template('student/view_grades.html', student=student, grades=grades, enrollments=enrollments)
     else:
         flash('You are not associated with a student profile.', 'warning')
         return redirect(url_for('dashboard'))
+
 ###############################################################################################################################################################
 @app.route('/add_schedule/<int:section_id>', methods=['GET', 'POST'])
 @login_required
@@ -871,21 +885,7 @@ def add_schedule(section_id):
    
     return render_template('admin/add_schedule.html', form=form, section=section, subjects=subjects)
 
-@app.route('/view_schedule/<int:student_id>/<int:section_id>/<int:course_id>', methods=['GET'])
-@login_required
-def view_schedule(student_id, section_id, course_id):
-    section = Section.query.get_or_404(section_id)
-    student = Student.query.get_or_404(student_id)
-    course = Course.query.get_or_404(course_id)
 
-    # Query the Enrollment model to get the schedules for the specific student, section, and course
-    enrollment = Enrollment.query.filter_by(student_id=student.id, section_id=section.id, course_id=course.id).first()
-
-    if enrollment:
-        schedules = Schedule.query.filter_by(subject__section_id=section.id).all()
-        return render_template('student/view_schedule.html', student=student, section=section, course=course, schedules=schedules)
-    else:
-        return render_template('student/view_schedule.html', student=student, section=section, course=course, schedules=[])
 
 # The above assumes that you have a 'Course' model and you need to pass the 'course_id' to the enrollment.
 

@@ -273,7 +273,7 @@
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
             <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
             <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="fas fa-certificate"></i> View Grades</a>
-            <a href="{{ url_for('view_schedule', student_id=current_user.id) }}" class="link"><i class="fas fa-calendar"></i> Schedule</a>
+            <a  class="link"><i class="fas fa-calendar"></i> Schedule</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Password</a>
         </nav>
     </nav>
@@ -283,13 +283,20 @@
     <!-- Display student, section, and course information -->
     <div class="info-section">
         <p><strong>Student:</strong> {{ student.name }}</p>
-        {% if section %}
-            <p><strong>Section:</strong> {{ section.name }}</p>
-        {% endif %}
-        {% if course %}
-            <p><strong>Course:</strong> {{ course.name }}</p>
-        {% endif %}
+        {% for enrollment in enrollments %}
+            <p><strong>Course:</strong> {{ enrollment.enrolled_course_rel.title }} 
+            <strong>Section:</strong> {{ enrollment.enrolled_section_rel.name}}
+            <strong>Semester:</strong> {{ enrollment.enrolled_course_rel.semesters }}
+            <strong>School Year:</strong> {{ enrollment.enrolled_course_rel.school_year }}
+            <strong>Year:</strong> {{ enrollment.enrolled_course_rel.year }}
+            <strong>Class:</strong> {{ enrollment.enrolled_course_rel.Class }}</p>
+            <!-- Inner loop for sections should be placed here -->
+            {% for section in enrollment.enrolled_course_rel.sections %}
+                <p><strong>Teacher:</strong> {{ section.teacher.name }}</p>
+            {% endfor %}
+        {% endfor %}
     </div>
+    
 
     <table class="grades-table">
         <thead>
@@ -300,13 +307,13 @@
               <th>Period 3</th>
               <th>Final Grade</th>
               <th>Passed</th>
-              <th>Action</th>
+              
             </tr>
           </thead>
           <tbody>
             {% for grade in grades %}
               <tr>
-                <td>{{ grade.subject.name }}</td>
+                <td>{{ grade.subject.title }}</td>
                 <td>{{ grade.period_1 }}</td>
                 <td>{{ grade.period_2 }}</td>
                 <td>{{ grade.period_3 }}</td>
