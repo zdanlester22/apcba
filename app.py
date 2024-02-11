@@ -731,6 +731,17 @@ def view_modules():
         return redirect(url_for('index'))
 
     return render_template(template, form_module=form_module, modules=modules)
+
+@app.route('/download_module/<pdf_filename>', methods=['GET'])
+@login_required
+def download_module(pdf_filename):
+    # Check if the user is authorized to download this module
+
+    # Determine the directory path where the PDF files are stored
+    directory = os.path.join('uploads', 'documents')
+
+    # Use send_from_directory to send the file to the client
+    return send_from_directory(directory, pdf_filename, as_attachment=True)
 ###################################################################################ENROLLMENT###############################################################################################################
 @app.route('/enroll', methods=['GET', 'POST'])
 @login_required

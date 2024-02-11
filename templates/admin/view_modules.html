@@ -258,6 +258,7 @@ label {
                     <li>
                         {{ module.title }} - {{ module.year }} - {{ module.course.title }}
                         <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a>
+
                     </li>
                 {% endfor %}
             </ul>
