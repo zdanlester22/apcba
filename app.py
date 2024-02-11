@@ -12,7 +12,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/apcba'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_uhvw_user:MYUzSsCKpa8teEJC40w12oXdtqHlTqD2@dpg-cmt5evv109ks73a2sj10-a.oregon-postgres.render.com/apcba_uhvw'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 login_manager = LoginManager(app)
