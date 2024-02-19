@@ -299,7 +299,6 @@ nav:hover::-webkit-scrollbar-thumb {
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
             <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
             <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
-            <a href="{{ url_for('register') }}" class="link"><i class="fas fa-user-plus"></i> Register</a>
             <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
             <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
             <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
@@ -322,14 +321,11 @@ nav:hover::-webkit-scrollbar-thumb {
             <tbody>
                 {% for enrollies in enrollies_list %}
                 <tr>
-                    <td>
-                        <span class="show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</span>
-                        {{ enrollies.name }}
-                    </td>
+                    <td>{{ enrollies.name }}</td>
                     <td>{{ enrollies.email }}</td>
                     <td>
                         <a href="{{ url_for('archive_enrollie', enrollie_id=enrollies.id) }}" class="archive-btn">Archive</a>
-    <table>
+                        <button class="show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</button>
                     </td>
                 </tr>
                 <div id="myModal" class="modal">

@@ -132,9 +132,9 @@
         <h1>ASIA PACIFIC COLLEGE OF BUSINESS AND ARTS</h1><br>
         {{ form.csrf_token }}
         <div class="input-container">
-            <label for="username">{{ form.username.label }}</label>
+            <label for="username">{{ form.email.label }}</label>
             <img src="{{ url_for('static', filename='images/uname.png') }}" alt="Username Icon">
-            {{ form.username(required=True, placeholder='Enter your username') }}
+            {{ form.email(required=True, placeholder='Enter your username') }}
         </div>
         <div class="input-container">
             <label for="password">{{ form.password.label }}</label>

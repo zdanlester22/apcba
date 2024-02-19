@@ -9,19 +9,10 @@ from wtforms.fields import FloatField, TimeField
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
-
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    name = StringField('Name', validators=[DataRequired()])
-    contact = StringField('Contact', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    role = SelectField('Role', choices=[('student', 'Student'), ('teacher', 'Teacher'), ('admin', 'Admin')],
-                       validators=[DataRequired()])
     
-
 class UpdateUserForm(FlaskForm):
     new_username = StringField('New Username')
     new_name = StringField('New Name', validators=[DataRequired()])
@@ -54,52 +45,38 @@ class UserAccountForm(FlaskForm):
     last_name = StringField('Last Name', validators=[DataRequired()])
     first_name = StringField('First Name', validators=[DataRequired()])
     middle_name = StringField('Middle Name', validators=[DataRequired()])
-    
-    # Place of Birth
+
     place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired()])
     gender = SelectField('Gender', choices=[('male', 'Male'), ('female', 'Female')], validators=[DataRequired()])
     civil_status = StringField('Civil Status', validators=[DataRequired()])
     nationality = StringField('Nationality', validators=[DataRequired()])
-    
-    # Current Address
     current_country = StringField('Country', validators=[DataRequired()])
     current_region = StringField('Region', validators=[DataRequired()])
     current_province = StringField('Province', validators=[DataRequired()])
     current_municipality = StringField('Municipality', validators=[DataRequired()])
     current_complete_address = TextAreaField('Complete Address (Rm# Bldg./House#, Street, Brgy.)')
-    
-    # Permanent Address
     permanent_country = StringField('Country', validators=[DataRequired()])
     permanent_region = StringField('Region', validators=[DataRequired()])
     permanent_province = StringField('Province', validators=[DataRequired()])
     permanent_municipality = StringField('Municipality', validators=[DataRequired()])
     permanent_complete_address = TextAreaField('Complete Address (Rm# Bldg./House#, Street, Brgy.)')
-    
-    # Contact Information
     school_issued_mobile = StringField('School Issued Mobile No.', validators=[DataRequired()])
     school_email = StringField('School Email', validators=[DataRequired(), Email()])
-    
     personal_country_code = StringField('Country Code', validators=[DataRequired()])
     personal_tel_no = StringField('Tel No.')
     personal_mobile_1 = StringField('Personal Mobile No. 1', validators=[DataRequired()])
     personal_mobile_2 = StringField('Personal Mobile No. 2')
     personal_mobile_3 = StringField('Personal Mobile No. 3')
     personal_email = StringField('Personal Email', validators=[DataRequired(), Email()])
-    
-    # Religion and Social Media
     religion = StringField('Religion', validators=[DataRequired()])
     facebook = StringField('Facebook')
     twitter = StringField('Twitter')
-    
-    # Educational Data
     school_level = StringField('School Level', validators=[DataRequired()])
     school_name = StringField('Name of School', validators=[DataRequired()])
     course = StringField('Course', validators=[DataRequired()])
     year_graduated = StringField('Year Graduated')
     last_school_attended = StringField('Last School Attended', validators=[DataRequired()])
-    
-    # Economic Data
     father_last_name = StringField("Father's Last Name", validators=[DataRequired()])
     father_first_name = StringField("Father's First Name", validators=[DataRequired()])
     father_middle_name = StringField("Father's Middle Name", validators=[DataRequired()])

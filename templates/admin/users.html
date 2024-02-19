@@ -230,7 +230,6 @@ nav:hover::-webkit-scrollbar-thumb {
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
             <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
             <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
-            <a href="{{ url_for('register') }}" class="link"><i class="fas fa-user-plus"></i> Register</a>
             <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
             <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
             <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
@@ -249,93 +248,27 @@ nav:hover::-webkit-scrollbar-thumb {
             <br>
             <table>
                 <tr>
-                    <th>User ID</th>
-                    <th>Username</th>
+                    <th>Email</th>
                     <th>Name</th>
-                    <th>Contact</th>
                     <th>Password</th>
                     <th>Role</th>
                     <th>Update</th>
                     <th>Delete</th>
-                    <th>Enroll</th>
                 </tr>
                 {% for user in users %}
                 <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
                     <td>{{ user.name }}</td>
-                    <td>{{ user.contact }}</td>
                     <td>{{ user.password }}</td>
                     <td>{{ user.role }}</td>
                     <td><a href="{{ url_for('update_user', user_id=user.id) }}" class="link">Update</a></td>
                     <td><a href="{{ url_for('delete_user', user_id=user.id) }}" class="link">Delete</a></td>
-                    {% if user.role == 'teacher' %}
-                    <td><a href="#" class="link" onclick="toggleEnrollForm(this)" data-user-id="{{ user.id }}">Verify </a></td>
-                    {% elif user.role == 'student' %}
-                    <td><a href="#" class="link" onclick="toggleStudentEnrollForm(this)" data-user-id="{{ user.id }}">Verify</a></td>
-                    {% else %}
-                    <td></td> <!-- Empty cell for users without the 'teacher' or 'student' role -->
-                    {% endif %}
                 </tr>
                 {% endfor %}
             </table>
         </div>
-        <div id="enroll-form" class="enroll-form" style="display: none;">
-            <h2>Enroll</h2>
-            <form method="POST" action="{{ url_for('users') }}">
-                {{ teacher_form.hidden_tag() }}
-
-                <!-- Add an input field for the teacher's user ID -->
-                <input type="hidden" id="teacher-id-input" name="teacher_id">
-
-                <label for="name">Name:</label>
-                {{ teacher_form.name(class="your-css-class") }}
-                <button type="submit" class="link">Add Teacher</button>
-            </form>
-        </div>
-        <div id="student-enroll-form" class="enroll-form" style="display: none;">
-            <h2>Enroll Student</h2>
-            <form method="POST" action="{{ url_for('users') }}">
-                {{ student_form.hidden_tag() }}
-
-                <!-- Add an input field for the student's user ID -->
-                <input type="hidden" id="student-id-input" name="student_id">
-
-                <label for="name">Name:</label>
-                {{ student_form.name(class="your-css-class") }}
-                <button type="submit" class="link">Enroll Student</button>
-            </form>
-        </div>
     </main>
+    
 
-    <script>
-        function toggleEnrollForm(clickedElement) {
-            var enrollForm = document.getElementById('enroll-form');
-            var teacherIdInput = document.getElementById('teacher-id-input');
-
-            // Retrieve user ID from the clicked element's data attribute
-            var userId = clickedElement.getAttribute('data-user-id');
-
-            // Set the user ID to the teacher ID input field
-            teacherIdInput.value = userId;
-
-            // Toggle the visibility of the enroll form
-            enrollForm.style.display = enrollForm.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function toggleStudentEnrollForm(clickedElement) {
-            var studentEnrollForm = document.getElementById('student-enroll-form');
-            var studentIdInput = document.getElementById('student-id-input');
-
-            // Retrieve user ID from the clicked element's data attribute
-            var userId = clickedElement.getAttribute('data-user-id');
-
-            // Set the user ID to the student ID input field
-            studentIdInput.value = userId;
-
-            // Toggle the visibility of the enroll form for students
-            studentEnrollForm.style.display = studentEnrollForm.style.display === 'none' ? 'block' : 'none';
-        }
-    </script>
 </body>
 </html>

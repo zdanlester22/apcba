@@ -2,17 +2,17 @@ from flask import Flask, render_template, request, redirect, url_for, flash,  se
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Enrollment, Enrollies, Grades, Schedule
-from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, RegistrationForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm
+from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm
 from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, GradeForm, ScheduleForm
 from datetime import datetime
-from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash
 from sqlalchemy import or_
 import os
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_uhvw_user:MYUzSsCKpa8teEJC40w12oXdtqHlTqD2@dpg-cmt5evv109ks73a2sj10-a.oregon-postgres.render.com/apcba_uhvw'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/apcba'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 login_manager = LoginManager(app)
@@ -54,6 +54,12 @@ def enrollies():
 
     if form.validate_on_submit():
         try:
+            # Convert the string date of birth to a datetime object
+            date_of_birth = datetime.strptime(form.date_of_birth.data, "%Y-%m-%d")
+
+            # Format the datetime object as a string in the desired format
+            password = date_of_birth.strftime("%Y-%m-%d")
+
             new_enrollies = Enrollies(
                 name=form.name.data,
                 email=form.email.data,
@@ -78,16 +84,23 @@ def enrollies():
             db.session.add(new_enrollies)
             db.session.commit()
 
+            user = User(
+                name=form.name.data,  
+                password=password, 
+                email=form.email.data,
+                role='student', 
+            )
+            db.session.add(user)
+            db.session.commit()
+
             flash('Enrollment successful!', 'success')
             return redirect(url_for('enrollies'))
 
         except Exception as e:
             db.session.rollback()
             app.logger.error(f"Error during enrollment: {str(e)}")
-            flash('Error during enrollment. Please try again.', 'danger')
 
     enrollies_list = Enrollies.query.all()
-
     return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list)
 
 @app.route('/admin/view_enrollies')
@@ -113,57 +126,51 @@ def archive_enrollie(enrollie_id):
 @login_required
 def users():
     if current_user.role != 'admin':
-        flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('admin/dashboard'))
 
-    # Fetch user data from the database
     users_data = User.query.all()
-
-    # Search functionality
     search_query = request.args.get('q', default='', type=str)
 
     if search_query:
         users_data = User.query.filter(
             or_(
-                User.username.ilike(f"%{search_query}%"),
+                User.email.ilike(f"%{search_query}%"),
                 User.id.ilike(f"%{search_query}%"),
                 User.name.ilike(f"%{search_query}%"),
             )
         ).all()
 
-
-    # Handle form submissions
     teacher_form = TeacherForm()
     student_form = StudentForm()
 
-
     if request.method == 'POST':
-        if teacher_form.validate_on_submit() and current_user.role == 'admin':
-            new_teacher = Teacher(
-                teacher_id=teacher_form.teacher_id.data,
-                name=teacher_form.name.data,
-            )
-            db.session.add(new_teacher)
-            try:
-                db.session.commit()
-                flash('Teacher added successfully!', 'success')
-            except Exception as e:
-                db.session.rollback()
-                flash(f'Error adding teacher: {str(e)}', 'danger')
-
-        elif student_form.validate_on_submit() and current_user.role == 'admin':
-            new_student = Student(
-                student_id=student_form.student_id.data,
-                name=student_form.name.data,
-            
-            )
-            db.session.add(new_student)
-            try:
-                db.session.commit()
-                flash('Student added successfully!', 'success')
-            except Exception as e:
-                db.session.rollback()
-                flash(f'Error adding student: {str(e)}', 'danger')
+        # Automatically add a new user as a Teacher or Student based on the form submitted
+        form = request.form.get('form_type')  # Get the form type (teacher or student)
+        if form == 'teacher' and current_user.role == 'admin':
+            form_data = TeacherForm(request.form)
+            if form_data.validate():
+                new_user = Teacher(
+                    name=form_data.name.data,
+                    teacher_id=form_data.teacher_id.data
+                )
+                db.session.add(new_user)
+        elif form == 'student' and current_user.role == 'admin':
+            form_data = StudentForm(request.form)
+            if form_data.validate():
+                new_user = Student(
+                    name=form_data.name.data,
+                    student_id=form_data.student_id.data
+                )
+                db.session.add(new_user)
+        
+        # Commit changes to the database
+        try:
+            db.session.commit()
+            flash('User added successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error adding user: {str(e)}")
+            flash('Error adding user. Please try again.', 'danger')
 
         return redirect(url_for('users'))
 
@@ -173,10 +180,7 @@ def users():
 @login_required
 def view_teachers():
     if current_user.role != 'admin':
-        flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('admin/dashboard'))
-
-    # Fetch teacher data from the database
     teachers_data = Teacher.query.all()
 
     return render_template('admin/view_teachers.html', teachers=teachers_data)
@@ -185,8 +189,8 @@ def view_teachers():
 @login_required
 def view_students():
     if current_user.role != 'admin':
-        flash('You do not have permission to access this page.', 'danger')
-        return redirect(url_for('admin.dashboard'))
+
+        return redirect(url_for('dashboard'))
 
     students_data = (
         db.session.query(Student, Section.name.label('section_name'))
@@ -204,12 +208,10 @@ def view_students():
 @login_required
 def update_student(student_id):
     if current_user.role != 'admin':
-        flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('view_students'))
 
     student_to_update = Student.query.get(student_id)
     if not student_to_update:
-        flash('Student not found.', 'danger')
         return redirect(url_for('view_students'))
 
     form = UpdateStudentForm(obj=student_to_update)
@@ -221,7 +223,6 @@ def update_student(student_id):
         
 
         db.session.commit()
-        flash('Student updated successfully.', 'success')
         return redirect(url_for('view_students'))
 
     return render_template('admin/update_student.html', form=form, student=student_to_update)
@@ -230,12 +231,10 @@ def update_student(student_id):
 @login_required
 def delete_student(student_id):
     if current_user.role != 'admin':
-        flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('view_students'))
 
     student_to_delete = Student.query.get(student_id)
     if not student_to_delete:
-        flash('Student not found.', 'danger')
         return redirect(url_for('view_students'))
 
     db.session.delete(student_to_delete)
@@ -249,15 +248,11 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data, password=form.password.data).first()
+        user = User.query.filter_by(email=form.email.data, password=form.password.data).first()
         if user:
             login_user(user)
             flash('Login successful', 'success')
             return redirect(url_for('dashboard'))
-        else:
-            flash('Please check your username and password.')
-
-    # Handle the case where form is not validated or initial GET request
     return render_template('web/login.html', form=form, )
     
 @app.route('/logout')
@@ -275,11 +270,9 @@ def dashboard():
         announcement = Announcement(title=form.title.data, content=form.content.data, author_id=current_user.id)
         db.session.add(announcement)
         db.session.commit()
-        flash('Announcement posted successfully!', 'success')
 
     announcements = Announcement.query.order_by(Announcement.timestamp.desc()).all()
 
-    # Choose the appropriate template based on the user's role
     if current_user.role == 'student':
         template = 'student/student_dashboard.html'
     elif current_user.role == 'teacher':
@@ -287,8 +280,6 @@ def dashboard():
     elif current_user.role == 'admin':
         template = 'admin/dashboard.html'
     else:
-        # Handle other roles or scenarios
-        flash('Unsupported user role', 'danger')
         return redirect(url_for('index'))
 
     return render_template(template, user=current_user, form=form, announcements=announcements,)
@@ -299,7 +290,6 @@ def update_announcement(announcement_id):
     announcement = Announcement.query.get(announcement_id)
 
     if not announcement or current_user.id != announcement.author_id:
-        flash('You do not have permission to update this announcement.', 'danger')
         return redirect(url_for('dashboard'))
 
     form = AnnouncementForm(obj=announcement)
@@ -308,7 +298,6 @@ def update_announcement(announcement_id):
         announcement.title = form.title.data
         announcement.content = form.content.data
         db.session.commit()
-        flash('Announcement updated successfully!', 'success')
         return redirect(url_for('dashboard'))
 
     return render_template('admin/update_announcement.html', form=form, announcement=announcement)
@@ -319,53 +308,21 @@ def delete_announcement(announcement_id):
     announcement = Announcement.query.get(announcement_id)
 
     if not announcement or current_user.id != announcement.author_id:
-        flash('You do not have permission to delete this announcement.', 'danger')
         return redirect(url_for('dashboard'))
 
     db.session.delete(announcement)
     db.session.commit()
-    flash('Announcement deleted successfully!', 'success')
     return redirect(url_for('dashboard'))
 
-@app.route('/admin/register', methods=['GET', 'POST'])
-@login_required
-def register():
-    if current_user.role != 'admin':
-        flash('You do not have permission to access this page.', 'danger')
-        return redirect(url_for('dashboard'))
-
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = form.password.data  # In a real application, you should hash the password
-
-        # Create a new user with the provided information and set the user_id
-        user = User(
-            username=form.username.data,
-            name=form.name.data,
-            contact=form.contact.data,
-            password=hashed_password,
-            role=form.role.data,
-        )
-
-        # Add the user to the database
-        db.session.add(user)
-        db.session.commit()
-
-        flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('register'))
-
-    return render_template('admin/register.html', form=form)
 
 @app.route('/update/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def update_user(user_id):
     if current_user.role != 'admin':
-        flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('dashboard'))
 
     user_to_update = User.query.get(user_id)
     if not user_to_update:
-        flash('User not found.', 'danger')
         return redirect(url_for('dashboard'))
 
     form = UpdateUserForm()
@@ -373,12 +330,11 @@ def update_user(user_id):
         if form.new_username.data:
             user_to_update.username = form.new_username.data
         if form.new_password.data:
-            user_to_update.password = form.new_password.data  # In a real application, you should hash the password
+            user_to_update.password = form.new_password.data 
         if form.new_role.data:
             user_to_update.role = form.new_role.data
 
         db.session.commit()
-        flash(f'User updated successfully!', 'success')
         return redirect(url_for('dashboard'))
 
     return render_template('admin/update_user.html', form=form, user=user_to_update)
@@ -387,18 +343,15 @@ def update_user(user_id):
 @login_required
 def delete_user(user_id):
     if current_user.role != 'admin':
-        flash('You do not have permission to access this page.', 'danger')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('users'))
 
     user_to_delete = User.query.get(user_id)
     if not user_to_delete:
-        flash('User not found.', 'danger')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('users'))
 
     db.session.delete(user_to_delete)
     db.session.commit()
-    flash(f'User deleted successfully!', 'success')
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('users'))
 
 @app.route('/certificate', methods=['GET', 'POST'])
 @login_required
@@ -408,19 +361,13 @@ def certificate():
     if form.validate_on_submit():
         title = form.title.data
         pdf = form.pdf.data
-
-        # Save the PDF file
         pdf_filename = f"{title.replace(' ', '_')}.pdf"
         os.makedirs(os.path.join('uploads', 'documents'), exist_ok=True)
         pdf.save(os.path.join('uploads', 'documents', pdf_filename))
-
-        # Save certificate information to the database
         certificate = Certificate(title=title, pdf=pdf_filename, user_id=current_user.id)
         db.session.add(certificate)
         db.session.commit()
-        flash('Certificate uploaded successfully!', 'success')
-
-    # Choose the appropriate template based on the user's role
+        
     if current_user.role == 'student':
         title_filter = request.args.get('title', default='', type=str)
         certificates = Certificate.query.filter_by(user_id=current_user.id).order_by(Certificate.id.desc()).all()
@@ -430,13 +377,10 @@ def certificate():
         certificates = Certificate.query.order_by(Certificate.id.desc()).all()
         template = 'teacher/teacher_certificate.html'
     elif current_user.role == 'admin':
-        # Filter certificates based on the title
         title_filter = request.args.get('title', default='', type=str)
         certificates = Certificate.query.filter(Certificate.title.ilike(f'%{title_filter}%')).order_by(Certificate.id.desc()).all()
         template = 'admin/certificate.html'
     else:
-        # Handle other roles or scenarios
-        flash('Unsupported user role', 'danger')
         return redirect(url_for('dashboard'))
 
     return render_template(template, user=current_user, form=form, certificates=certificates)
@@ -447,7 +391,6 @@ def update_certificate(certificate_id):
     certificate = Certificate.query.get(certificate_id)
 
     if not certificate or current_user.id != certificate.user_id:
-        flash('You do not have permission to update this certificate.', 'danger')
         return redirect(url_for('dashboard'))
 
     form = CertificateForm(obj=certificate)
@@ -456,14 +399,12 @@ def update_certificate(certificate_id):
         certificate.title = form.title.data
 
         if 'pdf' in request.files:
-            # Save the new PDF file
             pdf = request.files['pdf']
             pdf_filename = f"{form.title.data.replace(' ', '_')}.pdf"
             pdf.save(os.path.join('uploads', 'documents', pdf_filename))
             certificate.pdf = pdf_filename
 
         db.session.commit()
-        flash('Certificate updated successfully!', 'success')
         return redirect(url_for('certificate'))
 
     return render_template('admin/update_certificate.html', form=form, certificate=certificate)
@@ -474,12 +415,10 @@ def delete_certificate(certificate_id):
     certificate = Certificate.query.get(certificate_id)
 
     if not certificate or current_user.id != certificate.user_id:
-        flash('You do not have permission to delete this certificate.', 'danger')
         return redirect(url_for('certificate'))
 
     db.session.delete(certificate)
     db.session.commit()
-    flash('Certificate deleted successfully!', 'success')
     return redirect(url_for('certificate'))
 
 @app.route('/admin/download_certificate/<int:certificate_id>')
@@ -488,7 +427,6 @@ def download_certificate(certificate_id):
     certificate = Certificate.query.get(certificate_id)
 
     if not certificate or current_user.id != certificate.user_id:
-        flash('You do not have permission to download this certificate.', 'danger')
         return redirect(url_for('certificate'))
 
     certificate_path = os.path.join('uploads', 'documents', certificate.pdf)
@@ -509,7 +447,6 @@ def account():
             form.populate_obj(current_user.user_account)
 
         db.session.commit()
-        flash('User account information submitted successfully!', 'success')
         return redirect(url_for('account'))
 
     return render_template('account.html', form=form)
@@ -520,8 +457,6 @@ def view_course():
     form_course = CourseForm()
     form_subject = SubjectForm()
     filter_form = FilterForm()
-
-    # Use set_course_choices method to dynamically set choices for the course_id field
     form_subject.set_course_choices(Course.query.all())
     
     if form_course.validate_on_submit():
@@ -537,15 +472,10 @@ def view_course():
         )
         db.session.add(new_course)
         db.session.commit()
-        flash('Course created successfully!', 'success')
         return redirect(url_for('view_course'))
-
-    # Retrieve courses based on filters
     school_year_filter = request.args.get('school_year', type=str)
     semester_filter = request.args.get('semester', type=int)
     course_type_filter = request.args.get('course_type', type=str)
-
-    # Filter courses based on the selected school year, semester, and course type
     courses_query = Course.query
     if school_year_filter:
         courses_query = courses_query.filter_by(school_year=school_year_filter)
@@ -557,7 +487,6 @@ def view_course():
     courses = courses_query.all()
 
     if form_subject.validate_on_submit():
-        # Remove the check for the existence of the selected teacher_id
         new_subject = Subject(
             abbreviation=form_subject.abbreviation.data,
             title=form_subject.title.data,
@@ -566,7 +495,6 @@ def view_course():
         )
         db.session.add(new_subject)
         db.session.commit()
-        flash('Subject created successfully!', 'success')
         return redirect(url_for('view_course'))
 
     return render_template('admin/view_course.html', courses=courses, form_course=form_course, form_subject=form_subject, filter_form=filter_form)
@@ -578,7 +506,6 @@ def update_course(course_id):
     form = CourseForm(obj=course)
 
     if form.validate_on_submit():
-        # Update the course fields
         course.course_type = form.course_type.data
         course.abbreviation = form.abbreviation.data
         course.title = form.title.data
@@ -589,7 +516,6 @@ def update_course(course_id):
         course.is_active = form.is_active.data
 
         db.session.commit()
-        flash('Course updated successfully!', 'success')
         return redirect(url_for('view_course'))
 
     return render_template('admin/update_course.html', form=form, course=course)
@@ -599,19 +525,15 @@ def update_course(course_id):
 def update_subject(subject_id):
     subject = Subject.query.get_or_404(subject_id)
     form = SubjectForm(obj=subject)
-
-    # Set choices for the course_id field
     form.course_id.choices = [(course.id, course.title) for course in Course.query.all()]
 
     if form.validate_on_submit():
-        # Update the subject fields
         subject.abbreviation = form.abbreviation.data
         subject.title = form.title.data
         subject.unit = form.unit.data
         subject.course_id = form.course_id.data
 
         db.session.commit()
-        flash('Subject updated successfully!', 'success')
         return redirect(url_for('view_course'))
 
     return render_template('admin/update_subject.html', form=form, subject=subject)
@@ -620,16 +542,13 @@ def update_subject(subject_id):
 @login_required
 def manage_section():
     form_section = SectionForm()
-
     course_id_filter = request.args.get('course_id', type=int)
     section_name_filter = request.args.get('section_name', type=str)
-
     sections_query = Section.query
     if course_id_filter:
         sections_query = sections_query.filter_by(course_id=course_id_filter)
     if section_name_filter:
         sections_query = sections_query.filter(Section.name.ilike(f'%{section_name_filter}%'))
-
     sections = sections_query.all()
     courses = Course.query.all()
     form_section.course_id.choices = [(course.id, course.title) for course in courses]
@@ -648,7 +567,6 @@ def manage_section():
         db.session.add(new_section)
         db.session.commit()
 
-        # Automatically assign subjects from the course to the new section
         course = Course.query.get(form_section.course_id.data)
         if course:
             subjects_from_course = Subject.query.filter_by(course_id=course.id).all()
@@ -657,10 +575,6 @@ def manage_section():
                 db.session.add(subject)
         
         db.session.commit()
-
-        flash('Section created successfully!', 'success')
-
-        # Redirect to the same page with the selected course_id
         return redirect(url_for('manage_section'))
 
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
@@ -671,13 +585,9 @@ def manage_section():
 def view_subjects():
     section_id = request.args.get('section_id', type=int)
     course_id = request.args.get('course_id', type=int)
-
     current_app.logger.info(f"section_id: {section_id}, course_id: {course_id}")
-
-    # Your logic to fetch subjects based on section_id and course_id
     subjects = Subject.query.filter_by(section_id=section_id, course_id=course_id).all()
 
-    # Fetch schedules for each subject
     for subject in subjects:
         subject.schedules = Schedule.query.filter_by(subject_id=subject.id).all()
 
@@ -689,8 +599,6 @@ def view_subjects():
 @login_required
 def view_modules():
     form_module = ModuleForm()
-
-    # Fetch courses for the dropdown in the form
     courses = Course.query.all()
     form_module.course_id.choices = [(course.id, course.title) for course in courses]
 
@@ -699,13 +607,9 @@ def view_modules():
         year = form_module.year.data
         course_id = form_module.course_id.data
         pdf_file = form_module.pdf_file.data
-
-        # Save the PDF file
         pdf_filename = f"{title.replace(' ', '_')}.pdf"
         os.makedirs(os.path.join('uploads', 'documents'), exist_ok=True)
         pdf_file.save(os.path.join('uploads', 'documents', pdf_filename))
-
-        # Save module details to the database
         new_module = Module(
             title=title,
             year=year,
@@ -714,12 +618,7 @@ def view_modules():
         )
         db.session.add(new_module)
         db.session.commit()
-        flash('Module created successfully!', 'success')
-
-    # Fetch and display existing modules
     modules = Module.query.all()
-
-    # Determine the user role and render the appropriate template
     if current_user.role == 'admin':
         template = 'admin/view_modules.html'
     elif current_user.role == 'teacher':
@@ -727,7 +626,6 @@ def view_modules():
     elif current_user.role == 'student':
         template = 'student/view_modules.html'
     else:
-        flash('Unauthorized access!', 'danger')
         return redirect(url_for('index'))
 
     return render_template(template, form_module=form_module, modules=modules)
@@ -735,44 +633,32 @@ def view_modules():
 @app.route('/download_module/<pdf_filename>', methods=['GET'])
 @login_required
 def download_module(pdf_filename):
-    # Check if the user is authorized to download this module
-
-    # Determine the directory path where the PDF files are stored
     directory = os.path.join('uploads', 'documents')
-
-    # Use send_from_directory to send the file to the client
     return send_from_directory(directory, pdf_filename, as_attachment=True)
 ###################################################################################ENROLLMENT###############################################################################################################
 @app.route('/enroll', methods=['GET', 'POST'])
 @login_required
 def enroll():
-    # Assuming you have a StudentForm to get the student_id
     student_form = StudentForm()
-
-    # Populate the form with the student_id from the query parameter
     student_id = request.args.get('student_id', type=int)
     student_form.student_id.data = student_id
-
     form = EnrollmentForm()
-
     courses = Course.query.all()
     sections = Section.query.all()
 
-    # Set choices only if there are courses and sections available
     if courses:
         form.course_id.choices = [(course.id, course.title) for course in courses]
 
     if sections:
         form.section_id.choices = [(section.id, section.name) for section in sections]
 
-    # Set choices for student_id
+
     students = Student.query.all()
     form.student_id.choices = [(student.id, student.name) for student in students]
-
     existing_enrollments = Enrollment.query.all()
 
     if form.validate_on_submit():
-        print("Form validated")
+
 
         existing_enrollment = Enrollment.query.filter_by(student_id=student_id, section_id=form.section_id.data).first()
 
@@ -803,7 +689,6 @@ def view_grades(student_id):
     form = GradeForm()
 
     if request.method == 'POST':
-        # Create an empty list to store grades
         grades = []
 
         for subject in subjects:
@@ -811,8 +696,6 @@ def view_grades(student_id):
             period_2 = request.form.get(f'period_2_{subject.id}')
             period_3 = request.form.get(f'period_3_{subject.id}')
 
-
-            # Check form validation for each subject
             form.period_1.data = period_1
             form.period_2.data = period_2
             form.period_3.data = period_3
@@ -820,7 +703,6 @@ def view_grades(student_id):
             if not form.validate():
                 print(f'Validation Errors for Subject {subject.id}: {form.errors}')
 
-            # Create a new grade instance and add it to the list
             grade = Grades(
                 student_id=student.id,
                 subject_id=subject.id,
@@ -830,13 +712,8 @@ def view_grades(student_id):
             )
             grades.append(grade)
 
-        # Add all grades to the session (but don't commit yet)
         db.session.add_all(grades)
-
-        # Commit all changes to the database
         db.session.commit()
-
-        flash('Grades recorded successfully!', 'success')
         return redirect(url_for('view_grades', student_id=student_id))
 
     return render_template('admin/view_grades.html', student=student, subjects=subjects, form=form)
@@ -846,16 +723,8 @@ def view_grades(student_id):
 def student_view_grades():
     if current_user.is_authenticated and current_user.role == 'student':
         student = current_user.student
-        
-        # Retrieve grades for the current student
         grades = Grades.query.filter_by(student_id=student.id).all()
-
-        # Retrieve enrollments for the current student
         enrollments = Enrollment.query.filter_by(student_id=student.id).all()
-
-        # Debugging: Print the number of grades retrieved
-        print("Number of grades:", len(grades))
-        print("Number of enrollments:", len(enrollments))
 
         if not grades:
             flash('No grades available for this student.', 'info')
@@ -865,7 +734,7 @@ def student_view_grades():
 
         return render_template('student/view_grades.html', student=student, grades=grades, enrollments=enrollments)
     else:
-        flash('You are not associated with a student profile.', 'warning')
+
         return redirect(url_for('dashboard'))
 
 ###############################################################################################################################################################
@@ -895,10 +764,6 @@ def add_schedule(section_id):
             current_app.logger.error(f"Error adding schedules: {str(e)}")
    
     return render_template('admin/add_schedule.html', form=form, section=section, subjects=subjects)
-
-
-
-# The above assumes that you have a 'Course' model and you need to pass the 'course_id' to the enrollment.
 
 
 if __name__ == '__main__':
