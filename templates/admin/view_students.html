@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <title>APCBA Portal V1.0 - Student Portal Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -205,12 +206,15 @@ nav:hover::-webkit-scrollbar-thumb {
                         <td>{{ student.section_name if student.section_name else "No Section Assigned" }}</td>
                         <td>
                             <a href="{{ url_for('update_student', student_id=student.id) }}" class="link">Update</a>
-                            <a href="{{ url_for('view_grades', student_id=student.id) }}" class="link">Grades</a>
+                            {% if student.section_name %}
+                                <a href="{{ url_for('view_grades', student_id=student.id) }}" class="link">Grades</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </main>
+    
 </body>
 </html>

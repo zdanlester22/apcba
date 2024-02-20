@@ -2,10 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash,  se
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Enrollment, Enrollies, Grades, Schedule
-from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm
+from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm, ChangePasswordForm
 from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, GradeForm, ScheduleForm
 from datetime import datetime
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
 import os
 
@@ -48,16 +48,41 @@ def websiteenroll():
 def student_dashboard():
     return render_template('student/student_dashboard.html')
 
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+        # Retrieve the current user
+        user = User.query.get(current_user.id)
+
+        # Check if the entered current password matches the user's password
+        if not check_password_hash(user.password, form.old_password.data):
+            flash('Incorrect current password. Please try again.', 'danger')
+            return redirect(url_for('change_password'))
+
+        # Generate a hash for the new password
+        hashed_password = generate_password_hash(form.new_password.data)
+
+        # Update the user's password
+        user.password = hashed_password
+        db.session.commit()
+
+        flash('Password updated successfully!', 'success')
+        return redirect(url_for('dashboard'))  # Redirect to another page after password update
+
+    return render_template('change_password.html', form=form)
+
+
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
     form = EnrolliesForm()
 
     if form.validate_on_submit():
         try:
-            # Convert the string date of birth to a datetime object
-            date_of_birth = datetime.strptime(form.date_of_birth.data, "%Y-%m-%d")
 
-            # Format the datetime object as a string in the desired format
+            date_of_birth = datetime.strptime(form.date_of_birth.data, "%Y-%m-%d")
             password = date_of_birth.strftime("%Y-%m-%d")
 
             new_enrollies = Enrollies(
@@ -83,14 +108,20 @@ def enrollies():
 
             db.session.add(new_enrollies)
             db.session.commit()
-
             user = User(
-                name=form.name.data,  
-                password=password, 
+                name=form.name.data,
+                password=password,
                 email=form.email.data,
-                role='student', 
+                role='student'
             )
             db.session.add(user)
+            db.session.commit()
+
+            student = Student(
+                student_id=user.id,
+                name=form.name.data
+            )
+            db.session.add(student)
             db.session.commit()
 
             flash('Enrollment successful!', 'success')
@@ -145,8 +176,8 @@ def users():
 
     if request.method == 'POST':
         # Automatically add a new user as a Teacher or Student based on the form submitted
-        form = request.form.get('form_type')  # Get the form type (teacher or student)
-        if form == 'teacher' and current_user.role == 'admin':
+        form_type = request.form.get('form_type')  # Get the form type (teacher or student)
+        if form_type == 'teacher' and current_user.role == 'admin':
             form_data = TeacherForm(request.form)
             if form_data.validate():
                 new_user = Teacher(
@@ -154,7 +185,15 @@ def users():
                     teacher_id=form_data.teacher_id.data
                 )
                 db.session.add(new_user)
-        elif form == 'student' and current_user.role == 'admin':
+        elif form_type == 'student' and current_user.role == 'admin':
+            form_data = StudentForm(request.form)
+            if form_data.validate():
+                new_user = Student(
+                    name=form_data.name.data,
+                    student_id=form_data.student_id.data
+                )
+                db.session.add(new_user)
+        else:  # If the form type is not specified, consider it as a student
             form_data = StudentForm(request.form)
             if form_data.validate():
                 new_user = Student(
@@ -163,7 +202,6 @@ def users():
                 )
                 db.session.add(new_user)
         
-        # Commit changes to the database
         try:
             db.session.commit()
             flash('User added successfully!', 'success')
@@ -180,7 +218,7 @@ def users():
 @login_required
 def view_teachers():
     if current_user.role != 'admin':
-        return redirect(url_for('admin/dashboard'))
+        return redirect(url_for('dashboard'))
     teachers_data = Teacher.query.all()
 
     return render_template('admin/view_teachers.html', teachers=teachers_data)
@@ -703,12 +741,17 @@ def view_grades(student_id):
             if not form.validate():
                 print(f'Validation Errors for Subject {subject.id}: {form.errors}')
 
+            final_grade = (float(period_1) + float(period_2) + float(period_3)) / 3.0
+            is_passed = final_grade >= 75
+
             grade = Grades(
                 student_id=student.id,
                 subject_id=subject.id,
                 period_1=period_1,
                 period_2=period_2,
                 period_3=period_3,
+                final_grade=final_grade,
+                is_passed=is_passed
             )
             grades.append(grade)
 
@@ -717,6 +760,7 @@ def view_grades(student_id):
         return redirect(url_for('view_grades', student_id=student_id))
 
     return render_template('admin/view_grades.html', student=student, subjects=subjects, form=form)
+
 
 @app.route('/grades/student_view', methods=['GET'])
 @login_required
