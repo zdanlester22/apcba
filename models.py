@@ -125,9 +125,9 @@ class Subject(db.Model):
 class Teacher(db.Model):
     __tablename__ = 'teacher'
     id = db.Column(db.Integer, primary_key=True)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    section = db.relationship('Section', back_populates='teacher', uselist=False)  # Using 'section' instead of 'sections'
+    section = db.relationship('Section', back_populates='teacher', uselist=False) # Using 'section' instead of 'sections'
     
 
 
