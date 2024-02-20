@@ -9,10 +9,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
 import os
 
-
+#'mysql+mysqlconnector://root:@localhost/apcba'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/apcba'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 login_manager = LoginManager(app)
@@ -54,24 +54,23 @@ def change_password():
     form = ChangePasswordForm()
 
     if form.validate_on_submit():
-        # Retrieve the current user
+      
         user = User.query.get(current_user.id)
 
-        # Check if the entered current password matches the user's password
+       
         if not check_password_hash(user.password, form.old_password.data):
             flash('Incorrect current password. Please try again.', 'danger')
             return redirect(url_for('change_password'))
 
-        # Generate a hash for the new password
+        
         hashed_password = generate_password_hash(form.new_password.data)
 
-        # Update the user's password
+       
         user.password = hashed_password
         db.session.commit()
 
         flash('Password updated successfully!', 'success')
-        return redirect(url_for('dashboard'))  # Redirect to another page after password update
-
+        return redirect(url_for('dashboard')) 
     return render_template('change_password.html', form=form)
 
 
@@ -175,8 +174,7 @@ def users():
     student_form = StudentForm()
 
     if request.method == 'POST':
-        # Automatically add a new user as a Teacher or Student based on the form submitted
-        form_type = request.form.get('form_type')  # Get the form type (teacher or student)
+        form_type = request.form.get('form_type')  
         if form_type == 'teacher' and current_user.role == 'admin':
             form_data = TeacherForm(request.form)
             if form_data.validate():
@@ -193,7 +191,7 @@ def users():
                     student_id=form_data.student_id.data
                 )
                 db.session.add(new_user)
-        else:  # If the form type is not specified, consider it as a student
+        else: 
             form_data = StudentForm(request.form)
             if form_data.validate():
                 new_user = Student(
