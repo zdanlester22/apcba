@@ -12,11 +12,17 @@ class LoginForm(FlaskForm):
     email = StringField('email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
+
+class RegistrationForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    role = SelectField('Role', choices=[('student', 'Student'), ('teacher', 'Teacher'), ('admin', 'Admin')],
+                       validators=[DataRequired()])
     
 class UpdateUserForm(FlaskForm):
-    new_username = StringField('New Username')
+    new_email = StringField('email')
     new_name = StringField('New Name', validators=[DataRequired()])
-    new_contact = StringField('New Contact', validators=[DataRequired()])
     new_password = PasswordField('New Password')
     new_role = SelectField('New Role', choices=[('admin', 'Admin'), ('teacher', 'Teacher'), ('student', 'Student')])
     submit = SubmitField('Update User')

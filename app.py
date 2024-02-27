@@ -3,7 +3,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.utils import secure_filename
 from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Enrollment, Enrollies, Grades, Schedule
 from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm, ChangePasswordForm
-from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, GradeForm, ScheduleForm
+from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, GradeForm, ScheduleForm, RegistrationForm
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
@@ -320,6 +320,75 @@ def dashboard():
 
     return render_template(template, user=current_user, form=form, announcements=announcements,)
 
+@app.route('/admin/register', methods=['GET', 'POST'])
+@login_required
+def register():
+    if current_user.role != 'admin':
+        flash('You do not have permission to access this page.', 'danger')
+        return redirect(url_for('dashboard'))
+
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = form.password.data  # In a real application, you should hash the password
+
+        # Create a new user with the provided information and set the user_id
+        user = User(
+            email=form.email.data,
+            name=form.name.data,
+            password=hashed_password,
+            role=form.role.data,
+        )
+
+        # Add the user to the database
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('register'))
+
+    return render_template('admin/register.html', form=form)
+
+
+@app.route('/update/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def update_user(user_id):
+    if current_user.role != 'admin':
+        flash('You do not have permission to access this page.', 'danger')
+        return redirect(url_for('dashboard'))
+
+    user_to_update = User.query.get(user_id)
+    if not user_to_update:
+        flash('User not found.', 'danger')
+        return redirect(url_for('dashboard'))
+
+    form = UpdateUserForm()
+    if form.validate_on_submit():
+        if form.new_email.data:
+            user_to_update.email = form.new_email.data
+        if form.new_password.data:
+            user_to_update.password = form.new_password.data  # In a real application, you should hash the password
+        if form.new_role.data:
+            user_to_update.role = form.new_role.data
+
+        db.session.commit()
+        flash(f'User updated successfully!', 'success')
+        return redirect(url_for('dashboard'))
+
+    return render_template('admin/update_user.html', form=form, user=user_to_update)
+
+
+@app.route('/delete/<int:user_id>')
+@login_required
+def delete_user(user_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('users'))
+
+    user_to_delete = User.query.get(user_id)
+    if not user_to_delete:
+        return redirect(url_for('users'))
+
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    return redirect(url_for('users'))
+
 @app.route('/admin/update_announcement/<int:announcement_id>', methods=['GET', 'POST'])
 @login_required
 def update_announcement(announcement_id):
@@ -351,43 +420,7 @@ def delete_announcement(announcement_id):
     return redirect(url_for('dashboard'))
 
 
-@app.route('/update/<int:user_id>', methods=['GET', 'POST'])
-@login_required
-def update_user(user_id):
-    if current_user.role != 'admin':
-        return redirect(url_for('dashboard'))
 
-    user_to_update = User.query.get(user_id)
-    if not user_to_update:
-        return redirect(url_for('dashboard'))
-
-    form = UpdateUserForm()
-    if form.validate_on_submit():
-        if form.new_username.data:
-            user_to_update.username = form.new_username.data
-        if form.new_password.data:
-            user_to_update.password = form.new_password.data 
-        if form.new_role.data:
-            user_to_update.role = form.new_role.data
-
-        db.session.commit()
-        return redirect(url_for('dashboard'))
-
-    return render_template('admin/update_user.html', form=form, user=user_to_update)
-
-@app.route('/delete/<int:user_id>')
-@login_required
-def delete_user(user_id):
-    if current_user.role != 'admin':
-        return redirect(url_for('users'))
-
-    user_to_delete = User.query.get(user_id)
-    if not user_to_delete:
-        return redirect(url_for('users'))
-
-    db.session.delete(user_to_delete)
-    db.session.commit()
-    return redirect(url_for('users'))
 
 @app.route('/certificate', methods=['GET', 'POST'])
 @login_required
