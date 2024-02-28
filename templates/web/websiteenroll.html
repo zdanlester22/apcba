@@ -12,12 +12,11 @@
             margin: 0;
             padding: 0;
             font-family: 'JetBrains Mono', monospace;
-            background-color: #2a235e;
-            color: #fff;
+            background-color: #fff;
+            color: #303030;
         }
 
         nav {
-            background-color: #2a235e;
             color: white;
             padding: 10px;
             text-align: center;
@@ -25,9 +24,9 @@
         }
 
         nav a {
-            color: white;
+            color: gray;
             text-decoration: none;
-            font-size: 20px;
+            font-size: 30px;
         }
 
         .back-button {
@@ -41,11 +40,14 @@
 
         .header-image {
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
             margin: 20px auto;
             display: block;
             border-radius: 75px;
             margin-top: 50px;
+            border: 1px solid rgb(216, 211, 211);
+            height: 400px;
+            margin-bottom: 50px;
         }
 
         .enrollment-instructions {
@@ -59,12 +61,12 @@
             display: flex;
         }
         .enrollment-instructions h2{
-            color: #fff;
+            color: rgb(97, 96, 96);
             margin-left: -300px;
             margin-top: 100px;
         }
         .enrollment-instructions p{
-            color: #fff;
+            color: gray;
             margin-left: -300px;
             margin-top: 20px;
         }
@@ -75,9 +77,10 @@
             max-width: 800px;
             margin: 20px auto;
             padding: 30px;
-            background-color: #574f8d;
+            background-color: #fff;
             border-radius: 15px;
             margin-bottom: 50px;
+            border: 1px solid rgb(216, 211, 211);
         }
 
         .courses1, .courses2 {
@@ -86,20 +89,20 @@
         }
 
         .courses1 h1, .courses2 h1 {
-            color: #fff;
             font-size: 24px;
             margin-bottom: 10px;
         }
 
         .courses1 p, .courses2 p {
             margin: 5px 0;
+            color: #303030;
         }
 
         .link {
             display: block;
             margin-top: 20px;
             padding: 10px;
-            background-color: #33c86c;
+            background-color: #374c60;
             color: #fff;
             text-align: center;
             text-decoration: none;
@@ -107,12 +110,13 @@
         }
 
         .link:hover {
-            background-color: #007bb5;
+            background-color: #48647e;
         }
         .enrollment-instructions{
             margin-left: 300px;
             margin-right: 50px;
         }
+   
     </style>
 </head>
 <body>
@@ -151,6 +155,6 @@
             <p>HE - Home Economics</p>
         </div>
     </div>
-         <a href="{{ url_for('enrollies') }}" class="link">Enroll Here</a>
+         <a href="{{ url_for('enrollies') }}" class="link">Fill up the form here</a>
 </body>
 </html>

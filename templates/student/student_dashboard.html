@@ -277,6 +277,7 @@
             <a  href="{{ url_for('change_password') }}" class="link"><i class="fas fa-book"></i> Password</a>
         </nav>
     </nav>
+    <h2>Welcome, {{ user.name }}!</h2>
     <div class="bot">
         <div class="announcements">
             {% if announcements %}

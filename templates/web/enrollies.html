@@ -5,34 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enrollment Form</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #2a235e;
+            font-family: Montserrat, sans-serif;
+            background-color: #fff;
             margin: 0;
             padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            color: #fff;
+            color: #303030;
         }
 
         form {
             max-width: 700px;
-            background-color: #574f8d;
+            background-color: #fff;
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             margin-top: 1600px;
             width: 100%;
+            color: #303030;
+            border: 1px solid rgb(235, 227, 227);
         }
 
         h1, h2 {
-            color: #fff;
+            color: #5f5959;
             margin-bottom: 20px;
         }
 
@@ -103,7 +106,8 @@
         }
 
         .back-button a {
-            color: #fff;
+            color: gray;
+            font-size: 30px;
         }
 
         .back-button:hover {
@@ -129,7 +133,7 @@
     <form method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <h1>Enrollment Form</h1>
-        <p>Note: Fill up this enrollment form honestly, we will validate each information before we verify your enrollment.</p>
+        <p>Note:(College and SHS) Fill up this enrollment form honestly, we will validate each information before we verify your enrollment.</p>
 
         <h2>Enrollee Information</h2>
         <label for="name">Name:</label>
