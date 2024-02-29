@@ -176,7 +176,7 @@ class EnrolliesForm(FlaskForm):
     contact_number = StringField('Contact Number', validators=[DataRequired()])
     date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
     place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
-    gender = StringField('Gender', validators=[DataRequired()])
+    gender = SelectField('Gender', choices=[('male', 'Male'), ('female', 'Female')], validators=[DataRequired()])
     nationality = StringField('Nationality', validators=[DataRequired()])
     religion = StringField('Religion', validators=[DataRequired()])
     previous_school_info = StringField('Previous School Information')
@@ -208,3 +208,9 @@ class ChangePasswordForm(FlaskForm):
     new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8)])
     confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), Length(min=8)])
     submit = SubmitField('Change Password')
+
+class CommentForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    comment = TextAreaField('Comment', validators=[DataRequired()])
+    submit = SubmitField('Submit')

@@ -281,52 +281,51 @@
     <div class="bot">
         <h1 class="page-title">Grades</h1>
     
-    <!-- Display student, section, and course information -->
-    <div class="info-section">
-        <p><strong>Student:</strong> {{ student.name }}</p>
-        {% for enrollment in enrollments %}
-            <p><strong>Course:</strong> {{ enrollment.enrolled_course_rel.title }} 
-            <strong>Section:</strong> {{ enrollment.enrolled_section_rel.name}}
-            <strong>Semester:</strong> {{ enrollment.enrolled_course_rel.semesters }}
-            <strong>School Year:</strong> {{ enrollment.enrolled_course_rel.school_year }}
-            <strong>Year:</strong> {{ enrollment.enrolled_course_rel.year }}
-            <strong>Class:</strong> {{ enrollment.enrolled_course_rel.Class }}</p>
-            <!-- Inner loop for sections should be placed here -->
-            {% for section in enrollment.enrolled_course_rel.sections %}
-                <p><strong>Teacher:</strong> {{ section.teacher.name }}</p>
-            {% endfor %}
-        {% endfor %}
-    </div>
+        <!-- Display student, section, and course information -->
+        {% if enrollments %}
+            <div class="info-section">
+                <p><strong>Student:</strong> {{ student.name }}</p>
+                {% for enrollment in enrollments %}
+                    <p><strong>Course:</strong> {{ enrollment.enrolled_course_rel.title }} 
+                    <strong>Section:</strong> {{ enrollment.enrolled_section_rel.name}}
+                    <strong>Semester:</strong> {{ enrollment.enrolled_course_rel.semesters }}
+                    <strong>School Year:</strong> {{ enrollment.enrolled_course_rel.school_year }}
+                    <strong>Year:</strong> {{ enrollment.enrolled_course_rel.year }}
+                    <strong>Class:</strong> {{ enrollment.enrolled_course_rel.Class }}</p>
+                    <!-- Inner loop for sections should be placed here -->
+                    {% for section in enrollment.enrolled_course_rel.sections %}
+                        <p><strong>Teacher:</strong> {{ section.teacher.name }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
     
-
-    <table class="grades-table">
-        <thead>
-            <tr>
-              <th>Subject</th>
-              <th>Period 1</th>
-              <th>Period 2</th>
-              <th>Period 3</th>
-              <th>Final Grade</th>
-              <th>Passed</th>
-              
-            </tr>
-          </thead>
-          <tbody>
-            {% for grade in grades %}
-              <tr>
-                <td>{{ grade.subject.title }}</td>
-                <td>{{ grade.period_1 }}</td>
-                <td>{{ grade.period_2 }}</td>
-                <td>{{ grade.period_3 }}</td>
-                <td>{{ grade.final_grade }}</td>
-                <td>{{ "Pass" if grade.is_passed else "Fail" if grade else 'N/A' }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-    
-    
-    
+            <table class="grades-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Period 1</th>
+                        <th>Period 2</th>
+                        <th>Period 3</th>
+                        <th>Final Grade</th>
+                        <th>Passed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in grades %}
+                        <tr>
+                            <td>{{ grade.subject.title }}</td>
+                            <td>{{ grade.period_1 }}</td>
+                            <td>{{ grade.period_2 }}</td>
+                            <td>{{ grade.period_3 }}</td>
+                            <td>{{ grade.final_grade }}</td>
+                            <td>{{ "Pass" if grade.is_passed else "Fail" if grade else 'N/A' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <h2>Not yet enrolled</h2>
+        {% endif %}
     </div>
     
 

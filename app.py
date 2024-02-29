@@ -1,33 +1,64 @@
 from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
-from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Enrollment, Enrollies, Grades, Schedule
+from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
 from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm, ChangePasswordForm
-from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, GradeForm, ScheduleForm, RegistrationForm
+from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, GradeForm, ScheduleForm, RegistrationForm, CommentForm
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
 import os
+from flask_mail import Mail, Message
 
 #'mysql+mysqlconnector://root:@localhost/apcba'
 #'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost/apcba'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
+app.config['MAIL_PORT'] = 2525
+app.config['MAIL_USERNAME'] = 'nicssanyo@gmail.com'
+app.config['MAIL_PASSWORD'] = 'sanaymagisa24'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+
 db.init_app(app)
+mail = Mail(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-
+import logging
+if app.debug:
+    app.logger.setLevel(logging.DEBUG)
+    logging.getLogger('werkzeug').setLevel(logging.DEBUG)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('web/index.html')
+    form = CommentForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        comment_text = form.comment.data
+
+        new_comment = Comment(name=name, email=email, comment=comment_text)
+        db.session.add(new_comment)
+        db.session.commit()
+
+        # Send email directly to your email address
+        msg = Message(subject="New Comment",
+                      sender=email,
+                      recipients=["zdanlester@gmail.com"])  # Your email address
+        msg.body = f"New comment from {name} ({email}):\n\n{comment_text}"
+        mail.send(msg)
+
+        return 'Comment submitted successfully!'
+
+    return render_template('web/index.html', form=form)
 
 @app.route('/web/websiteabout')
 def websiteabout():
@@ -157,61 +188,62 @@ def archive_enrollie(enrollie_id):
 @login_required
 def users():
     if current_user.role != 'admin':
+        flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('admin/dashboard'))
 
+    # Fetch user data from the database
     users_data = User.query.all()
+
+    # Search functionality
     search_query = request.args.get('q', default='', type=str)
 
     if search_query:
         users_data = User.query.filter(
             or_(
-                User.email.ilike(f"%{search_query}%"),
+                User.username.ilike(f"%{search_query}%"),
                 User.id.ilike(f"%{search_query}%"),
                 User.name.ilike(f"%{search_query}%"),
             )
         ).all()
 
+
+    # Handle form submissions
     teacher_form = TeacherForm()
     student_form = StudentForm()
 
+
     if request.method == 'POST':
-        form_type = request.form.get('form_type')  
-        if form_type == 'teacher' and current_user.role == 'admin':
-            form_data = TeacherForm(request.form)
-            if form_data.validate():
-                new_user = Teacher(
-                    name=form_data.name.data,
-                    teacher_id=form_data.teacher_id.data
-                )
-                db.session.add(new_user)
-        elif form_type == 'student' and current_user.role == 'admin':
-            form_data = StudentForm(request.form)
-            if form_data.validate():
-                new_user = Student(
-                    name=form_data.name.data,
-                    student_id=form_data.student_id.data
-                )
-                db.session.add(new_user)
-        else: 
-            form_data = StudentForm(request.form)
-            if form_data.validate():
-                new_user = Student(
-                    name=form_data.name.data,
-                    student_id=form_data.student_id.data
-                )
-                db.session.add(new_user)
-        
-        try:
-            db.session.commit()
-            flash('User added successfully!', 'success')
-        except Exception as e:
-            db.session.rollback()
-            app.logger.error(f"Error adding user: {str(e)}")
-            flash('Error adding user. Please try again.', 'danger')
+        if teacher_form.validate_on_submit() and current_user.role == 'admin':
+            new_teacher = Teacher(
+                teacher_id=teacher_form.teacher_id.data,
+                name=teacher_form.name.data,
+            )
+            db.session.add(new_teacher)
+            try:
+                db.session.commit()
+                flash('Teacher added successfully!', 'success')
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Error adding teacher: {str(e)}', 'danger')
+
+        elif student_form.validate_on_submit() and current_user.role == 'admin':
+            new_student = Student(
+                student_id=student_form.student_id.data,
+                name=student_form.name.data,
+            
+            )
+            db.session.add(new_student)
+            try:
+                db.session.commit()
+                flash('Student added successfully!', 'success')
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Error adding student: {str(e)}', 'danger')
 
         return redirect(url_for('users'))
 
     return render_template('admin/users.html', users=users_data, search_query=search_query, teacher_form=teacher_form, student_form=student_form)
+
 
 @app.route('/admin/teachers')
 @login_required

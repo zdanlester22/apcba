@@ -55,23 +55,18 @@
             <td>{{ subject.title }}</td>
             <td>{{ subject.unit }}</td>
             <td>
-              <input type="text" class="form-control" id="period_1_{{ subject.id }}" name="period_1_{{ subject.id }}" />
-            </td>
-            <td>
-              <input type="text" class="form-control" id="period_2_{{ subject.id }}" name="period_2_{{ subject.id }}" />
-            </td>
-            <td>
-              <input type="text" class="form-control" id="period_3_{{ subject.id }}" name="period_3_{{ subject.id }}" />
-            </td>
-            <td>
-              <input type="text" class="form-control" id="final_grade_{{ subject.id }}" name="final_grade_{{ subject.id }}" />
-            </td>
-            <td>
-              <input type="checkbox" class="form-check-input" id="is_passed_{{ subject.id }}" name="is_passed_{{ subject.id }}" />
-            </td>
-            <td>
-              <button type="button" class="btn btn-warning" onclick="updateSubject('{{ subject.id }}')">Update</button>
-            </td>
+              <input type="number" class="form-control" id="period_1_{{ subject.id }}" name="period_1_{{ subject.id }}" />
+          </td>
+          <td>
+              <input type="number" class="form-control" id="period_2_{{ subject.id }}" name="period_2_{{ subject.id }}" />
+          </td>
+          <td>
+              <input type="number" class="form-control" id="period_3_{{ subject.id }}" name="period_3_{{ subject.id }}" />
+          </td>
+          <td>
+              <input type="number" class="form-control" id="final_grade_{{ subject.id }}" name="final_grade_{{ subject.id }}" step="0.01" />
+          </td>
+          
           </tr>
         {% endfor %}
       </tbody>

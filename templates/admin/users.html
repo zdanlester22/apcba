@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <title>APCBA Portal V1.0 - Student Portal Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -62,29 +61,22 @@
         }
 
         nav {
-    background-color: #2f2e2e;
-    padding: 3px;
-    overflow: auto;
-    white-space: nowrap;
-    text-align: center;
-}
+            background-color: #2f2e2e;
+            padding: 3px;
+            overflow: auto;
+            white-space: nowrap;
+            text-align: center;
+            scrollbar-width: thin; /* Firefox */
+        }
 
-/* Styling for Webkit Scrollbar */
-nav::-webkit-scrollbar {
-    width: 5px;
-    height: 10px;
-}
+        nav::-webkit-scrollbar {
+            height: 10px;
+        }
 
-nav::-webkit-scrollbar-thumb {
-    background-color: #555;
-    border-radius: 10px;
-    transition: background-color 0.3s ease; /* Add animation transition */
-}
-
-/* Hover effect for scrollbar thumb */
-nav:hover::-webkit-scrollbar-thumb {
-    background-color: #777;
-}
+        nav::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
+        }
 
         nav a {
             display: inline-block;
@@ -213,6 +205,38 @@ nav:hover::-webkit-scrollbar-thumb {
                 padding: 8px 12px;
             }
         }
+
+        .enroll-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #cccccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+    
+        .form-content {
+            position: relative;
+        }
+    
+        .exit-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            font-size: 16px;
+            color: #999999;
+        }
+    
+        .exit-button:hover {
+            color: #ff0000;
+        }
     </style>
 </head>
 <body>
@@ -229,13 +253,13 @@ nav:hover::-webkit-scrollbar-thumb {
             <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
+            <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
             <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
             <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
-            <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
+            <a href="{{ url_for('register') }}" class="link"><i class="fas fa-user-plus"></i> Register</a>
             <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
             <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
             <a href="{{ url_for('enroll') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrolled</a>
-            <a href="{{ url_for('view_enrollies') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrollies</a>
         </nav>
     </nav>
 
@@ -249,15 +273,18 @@ nav:hover::-webkit-scrollbar-thumb {
             <br>
             <table>
                 <tr>
+                    <th>User ID</th>
                     <th>Email</th>
                     <th>Name</th>
                     <th>Password</th>
                     <th>Role</th>
                     <th>Update</th>
                     <th>Delete</th>
+                    <th>Enroll</th>
                 </tr>
                 {% for user in users %}
                 <tr>
+                    <td>{{ user.id }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.name }}</td>
                     <td>{{ user.password }}</td>
@@ -265,9 +292,9 @@ nav:hover::-webkit-scrollbar-thumb {
                     <td><a href="{{ url_for('update_user', user_id=user.id) }}" class="link">Update</a></td>
                     <td><a href="{{ url_for('delete_user', user_id=user.id) }}" class="link">Delete</a></td>
                     {% if user.role == 'teacher' %}
-                    <td><a href="#" class="link" onclick="toggleEnrollForm(this)" data-user-id="{{ user.id }}">Verify </a></td>
+                    <td><a href="#" class="link" onclick="toggleEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
                     {% elif user.role == 'student' %}
-                    <td><a href="#" class="link" onclick="toggleStudentEnrollForm(this)" data-user-id="{{ user.id }}">Verify</a></td>
+                    <td><a href="#" class="link" onclick="toggleStudentEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
                     {% else %}
                     <td></td> <!-- Empty cell for users without the 'teacher' or 'student' role -->
                     {% endif %}
@@ -275,64 +302,83 @@ nav:hover::-webkit-scrollbar-thumb {
                 {% endfor %}
             </table>
         </div>
-        <div id="enroll-form" class="enroll-form" style="display: none;">
-            <h2>Enroll</h2>
-            <form method="POST" action="{{ url_for('users') }}">
-                {{ teacher_form.hidden_tag() }}
-
-                <!-- Add an input field for the teacher's user ID -->
-                <input type="hidden" id="teacher-id-input" name="teacher_id">
-
-                <label for="name">Name:</label>
-                {{ teacher_form.name(class="your-css-class") }}
-                <button type="submit" class="link">Add Teacher</button>
-            </form>
+        <div id="enroll-form" class="enroll-form">
+            <div class="form-content">
+                <button class="exit-button" onclick="toggleEnrollForm()">X</button>
+                <h2>Teacher</h2>
+                <form method="POST" action="{{ url_for('users') }}">
+                    {{ teacher_form.hidden_tag() }}
+    
+                    <!-- Add an input field for the teacher's user ID -->
+                    <input type="hidden" id="teacher-id-input" name="teacher_id">
+    
+                    <label for="name">Name:</label>
+                    <input type="text" id="teacher-name-input" name="name" class="your-css-class" readonly>
+                    <button type="submit" class="link">Add Teacher</button>
+                </form>
+            </div>
         </div>
-        <div id="student-enroll-form" class="enroll-form" style="display: none;">
-            <h2>Enroll Student</h2>
-            <form method="POST" action="{{ url_for('users') }}">
-                {{ student_form.hidden_tag() }}
-
-                <!-- Add an input field for the student's user ID -->
-                <input type="hidden" id="student-id-input" name="student_id">
-
-                <label for="name">Name:</label>
-                {{ student_form.name(class="your-css-class") }}
-                <button type="submit" class="link">Enroll Student</button>
-            </form>
+        <div id="student-enroll-form" class="enroll-form">
+            <div class="form-content">
+                <button class="exit-button" onclick="toggleStudentEnrollForm()">X</button>
+                <h2>Student</h2>
+                <form method="POST" action="{{ url_for('users') }}">
+                    {{ student_form.hidden_tag() }}
+    
+                    <!-- Add an input field for the student's user ID -->
+                    <input type="hidden" id="student-id-input" name="student_id">
+    
+                    <label for="name">Name:</label>
+                    <input type="text" id="student-name-input" name="name" class="your-css-class" readonly>
+                    <button type="submit" class="link">Enroll Student</button>
+                </form>
+            </div>
         </div>
     </main>
-
+    
     <script>
-        function toggleEnrollForm(clickedElement) {
+        function toggleEnrollForm(clickedElement, name) {
             var enrollForm = document.getElementById('enroll-form');
             var teacherIdInput = document.getElementById('teacher-id-input');
-
-            // Retrieve user ID from the clicked element's data attribute
-            var userId = clickedElement.getAttribute('data-user-id');
-
-            // Set the user ID to the teacher ID input field
-            teacherIdInput.value = userId;
-
-            // Toggle the visibility of the enroll form
-            enrollForm.style.display = enrollForm.style.display === 'none' ? 'block' : 'none';
+            var teacherNameInput = document.getElementById('teacher-name-input');
+    
+            if (enrollForm.style.display === 'block') {
+                enrollForm.style.display = 'none';
+            } else {
+                // Retrieve user ID from the clicked element's data attribute
+                var userId = clickedElement.getAttribute('data-user-id');
+    
+                // Set the user ID and name to the input fields
+                teacherIdInput.value = userId;
+                teacherNameInput.value = name;
+    
+                // Show the enroll form
+                enrollForm.style.display = 'block';
+            }
         }
-
-        function toggleStudentEnrollForm(clickedElement) {
+    
+        function toggleStudentEnrollForm(clickedElement, name) {
             var studentEnrollForm = document.getElementById('student-enroll-form');
             var studentIdInput = document.getElementById('student-id-input');
-
-            // Retrieve user ID from the clicked element's data attribute
-            var userId = clickedElement.getAttribute('data-user-id');
-
-            // Set the user ID to the student ID input field
-            studentIdInput.value = userId;
-
-            // Toggle the visibility of the enroll form for students
-            studentEnrollForm.style.display = studentEnrollForm.style.display === 'none' ? 'block' : 'none';
+            var studentNameInput = document.getElementById('student-name-input');
+    
+            if (studentEnrollForm.style.display === 'block') {
+                studentEnrollForm.style.display = 'none';
+            } else {
+                // Retrieve user ID from the clicked element's data attribute
+                var userId = clickedElement.getAttribute('data-user-id');
+    
+                // Set the user ID and name to the input fields
+                studentIdInput.value = userId;
+                studentNameInput.value = name;
+    
+                // Show the student enroll form
+                studentEnrollForm.style.display = 'block';
+            }
         }
     </script>
     
-
+    
+    
 </body>
 </html>

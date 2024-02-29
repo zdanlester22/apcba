@@ -351,22 +351,35 @@ Saturday - Sunday: Closed
       <p><span class="glyphicon glyphicon-envelope"></span> asiapacificcollege2325@gmail.com</p>
     </div>
     <div class="col-sm-7 slideanim">
-      <div class="row">
-        <div class="col-sm-6 form-group">
-          <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
-        </div>
-        <div class="col-sm-6 form-group">
-          <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
-        </div>
-      </div>
-      <textarea class="form-control" id="comments" name="comments" placeholder="Comment" rows="5"></textarea><br>
-      <div class="row">
-        <div class="col-sm-12 form-group">
-          <button class="btn btn-default pull-right" type="submit">Send</button>
-        </div>
-      </div>
+    <div class="row">
+        <form method="POST" action="{{ url_for('index') }}"> <!-- Use the appropriate route name -->
+            {{ form.csrf_token }}
+            <div class="col-sm-6 form-group">
+                {{ form.name.label }} <!-- Render the label -->
+                {{ form.name(class="form-control", placeholder="Name") }} <!-- Render the input field with Bootstrap classes -->
+                {% for error in form.name.errors %}
+                    <span style="color: red;">{{ error }}</span> <!-- Display validation errors -->
+                {% endfor %}
+            </div>
+            <div class="col-sm-6 form-group">
+                {{ form.email.label }}
+                {{ form.email(class="form-control", placeholder="Email") }}
+                {% for error in form.email.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="col-sm-12 form-group">
+                {{ form.comment.label }}
+                {{ form.comment(class="form-control", placeholder="Comment", rows="5") }}
+                {% for error in form.comment.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            </div>
+            <div class="col-sm-12 form-group">
+                {{ form.submit(class="btn btn-default pull-right") }} <!-- Render the submit button -->
+            </div>
+        </form>
     </div>
-  </div>
 </div>
 
 

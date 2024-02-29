@@ -311,7 +311,7 @@ nav:hover::-webkit-scrollbar-thumb {
                     <li class="announcement-item">
                         <strong>{{ announcement.title }}</strong>
                         <p>{{ announcement.content }}</p>
-                        <small>Posted by {{ announcement.author.username }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                        <small>Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
                         <div class="update-delete-buttons">
                             <a href="{{ url_for('update_announcement', announcement_id=announcement.id) }}" class="update-button">Update</a>
                             <a href="{{ url_for('delete_announcement', announcement_id=announcement.id) }}" class="delete-button">Delete</a>
