@@ -258,6 +258,12 @@ nav:hover::-webkit-scrollbar-thumb {
             height: 50px;
             margin-right: 5px;
         }
+        .pang{
+            font-size: 1.2rem;
+            font-family: Montserrat, sans-serif;
+            margin-top: 5px;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
@@ -284,7 +290,7 @@ nav:hover::-webkit-scrollbar-thumb {
             <a href="{{ url_for('view_enrollies') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrollies</a>
         </nav>
     </nav>
-    <h2>Welcome, {{ user.name }}!</h2>
+    <h2 class="pang">Admin Dashboard<br>Welcome, {{ user.name }}!</h2>
     <main class="bot">
 
         <div class="announcement-form">

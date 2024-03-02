@@ -251,6 +251,12 @@
                 width: 80%;
             }
         }
+        .pang{
+            font-size: 1.1rem;
+            font-family: Montserrat, sans-serif;
+            margin-top: 5px;
+            padding: 5px;
+        }
     </style>
 </head>
 
@@ -265,17 +271,11 @@
 
     <nav>
             <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ url_for('account') }}" class="link"><i class="fas fa-book"></i> Profile</a>
             <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
-            <a class="link"><i class="fas fa-certificate"></i> View Grades</a>
-            <a class="link">
-                <i class="fas fa-calendar"></i> Schedule
-            </a>
-            
             <a  href="{{ url_for('change_password') }}" class="link"><i class="fas fa-book"></i> Password</a>
         
     </nav>
-    <h2>Welcome, {{user.name}}</h2>
+    <h2 class="pang">Teacher Dashboard<br>Welcome, {{user.name}}</h2>
     <div class="bot">
         <div class="announcements">
             {% if announcements %}

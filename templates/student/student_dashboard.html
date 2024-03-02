@@ -251,6 +251,12 @@
                 width: 80%;
             }
         }
+        .pang{
+            font-size: 1.1rem;
+            font-family: Montserrat, sans-serif;
+            margin-top: 5px;
+            padding: 5px;
+        }
     </style>
 </head>
 
@@ -271,12 +277,10 @@
             <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
             <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="fas fa-certificate"></i> View Grades</a>
             <a href="{{ url_for('view_schedule') }}" class="link"><i class="fas fa-calendar"></i> Schedule</a>
-
-            
             <a  href="{{ url_for('change_password') }}" class="link"><i class="fas fa-book"></i> Password</a>
         </nav>
     </nav>
-    <h2>Welcome, {{ user.name }}!</h2>
+    <h2 class="pang">Student Dashboard<br>Welcome, {{ user.name }}!</h2>
     <div class="bot">
         <div class="announcements">
             {% if announcements %}
