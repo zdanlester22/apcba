@@ -257,32 +257,7 @@ nav:hover::-webkit-scrollbar-thumb {
             cursor: pointer;
         }
     </style>
-    <script>
-        function toggleInfo(enrollieId) {
-            var modal = document.getElementById('myModal');
-            var modalContent = document.getElementById('modal-content');
-            var span = document.getElementsByClassName('close')[0];
-            var additionalInfo = document.getElementById(`additional-info-${enrollieId}`);
-            
-            // Display modal
-            modal.style.display = 'block';
-
-            // Populate modal content
-            modalContent.innerHTML = additionalInfo.innerHTML;
-
-            // Close modal when the close button is clicked
-            span.onclick = function() {
-                modal.style.display = 'none';
-            };
-
-            // Close modal when clicking outside the modal content
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            };
-        }
-    </script>
+   
 </head>
 <body>
     <header>
@@ -329,32 +304,69 @@ nav:hover::-webkit-scrollbar-thumb {
                         <button class="show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</button>
                     </td>
                 </tr>
-                <div id="myModal" class="modal">
-                    <div id="modal-content" class="modal-content">
-                        <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
-                        <strong>Additional Information:</strong><br>
-                        <strong>Level:</strong> {{ enrollies.level }}<br>
-                        <strong>Address:</strong> {{ enrollies.address }}<br>
-                        <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
-                        <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
-                        <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
-                        <strong>Gender:</strong> {{ enrollies.gender }}<br>
-                        <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
-                        <strong>Religion:</strong> {{ enrollies.religion }}<br>
-                        <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
-                        <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
-                        <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
-                        <strong>Proof of Address:</strong> {{ enrollies.proof_of_address }}<br>
-                        <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
-                        <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
-                        <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
-                        <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
-                                        
-                    </div>
+                <!-- Hidden additional info for each enrollie -->
+                <div id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
+                    <strong>Additional Information:</strong><br>
+                    <strong>Level:</strong> {{ enrollies.level }}<br>
+                    <strong>Address:</strong> {{ enrollies.address }}<br>
+                    <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
+                    <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
+                    <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
+                    <strong>Gender:</strong> {{ enrollies.gender }}<br>
+                    <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
+                    <strong>Religion:</strong> {{ enrollies.religion }}<br>
+                    <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
+                    <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
+                    <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
+                    <strong>Proof of Address:</strong> {{ enrollies.proof_of_address }}<br>
+                    <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
+                    <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
+                    <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
+                    <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
                 </div>
                 {% endfor %}
             </tbody>
         </table>
+        <!-- Modal Popup -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+                <div id="modal-info-content"></div>
+            </div>
+        </div>
     </div>
+    
+    <script>
+        function toggleInfo(enrollieId) {
+            var modal = document.getElementById('myModal');
+            var modalInfoContent = document.getElementById('modal-info-content');
+            var span = document.getElementsByClassName('close')[0];
+            var enrollies = document.getElementById(`additional-info-${enrollieId}`);
+    
+            // Display modal
+            modal.style.display = 'block';
+    
+            // Populate modal content
+            modalInfoContent.innerHTML = enrollies.innerHTML;
+    
+            // Close modal when the close button is clicked
+            span.onclick = function() {
+                modal.style.display = 'none';
+            };
+    
+            // Close modal when clicking outside the modal content
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+    
+        function hideInfo(enrollieId) {
+            var enrollies = document.getElementById(`additional-info-${enrollieId}`);
+            enrollies.style.display = 'none';
+        }
+    </script>
+    
 </body>
 </html>
