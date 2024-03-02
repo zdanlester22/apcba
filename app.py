@@ -129,7 +129,6 @@ def enrollies():
                 previous_school_info=form.previous_school_info.data,
                 grade_last_completed=form.grade_last_completed.data,
                 academic_achievements=form.academic_achievements.data,
-                proof_of_address=form.proof_of_address.data,
                 parent_names=form.parent_names.data,
                 parent_contact_info=form.parent_contact_info.data,
                 parent_occupation=form.parent_occupation.data,

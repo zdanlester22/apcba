@@ -174,7 +174,6 @@ class Enrollies(db.Model):
     previous_school_info = db.Column(db.String(100))
     grade_last_completed = db.Column(db.String(10))
     academic_achievements = db.Column(db.String(255))
-    proof_of_address = db.Column(db.String(255))
     parent_names = db.Column(db.String(200))
     parent_contact_info = db.Column(db.String(30))
     parent_occupation = db.Column(db.String(100))

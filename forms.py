@@ -182,7 +182,6 @@ class EnrolliesForm(FlaskForm):
     previous_school_info = StringField('Previous School Information')
     grade_last_completed = StringField('Grade/Class Last Completed')
     academic_achievements = TextAreaField('Academic Achievements')
-    proof_of_address = StringField('Proof of Address')
     parent_names = StringField('Names of Parents/Guardians', validators=[DataRequired()])
     parent_contact_info = StringField('Contact Information of Parents/Guardians', validators=[DataRequired()])
     parent_occupation = StringField('Occupation of Parents/Guardians', validators=[DataRequired()])
