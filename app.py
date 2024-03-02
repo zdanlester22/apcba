@@ -872,6 +872,21 @@ def add_schedule(section_id):
    
     return render_template('admin/add_schedule.html', form=form, section=section, subjects=subjects)
 
+@app.route('/view_schedule')
+@login_required
+def view_schedule():
+    try:
+        user_enrollments = Enrollment.query.filter_by(student_id=current_user.id).all()
+        course_ids = [enrollment.course_id for enrollment in user_enrollments]
+        section_ids = [enrollment.section_id for enrollment in user_enrollments]
+        schedules = Schedule.query.filter(Schedule.subject.has(Subject.course_id.in_(course_ids)), Schedule.subject.has(Subject.section_id.in_(section_ids))).all()
+        
+        return render_template('student/view_schedule.html', schedules=schedules)
+    except Exception as e:
+        current_app.logger.error(f"Error retrieving schedules: {str(e)}")
+
+        return redirect(url_for('dashboard'))
+
 
 if __name__ == '__main__':
     with app.app_context():

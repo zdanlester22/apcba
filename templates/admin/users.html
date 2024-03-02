@@ -276,7 +276,6 @@
                     <th>User ID</th>
                     <th>Email</th>
                     <th>Name</th>
-                    <th>Password</th>
                     <th>Role</th>
                     <th>Update</th>
                     <th>Delete</th>
@@ -287,7 +286,6 @@
                     <td>{{ user.id }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.name }}</td>
-                    <td>{{ user.password }}</td>
                     <td>{{ user.role }}</td>
                     <td><a href="{{ url_for('update_user', user_id=user.id) }}" class="link">Update</a></td>
                     <td><a href="{{ url_for('delete_user', user_id=user.id) }}" class="link">Delete</a></td>
