@@ -213,7 +213,7 @@ class Grades(db.Model):
     period_1 = db.Column(db.String(5))
     period_2 = db.Column(db.String(5))
     period_3 = db.Column(db.String(5))
-    final_grade = db.Column(db.String(5))
+    final_grade = db.Column(db.String(20))
     is_passed = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.TIMESTAMP, default=datetime.utcnow)
 

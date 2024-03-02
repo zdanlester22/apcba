@@ -789,6 +789,7 @@ def view_grades(student_id):
     form = GradeForm()
 
     if request.method == 'POST':
+        # Create an empty list to store grades
         grades = []
 
         for subject in subjects:
@@ -796,6 +797,8 @@ def view_grades(student_id):
             period_2 = request.form.get(f'period_2_{subject.id}')
             period_3 = request.form.get(f'period_3_{subject.id}')
 
+
+            # Check form validation for each subject
             form.period_1.data = period_1
             form.period_2.data = period_2
             form.period_3.data = period_3
@@ -803,22 +806,23 @@ def view_grades(student_id):
             if not form.validate():
                 print(f'Validation Errors for Subject {subject.id}: {form.errors}')
 
-            final_grade = (float(period_1) + float(period_2) + float(period_3)) / 3.0
-            is_passed = final_grade >= 75
-
+            # Create a new grade instance and add it to the list
             grade = Grades(
                 student_id=student.id,
                 subject_id=subject.id,
                 period_1=period_1,
                 period_2=period_2,
                 period_3=period_3,
-                final_grade=final_grade,
-                is_passed=is_passed
             )
             grades.append(grade)
 
+        # Add all grades to the session (but don't commit yet)
         db.session.add_all(grades)
+
+        # Commit all changes to the database
         db.session.commit()
+
+        flash('Grades recorded successfully!', 'success')
         return redirect(url_for('view_grades', student_id=student_id))
 
     return render_template('admin/view_grades.html', student=student, subjects=subjects, form=form)
