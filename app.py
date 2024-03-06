@@ -119,6 +119,7 @@ def enrollies():
                 name=form.name.data,
                 email=form.email.data,
                 level=form.level.data,
+                year=form.year.data,
                 address=form.address.data,
                 contact_number=form.contact_number.data,
                 date_of_birth=form.date_of_birth.data,
@@ -260,13 +261,16 @@ def view_students():
         return redirect(url_for('dashboard'))
 
     students_data = (
-        db.session.query(Student, Section.name.label('section_name'))
-        .outerjoin(Enrollment, Student.id == Enrollment.student_id)
-        .add_columns(Student.student_id, Student.id, Student.name, db.func.count(Enrollment.id).label('enrollment_count'))
-        .group_by(Student.student_id, Student.id, Student.name, Section.name)
-        .all()
+    db.session.query(
+        Student, Section.name.label('section_name'), Course, Enrollment.year
     )
-
+    .outerjoin(Enrollment, Student.id == Enrollment.student_id)
+    .outerjoin(Section, Enrollment.section_id == Section.id)
+    .outerjoin(Course, Enrollment.course_id == Course.id)
+    .add_columns(Student.student_id, Student.id, Student.name, Course, Enrollment.year)
+    .group_by(Student.student_id, Student.id, Student.name, Section.name)
+    .all()
+)
     sections_data = Section.query.all()
 
     return render_template('admin/view_students.html', students=students_data, sections=sections_data)
@@ -661,6 +665,7 @@ def manage_section():
         new_section = Section(
             name=form_section.name.data,
             capacity=form_section.capacity.data,
+            year=form_section.year.data,
             course_id=form_section.course_id.data,
             teacher_id=selected_teacher_id
         )
@@ -767,6 +772,7 @@ def enroll():
         else:
             new_enrollment = Enrollment(
             student_id=form.student_id.data,
+            year=form.year.data,
             course_id=form.course_id.data,
             section_id=form.section_id.data,
             is_approved=form.is_approved.data

@@ -304,6 +304,10 @@ nav:hover::-webkit-scrollbar-thumb {
           <label for="{{ form.course_id.id }}">{{ form.course_id.label }}</label>
           {{ form.course_id(class="form-control select2") }}
         </div>
+        <div class="form-group">
+            <label for="{{ form.year.id }}">{{ form.year.label }}</label>
+            {{ form.year(class="form-control select2") }}
+        </div>
   
         <!-- Select2 for section_id -->
         <div class="form-group">
@@ -326,7 +330,8 @@ nav:hover::-webkit-scrollbar-thumb {
       <thead>
         <tr>
           <th>Student Name</th>
-          <th>Course Title</th>
+          <th>Course</th>
+          <th>Year</th>
           <th>Section Name</th>
         </tr>
       </thead>
@@ -335,6 +340,7 @@ nav:hover::-webkit-scrollbar-thumb {
           <tr>
             <td>{{ enrollment.student.name }}</td>
             <td>{{ enrollment.enrolled_course_rel.title }}</td>
+            <td>{{ enrollment.year }}</td>
             <td>{{ enrollment.enrolled_section_rel.name }}</td>
           </tr>
         {% endfor %}

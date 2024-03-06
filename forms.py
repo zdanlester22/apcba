@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField,  validators
 from wtforms.validators import DataRequired,Optional,Email
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.fields import StringField, SubmitField, IntegerField, DateField, TextAreaField
@@ -107,7 +107,8 @@ class CourseForm(FlaskForm):
     abbreviation = StringField('Abbreviation', validators=[DataRequired()])
     title = StringField('Title Name', validators=[DataRequired()])
     school_year = StringField('School Year', validators=[DataRequired()])
-    year = StringField('Year', validators=[DataRequired()])
+    year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
+    year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
     Class = StringField('Class', validators=[DataRequired()])
     semesters = SelectField('Semesters', choices=[('1st Semester', '1st Semester'), ('2nd Semester', '2nd Semester')], validators=[DataRequired()])
     course_type = SelectField('Type', choices=[('SHS', 'SHS'), ('College', 'College')], validators=[DataRequired()])
@@ -132,6 +133,8 @@ class FilterForm(FlaskForm):
 class SectionForm(FlaskForm):
     name = StringField('Section Name', validators=[DataRequired()])
     capacity = IntegerField('Capacity', validators=[DataRequired()])
+    year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
+    year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
     course_id = SelectField('Course', coerce=int, validators=[DataRequired()])
     teacher_id = SelectField('Teacher', coerce=int, validators=[DataRequired()])
 
@@ -164,6 +167,8 @@ class EnrollmentForm(FlaskForm):
     student_id = SelectField('Student ID', validators=[DataRequired()])
     course_id = SelectField('Select Course', coerce=int)
     section_id = SelectField('Select Section', coerce=int)
+    year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
+    year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
     is_approved = BooleanField('Is Approved')
     submit = SubmitField('Enroll')
 
@@ -173,6 +178,8 @@ class EnrolliesForm(FlaskForm):
     level = SelectField('Choose your level', choices=[('college', 'College'), ('senior_high', 'Senior High School')],
                         validators=[DataRequired()])
     address = StringField('Home Address', validators=[DataRequired()])
+    year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
+    year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
     contact_number = StringField('Contact Number', validators=[DataRequired()])
     date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
     place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
