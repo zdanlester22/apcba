@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <title>APCBA Portal V1.0 - Student Portal Management System</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Montserrat, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f5f5f5;
@@ -211,14 +212,20 @@ nav:hover::-webkit-scrollbar-thumb {
         }
 
         .additional-info {
-            display: none;
+           padding: 10px;
+           display: flex;
+           font-family: Montserrat, sans-serif;
+         
         }
 
         .show-info-btn {
             cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
-            font-weight: bold;
+            color: #fff;
+            background-color: #2a235e;
+            text-decoration: none;
+            padding: 5px;
+            border-radius: 10px;
+            font-family: Montserrat, sans-serif;
         }
 
         .modal {
@@ -237,10 +244,14 @@ nav:hover::-webkit-scrollbar-thumb {
 
         .modal-content {
             background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
+            margin: 7%;
+            padding: 40px;
             border: 1px solid #888;
-            width: 80%;
+            width: 70%;
+            font-size: 1.2rem;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: 30px;
         }
 
         .close {
@@ -254,6 +265,14 @@ nav:hover::-webkit-scrollbar-thumb {
         .close:focus {
             color: black;
             text-decoration: none;
+            cursor: pointer;
+        }
+        .archive-btn{
+            text-decoration: none;
+            color: #fff;
+            background-color: #036819;
+            border-radius: 10px;
+            padding: 5px;
             cursor: pointer;
         }
     </style>
@@ -306,7 +325,7 @@ nav:hover::-webkit-scrollbar-thumb {
                 </tr>
                 <!-- Hidden additional info for each enrollie -->
                 <div id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
-                    <strong>Additional Information:</strong><br>
+                    <strong>ENROLLEE INFORMATION:</strong><br><br>
                     <strong>Level:</strong> {{ enrollies.level }}<br>
                     <strong>Address:</strong> {{ enrollies.address }}<br>
                     <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
@@ -318,7 +337,6 @@ nav:hover::-webkit-scrollbar-thumb {
                     <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
                     <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
                     <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
-                    <strong>Proof of Address:</strong> {{ enrollies.proof_of_address }}<br>
                     <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
                     <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
                     <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
