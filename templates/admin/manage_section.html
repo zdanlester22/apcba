@@ -262,6 +262,12 @@ nav:hover::-webkit-scrollbar-thumb {
                 <label for="name" class="form-control-label">Section Name</label>
                 {{ form_section.name(class="form-control") }}
             </div>
+
+            <div class="form-group">
+                <label for="year" class="form-control-label">Year</label>
+                {{ form_section.year(class="form-control") }}
+            </div>
+    
             <div class="form-group">
                 <label for="capacity" class="form-control-label">Capacity</label>
                 {{ form_section.capacity(class="form-control") }}
@@ -285,6 +291,7 @@ nav:hover::-webkit-scrollbar-thumb {
                     <th>Section Name</th>
                     <th>Capacity</th>
                     <th>Course</th>
+                    <th>Year</th>
                     <th>Class</th>
                     <th>Course type</th>
                     <th>Teacher</th>
@@ -297,6 +304,7 @@ nav:hover::-webkit-scrollbar-thumb {
                     <td>{{ section.name }}</td>
                     <td>{{ section.capacity }}</td>
                     <td>{{ section.course.title }}</td>
+                    <td>{{ section.year }}</td>
                     <td>{{ section.course.Class }}</td>
                     <td>{{ section.course.course_type }}</td>
                     <td>{{ section.teacher.name }}</td>
