@@ -3,330 +3,617 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>Dashboard</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Montserrat, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
         }
-
-        header {
-            background-color: #222;
-            padding: 15px;
-            text-align: center;
-            color: #fff;
-            position: relative;
+        .container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            height: 100vh; /* Set container to 100% viewport height */
+            overflow-x: hidden; /* Hide horizontal overflow */
         }
-
-        .header-content {
+        .sidebar {
+            position: fixed; /* Fix the position of the sidebar */
+            top: 0; /* Position it at the top */
+            bottom: 0; /* Extend it to the bottom */
+            left: 0; /* Position it at the left */
+            width: 200px;
+            background-color: #374c60;
+            color: #0f0f0f;
+            padding: 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 2; 
+            flex-direction: column;
+            transition: opacity 0.3s ease, width 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
         }
 
-        h1 {
-            color: antiquewhite;
-            font-size: 3vh;
-            margin-right: 60px;
+        .sidebar-hidden {
+            opacity: 0; /* Hide the sidebar when it's hidden */
+            width: 0; /* Remove the width of the sidebar when hidden */
+            pointer-events: none; /* Disable pointer events when hidden */
         }
 
-        .arrow-button {
-        background-color: #37332f;
-        color: #fff;
-        border: none;
-        padding: 2px 4px;
-        text-decoration: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        margin-left: 10px;
-          }
 
+        .content {
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            margin-left: 300px; /* Adjust the initial margin-left to accommodate the sidebar */
+        }
+        .logo {
+            margin-bottom: 20px;
+            display: flex;
+        }
 
-        .arrow-button::before {
-    content: '\25C0'; /* Unicode character for a large left-pointing triangle */
-    font-family: 'Font Awesome 5 Free';
-    margin-right: 5px;
-    font-size: 1.3em; /* Adjust the size as needed */
-}
-.arrow-button:hover {
-    transform: scale(1.50);
-}
-
-
-nav {
-    background-color: #2f2e2e;
-    padding: 3px;
-    overflow: auto;
-    white-space: nowrap;
-    text-align: center;
-}
-
-/* Styling for Webkit Scrollbar */
-nav::-webkit-scrollbar {
-    width: 5px;
-    height: 10px;
-}
-
-nav::-webkit-scrollbar-thumb {
-    background-color: #555;
-    border-radius: 10px;
-    transition: background-color 0.3s ease; /* Add animation transition */
-}
-
-/* Hover effect for scrollbar thumb */
-nav:hover::-webkit-scrollbar-thumb {
-    background-color: #777;
-}
-
-
-        nav a {
-            display: inline-block;
+        .logo h2 {
             color: #fff;
             text-align: center;
-            padding: 10px 15px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-            margin: 5px;
-            border-radius: 5px;
-            width: 100px;
-            white-space: nowrap;
-        }
-
-        nav a:hover {
-            background-color: #555;
-        }
-
-        main {
-            margin: 20px;
-            text-align: center;
-        }
-
-        .link {
-            display: inline-block;
-            margin: 5px;
-            padding: 8px 13px;
-            background-color: #2a235e;
-            text-decoration: none;
-            color: #fff;
-            font-size: 11px;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100px;
+            margin-top: 10px;
+            font-size: 20px;
             font-weight: bold;
         }
-
-        .link:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
+        .link i {
+    margin-right: 10px;
+    margin-left: 10px; /* Adjust this value as needed */
+}
 
+        .links a {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 0;
+    margin-bottom: -7px;
+    font-size: .9rem;
+    font-weight: 600;
+    transition:  color 0.3s ease;
+}
+.links a:hover,
+.links a:hover i {
+    background-color: #fff; /* Change background color on hover */
+    color: #222; /* Change text color on hover */
+    border-radius: 10px;
+}
+.links a:hover i {
+    color: #374c60;
+}
+
+        .link {
+            cursor: pointer;
+            margin-bottom: 10px;
+            text-align: left;
+            font-size: .9rem;
+        }
+        .toggle-btn {
+            color: #111;
+            border: none;
+            padding: 20px;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 25px; 
+            z-index: 2;
+            background-color: #fff;
+        }
+        .content {
+            flex: 1;
+            padding: 30px;
+            transition: margin-left 0.3s ease; /* Add transition for smooth content movement */
+            margin-right: 60px;
+        }
+        .Name {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
         .bot {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            gap: 20px;
+            margin-top: -100px;
         }
-
-
-        h2 {
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 0;
-        }
-
-        img{
-            height: 50px;
-            margin-right: 5px;
-        }
-        .form { 
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Adding background shadow */
-            padding: 50px;
-            border-radius: 50px;
+        .announcement-form {
             background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+            margin: 20px;
         }
-
+        .announcement-form h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
         .form-group {
             margin-bottom: 15px;
         }
-
-        .form-control-label {
+        .form-group label {
             display: block;
-            font-weight: bold;
             margin-bottom: 5px;
+            color: #666;
         }
-
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 30px;
-        }
-
-        .form-control-file {
-            margin-left: 70px;
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 97%;
             padding: 10px;
-        }
-
-        .btn-primary {
-            background-color: #2a235e;
-            color: #fff;
-            padding: 10px 15px;
-            border: none; 
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-
-        }
-
-        .btn-primary:hover {
-            background-color: #e07b00;
-        }
-
-        /* Additional styles for the filter form */
-        .filter-form {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .filter-form label {
-            margin-right: 5px;
-            font-weight: bold;
-        }
-
-        .filter-form input {
-            padding: 8px;
-            box-sizing: border-box;
             border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
         }
-
-        .filter-form button {
-            background-color: #2a235e;
+        .form-group input[type="submit"] {
+            background-color: #374c60;
             color: #fff;
-            padding: 8px 15px;
             border: none;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease;
+            font-family: Montserrat, sans-serif;
         }
-
-        .filter-form button:hover {
-            background-color: #e07b00;
+        .announcements {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
         }
-
-        /* Additional styles for the table */
-        .table {
+        .announcement-item {
+            margin-bottom: 15px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
+            list-style-type: none;
+            max-height: 300px;
+            height: 100%;
+        }
+        .announcement-item strong {
+            color: #333;
+        }
+        .announcement-item p {
+            color: #666;
+        }
+        .announcement-item small {
+            color: #999;
+        }
+        .update-delete-buttons {
+            margin-top: 10px;
+        }
+        .update-button {
+            color: #fff;
+            background-color: #349b3f;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: color 0.3s ease;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .delete-button {
+            color: #fff;
+            background-color: #c03232;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: color 0.3s ease;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        #content-char-count {
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
+        #title-char-count {
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
+        .submit {
+            padding: 13px;
+            color: #fff;
+            background-color: #349b3f;
+            border: none;
+            border-radius: 5px;
+            font-family: Montserrat, sans-serif;
+        }
+        .submit:hover {
+            transform: scale(1.1);
+        }
+        h3 {
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 570px;
+            position: fixed;
+            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.3);
+            background-color: #374c60;
+            padding: 10px;
+            color: #fff;
+            max-width: 180px;
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
         }
-
-        .table th, .table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+        .shadow {
+            background-color: #f9f9f9;
+            border-radius: 8px;
         }
-
-        .table th {
-            background-color: #2a235e;
+        h4{
+            margin-left: 20px;
+        }
+        .sidebar a{
+            text-decoration: none;
             color: #fff;
         }
+        .user-info {
+    margin-top: auto; /* Push user info to the bottom of the sidebar */
+}
 
-        .table a {
-            text-decoration: none;
-            color: #2a235e;
-            margin-right: 10px;
-        }
+.user-info a {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Align items vertically */
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    max-width: 150px;
+    width: 100%;
+}
+
+.user-info a:hover {
+    background-color: #fff; /* Change background color on hover */
+    color: #222; /* Change text color on hover */
+}
+
+.user-info span {
+    margin-right: 10px; /* Add space between username and icon */
+}
+
+.user-info div {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Align items vertically */
+}
+/* Styles for the certificate form */
+.form {
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px;
+
+}
+
+.form h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"] {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.form-group input[type="submit"] {
+    background-color: #374c60;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: Montserrat, sans-serif;
+}
+
+.form-group input[type="submit"]:hover {
+    background-color: #263846;
+}
+
+/* Styles for the certificate table */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #374c60;
+    color: #fff;
+    
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Styles for the buttons */
+.button {
+    display: inline-block;
+    padding: 7px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: Montserrat, sans-serif;
+    width: 100px;
+}
+
+.button-primary {
+    background-color: #374c60;
+    color: #fff;
+
+}
+
+.button-primary:hover {
+    background-color: #fff;
+    color: #374c60;
+    border: 1px solid #374c60;
+}
+
+.button-danger {
+    background-color: #c03232;
+    color: #fff;
+}
+
+.button-danger:hover {
+    background-color: #9a2525;
+}
+#uploadModal {
+    display: none;
+}
+.filter form{
+    font-family: Montserrat, sans-serif;
+}
+.top{
+    display: flex;
+    justify-content: right;
+    gap: 20px;
+    text-align: center;
+    align-items: center;
+}
+/* CSS for modal */
+.modal {
+    display: none; /* Hide the modal by default */
+    position: fixed; /* Position the modal */
+    z-index: 999; /* Ensure it's on top of other elements */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.4); /* Black background with transparency */
+}
+
+.modal-content {
+    background-color: #fefefe; /* White background */
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 400px; /* 80% width */
+    border-radius: 10px;
+    position: relative; /* Position relative to its parent */
+    margin-top: 70px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 50px;
+    cursor: pointer;
+}
+table a{
+    text-decoration: none;
+    background-color: #374c60;
+    color: #fff;
+    padding: 6px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+table a:hover{
+    background-color: #fff;
+    color: #374c60;
+    border: 1px solid #374c60;
+}
+
+
+
     </style>
 </head>
 <body>
-    <header>
-        <a href="{{ url_for('portaluserlogin') }}" class="arrow-button"></a>
-        <div class="header-content">
-            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo">
-            <h1>APCBA Portal V1.0</h1>
+    <div class="container">
+        <button class="toggle-btn" onclick="toggleSidebar()">
+            <span class="material-icons">menu</span>
+        </button>
+        <div class="sidebar">
+            <div class="logo">
+                <h2>APCBA PORTAL V1.0</h2>
+            </div>
+            <div class="links">
+                <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
+                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
+                <a href="{{ url_for('view_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
+                <a href="{{ url_for('view_course') }}" class="link"><i class="material-icons">school</i> Courses</a>
+                <a href="{{ url_for('manage_section') }}" class="link"><i class="material-icons">view_module</i> Sections</a>
+                <a href="{{ url_for('users') }}" class="link"><i class="material-icons">group</i> Accounts</a>
+                <a href="{{ url_for('view_teachers') }}" class="link"><i class="material-icons">face</i> Teachers</a>
+                <a href="{{ url_for('view_students') }}" class="link"><i class="material-icons">people</i> Students</a>
+                <a href="{{ url_for('enroll') }}" class="link"><i class="material-icons">assignment_turned_in</i> Enrolled</a>
+                <a href="{{ url_for('view_enrollies') }}" class="link"><i class="material-icons">school</i> Enrollies</a>
+            </div><br><br>
+            <div class="user-info">
+                <a href="#">
+                    <span>{{ user.name }}</span> <i class="material-icons">exit_to_app</i>
+                </a>
+                
+            </div>
         </div>
-    </header>
-
-    <nav>
-        <nav>
-            <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
-            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
-            <a href="{{ url_for('view_course') }}" class="link"><i class="fas fa-graduation-cap"></i> Courses</a>
-            <a href="{{ url_for('manage_section') }}" class="link"><i class="fas fa-th"></i> Sections</a>
-            <a href="{{ url_for('users') }}" class="link"><i class="fas fa-users"></i> Accounts</a>
-            <a href="{{ url_for('view_teachers') }}" class="link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
-            <a href="{{ url_for('view_students') }}" class="link"><i class="fas fa-user-graduate"></i> Students</a>
-            <a href="{{ url_for('enroll') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrolled</a>
-            <a href="{{ url_for('view_enrollies') }}" class="link"><i class="fas fa-clipboard-check"></i> Enrollies</a>
-        </nav>
-    </nav>
-    <main class="bot">
-        <form method="POST" enctype="multipart/form-data" class="form">
-            <h2>Upload Certificate</h2>
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{ form.title.label(class="form-control-label") }}
-                {{ form.title(class="form-control", placeholder="Enter Certificate Title") }}
+        <div class="content">
+        <div class="topnav">
+                <h4 class="Name">Admin Dashboard/Certificates</h4>
             </div>
-            <div class="form-group">
-                {{ form.pdf.label(class="form-control-label") }}
-                {{ form.pdf(class="form-control-file", placeholder="Choose PDF File") }}
-            </div>
-            <button type="submit" class="btn btn-primary">Upload Certificate</button>
-        </form>
-        <br> <br><br> <br><br>   
-        <h3>Certificates</h3>
-        <center>
-            <form action="{{ url_for('certificate') }}" method="get">
-                {{ form.csrf_token }}
-                {{ form.title.label }} {{ form.title(placeholder="Enter Certificate Title") }}
-                <button type="submit">Filter</button>
-            </form>
-        </center>
-        {% if certificates %}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>PDF</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for certificate in certificates %}
-                        <tr>
-                            <td>{{ certificate.title }}</td>
-                            <td>
-                                <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download PDF</a>
-                            </td>
-                            <td>
-                                <a href="{{ url_for('update_certificate', certificate_id=certificate.id) }}">Update</a>
-                                |
-                                <a href="{{ url_for('delete_certificate', certificate_id=certificate.id) }}">Delete</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No certificates available.</p>
-        {% endif %}
-    </main>
+            <main class="bot">
+                <div id="uploadModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeModal()">&times;</span> <!-- Close button (X) -->
+                        <form method="POST" enctype="multipart/form-data" class="form">
+                            <h2>Upload Certificate</h2>
+                            {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                {{ form.title.label(class="form-control-label") }}
+                                {{ form.title(class="form-control", placeholder="Enter Title") }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.pdf.label(class="form-control-label") }}
+                                {{ form.pdf(class="form-control-file", placeholder="Choose PDF File") }}
+                            </div>
+                            <button type="submit" class="submit">Upload</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <br> <br><br> <br><br>   
+                <div class="top">
+                    <button id="uploadBtn" class="button button-primary">Upload</button>
+                    <form action="{{ url_for('certificate') }}" class="filter" method="get">
+                        {{ form.csrf_token }}
+                        {{ form.title}}
+                        <button type="submit">Filter</button>
+                    </form>
+                {% if certificates %}
+                </div>
+              
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>PDF</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for certificate in certificates %}
+                                <tr>
+                                    <td>{{ certificate.title }}</td>
+                                    <td>
+                                        <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('update_certificate', certificate_id=certificate.id) }}">Update</a>
+                                        |
+                                        <a href="{{ url_for('delete_certificate', certificate_id=certificate.id) }}">Delete</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No certificates available.</p>
+                {% endif %}
+            </main>
+        </div>
+    </div>
+    <script>
+        var originalContentMargin; // Store the original content margin
+    
+        function toggleDropdown(event, id) {
+    event.preventDefault(); // Prevent default behavior of the link click
+    var dropdown = document.getElementById(id);
+    var isDisplayed = dropdown.style.display === "block";
+    // Hide all dropdowns
+    var allDropdowns = document.querySelectorAll('.sub-links');
+    allDropdowns.forEach(function(dropdown) {
+        dropdown.style.display = 'none';
+    });
+    // Display the clicked dropdown if it wasn't already displayed
+    if (!isDisplayed) {
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none'; // Hide the dropdown if already displayed
+    }
+}
 
+    
+        function toggleSidebar() {
+            var sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('sidebar-hidden');
+    
+            // Toggle content margin based on sidebar visibility
+            var content = document.querySelector('.content');
+            if (!originalContentMargin) {
+                originalContentMargin = getComputedStyle(content).marginLeft;
+            }
+            content.style.marginLeft = (sidebar.classList.contains('sidebar-hidden')) ? '0' : originalContentMargin;
+        }
+    
+        function countCharacters(inputId, displayId, limit) {
+            var input = document.getElementById(inputId);
+            var characterCount = input.value.length;
+            var display = document.getElementById(displayId);
+            display.textContent = characterCount + "/" + limit + " characters";
+    
+            // Check if character count exceeds the limit
+            if (characterCount > limit) {
+                // Trim the input value to the limit
+                input.value = input.value.slice(0, limit);
+    
+                // Update the character count in the display
+                characterCount = limit;
+                display.textContent = characterCount + "/" + limit + " characters";
+    
+                // Change the color to red
+                display.style.color = 'red';
+            } else {
+                // Reset the color to black
+                display.style.color = 'black';
+            }
+        }
+      // Update the JavaScript to handle closing the modal
+// Update the JavaScript to handle showing and hiding the modal
+var modal = document.getElementById("uploadModal");
+var btn = document.getElementById("uploadBtn");
+var closeBtn = document.querySelector(".close-btn");
+
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+    </script>
+    
 </body>
 </html>
