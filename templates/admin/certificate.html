@@ -461,6 +461,7 @@ table a:hover{
                 <a href="{{ url_for('view_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
                 <a href="{{ url_for('view_course') }}" class="link"><i class="material-icons">school</i> Courses</a>
                 <a href="{{ url_for('manage_section') }}" class="link"><i class="material-icons">view_module</i> Sections</a>
+                <a href="{{ url_for('register') }}" class="link"><i class="material-icons">app_registration</i> Register</a>
                 <a href="{{ url_for('users') }}" class="link"><i class="material-icons">group</i> Accounts</a>
                 <a href="{{ url_for('view_teachers') }}" class="link"><i class="material-icons">face</i> Teachers</a>
                 <a href="{{ url_for('view_students') }}" class="link"><i class="material-icons">people</i> Students</a>
@@ -468,10 +469,9 @@ table a:hover{
                 <a href="{{ url_for('view_enrollies') }}" class="link"><i class="material-icons">school</i> Enrollies</a>
             </div><br><br>
             <div class="user-info">
-                <a href="#">
+                <a href="#" id="logout-link">
                     <span>{{ user.name }}</span> <i class="material-icons">exit_to_app</i>
                 </a>
-                
             </div>
         </div>
         <div class="content">
@@ -613,7 +613,17 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+//logout to
+var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
+        document.getElementById("logout-link").addEventListener("click", confirmLogout);
 
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            var confirmLogout = confirm("Are you sure you want to logout?");
+            if (confirmLogout) {
+                window.location.href = logoutUrl; // Redirect to logout URL
+            }
+        }
     </script>
     
 </body>

@@ -1,22 +1,18 @@
-
-    body {
+body {
     font-family: Montserrat, sans-serif;
     margin: 0;
     padding: 0;
 }
-
 .container {
     display: flex;
-    height: 100vh;
-    overflow-x: hidden;
+    height: 100vh; /* Set container to 100% viewport height */
+    overflow-x: hidden; /* Hide horizontal overflow */
 }
-
-/* Sidebar styles */
 .sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
+    position: fixed; /* Fix the position of the sidebar */
+    top: 0; /* Position it at the top */
+    bottom: 0; /* Extend it to the bottom */
+    left: 0; /* Position it at the left */
     width: 200px;
     background-color: #374c60;
     color: #0f0f0f;
@@ -30,19 +26,18 @@
 }
 
 .sidebar-hidden {
-    opacity: 0;
-    width: 0;
-    pointer-events: none;
+    opacity: 0; /* Hide the sidebar when it's hidden */
+    width: 0; /* Remove the width of the sidebar when hidden */
+    pointer-events: none; /* Disable pointer events when hidden */
 }
 
-/* Content styles */
+
 .content {
     flex: 1;
     padding: 20px;
     transition: margin-left 0.3s ease;
-    margin-left: 300px;
+    margin-left: 300px; /* Adjust the initial margin-left to accommodate the sidebar */
 }
-
 .logo {
     margin-bottom: 20px;
     display: flex;
@@ -55,40 +50,36 @@
     font-size: 20px;
     font-weight: bold;
 }
-
 .links {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
-
 .link i {
-    margin-right: 10px;
-    margin-left: 10px;
+margin-right: 10px;
+margin-left: 10px; /* Adjust this value as needed */
 }
 
 .links a {
-    display: flex;
-    align-items: center;
-    text-align: left;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 0;
-    margin-bottom: -7px;
-    font-size: .9rem;
-    font-weight: 600;
-    transition: color 0.3s ease;
+display: flex;
+align-items: center;
+text-align: left;
+color: #fff;
+text-decoration: none;
+padding: 10px 0;
+margin-bottom: -7px;
+font-size: .9rem;
+font-weight: 600;
+transition:  color 0.3s ease;
 }
-
 .links a:hover,
 .links a:hover i {
-    background-color: #fff;
-    color: #222;
-    border-radius: 10px;
+background-color: #fff; /* Change background color on hover */
+color: #222; /* Change text color on hover */
+border-radius: 10px;
 }
-
 .links a:hover i {
-    color: #374c60;
+color: #374c60;
 }
 
 .link {
@@ -97,7 +88,6 @@
     text-align: left;
     font-size: .9rem;
 }
-
 .toggle-btn {
     color: #111;
     border: none;
@@ -105,48 +95,181 @@
     cursor: pointer;
     position: absolute;
     top: 20px;
-    right: 25px;
+    right: 25px; 
     z-index: 2;
     background-color: #fff;
 }
-
-
+.content {
+    flex: 1;
+    padding: 30px;
+    transition: margin-left 0.3s ease; /* Add transition for smooth content movement */
+    margin-right: 60px;
+}
 .Name {
     margin-bottom: 20px;
     font-size: 24px;
     color: #333;
 }
-
 .bot {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    flex-grow: 1;
+    margin-top: -100px;
+}
+.announcement-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+    margin: 20px;
+}
+.announcement-form h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+}
+.form-group input[type="text"],
+.form-group textarea {
+    width: 97%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+.form-group input[type="submit"] {
+    background-color: #374c60;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: Montserrat, sans-serif;
+}
+.announcements {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+}
+.announcement-item {
+    margin-bottom: 15px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
+    list-style-type: none;
+    max-height: 300px;
+    height: 100%;
+}
+.announcement-item strong {
+    color: #333;
+}
+.announcement-item p {
+    color: #666;
+}
+.announcement-item small {
+    color: #999;
+}
+.update-delete-buttons {
+    margin-top: 10px;
+}
+.update-button {
+    color: #fff;
+    background-color: #349b3f;
+    text-decoration: none;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+    padding: 10px;
+    border-radius: 10px;
+}
+.delete-button {
+    color: #fff;
+    background-color: #c03232;
+    text-decoration: none;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+    padding: 10px;
+    border-radius: 10px;
+}
+#content-char-count {
+    font-size: 12px;
+    display: flex;
+    justify-content: end;
+    margin-right: 25px;
+}
+#title-char-count {
+    font-size: 12px;
+    display: flex;
+    justify-content: end;
+    margin-right: 25px;
+}
+.submit {
+    padding: 13px;
+    color: #fff;
+    background-color: #349b3f;
+    border: none;
+    border-radius: 5px;
+    font-family: Montserrat, sans-serif;
+}
+.submit:hover {
+    transform: scale(1.1);
+}
+h3 {
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 570px;
+    position: fixed;
+    box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.3);
+    background-color: #374c60;
+    padding: 10px;
+    color: #fff;
+    max-width: 180px;
+    width: 100%;
+}
+.shadow {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+h4{
+    margin-left: 20px;
+}
+.sidebar a{
+    text-decoration: none;
+    color: #fff;
+}
+.user-info {
+margin-top: auto; /* Push user info to the bottom of the sidebar */
 }
 
 .user-info a {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
-    text-decoration: none;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
-    max-width: 150px;
-    width: 100%;
+display: flex; /* Use flexbox */
+align-items: center; /* Align items vertically */
+text-decoration: none;
+color: #fff;
+padding: 10px 20px;
+border-radius: 10px;
+transition: background-color 0.3s ease;
+max-width: 150px;
+width: 100%;
 }
 
 .user-info a:hover {
-    background-color: #fff; /* Change background color on hover */
-    color: #222; /* Change text color on hover */
+background-color: #fff; /* Change background color on hover */
+color: #222; /* Change text color on hover */
 }
 
 .user-info span {
-    margin-right: 10px; /* Add space between username and icon */
+margin-right: 10px; /* Add space between username and icon */
 }
 
 .user-info div {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
+display: flex; /* Use flexbox */
+align-items: center; /* Align items vertically */
 }
-    

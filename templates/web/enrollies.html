@@ -42,6 +42,7 @@
         label {
             display: block;
             margin-bottom: 8px;
+            font-family: Montserrat, sans-serif;
 
         }
 
@@ -49,13 +50,14 @@
         select,
         textarea {
             width: 60%;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 15px;
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
             background-color: #fff;
             color: #333;
+            font-family: Montserrat, sans-serif;
         }
 
         textarea {
@@ -125,8 +127,47 @@
         }
         .required {
         color: red;
-        font-size: 25px;
+        font-size: 20px;
     }
+    .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .exit-button {
+            padding: 8px 20px;
+            background-color: #202e73;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .exit-button:hover{
+            background-color: #fff;
+            color: #202e73;
+            border: 1px solid #202e73;
+        }
+        .fas{
+            
+            font-size: 30px; 
+        }
     </style>
 </head>
 
@@ -134,17 +175,25 @@
     <div class="back-button">
         <a href="{{ url_for('websiteenroll') }}"><i class="fas fa-arrow-left"></i></a>
     </div>
-    <form method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
+    <div id="noteModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-info-circle"></i>
+            <h2>The Form will only accept real information. Please fill it up carefully.</h2>
+            <button class="exit-button" id="noteExitButton">Got it</button>
+        </div>
+    </div>
+    <form id="enrollmentForm" method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <h1>Enrollment Form</h1>
-        <p>Note:(College and SHS) Fill up this enrollment form honestly, we will validate each information before we verify your enrollment.</p>
+        <p>Note:(College and SHS) </p>
 
         <h2>Enrollee Information</h2>
-        <label for="name">Name:</label><span class="required">*</span>
-        {{ form.name(placeholder='Last Name, Middle Name, First Name') }}
+        <label for="name">Name:</label><span class="required" maxlength="50">*</span>
+        {{ form.name(placeholder='Ex. Dela Cruz, Juan D.') }}
 
-        <label for="email">Email:</label><span class="required">*</span>
-        {{ form.email(placeholder='Enter your email address') }}
+        <label for="email">Email:</label><span class="required" maxlength="50">*</span>
+        <input type="email" name="email" placeholder="juandelacruz@gmail.com" required>
+        
 
         <label for="level">Level:</label><span class="required">*</span>
         {{ form.level(placeholder='Enter your year') }}
@@ -152,56 +201,77 @@
         <label for="year">Year:</label><span class="required">*</span>
         {{ form.year(placeholder='Enter your level') }}
 
-        <label for="address">Address:</label><span class="required">*</span>
+        <label for="address">Address:</label><span class="required" maxlength="50">*</span>
         {{ form.address(placeholder='Enter your address') }}
 
         <label for="contact_number">Contact Number:</label><span class="required">*</span>
-        {{ form.contact_number(placeholder='Enter your contact number') }}
+        {{ form.contact_number(placeholder='Enter your contact number', pattern='[0-9]{11}', required=True) }}
+        
+        
 
         <label for="date_of_birth">Date of Birth:</label><span class="required">*</span>
 <input class="form-control" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" type="text" required>
 
 
-        <label for="place_of_birth">Place of Birth:</label><span class="required">*</span>
+        <label for="place_of_birth">Place of Birth:</label><span class="required" maxlength="50">*</span>
         {{ form.place_of_birth(placeholder='Enter your place of birth') }}
 
         <label for="gender">Gender:</label><span class="required">*</span>
         {{ form.gender(placeholder='Male/Female') }}
 
-        <label for="nationality">Nationality:</label>
+        <label for="nationality"maxlength="20">Nationality:</label>
         {{ form.nationality(placeholder='Enter your nationality') }}
 
-        <label for="religion">Religion:</label>
+        <label for="religion" maxlength="20">Religion:</label>
         {{ form.religion(placeholder='Enter your religion') }}
 
         <h2>Education Information</h2>
-        <label for="previous_school_info">Previous School Info:</label><span class="required">*</span>
-        {{ form.previous_school_info(placeholder='Enter your previous school info') }}
+        <label for="previous_school_info">Previous School Info:</label><span class="required" maxlength="50">*</span>
+        {{ form.previous_school_info(placeholder='Previous school info') }}
 
-        <label for="grade_last_completed">Grade Last Completed:</label><span class="required">*</span>
-        {{ form.grade_last_completed(placeholder='Enter the last grade completed') }}
+        <label for="grade_last_completed">Grade Last Completed:</label><span class="required" maxlength="3">*</span>
+        {{ form.grade_last_completed(placeholder='Last grade completed') }}
 
-        <label for="academic_achievements">Academic Achievements:</label>
-        {{ form.academic_achievements(placeholder='Enter your academic achievements') }}
+        <label for="academic_achievements" maxlength="250">Academic Achievements:</label>
+        {{ form.academic_achievements(placeholder='cademic achievements') }}
 
         <h2>Parent/Guardian Information</h2>
-        <label for="parent_names">Guardian Name:</label><span class="required">*</span>
-        {{ form.parent_names(placeholder='Enter guardian name') }}
+        <label for="parent_names">Guardian Name:</label><span class="required" maxlength="50">*</span>
+        {{ form.parent_names(placeholder='Guardian name') }}
 
-        <label for="parent_contact_info">Guardian Contact Info:</label><span class="required">*</span>
-        {{ form.parent_contact_info(placeholder='Enter guardian contact info') }}
+      
+        <label for="parent_contact_info">Contact Number:</label><span class="required">*</span>
+        {{ form.parent_contact_info(placeholder='Guardian contact number', pattern='[0-9]{11}', required=True) }}
+        
 
-        <label for="parent_occupation">Guardian Occupation:</label>
-        {{ form.parent_occupation(placeholder='Enter guardian occupation') }}
+        <label for="parent_occupation" maxlength="50">Guardian Occupation:</label>
+        {{ form.parent_occupation(placeholder='Guardian occupation') }}
 
         <h2>Special Needs</h2>
-        <label for="special_needs">Special Needs:</label>
+        <label for="special_needs"maxlength="100">Special Needs:</label>
         {{ form.special_needs(placeholder='Specify any special needs') }}
         <br>
         <button type="submit">Enroll</button>
     </form>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-info-circle"></i>
+            <h2>Thank you for choosing us! We will now verify your account.</h2>
+            <a href="{{ url_for('portaluserlogin') }}"><button class="exit-button">Go to Portal</button></a>
+        </div>
+    </div>
 </body>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var noteModal = document.getElementById('noteModal');
+        noteModal.style.display = 'block';
+
+        var noteExitButton = document.getElementById('noteExitButton');
+        noteExitButton.addEventListener('click', function() {
+            noteModal.style.display = 'none';
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         var dateOfBirthInput = document.getElementById('date_of_birth');
         dateOfBirthInput.addEventListener('input', function() {
@@ -218,6 +288,57 @@
             this.value = sanitizedValue;
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var contactNumberInputs = document.querySelectorAll('input[name="contact_number"]');
+
+        contactNumberInputs.forEach(function(input) {
+            input.addEventListener('input', function(event) {
+                // Remove non-numeric characters
+                this.value = this.value.replace(/\D/g, '');
+            });
+        });
+    });
+
+    // Form submission event
+    document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
+        // Check for form validation errors
+        if (!this.checkValidity()) {
+            // If there are validation errors, prevent modal from showing up
+            event.preventDefault();
+            return;
+        }
+
+        // Submit the form using AJAX
+        var formData = new FormData(this);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', this.action, true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Show the modal upon successful form submission
+                var modal = document.getElementById('myModal');
+                modal.style.display = 'block';
+            } else {
+                // Handle errors if any
+                console.error('Form submission failed with status: ' + xhr.status);
+            }
+        };
+        xhr.onerror = function() {
+            // Handle errors if any
+            console.error('Form submission failed.');
+        };
+        xhr.send(formData);
+        
+        // Prevent the default form submission behavior
+        event.preventDefault();
+    });
+
+    // Close modal event
+    document.getElementById('exitButton').addEventListener('click', function() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = 'none';
+    });
 </script>
+
 
 </html>
