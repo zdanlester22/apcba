@@ -14,21 +14,23 @@
 
         table {
             border-collapse: collapse;
-            width: 100%;
+            width: 115%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
             overflow-x: auto; /* Enable horizontal scrolling on small screens */
+
         }
 
         th, td {
-            padding: 15px;
+            padding: 14px;
             text-align: left;
             border: 1px solid #ddd;
         }
 
         th {
-            background-color: #444;
+            background-color: #374c60;
             color: #fff;
+            padding: 7px;
         }
 
         tr:hover {
@@ -56,14 +58,14 @@
         }
 
         /* Responsive styles using media queries */
-        @media (max-width: 600px) {
+        @media (max-width: 1000px) {
             table {
-                width: 100%;
+                width: 150%;
                 overflow-x: auto;
             }
 
             th, td {
-                padding: 10px;
+                padding: 20px;
             }
 
             .enroll-form label {
@@ -111,6 +113,22 @@
         .exit-button:hover {
             color: #ff0000;
         }
+        .content {
+              margin-right: 200px; /* Set a margin to the right when sidebar is visible */
+          }
+        table a{
+            background-color: #374c60;
+             color: #fff;
+             text-decoration: none;
+             padding:5px;
+             border-radius: 5px;
+        }
+        table a:hover {
+            background-color: #fff;
+            color: #374c60;
+            border: 1px solid #374c60;
+        }
+
     </style>
 </head>
 <body>
@@ -144,7 +162,7 @@
 
     <main>
         <div class="content">
-            <h2>List of users</h2>
+            <h2>Admin Dashboard/Portal Accounts</h2>
             <form method="GET" action="{{ url_for('users') }}">
                 <input type="text" name="q" value="{{ search_query }}" placeholder="Search users">
                 <button type="submit">Search</button>

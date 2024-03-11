@@ -29,21 +29,22 @@
         }
 
         .show-button {
-            background-color: #2a235e;
+          background-color: #374c60;
             color: #fff;
             padding: 8px 13px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
-            margin-top: 20px;
+            margin-top: 90px;
             margin-right: 20px;
 
         }
 
         .show-button:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
+          background-color: #fff;
+          color: #374c60;
+          border: 1px solid #374c60;
         }
 
         .enrollment-box {
@@ -104,9 +105,9 @@
         }
 
         button.btn-primary {
-            background-color: #2a235e;
+            background-color: #374c60;
             color: #fff;
-            padding: 8px 13px;
+            padding: 10px 13px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -115,8 +116,9 @@
         }
 
         button.btn-primary:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
+          background-color: #fff;
+          color: #374c60;
+          border: 1px solid #374c60;
         }
 
         table {
@@ -134,7 +136,7 @@
         }
 
         th {
-            background-color: #444;
+            background-color: #374c60;
             color: #fff;
         }
 
@@ -145,6 +147,28 @@
         img {
             height: 50px;
             margin-right: 5px;
+        }
+        h4{
+          color: #374c60;
+        }
+        h4{
+          display: block;
+          margin-top: -80px;
+          margin-bottom: 60px;
+          font-size: 25px;
+          
+        }
+        .show-button {
+          background-color: #374c60;
+            color: #fff;
+            padding: 8px 13px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 200px;
+            margin-right: 20px;
+
         }
     </style>
 </head>
@@ -179,14 +203,12 @@
     <main class="bot">
         <div class="content">
             <div class="topnav">
-                <h4 class="Name">Certificates</h4>
             </div>
-   
     {% block content %}
     <button class="show-button" onclick="showForm()">Enroll Students Here</button>
+    <h4>Admin Dashboard/Enroll Student</h4>
     <div class="enrollment-box" id="enrollment-box">
       <span class="close-button" onclick="hideForm()">X</span>
-      <h2>Enroll Student</h2>
       <form method="post" action="{{ url_for('enroll') }}">
         {{ form.hidden_tag() }}
   

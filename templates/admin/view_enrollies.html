@@ -104,8 +104,6 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
             padding-top: 60px;
         }
 
@@ -136,17 +134,99 @@
         }
         .archive-btn{
             text-decoration: none;
+            background-color: #374c60;
             color: #fff;
-            background-color: #036819;
             border-radius: 10px;
             padding: 5px;
             cursor: pointer;
         }
+        .container {
+            margin: 20px;
+            text-align: center;
+            overflow-x: auto; /* Allow horizontal scrolling */
+            overflow-y: hidden; /* Remove vertical scrollbar */
+            display: inline;
+        }     
+        .container button{
+            margin-top: 20px;
+            background-color: #374c60;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .enrollies-table button{
+            margin-top: -70px;
+            background-color: #374c60;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        .enrollies-table a{
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .enrollies-table{
+            width: 70%;
+            margin-left: 300px;
+            margin-right: auto;
+        }
+        .enrollies-table button:hover{
+            background-color: #fff;
+          color: #374c60;
+          border: 1px solid #374c60;
+        }
+        .container button:hover{
+            background-color: #fff;
+          color: #374c60;
+          border: 1px solid #374c60;
+        }
+        .enrollies-table a:hover{
+            background-color: #fff;
+          color: #374c60;
+          border: 1px solid #374c60;
+        }
+        .page-title{
+            color: #374c60;
+            font-size: 29px;
+            margin-left: -340px;
+        }
+        .enrollies-table th {
+    background-color: #374c60;
+    color: #fff;
+}
+        .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 350px;
+    top: 0;
+    width: 500px;
+    height: 100%;
+    overflow: auto;
+    padding-top: 60px;
+        }
+        .modal-content {
+    background-color: #fefefe;
+    margin: 7%;
+    padding: 30px;
+    border: 1px solid #888;
+    width: 70%;
+    font-size: 1.2rem;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 30px;
+    text-align: left;
+}
+.page-title {
+    color: #374c60;
+    font-size: 29px;
+    margin-left: -340px;
+}
     </style>
    
 </head>
 <body>
-    <div class="container">
         <button class="toggle-btn" onclick="toggleSidebar()">
             <span class="material-icons">menu</span>
         </button>
@@ -174,8 +254,8 @@
             </div>
         </div>
     <div class="container">
-        <h1 class="page-title"></h1>
-        <a href="{{ url_for('view_enrollies') }}"><button>View All Enrollies</button></a>
+        <h4 class="page-title">Admin Dashboard/Enrollee</h4>
+        <a href="{{ url_for('view_enrollies') }}" class="view"><button style="margin-left: 300px;">View All Enrollies</button></a>
         <table class="enrollies-table">
             <thead>
                 <tr>
@@ -267,7 +347,33 @@ function confirmLogout(event) {
         window.location.href = logoutUrl; // Redirect to logout URL
     }
 }
+function toggleSidebar() {
+        var sidebar = document.querySelector('.sidebar');
+        var form = document.querySelector('.container');
+        var table = document.querySelector('.enrollies-table');
+        var button = document.querySelector('.view');
+        var text = document.querySelector('.page-title');
 
+        if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+            // Show the sidebar
+            sidebar.style.display = 'block';
+            form.style.width = 'calc(100% - 300px)';
+            table.style.width = 'calc(100% - 300px)';
+            table.style.marginLeft = '300px';
+            button.style.marginLeft = '0'; // Reset button position
+            text.style.marginLeft = '-340px'
+        } else {
+            // Hide the sidebar
+            sidebar.style.display = 'none';
+            form.style.width = '100%';
+            table.style.width = '90%';
+            table.style.marginLeft = 'auto';
+            table.style.marginRight = 'auto';
+            button.style.marginLeft = '-230px'; // Reset button position
+            text.style.marginLeft = '-820px'
+        }
+    }
+    
 
     </script>
     

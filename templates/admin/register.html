@@ -12,6 +12,7 @@
     <style>
 
         form {
+            font-family: Montserrat, sans-serif;
         margin-top: 20px;
         display: flex;
         flex-direction: column;
@@ -25,6 +26,7 @@
     }
 
     label {
+        font-family: Montserrat, sans-serif;
         margin-bottom: 10px;
         font-weight: bold;
         color: #333;
@@ -34,13 +36,14 @@
     input[type="tel"],
     input[type="password"],
     select {
+        font-family: Montserrat, sans-serif;
         width: 75%;
-        padding: 7px;
+        padding: 6px;
         margin: 8px 0;
         box-sizing: border-box;
         border: 1px solid #ccc;
         border-radius: 30px;
-        font-size: 12px;
+        font-size: 10px;
         transition: border-color 0.3s;
     }
 
@@ -55,7 +58,8 @@
     button[type="submit"] {
         background-color: #2a235e;
         color: #fff;
-        padding: 12px 20px;
+        padding: 10px 17px;
+        font-family: Montserrat, sans-serif;
         border: none;
         border-radius: 30px;
         cursor: pointer;
@@ -67,6 +71,76 @@
         background-color: #e07b00;
         transform: scale(1.1);
     }
+    form {
+    font-family: Montserrat, sans-serif;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 420px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 9px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus,
+select:focus {
+    border-color: #4CAF50;
+}
+
+button[type="submit"] {
+    background-color: #374c60;
+    color: #fff;
+    padding: 10px 0;
+    width: 50%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #fff;
+    color: #374c60;
+    border: 1px solid #374c60;
+
+}
+h4{
+    color: #374c60;
+}
+.Name{
+    color:#374c60
+}
+
     </style>
 </head>
 <body>
@@ -100,7 +174,7 @@
     <main>
         <div class="content">
             <div class="topnav">
-                <h4 class="Name">Admin Dashboard/Announcements</h4>
+                <h4 class="Name">Admin Dashboard/Register Accounts</h4>
             </div>
            {% block content %}
            <form method="post" action="{{ url_for('register') }}" id="registrationForm">
@@ -132,7 +206,24 @@ function confirmLogout(event) {
         window.location.href = logoutUrl; // Redirect to logout URL
     }
 }
+function toggleSidebar() {
+        var sidebar = document.querySelector('.sidebar');
+        var form = document.querySelector('.container');
+        var table = document.querySelector('.content');
 
+        if (sidebar.style.display === 'none') {
+            sidebar.style.display = 'block';
+
+
+        } else {
+            // Hide the sidebar
+            sidebar.style.display = 'none';
+            form.style.width = '100%';
+            table.style.width = '100%';
+            table.style.marginLeft = '400px';
+            table.style.marginRight = '500px';
+        }
+    }
 
 </script>
 </body>

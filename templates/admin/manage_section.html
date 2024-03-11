@@ -13,27 +13,6 @@
     <style>
    
 
-      
-        .form-container {
-            display: none;
-            margin: auto; 
-            max-width: 400px; /* Set a max-width for better readability */
-            padding: 20px; /* Add padding for better visual appeal */
-            border: 1px solid #ccc; /* Add border for a neat look */
-            border-radius: 5px; /* Add border-radius for rounded corners */
-            background-color: #fff; /* Set background color */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Add box shadow for depth */
-        }
-
-        .form {
-            text-align: left; /* Align form elements to the left */
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-            margin-left: 20px;
-            margin-top: 20px;
-        }
 
         /* Center the button in the form */
         .btn-primary {
@@ -53,16 +32,18 @@
 
         /* Add borders to the table */
         .table-container {
-            border: 1px solid #ccc;
-            border-radius: 5px;
             overflow: hidden; /* Hide table overflow */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
             margin: 20px;
+            border-radius: 10px;
         }
 
         table {
-            width: 100%;
+            width: 75%;
             border-collapse: collapse;
+            margin-left: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+            border: 1px solid #ccc;
+            border-radius: 10px;
         }
 
         th, td {
@@ -72,7 +53,7 @@
         }
 
         th {
-            background-color: #444;
+            background-color: #374c60;
             color: #fff;
         }
 
@@ -84,6 +65,100 @@
             margin-left: 20px;
             font-size: 13px;
         }
+        .container{
+            display: inline-block;
+        }
+
+
+        table a{
+            border: none;
+
+        }
+        .btn-primary {
+    display: block;
+    margin: auto;
+    background-color: #374c60;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+.btn-primary:hover{
+    color: #374c60;
+    background-color: #fff;
+    border: 1px solid #374c60;
+    transform: scale(1);
+}
+ /* Add this CSS to center the form-container */
+  /* Common styles */
+  .form-container {
+        display: none;
+        position: fixed; /* Position it fixed for centering */
+        top: 50%; /* Move it down by half of its height */
+        left: 50%; /* Move it horizontally by half of its width */
+        transform: translate(-50%, -50%); /* Center it precisely */
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+        gap: 10px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group select {
+        width: calc(100% - 20px); /* Calculate width to adjust for padding */
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        outline: none;
+    }
+
+    .form-group button {
+        width: 100%; /* Button spans full width */
+        background-color: #374c60;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+
+    /* Add specific styles here if needed */
+    .form {
+        text-align: left;
+        width: 300px;
+    }
+    .form-group input[type="text"]{
+    width: 200px;
+
+}
+.form-group input[type="text"] {
+    width: 262px;
+}
+.form-group button {
+    width: 100px;
+
+}
+.form-group button:hover{
+    background-color: #fff;
+          color: #374c60;
+          border: 1px solid #374c60;
+}
+.custom-form-group {
+      padding: 7px;
+      width: 260px;
+    }
     </style>
 </head>
 <body>
@@ -113,16 +188,20 @@
                     <span>{{ user_name }}</span> <i class="material-icons">exit_to_app</i>
                 </a>
             </div>
-        </div>
-
-    <form method="get" action="{{ url_for('manage_section') }}">
+        </div>  
         <div class="form-group">
+    <form method="get" action="{{ url_for('manage_section') }}" style="
+    margin-left: 300px;
+    display: flex;
+    margin-top: 120px;
+    gap: 20px;
+">
+        <button id="toggle-button" class="toggle-button" type="button">Add</button>
+
             <input type="text" id="section_name" name="section_name" placeholder="Enter section name">
             <button type="submit">Search</button>
-        </div>
     </form>
-
-    <button id="toggle-button" class="toggle-button">Add Section Here</button>
+    </div>
 
     <div id="form-container" class="form-container">
         <br>
@@ -139,7 +218,7 @@
                 {{ form_section.year(class="form-control") }}
             </div>
     
-            <div class="form-group">
+            <div class="form-group custom-form-group">
                 <label for="capacity" class="form-control-label">Capacity</label>
                 {{ form_section.capacity(class="form-control") }}
             </div>
@@ -184,7 +263,7 @@
                         <form method="GET" action="{{ url_for('view_subjects') }}">
                             <input type="hidden" name="section_id" value="{{ section.id }}">
                             <input type="hidden" name="course_id" value="{{ section.course.id }}">
-                            <button type="submit" class="btn btn-primary">View Subjects</button>
+                            <button type="submit" class="btn btn-primary">Subjects</button>
                         </form>
                     </td>
                 </tr>
@@ -192,7 +271,6 @@
             </tbody>
         </table>
     </div>
-
     <script>
         document.getElementById('toggle-button').addEventListener('click', function () {
             var formContainer = document.getElementById('form-container');

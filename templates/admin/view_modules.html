@@ -10,7 +10,136 @@
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="{{ url_for('static', filename='images/style.css') }}">
+<style>
+ h2 {
+    color: #374c60;
+    margin-top: 70px;
+    margin-left: 30px;
+}
 
+.formi {
+    background-color: #f9f9f9;
+    width: 890px;
+    height: auto;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.module-form {
+    width: 95%;
+    background-color: #fff;
+    color: black;
+    border: none;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.module-form .form-group {
+    margin-bottom: 20px;
+}
+
+.module-form label {
+    font-weight: bold;
+}
+
+.module-form input[type="text"] {
+    width: 90%;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+}
+.module-form select{
+    width:99.5%;
+    height: 52px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+.module-form input[type="number"]{
+    width: 97%;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+
+}
+.module-form input[type="file"] {
+    width: 97%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.module-form button[type="submit"] {
+    background-color: #374c60;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.module-form button[type="submit"]:hover {
+    background-color: #fff;
+    color: #374c60;
+    border: 1px solid #374c60;
+}
+.mod {
+    background-color: #f9f9f9;
+    width: 95%;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.mod table {
+    width: 100%;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+.mod table th,
+.mod table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.mod table th {
+    background-color: #374c60;
+    color: #fff;
+    text-align: left;
+}
+
+.mod table tr:last-child td {
+    border-bottom: none;
+}
+
+table a{
+    background-color: #374c60;
+    color: #fff;
+    text-decoration: none;
+    padding: 7px;
+    border-radius: 5px;
+}
+table a:hover{
+    background-color: #fff;
+    color: #374c60;
+    border: 1px solid #374c60;
+}
+
+</style>
 </head>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -48,47 +177,63 @@
                 <h4 class="Name">Module</h4>
             </div>
         {% block content %}
-    
+        <h2>Admin Dashboard/Modules</h2>
+         <div class="formi">
             <form method="POST" enctype="multipart/form-data" class="module-form">
-                <h2>Module Management</h2>
+
                 {{ form_module.hidden_tag() }}
-    
+            
                 <div class="form-group">
                     <label for="title">Title</label>
-                    {{ form_module.title(class="form-control", placeholder="Enter Module Title") }}
+                    {{ form_module.title(class="form-control", placeholder="Enter Module Title", required="required") }}
                 </div>
-    
+            
                 <div class="form-group">
                     <label for="year">Year</label>
-                    {{ form_module.year(class="form-control", placeholder="Enter Module Year") }}
+                    {{ form_module.year(class="form-control", placeholder="Enter Module Year", required="required") }}
                 </div>
-    
+            
                 <div class="form-group">
                     <label for="course_id">Course</label>
-                    {{ form_module.course_id(class="form-control") }}
+                    {{ form_module.course_id(class="form-control", required="required") }}
                 </div>
-    
+            
                 <div class="form-group">
                     <label for="pdf_file">PDF File</label>
-                    {{ form_module.pdf_file(class="form-control-file") }}
+                    {{ form_module.pdf_file(class="form-control-file", required="required") }}
                 </div>
-    
+            
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Create Module</button>
                 </div>
             </form>
-    
+            
+        </div>
+        <div class="mod">
             <h3>Existing Modules</h3>
-            <ul>
-                {% for module in modules %}
-                    <li>
-                        {{ module.title }} - {{ module.year }} - {{ module.course.title }}
-                        <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a>
-
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endblock %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Year</th>
+                        <th>Course</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for module in modules %}
+                    <tr>
+                        <td>{{ module.title }}</td>
+                        <td>{{ module.year }}</td>
+                        <td>{{ module.course.title }}</td>
+                        <td><a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a></td>
+                    </tr>
+                    {% endfor %}
+                    {% endblock %}
+                </tbody>
+            </table>
+        </div>
+        
     </main>
     </div>
     <script>

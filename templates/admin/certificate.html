@@ -441,7 +441,9 @@ table a:hover{
     color: #374c60;
     border: 1px solid #374c60;
 }
-
+h4{
+    color: #374c60;
+}
 
 
     </style>
@@ -491,7 +493,8 @@ table a:hover{
                             </div>
                             <div class="form-group">
                                 {{ form.pdf.label(class="form-control-label") }}
-                                {{ form.pdf(class="form-control-file", placeholder="Choose PDF File") }}
+                                {{ form.pdf(class="form-control-file", placeholder="Choose PDF File", required=True) }}
+
                             </div>
                             <button type="submit" class="submit">Upload</button>
                         </form>
