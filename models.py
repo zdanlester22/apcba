@@ -111,7 +111,8 @@ class Section(db.Model):
     course = db.relationship('Course', back_populates='sections', lazy=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.teacher_id'))
     teacher = db.relationship('Teacher', back_populates='section', uselist=False)
-    subjects = db.relationship('Subject', back_populates='section', lazy=True)  # Added this line
+    subjects = db.relationship('Subject', back_populates='section', lazy=True) 
+    enrollments = db.relationship('Enrollment', backref='section', lazy=True)
 
 
 class Subject(db.Model):
@@ -154,7 +155,7 @@ class Enrollment(db.Model):
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
     is_approved = db.Column(db.Boolean, default=False)
     year = db.Column(db.String(20), nullable=False)
-    enrolled_student_rel = db.relationship('Student', backref='enrollment', single_parent=True)
+    enrolled_student_rel = db.relationship('Student', back_populates='enrollments', single_parent=True)
     enrolled_course_rel = db.relationship('Course', backref='enrollments_course')
     enrolled_section_rel = db.relationship('Section', backref='enrollments_section')
 
@@ -189,7 +190,7 @@ class Student(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     grades = db.relationship('Grades', back_populates='student', lazy=True)
-    enrollments = db.relationship('Enrollment', backref='student', lazy=True)
+    enrollments = db.relationship('Enrollment', back_populates='enrolled_student_rel', lazy=True)
 
 
 class Course(db.Model):

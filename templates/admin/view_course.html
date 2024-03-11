@@ -517,8 +517,8 @@ select {
                     <td>{{ subject.unit }}</td>
                     <td>{{ subject.teacher }}</td>
                     <td>
-                        <form method="POST" action="{{ url_for('update_subject', subject_id=subject.id) }}">
-                        </form>
+                        <button method="POST" action="{{ url_for('update_subject', subject_id=subject.id) }}">
+                        </button>
                     </td>
                 </tr>
             {% endfor %}

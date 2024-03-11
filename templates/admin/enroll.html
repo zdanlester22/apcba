@@ -257,7 +257,7 @@
       <tbody>
         {% for enrollment in existing_enrollments %}
           <tr>
-            <td>{{ enrollment.student.name }}</td>
+            <td>{{ enrollment.enrolled_student_rel.name }}</td>
             <td>{{ enrollment.enrolled_course_rel.title }}</td>
             <td>{{ enrollment.year }}</td>
             <td>{{ enrollment.enrolled_section_rel.name }}</td>

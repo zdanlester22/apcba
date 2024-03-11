@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app
+from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app, session, make_response
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
@@ -13,7 +13,7 @@ from flask_mail import Mail, Message
 #'mysql+mysqlconnector://root:@localhost/apcba'
 #'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SECRET_KEY'] = 'somethingdan'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
 app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
 app.config['MAIL_PORT'] = 2525
@@ -21,6 +21,7 @@ app.config['MAIL_USERNAME'] = 'nicssanyo@gmail.com'
 app.config['MAIL_PASSWORD'] = 'sanaymagisa24'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
+
 
 db.init_app(app)
 mail = Mail(app)
@@ -32,7 +33,7 @@ if app.debug:
     app.logger.setLevel(logging.DEBUG)
     logging.getLogger('werkzeug').setLevel(logging.DEBUG)
 
-@login_manager.user_loader 
+@login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
@@ -108,7 +109,6 @@ def change_password():
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
     form = EnrolliesForm()
-
     if form.validate_on_submit():
         try:
 
@@ -166,8 +166,9 @@ def enrollies():
 
 @app.route('/admin/view_enrollies')
 def view_enrollies():
+    user_name = current_user.name
     enrollies_list = Enrollies.query.filter_by(is_archived=False).all()
-    return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list)
+    return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list,user_name=user_name)
 
 @app.route('/admin/view_archived_enrollies')
 def view_archived_enrollies():
@@ -186,6 +187,7 @@ def archive_enrollie(enrollie_id):
 @app.route('/admin/users', methods=['GET', 'POST'])
 @login_required
 def users():
+    user_name = current_user.name
     if current_user.role != 'admin':
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('admin/dashboard'))
@@ -197,13 +199,12 @@ def users():
     search_query = request.args.get('q', default='', type=str)
 
     if search_query:
-        users_data = User.query.filter(
-            or_(
-                User.username.ilike(f"%{search_query}%"),
-                User.id.ilike(f"%{search_query}%"),
-                User.name.ilike(f"%{search_query}%"),
-            )
-        ).all()
+       users_data = User.query.filter(
+    or_(
+        User.email.ilike(f"%{search_query}%"),
+        User.name.ilike(f"%{search_query}%"),
+    )
+).all()
 
 
     # Handle form submissions
@@ -241,39 +242,54 @@ def users():
 
         return redirect(url_for('users'))
 
-    return render_template('admin/users.html', users=users_data, search_query=search_query, teacher_form=teacher_form, student_form=student_form)
+    return render_template('admin/users.html', users=users_data, search_query=search_query, teacher_form=teacher_form, student_form=student_form,user_name=user_name)
 
 
 @app.route('/admin/teachers')
 @login_required
 def view_teachers():
+    user_name = current_user.name
     if current_user.role != 'admin':
         return redirect(url_for('dashboard'))
     teachers_data = Teacher.query.all()
 
-    return render_template('admin/view_teachers.html', teachers=teachers_data)
+    return render_template('admin/view_teachers.html', teachers=teachers_data,user_name=user_name)
 
-@app.route('/admin/students', methods=['GET'])
+
+
+@app.route('/students', methods=['GET'])
 @login_required
 def view_students():
-    if current_user.role != 'admin':
-
+    # Check if the current user is authorized to view students
+    if current_user.role not in ['admin', 'teacher']:
+        flash('You are not authorized to view students.', 'danger')
         return redirect(url_for('dashboard'))
 
-    students_data = (
-    db.session.query(
-        Student, Section.name.label('section_name'), Course, Enrollment.year
-    )
-    .outerjoin(Enrollment, Student.id == Enrollment.student_id)
-    .outerjoin(Section, Enrollment.section_id == Section.id)
-    .outerjoin(Course, Enrollment.course_id == Course.id)
-    .add_columns(Student.student_id, Student.id, Student.name, Course, Enrollment.year)
-    .group_by(Student.student_id, Student.id, Student.name, Section.name)
-    .all()
-)
-    sections_data = Section.query.all()
+    # Retrieve the enrollments associated with the sections taught/advised by the current user
+    if current_user.role == 'teacher':
+        teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
+        if teacher is not None:
+            sections = teacher.section
+            if sections is not None:
+                enrollments = []
+                if isinstance(sections, list):
+                    for section in sections:
+                        enrollments.extend(section.enrollment)
+                else:
+                    enrollments.extend(sections.enrollment)
+            else:
+                enrollments = []
+        else:
+            enrollments = []
+    else:  # For admins, retrieve all enrollments
+        enrollments = Enrollment.query.all()
 
-    return render_template('admin/view_students.html', students=students_data, sections=sections_data)
+    return render_template('admin/view_students.html', enrollments=enrollments)
+
+
+
+
+
 
 @app.route('/admin/students/update/<int:student_id>', methods=['GET', 'POST'])
 @login_required
@@ -314,23 +330,38 @@ def delete_student(student_id):
 
     return redirect(url_for('view_students'))
 
-@app.route('/web/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data, password=form.password.data).first()
-        if user:
+        email = form.email.data
+        password = form.password.data
+        user = User.query.filter_by(email=email).first()
+        if user:  
             login_user(user)
-            flash('Login successful', 'success')
+            session['user_id'] = user.id
+            flash('Logged in successfully!', 'success')
             return redirect(url_for('dashboard'))
-    return render_template('web/login.html', form=form, )
+        else:
+            flash('Invalid username or password. Please try again.', 'error')
+    return render_template('web/login.html', form=form)
+
     
 @app.route('/logout')
 @login_required
 def logout():
+    # Invalidate session
+    session.clear()
     logout_user()
+    flash('You have been logged out', 'success')
     return redirect(url_for('login'))
+
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -344,20 +375,24 @@ def dashboard():
 
     announcements = Announcement.query.order_by(Announcement.timestamp.desc()).all()
 
-    if current_user.role == 'student':
-        template = 'student/student_dashboard.html'
-    elif current_user.role == 'teacher':
-        template = 'teacher/teacher_dashboard.html'
-    elif current_user.role == 'admin':
-        template = 'admin/dashboard.html'
+    if current_user.is_authenticated:
+        if current_user.role == 'student':
+            template = 'student/student_dashboard.html'
+        elif current_user.role == 'teacher':
+            template = 'teacher/teacher_dashboard.html'
+        elif current_user.role == 'admin':
+            template = 'admin/dashboard.html'
+        else:
+            return redirect(url_for('index'))
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
 
-    return render_template(template, user=current_user, form=form, announcements=announcements,)
+    return render_template(template, user=current_user, form=form, announcements=announcements)
 
 @app.route('/admin/register', methods=['GET', 'POST'])
 @login_required
 def register():
+    user_name = current_user.name
     if current_user.role != 'admin':
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('dashboard'))
@@ -379,7 +414,7 @@ def register():
         db.session.commit()
         return redirect(url_for('register'))
 
-    return render_template('admin/register.html', form=form)
+    return render_template('admin/register.html', form=form,user_name=user_name)
 
 
 @app.route('/update/<int:user_id>', methods=['GET', 'POST'])
@@ -558,6 +593,7 @@ def account():
 @app.route('/courses', methods=['GET', 'POST'])
 @login_required
 def view_course():
+    user_name = current_user.name
     form_course = CourseForm()
     form_subject = SubjectForm()
     filter_form = FilterForm()
@@ -601,7 +637,7 @@ def view_course():
         db.session.commit()
         return redirect(url_for('view_course'))
 
-    return render_template('admin/view_course.html', courses=courses, form_course=form_course, form_subject=form_subject, filter_form=filter_form)
+    return render_template('admin/view_course.html', courses=courses, form_course=form_course, form_subject=form_subject, filter_form=filter_form,user_name=user_name)
 
 @app.route('/update_course/<int:course_id>', methods=['GET', 'POST'])
 @login_required
@@ -645,6 +681,7 @@ def update_subject(subject_id):
 @app.route('/sections', methods=['GET', 'POST'])
 @login_required
 def manage_section():
+    user_name = current_user.name
     form_section = SectionForm()
     course_id_filter = request.args.get('course_id', type=int)
     section_name_filter = request.args.get('section_name', type=str)
@@ -683,7 +720,7 @@ def manage_section():
         return redirect(url_for('manage_section'))
 
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
-                           form_section=form_section)
+                           form_section=form_section, user_name=user_name)
 
 @app.route('/view_subjects', methods=['GET'])
 @login_required
@@ -703,6 +740,7 @@ def view_subjects():
 @app.route('/view_modules', methods=['GET', 'POST'])
 @login_required
 def view_modules():
+    user_name = current_user.name
     form_module = ModuleForm()
     courses = Course.query.all()
     form_module.course_id.choices = [(course.id, course.title) for course in courses]
@@ -723,17 +761,20 @@ def view_modules():
         )
         db.session.add(new_module)
         db.session.commit()
+    
     modules = Module.query.all()
-    if current_user.role == 'admin':
+    
+    # Check if the current user is authenticated and has a valid role
+    if current_user.is_authenticated and current_user.role == 'admin':
         template = 'admin/view_modules.html'
-    elif current_user.role == 'teacher':
+    elif current_user.is_authenticated and current_user.role == 'teacher':
         template = 'teacher/view_modules.html'
-    elif current_user.role == 'student':
+    elif current_user.is_authenticated and current_user.role == 'student':
         template = 'student/view_modules.html'
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('index'))  # Redirect to the index page if the user is not authenticated or has an invalid role
 
-    return render_template(template, form_module=form_module, modules=modules)
+    return render_template(template, form_module=form_module, modules=modules, user_name=user_name)
 
 @app.route('/download_module/<pdf_filename>', methods=['GET'])
 @login_required
@@ -744,6 +785,7 @@ def download_module(pdf_filename):
 @app.route('/enroll', methods=['GET', 'POST'])
 @login_required
 def enroll():
+    user_name = current_user.name
     student_form = StudentForm()
     student_id = request.args.get('student_id', type=int)
     student_form.student_id.data = student_id
@@ -783,7 +825,7 @@ def enroll():
 
             flash('Enrollment successful.', 'success')
 
-    return render_template('admin/enroll.html', form=form, student_form=student_form, existing_enrollments=existing_enrollments)
+    return render_template('admin/enroll.html', form=form, student_form=student_form, existing_enrollments=existing_enrollments,user_name=user_name)
 ###########################################################################################################################################################################################################
 @app.route('/grades/<int:student_id>', methods=['GET', 'POST'])
 @login_required
@@ -901,4 +943,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
