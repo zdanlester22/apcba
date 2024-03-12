@@ -30,6 +30,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
             text-align: left;
+            margin-top: 50px;
         }
 
         label {
@@ -54,14 +55,14 @@
 
         button {
             display: inline-block;
-            padding: 12px 18px;
+            padding: 10px 16px;
             font-size: 16px;
             font-weight: bold;
             text-align: center;
             text-decoration: none;
-            background-color: #2a235e;
+            background-color: #374c60;
             color: #fff;
-            border-radius: 30px;
+            border-radius: 5px;
             transition: background-color 0.3s, transform 0.2s;
             cursor: pointer;
             border: none;
@@ -70,8 +71,9 @@
         }
 
         button:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
+            background-color: #fff;
+            color: #374c60;
+            border: 1px solid #374c60;
         }
 
         p {
@@ -91,12 +93,11 @@
 </head>
 
 <body>
-    <h1>Asia Pacific College of Business and Arts<br>Asianites Management System</h1>
     <form method="post" action="{{ url_for('update_user', user_id=user.id) }}">
         {{ form.csrf_token }}
         
         <div>
-            <label for="new_email">email:</label>
+            <label for="new_email">Email:</label>
             {{ form.new_email() }}
         </div>
         
@@ -119,7 +120,7 @@
         <button type="submit">Update User</button>
     </form>
     
-    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+    <p><a href="{{ url_for('users') }}">Back to Accounts</a></p>
 </body>
 
 </html>

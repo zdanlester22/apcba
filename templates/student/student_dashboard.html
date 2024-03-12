@@ -1,336 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Montserrat, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
         }
-
-        header {
-            background-color: #222;
-            padding: 15px;
-            text-align: center;
-            color: #fff;
-            position: relative;
+        .container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            height: 100vh; /* Set container to 100% viewport height */
+            overflow-x: hidden; /* Hide horizontal overflow */
         }
-
-        .header-content {
+        .sidebar {
+            position: fixed; /* Fix the position of the sidebar */
+            top: 0; /* Position it at the top */
+            bottom: 0; /* Extend it to the bottom */
+            left: 0; /* Position it at the left */
+            width: 200px;
+            background-color: #374c60;
+            color: #0f0f0f;
+            padding: 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 2;
+            flex-direction: column;
+            transition: opacity 0.3s ease, width 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
         }
 
-        h1 {
-            color: antiquewhite;
-            font-size: 3vh;
-            margin-right: 60px;
+        .sidebar-hidden {
+            opacity: 0; /* Hide the sidebar when it's hidden */
+            width: 0; /* Remove the width of the sidebar when hidden */
+            pointer-events: none; /* Disable pointer events when hidden */
         }
 
-        .arrow-button {
-            background-color: #37332f;
-            color: #fff;
-            border: none;
-            padding: 2px 4px;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            margin-left: 10px;
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            margin-left: 300px; /* Adjust the initial margin-left to accommodate the sidebar */
+        }
+        .logo {
+            margin-bottom: 20px;
+            display: flex;
         }
 
-        .arrow-button::before {
-            content: '\25C0';
-            /* Unicode character for a large left-pointing triangle */
-            font-family: 'Font Awesome 5 Free';
-            margin-right: 5px;
-            font-size: 1.3em;
-            /* Adjust the size as needed */
-        }
-
-        .arrow-button:hover {
-            transform: scale(1.50);
-        }
-
-        nav {
-            background-color: #2f2e2e;
-            padding: 3px;
-            overflow: auto;
-            white-space: nowrap;
-            text-align: center;
-            scrollbar-width: thin;
-            /* Firefox */
-        }
-
-        nav::-webkit-scrollbar {
-            height: 10px;
-        }
-
-        nav::-webkit-scrollbar-thumb {
-            background-color: #555;
-            border-radius: 10px;
-        }
-
-        nav a {
-            display: inline-block;
+        .logo h2 {
             color: #fff;
             text-align: center;
-            padding: 10px 15px;
-            text-decoration: none;
-            transition: background-color 0.3s;
-            margin: 5px;
-            border-radius: 5px;
-            width: 100px;
-            white-space: nowrap;
-        }
-
-        nav a:hover {
-            background-color: #555;
-        }
-
-        main {
-            margin: 20px;
-            text-align: center;
-        }
-
-        .link {
-            display: inline-block;
-            margin: 5px;
-            padding: 8px 13px;
-            background-color: #2a235e;
-            text-decoration: none;
-            color: #fff;
-            font-size: 11px;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100px;
+            margin-top: 10px;
+            font-size: 20px;
             font-weight: bold;
         }
-
-        .link:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
+        .link i {
+    margin-right: 10px;
+    margin-left: 10px; /* Adjust this value as needed */
+}
 
+        .links a {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 0;
+    margin-bottom: -7px;
+    font-size: .9rem;
+    font-weight: 600;
+    transition:  color 0.3s ease;
+}
+.links a:hover,
+.links a:hover i {
+    background-color: #fff; /* Change background color on hover */
+    color: #222; /* Change text color on hover */
+    border-radius: 10px;
+}
+.links a:hover i {
+    color: #374c60;
+}
+
+        .link {
+            cursor: pointer;
+            margin-bottom: 10px;
+            text-align: left;
+            font-size: .9rem;
+        }
+        .toggle-btn {
+            color: #111;
+            border: none;
+            padding: 20px;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 25px; 
+            z-index: 2;
+            background-color: #fff;
+        }
+        .content {
+            flex: 1;
+            padding: 30px;
+            transition: margin-left 0.3s ease; /* Add transition for smooth content movement */
+            margin-right: 60px;
+        }
+        .Name {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
         .bot {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            gap: 20px;
         }
-
-        h2 {
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 0;
-        }
-
-        img {
-            height: 50px;
-            margin-right: 5px;
-        }
-
-        .announcements {
-            margin-top: 20px;
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-
-        .announcement-item {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-bottom: 15px;
-            padding: 25px;
-            max-width: 700px;
-            width: 600px;
-        }
-
-        .announcement-item strong {
-            font-size: 17px;
-            color: #333;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .announcement-item p {
-            color: #555;
-            margin-top: 10px;
-            line-height: 1.5;
-            font-size: 15px;
-        }
-
-        .announcement-item small {
-            color: #777;
-            display: block;
-            margin-top: 10px;
-        }
-
-        .announcement-item:hover {
-            background-color: #f5f5f5;
-        }
-
-        .announcements h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 3vh;
-            margin-left: 25px;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logout-form {
+        .announcement-form {
             background-color: #fff;
             padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            visibility: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+            margin: 20px;
         }
-
-        .logout-buttons {
-            margin-top: 20px;
+        .announcement-form h2 {
+            margin-bottom: 10px;
+            color: #333;
         }
-
-        .btn-logout {
-            padding: 10px 20px;
-            background-color: #e07b00;
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 97%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        .form-group input[type="submit"] {
+            background-color: #374c60;
             color: #fff;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 10px;
-        }
-
-        .btn-cancel {
             padding: 10px 20px;
-            background-color: #555;
-            color: #fff;
-            border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 0 10px;
-        }
-
-        @media screen and (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .header-content {
-                margin-top: 15px;
-            }
-
-            h1 {
-                margin-right: 0;
-            }
-
-            .logout-form {
-                width: 80%;
-            }
-        }
-        .pang{
-            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
             font-family: Montserrat, sans-serif;
-            margin-top: 5px;
-            padding: 5px;
         }
+        .announcements {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .announcement-item {
+            margin-bottom: 15px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
+            list-style-type: none;
+            max-height: 300px;
+            height: 100%;
+        }
+        .announcement-item strong {
+            color: #333;
+        }
+        .announcement-item p {
+            color: #666;
+        }
+        .announcement-item small {
+            color: #999;
+        }
+        .update-delete-buttons {
+            margin-top: 10px;
+        }
+        .update-button {
+            background-color: #374c60;
+           color: #fff;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: color 0.3s ease;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .delete-button {
+            background-color: #374c60;
+            color: #fff;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: color 0.3s ease;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        #content-char-count {
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
+        #title-char-count {
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
+        .submit {
+            padding: 13px;
+            background-color: #374c60;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-family: Montserrat, sans-serif;
+        }
+        .submit:hover {
+            background-color: #fff;
+              color: #374c60;
+           border: 1px solid #374c60;
+        }
+        h3 {
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 570px;
+            position: fixed;
+            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.3);
+            background-color: #374c60;
+            padding: 10px;
+            color: #fff;
+            max-width: 180px;
+            width: 100%;
+        }
+        .shadow {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        h4{
+            margin-left: 20px;
+        }
+        .sidebar a{
+            text-decoration: none;
+            color: #fff;
+        }
+        .user-info {
+    margin-top: auto; /* Push user info to the bottom of the sidebar */
+}
+
+.user-info a {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Align items vertically */
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    max-width: 150px;
+    width: 100%;
+}
+
+.user-info a:hover {
+    background-color: #fff; /* Change background color on hover */
+    color: #222; /* Change text color on hover */
+}
+
+.user-info span {
+    margin-right: 10px; /* Add space between username and icon */
+}
+
+.user-info div {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Align items vertically */
+}
+.announcements a:hover{
+    background-color: #fff;
+              color: #374c60;
+           border: 1px solid #374c60;
+           transform: scale(0);
+}
+
     </style>
 </head>
-
 <body>
-    <header>
-        <a href="javascript:void(0);" class="arrow-button" onclick="showLogoutForm()"></a>
-        <div class="header-content">
-            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo">
-            <h1>APCBA Portal V1.0</h1>
-        </div>
-    </header>
-
-    <nav>
-        <nav>
-            <a href="{{ url_for('dashboard') }}" class="link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="{{ url_for('account') }}" class="link"><i class="fas fa-book"></i> Profile</a>
-            <a href="{{ url_for('view_modules') }}" class="link"><i class="fas fa-book"></i> Modules</a>
-            <a href="{{ url_for('certificate') }}" class="link"><i class="fas fa-certificate"></i> Certificates</a>
-            <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="fas fa-certificate"></i> View Grades</a>
-            <a href="{{ url_for('view_schedule') }}" class="link"><i class="fas fa-calendar"></i> Schedule</a>
-            <a  href="{{ url_for('change_password') }}" class="link"><i class="fas fa-book"></i> Password</a>
-        </nav>
-    </nav>
-    <h2 class="pang">Student Dashboard<br>Welcome, {{ user.name }}!</h2>
-    <div class="bot">
-        <div class="announcements">
-            {% if announcements %}
-                {% for announcement in announcements %}
-                    <div class="announcement-item">
-                        <strong>{{ announcement.title }}</strong>
-                        <p>{{ announcement.content }}</p>
-                        <small>Posted by {{ announcement.author.username }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>No announcements available.</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Logout Overlay and Form -->
-    <div class="overlay" id="logoutOverlay">
-        <div class="logout-form">
-            <p>Logout?</p>
-            <div class="logout-buttons">
-                <button class="btn-logout" onclick="logout()">Yes</button>
-                <button class="btn-cancel" onclick="cancelLogout()">No</button>
+    <div class="container">
+        <button class="toggle-btn" onclick="toggleSidebar()">
+            <span class="material-icons">menu</span>
+        </button>
+        <div class="sidebar">
+            <div class="logo">
+                <h2>APCBA PORTAL V1.0</h2>
+            </div>
+            <div class="links">
+                <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
+                <a href="{{ url_for('account') }}" class="link"><i class="material-icons">person</i> Profile</a>
+                <a href="{{ url_for('view_modules') }}" class="link"><i class="material-icons">chrome_reader_mode</i> Modules</a>
+                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">verified</i> Certificates</a>
+                <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="material-icons">grade</i> View Grades</a>
+                <a href="{{ url_for('view_schedule') }}" class="link"><i class="material-icons">event</i> Schedule</a>
+                <a href="{{ url_for('change_password') }}" class="link"><i class="material-icons">vpn_key</i> Password</a>
+                
+            </div><br><br>
+            <div class="user-info">
+                <a href="#" id="logout-link">
+                    <span>{{ user.name }}</span> <i class="material-icons">exit_to_app</i>
+                </a>
             </div>
         </div>
+        <div class="content">
+            <div class="topnav">
+                <h4 class="Name">Announcements</h4>
+            </div>
+                <div class="announcements">
+                    {% for announcement in announcements %}
+                        <li class="announcement-item">
+                            <strong>{{ announcement.title }}</strong>
+                            <p>{{ announcement.content }}</p>
+                            <small>Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                        </li>
+                    {% endfor %}
+                </div>
+            </main>
+        </div>
     </div>
-
     <script>
-    function showLogoutForm() {
-        var overlay = document.getElementById("logoutOverlay");
-        overlay.style.display = "flex";
-        document.querySelector('.logout-form').style.visibility = 'visible';
+        var originalContentMargin; // Store the original content margin
+    
+        function toggleDropdown(event, id) {
+    event.preventDefault(); // Prevent default behavior of the link click
+    var dropdown = document.getElementById(id);
+    var isDisplayed = dropdown.style.display === "block";
+    // Hide all dropdowns
+    var allDropdowns = document.querySelectorAll('.sub-links');
+    allDropdowns.forEach(function(dropdown) {
+        dropdown.style.display = 'none';
+    });
+    // Display the clicked dropdown if it wasn't already displayed
+    if (!isDisplayed) {
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none'; // Hide the dropdown if already displayed
     }
+}
 
-    function logout() {
-        // Redirect to the login page
-        window.location.href = "{{ url_for('portaluserlogin') }}";
+    
+        function toggleSidebar() {
+            var sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('sidebar-hidden');
+    
+            // Toggle content margin based on sidebar visibility
+            var content = document.querySelector('.content');
+            if (!originalContentMargin) {
+                originalContentMargin = getComputedStyle(content).marginLeft;
+            }
+            content.style.marginLeft = (sidebar.classList.contains('sidebar-hidden')) ? '0' : originalContentMargin;
+        }
+    
+        function countCharacters(inputId, displayId, limit) {
+            var input = document.getElementById(inputId);
+            var characterCount = input.value.length;
+            var display = document.getElementById(displayId);
+            display.textContent = characterCount + "/" + limit + " characters";
+    
+            // Check if character count exceeds the limit
+            if (characterCount > limit) {
+                // Trim the input value to the limit
+                input.value = input.value.slice(0, limit);
+    
+                // Update the character count in the display
+                characterCount = limit;
+                display.textContent = characterCount + "/" + limit + " characters";
+    
+                // Change the color to red
+                display.style.color = 'red';
+            } else {
+                // Reset the color to black
+                display.style.color = 'black';
+            }
+        }
+
+        function confirmSubmit() {
+        return confirm("Are you sure you want to submit this announcement?");
     }
+      //logout to
+        var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
+        document.getElementById("logout-link").addEventListener("click", confirmLogout);
 
-    function cancelLogout() {
-        hideLogoutForm();
-    }
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            var confirmLogout = confirm("Are you sure you want to logout?");
+            if (confirmLogout) {
+                window.location.href = logoutUrl; // Redirect to logout URL
+            }
+        }
 
-    function hideLogoutForm() {
-        var overlay = document.getElementById("logoutOverlay");
-        overlay.style.display = "none";
-        document.querySelector('.logout-form').style.visibility = 'hidden';
-    }
-</script>
-
+    </script>
+    
 </body>
-
 </html>
