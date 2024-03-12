@@ -260,7 +260,7 @@ def view_teachers():
 @app.route('/students', methods=['GET'])
 @login_required
 def view_students():
-    # Check if the current user is authorized to view students
+    
     if current_user.role not in ['admin', 'teacher']:
         flash('You are not authorized to view students.', 'danger')
         return redirect(url_for('dashboard'))
@@ -274,9 +274,9 @@ def view_students():
                 enrollments = []
                 if isinstance(sections, list):
                     for section in sections:
-                        enrollments.extend(section.enrollment)
+                        enrollments.extend(section.enrollments)
                 else:
-                    enrollments.extend(sections.enrollment)
+                    enrollments.extend(sections.enrollments)
             else:
                 enrollments = []
         else:
@@ -736,6 +736,8 @@ def view_subjects():
     current_app.logger.info(f"Number of subjects found: {len(subjects)}")
 
     return render_template('admin/view_subjects.html', subjects=subjects)
+
+
 ################################################################################################################################################################################################################    
 @app.route('/view_modules', methods=['GET', 'POST'])
 @login_required
