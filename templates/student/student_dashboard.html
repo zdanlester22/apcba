@@ -17,6 +17,7 @@
             display: flex;
             height: 100vh; /* Set container to 100% viewport height */
             overflow-x: hidden; /* Hide horizontal overflow */
+            position: relative;
         }
         .sidebar {
             position: fixed; /* Fix the position of the sidebar */
@@ -290,10 +291,28 @@
            border: 1px solid #374c60;
            transform: scale(0);
 }
+.flash {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
 
     </style>
 </head>
 <body>
+    <div class="flash">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
     <div class="container">
         <button class="toggle-btn" onclick="toggleSidebar()">
             <span class="material-icons">menu</span>
@@ -318,6 +337,7 @@
                 </a>
             </div>
         </div>
+        
         <div class="content">
             <div class="topnav">
                 <h4 class="Name">Announcements</h4>

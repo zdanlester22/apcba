@@ -32,6 +32,7 @@
             width: 100%;
             color: #303030;
             border: 1px solid rgb(235, 227, 227);
+            font-family: Montserrat, sans-serif;
         }
 
         h1, h2 {
@@ -192,7 +193,7 @@
         {{ form.name(placeholder='Ex. Dela Cruz, Juan D.') }}
 
         <label for="email">Email:</label><span class="required" maxlength="50">*</span>
-        <input type="email" name="email" placeholder="juandelacruz@gmail.com" required>
+        {{ form.email(placeholder='ex. juandelacruz@gmail.com') }}
         
 
         <label for="level">Level:</label><span class="required">*</span>
@@ -210,7 +211,7 @@
         
 
         <label for="date_of_birth">Date of Birth:</label><span class="required">*</span>
-<input class="form-control" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" type="text" required>
+        <input class="form-control" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" type="text" required>
 
 
         <label for="place_of_birth">Place of Birth:</label><span class="required" maxlength="50">*</span>
@@ -239,10 +240,8 @@
         <label for="parent_names">Guardian Name:</label><span class="required" maxlength="50">*</span>
         {{ form.parent_names(placeholder='Guardian name') }}
 
-      
         <label for="parent_contact_info">Contact Number:</label><span class="required">*</span>
-        {{ form.parent_contact_info(placeholder='Guardian contact number', pattern='[0-9]{11}', required=True) }}
-        
+        <input type="text" id="parent_contact_info" name="parent_contact_info" placeholder="Guardian contact number" required>
 
         <label for="parent_occupation" maxlength="50">Guardian Occupation:</label>
         {{ form.parent_occupation(placeholder='Guardian occupation') }}
@@ -253,13 +252,6 @@
         <br>
         <button type="submit">Enroll</button>
     </form>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <i class="fas fa-info-circle"></i>
-            <h2>Thank you for choosing us! We will now verify your account.</h2>
-            <a href="{{ url_for('portaluserlogin') }}"><button class="exit-button">Go to Portal</button></a>
-        </div>
-    </div>
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -289,16 +281,38 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var contactNumberInputs = document.querySelectorAll('input[name="contact_number"]');
+  document.addEventListener('DOMContentLoaded', function() {
+    var contactNumberInputs = document.querySelectorAll('input[name="contact_number"]');
+    var guardianContactInput = document.getElementById('parent_contact_info');
 
-        contactNumberInputs.forEach(function(input) {
-            input.addEventListener('input', function(event) {
-                // Remove non-numeric characters
-                this.value = this.value.replace(/\D/g, '');
-            });
+    // Function to remove non-numeric characters from input value
+    function restrictToNumbers(input) {
+        input.value = input.value.replace(/\D/g, '');
+    }
+
+    // Add event listeners to all contact number inputs
+    contactNumberInputs.forEach(function(input) {
+        input.addEventListener('input', function(event) {
+            restrictToNumbers(this);
+
+            // Check if the input length is greater than 11 and truncate if necessary
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
         });
     });
+
+    // Add event listener specifically for the guardian contact input
+    guardianContactInput.addEventListener('input', function() {
+        restrictToNumbers(this);
+
+        // Check if the input length is greater than 11 and truncate if necessary
+        if (this.value.length > 11) {
+            this.value = this.value.slice(0, 11);
+        }
+    });
+});
+
 
     // Form submission event
     document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
@@ -338,6 +352,28 @@
         var modal = document.getElementById('myModal');
         modal.style.display = 'none';
     });
+    document.addEventListener('DOMContentLoaded', function() {
+    var emailInput = document.getElementById('email');
+
+    emailInput.addEventListener('input', function(event) {
+        var email = this.value;
+        var isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+        if (!isValidEmail) {
+            // If email is invalid, prevent leaving the field
+            this.setCustomValidity('Please enter a valid email address.');
+        } else {
+            // If email is valid, clear any previous error messages
+            this.setCustomValidity('');
+        }
+    });
+});
+   // Get the input element by its ID
+   var nameInput = document.getElementById('name');
+
+// Set the autocomplete attribute to "off"
+nameInput.setAttribute('autocomplete', 'off');
+
 </script>
 
 

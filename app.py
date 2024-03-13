@@ -173,6 +173,7 @@ def view_enrollies():
 @app.route('/admin/view_archived_enrollies')
 def view_archived_enrollies():
     archived_enrollies_list = Enrollies.query.filter_by(is_archived=True).all()
+    flash('Archives!', 'success')
     return render_template('admin/view_archived_enrollies.html', archived_enrollies_list=archived_enrollies_list)
 
 @app.route('/admin/archive_enrollie/<int:enrollie_id>')
@@ -182,6 +183,7 @@ def archive_enrollie(enrollie_id):
     if enrollie:
         enrollie.is_archived = True
         db.session.commit()
+        flash('Archived successfully!', 'success')
     return redirect(url_for('view_enrollies'))
 
 @app.route('/admin/users', methods=['GET', 'POST'])
@@ -343,7 +345,7 @@ def login():
             flash('Logged in successfully!', 'success')
             return redirect(url_for('dashboard'))
         else:
-            flash('Invalid username or password. Please try again.', 'error')
+            flash('Invalid username or password.', 'error')
     return render_template('web/login.html', form=form)
 
     
@@ -353,7 +355,7 @@ def logout():
     # Invalidate session
     session.clear()
     logout_user()
-    flash('You have been logged out', 'success')
+    flash('Logged out successfully!', 'success')
     return redirect(url_for('login'))
 
 @app.after_request
@@ -372,7 +374,7 @@ def dashboard():
         announcement = Announcement(title=form.title.data, content=form.content.data, author_id=current_user.id)
         db.session.add(announcement)
         db.session.commit()
-
+        flash('Message has been delivered successfully!', 'success')
     announcements = Announcement.query.order_by(Announcement.timestamp.desc()).all()
 
     if current_user.is_authenticated:
@@ -412,6 +414,7 @@ def register():
         # Add the user to the database
         db.session.add(user)
         db.session.commit()
+        flash('Registered successfully!', 'success')
         return redirect(url_for('register'))
 
     return render_template('admin/register.html', form=form,user_name=user_name)
@@ -440,7 +443,7 @@ def update_user(user_id):
 
         db.session.commit()
         flash(f'User updated successfully!', 'success')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('users'))
 
     return render_template('admin/update_user.html', form=form, user=user_to_update)
 
@@ -457,6 +460,7 @@ def delete_user(user_id):
 
     db.session.delete(user_to_delete)
     db.session.commit()
+    flash(f'User deleted successfully!', 'success')
     return redirect(url_for('users'))
 
 @app.route('/admin/update_announcement/<int:announcement_id>', methods=['GET', 'POST'])
@@ -473,6 +477,7 @@ def update_announcement(announcement_id):
         announcement.title = form.title.data
         announcement.content = form.content.data
         db.session.commit()
+        flash('Message has been updated successfully!', 'success')  # Moved flash above return
         return redirect(url_for('dashboard'))
 
     return render_template('admin/update_announcement.html', form=form, announcement=announcement)
@@ -487,6 +492,7 @@ def delete_announcement(announcement_id):
 
     db.session.delete(announcement)
     db.session.commit()
+    flash('Message has been deleted successfully!', 'success')
     return redirect(url_for('dashboard'))
 
 
@@ -506,6 +512,8 @@ def certificate():
         certificate = Certificate(title=title, pdf=pdf_filename, user_id=current_user.id)
         db.session.add(certificate)
         db.session.commit()
+        flash('Uploaded successfully!', 'success')
+        return redirect(url_for('certificate'))
         
     if current_user.role == 'student':
         title_filter = request.args.get('title', default='', type=str)
@@ -544,7 +552,9 @@ def update_certificate(certificate_id):
             certificate.pdf = pdf_filename
 
         db.session.commit()
+        flash('Updated successfully!', 'success')
         return redirect(url_for('certificate'))
+    
 
     return render_template('admin/update_certificate.html', form=form, certificate=certificate)
 
@@ -558,6 +568,7 @@ def delete_certificate(certificate_id):
 
     db.session.delete(certificate)
     db.session.commit()
+    flash('Deleted successfully!', 'success')
     return redirect(url_for('certificate'))
 
 @app.route('/admin/download_certificate/<int:certificate_id>')
@@ -569,7 +580,9 @@ def download_certificate(certificate_id):
         return redirect(url_for('certificate'))
 
     certificate_path = os.path.join('uploads', 'documents', certificate.pdf)
+    flash('Message has been deleted successfully!', 'success')
     return send_file(certificate_path, as_attachment=True)
+
 
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
@@ -612,6 +625,7 @@ def view_course():
         )
         db.session.add(new_course)
         db.session.commit()
+        flash('Created successfully!', 'success')
         return redirect(url_for('view_course'))
     school_year_filter = request.args.get('school_year', type=str)
     semester_filter = request.args.get('semester', type=int)
@@ -656,6 +670,7 @@ def update_course(course_id):
         course.is_active = form.is_active.data
 
         db.session.commit()
+        flash('Updated successfully!', 'success')
         return redirect(url_for('view_course'))
 
     return render_template('admin/update_course.html', form=form, course=course)
@@ -674,6 +689,7 @@ def update_subject(subject_id):
         subject.course_id = form.course_id.data
 
         db.session.commit()
+        flash('Updated successfully!', 'success')
         return redirect(url_for('view_course'))
 
     return render_template('admin/update_subject.html', form=form, subject=subject)
@@ -708,6 +724,8 @@ def manage_section():
         )
         db.session.add(new_section)
         db.session.commit()
+        flash('Created successfully!', 'success')
+        return redirect(url_for('manage_section'))
 
         course = Course.query.get(form_section.course_id.data)
         if course:
@@ -735,6 +753,7 @@ def view_subjects():
 
     current_app.logger.info(f"Number of subjects found: {len(subjects)}")
 
+    flash('Subjects!', 'success')
     return render_template('admin/view_subjects.html', subjects=subjects)
 
 
@@ -763,6 +782,8 @@ def view_modules():
         )
         db.session.add(new_module)
         db.session.commit()
+        flash('Created successfully!', 'success')
+        return redirect(url_for('view_modules'))
     
     modules = Module.query.all()
     
@@ -782,6 +803,7 @@ def view_modules():
 @login_required
 def download_module(pdf_filename):
     directory = os.path.join('uploads', 'documents')
+    flash('Downloaded successfully!', 'success')
     return send_from_directory(directory, pdf_filename, as_attachment=True)
 ###################################################################################ENROLLMENT###############################################################################################################
 @app.route('/enroll', methods=['GET', 'POST'])
@@ -824,8 +846,7 @@ def enroll():
 
             db.session.add(new_enrollment)
             db.session.commit()
-
-            flash('Enrollment successful.', 'success')
+            flash(f'Students enrolled successfully!', 'success')
 
     return render_template('admin/enroll.html', form=form, student_form=student_form, existing_enrollments=existing_enrollments,user_name=user_name)
 ###########################################################################################################################################################################################################
