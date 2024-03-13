@@ -475,8 +475,8 @@ select {
             <div class="links">
                 <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
                 <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
-                <a href="{{ url_for('view_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-                <a href="{{ url_for('view_course') }}" class="link"><i class="material-icons">school</i> Courses</a>
+                <a href="{{ url_for('modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
+                <a href="{{ url_for('course') }}" class="link"><i class="material-icons">school</i> Courses</a>
                 <a href="{{ url_for('manage_section') }}" class="link"><i class="material-icons">view_module</i> Sections</a>
                 <a href="{{ url_for('register') }}" class="link"><i class="material-icons">app_registration</i> Register</a>
                 <a href="{{ url_for('users') }}" class="link"><i class="material-icons">group</i> Accounts</a>
@@ -493,7 +493,7 @@ select {
         </div>
 <div class="formi">
     <h5>Admin Dashboard/Courses</h5>
-        <form method="get" action="{{ url_for('view_course') }}" class="form">
+        <form method="get" action="{{ url_for('course') }}" class="form">
         {{ filter_form.hidden_tag() }}
     
         <label for="{{ filter_form.school_year.id }}">SY:</label>
@@ -563,7 +563,7 @@ select {
     <div id="add-course-modal" class="modal">
         <div class="modal-content">
             <button class="exit-btn" onclick="hideModal('add-course-modal')">X</button>
-            <form method="POST" action="{{ url_for('view_course') }}">
+            <form method="POST" action="{{ url_for('course') }}">
                 {{ form_course.hidden_tag() }}
                 {{ form_course.course_type.label }} {{ form_course.course_type() }}
                 {{ form_course.abbreviation.label }} {{ form_course.abbreviation() }}
@@ -581,7 +581,7 @@ select {
     <!-- Form to add a new subject for a course (initially hidden) -->
     <div id="add-subject-form" class="modal-content" style="display: none;">
         <button class="exit-btn" onclick="hideModal('add-subject-form')">X</button>
-        <form method="POST" action="{{ url_for('view_course') }}">
+        <form method="POST" action="{{ url_for('course') }}">
             <h2>Add Subject</h2>
             {{ form_subject.hidden_tag() }}
             {{ form_subject.abbreviation.label }} {{ form_subject.abbreviation() }}<br>

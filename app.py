@@ -339,13 +339,13 @@ def login():
         email = form.email.data
         password = form.password.data
         user = User.query.filter_by(email=email).first()
-        if user:  
+        if user and user.password == password:  
             login_user(user)
             session['user_id'] = user.id
             flash('Logged in successfully!', 'success')
             return redirect(url_for('dashboard'))
         else:
-            flash('Invalid username or password.', 'error')
+            flash('Invalid email or password.', 'error')
     return render_template('web/login.html', form=form)
 
     
@@ -601,11 +601,11 @@ def account():
         db.session.commit()
         return redirect(url_for('account'))
 
-    return render_template('account.html', form=form)
+    return render_template('student/account.html', form=form)
 #######################################################################################################################################################################################
 @app.route('/courses', methods=['GET', 'POST'])
 @login_required
-def view_course():
+def course():
     user_name = current_user.name
     form_course = CourseForm()
     form_subject = SubjectForm()
@@ -649,9 +649,9 @@ def view_course():
         )
         db.session.add(new_subject)
         db.session.commit()
-        return redirect(url_for('view_course'))
+        return redirect(url_for('course'))
 
-    return render_template('admin/view_course.html', courses=courses, form_course=form_course, form_subject=form_subject, filter_form=filter_form,user_name=user_name)
+    return render_template('admin/course.html', courses=courses, form_course=form_course, form_subject=form_subject, filter_form=filter_form,user_name=user_name)
 
 @app.route('/update_course/<int:course_id>', methods=['GET', 'POST'])
 @login_required
@@ -725,7 +725,6 @@ def manage_section():
         db.session.add(new_section)
         db.session.commit()
         flash('Created successfully!', 'success')
-        return redirect(url_for('manage_section'))
 
         course = Course.query.get(form_section.course_id.data)
         if course:
@@ -739,6 +738,7 @@ def manage_section():
 
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
                            form_section=form_section, user_name=user_name)
+
 
 @app.route('/view_subjects', methods=['GET'])
 @login_required
@@ -758,9 +758,9 @@ def view_subjects():
 
 
 ################################################################################################################################################################################################################    
-@app.route('/view_modules', methods=['GET', 'POST'])
+@app.route('/admin/modules', methods=['GET', 'POST'])
 @login_required
-def view_modules():
+def modules():
     user_name = current_user.name
     form_module = ModuleForm()
     courses = Course.query.all()
@@ -783,21 +783,25 @@ def view_modules():
         db.session.add(new_module)
         db.session.commit()
         flash('Created successfully!', 'success')
-        return redirect(url_for('view_modules'))
-    
-    modules = Module.query.all()
-    
-    # Check if the current user is authenticated and has a valid role
-    if current_user.is_authenticated and current_user.role == 'admin':
-        template = 'admin/view_modules.html'
-    elif current_user.is_authenticated and current_user.role == 'teacher':
-        template = 'teacher/view_modules.html'
-    elif current_user.is_authenticated and current_user.role == 'student':
-        template = 'student/view_modules.html'
-    else:
-        return redirect(url_for('index'))  # Redirect to the index page if the user is not authenticated or has an invalid role
+        return redirect(url_for('modules'))
 
-    return render_template(template, form_module=form_module, modules=modules, user_name=user_name)
+    modules = Module.query.all()
+    return render_template('admin/modules.html', form_module=form_module, modules=modules, user_name=user_name)
+
+@app.route('/student/modules', methods=['GET'])
+@login_required
+def student_modules():
+    user_name = current_user.name
+    modules = Module.query.all()  # Query all modules accessible to students
+    return render_template('student/view_modules.html', modules=modules, user_name=user_name)
+
+@app.route('/teacher/modules', methods=['GET'])
+@login_required
+def teacher_modules():
+    user_name = current_user.name
+    modules = Module.query.all()  # Query all modules accessible to students
+    return render_template('teacher/view_modules.html', modules=modules, user_name=user_name)
+
 
 @app.route('/download_module/<pdf_filename>', methods=['GET'])
 @login_required
