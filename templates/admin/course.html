@@ -77,17 +77,7 @@
             align-items: center;
             width: 50%;
         }
-        .modal-content {
-            background-color: #fff;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 300px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+
         /* Position the exit button */
         .exit-btn {
             position: absolute;
@@ -115,10 +105,7 @@
             background-color: #e07b00;
             transform: scale(1.05);
         }
-        .modal-content form{
-            margin-left: 0;
-            width: 98%;
-        }
+       
         button{
             font-family: Montserrat, sans-serif;
         }
@@ -155,12 +142,7 @@
             margin-bottom: 10px;
             background-color: #374c60;
         }
-    .modal-content form{
-        display: inline-block;
-    }
-    .modal-content form button[type="submit"]{
-        margin-top: 10px;
-    }
+
     #add-subject-form {
         display: none;
         position: fixed;
@@ -174,11 +156,12 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    #add-subject-form .modal-content {
+    #add-subject-form {
         background-color: #fff;
         border: 1px solid #888;
-        width: 100%;
+        width: 25%;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        height: 430px;
     }
 
     #add-subject-form .exit-btn {
@@ -191,13 +174,12 @@
     }
 
     #add-subject-form form {
-        flex-direction: column;
-        align-items: center;
-        margin-top: -20px;
-        padding: 3px;
-        width: 255px;
-    }
-
+    align-items: center;
+    margin-top: 20px;
+    width: 255px;
+    display: inherit;
+    margin-left: 50px;
+}
     #add-subject-form form label {
         margin-bottom: 10px;
     }
@@ -237,76 +219,12 @@
         border-radius: 5px;
         border: 1px solid #ccc;
     }
-    #add-course-modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    overflow: auto;
-    width: 250px;
-    height: 400px;
-    border: 1px solid #888;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
 
-#add-course-modal .modal-content {
-    background-color: #fff;
-    border: 1px solid #888;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-#add-course-modal .exit-btn {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#add-course-modal form {
-    width: 300px;
-    height: 750px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-#add-course-modal form input[type="submit"] {
-    width: 90%;
-    background-color: #374c60;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    font-size: 14px;
-    margin-top: 20px;
-    font-family: Montserrat, sans-serif;
-}
-
-#add-course-modal form input[type="submit"]:hover {
-    background-color: #fff;
-    color: #374c60;
-    border: 1px solid #374c60;
-}
 .modal{
     width: 400px;
     height: 600px;
 }
-#add-course-modal{
-    width: 500px;
-    height: 700px;
-}
+
 
 h5{
     margin-top: 80px;
@@ -430,6 +348,7 @@ select {
             border-radius: 10px;
             padding: 2px;
         }
+        
 /* CSS */
 /* CSS */
 /* CSS */
@@ -478,9 +397,10 @@ select {
     border-radius: 10px; /* Rounded corners */
     padding: 20px;
     text-align: center;
+    height: 495px;
 }
 
-#subject-modal .modal-content {
+#subject-modal{
     max-height: 70vh; /* Limit maximum height of modal content */
     overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
 }
@@ -494,6 +414,68 @@ select {
     font-size: 16px;
     cursor: pointer;
     color: #333; /* Close button color */
+}
+/* CSS for the modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    align-items: center;
+    width: 60%; /* Adjust width as needed */
+    max-width: 600px; /* Set maximum width */
+    height: 495px;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+    overflow-y: hidden;
+}
+
+.exit-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #333; /* Close button color */
+}
+
+/* CSS for the tooltip */
+.arrow-btn {
+    position: relative; /* Ensure the arrow-btn span is a positioned parent */
+}
+
+.arrow-btn .tooltip {
+    visibility: hidden;
+    background-color: #374c60;
+    color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 1;
+    top: calc(50% - 15px); /* Adjust positioning as needed */
+    left: calc(100% + 10px); /* Adjust positioning as needed */
+    width: 70px; /* Set the width */
+    height: 40px; /* Set the height */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.arrow-btn:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.arrow-btn:hover .tooltip::before {
+    content: "View subjects"; /* Display the text "View subjects" */
 }
 
 </style>
@@ -592,8 +574,8 @@ select {
                 </td>
             </tr>
 
-          <div id="subject-modal" class="modal">
-    <div class="modal-content">
+ <div id="subject-modal" class="modal">
+      <div class="modal-content">
         <button class="exit-btn" onclick="hideModal('subject-modal')">X</button>
         <div id="subject-modal-content">
             {% for subject in course.subjects %}
@@ -610,28 +592,58 @@ select {
 </div>
 
             
-            
-            
-
         
-
     </table>
 </div> 
     <!-- Modal for adding a new course (initially hidden) -->
     <div id="add-course-modal" class="modal">
         <div class="modal-content">
             <button class="exit-btn" onclick="hideModal('add-course-modal')">X</button>
-            <form method="POST" action="{{ url_for('course') }}">
+            <form method="POST" action="{{ url_for('course') }}" style="margin-top: 0; color: #374c60;
+           background-color: #fff; border-radius: 5px ;
+            padding: 20px;" >
                 {{ form_course.hidden_tag() }}
-                {{ form_course.course_type.label }} {{ form_course.course_type() }}
-                {{ form_course.abbreviation.label }} {{ form_course.abbreviation() }}
-                {{ form_course.title.label }} {{ form_course.title() }}
-                {{ form_course.year.label }} {{ form_course.year() }}
-                {{ form_course.Class.label }} {{ form_course.Class() }}
-                {{ form_course.school_year.label }} {{ form_course.school_year() }}
-                {{ form_course.semesters.label }} {{ form_course.semesters() }}
-                {{ form_course.is_active.label }} {{ form_course.is_active() }}<br>
-                <input type="submit" value="Add Course">
+                
+                <!-- Left side inputs -->
+                <div style="float: left; width: 50%;">
+                    <div>
+                        {{ form_course.course_type.label }} {{ form_course.course_type() }}
+                    </div>
+                    <div>
+                        {{ form_course.abbreviation.label }} {{ form_course.abbreviation() }}
+                    </div>
+                    <div>
+                        {{ form_course.title.label }} {{ form_course.title() }}
+                    </div>
+                    <div>
+                        {{ form_course.year.label }} {{ form_course.year() }}
+                    </div>
+                    <div>
+                        {{ form_course.Class.label }} {{ form_course.Class() }}
+                    </div>
+                </div>
+                
+                <!-- Right side inputs -->
+                <div style="float: right; width: 50%;">
+                    <div>
+                        {{ form_course.school_year.label }} {{ form_course.school_year() }}
+                    </div>
+                    <div>
+                        {{ form_course.semesters.label }} {{ form_course.semesters() }}
+                    </div>
+                    <div>
+                        {{ form_course.is_active.label }} {{ form_course.is_active() }}<br>
+                    </div>
+                    <div>
+                        <input type="submit" value="Add Course" style="margin-top: 0;
+                        color: #fff;
+                        background-color: #374c60;
+                        border: 1px solid #374c60;
+                        border-radius: 5px;
+                        padding: 8px 30px;">
+
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -727,6 +739,8 @@ function toggleSidebar() {
             fadeInFlash();
             fadeOutFlash();
         });
+    
+
         function toggleSubjects(courseId) {
     var subjectRows = document.querySelectorAll('.subject-row.subject-course-' + courseId);
     var modalContent = document.getElementById('subject-modal-content');
@@ -745,7 +759,6 @@ function toggleSidebar() {
     var modal = document.getElementById('subject-modal');
     modal.style.display = 'block';
 }
-
 
 
     </script>

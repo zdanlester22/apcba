@@ -3,140 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APCBA Portal V1.0 - Student Portal Management System</title>
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="{{ url_for('static', filename='images/style.css') }}">
-<style>
- h2 {
-    color: #374c60;
-    margin-top: 70px;
-    margin-left: 30px;
+    <title>APCBA Portal V1.0 - Student Portal Management System</title>
+    <style>
+        body {
+            font-family: Montserrat, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            height: 100vh; /* Set container to 100% viewport height */
+            overflow-x: hidden; /* Hide horizontal overflow */
+            position: relative;
+        }
+        .sidebar {
+            position: fixed; /* Fix the position of the sidebar */
+            top: 0; /* Position it at the top */
+            bottom: 0; /* Extend it to the bottom */
+            left: 0; /* Position it at the left */
+            width: 200px;
+            background-color: #374c60;
+            color: #0f0f0f;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.3s ease, width 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .sidebar-hidden {
+            opacity: 0; /* Hide the sidebar when it's hidden */
+            width: 0; /* Remove the width of the sidebar when hidden */
+            pointer-events: none; /* Disable pointer events when hidden */
+        }
+
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            margin-left: 300px; /* Adjust the initial margin-left to accommodate the sidebar */
+        }
+        .logo {
+            margin-bottom: 20px;
+            display: flex;
+        }
+
+        .logo h2 {
+            color: #fff;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .link i {
+    margin-right: 10px;
+    margin-left: 10px; /* Adjust this value as needed */
 }
 
-.formi {
-    background-color: #f9f9f9;
-    width: 890px;
-    height: auto;
-    padding: 20px;
-    border-radius: 5px;
-}
-
-.module-form {
-    width: 95%;
-    background-color: #fff;
-    color: black;
-    border: none;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-.module-form .form-group {
-    margin-bottom: 20px;
-}
-
-.module-form label {
-    font-weight: bold;
-}
-
-.module-form input[type="text"] {
-    width: 90%;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-family: 'Montserrat', sans-serif;
-}
-.module-form select{
-    width:99.5%;
-    height: 52px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-family: 'Montserrat', sans-serif;
-
-}
-
-.module-form input[type="number"]{
-    width: 97%;
-    height: 30px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-family: 'Montserrat', sans-serif;
-
-}
-.module-form input[type="file"] {
-    width: 97%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.module-form button[type="submit"] {
-    background-color: #374c60;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.module-form button[type="submit"]:hover {
-    background-color: #fff;
-    color: #374c60;
-    border: 1px solid #374c60;
-}
-.mod {
-    background-color: #f9f9f9;
-    width: 200%;
-    padding: 20px;
-    border-radius: 5px;
-    margin-top: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-.mod table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.mod table th,
-.mod table td {
-    padding: 20px;
-    border-bottom: 1px solid #ddd;
-    border: 1px solid #ccc;
+        .links a {
+    display: flex;
+    align-items: center;
     text-align: left;
-}
-
-.mod table th {
-    background-color: #374c60;
-    color: #fff;
-    text-align: left;
-}
-
-.mod table tr:last-child td {
-    border-bottom: none;
-}
-
-table a{
-    background-color: #374c60;
     color: #fff;
     text-decoration: none;
-    padding: 7px;
-    border-radius: 5px;
+    padding: 10px 0;
+    margin-bottom: -7px;
+    font-size: .9rem;
+    font-weight: 600;
+    transition:  color 0.3s ease;
 }
-table a:hover{
-    background-color: #fff;
+.links a:hover,
+.links a:hover i {
+    background-color: #fff; /* Change background color on hover */
+    color: #222; /* Change text color on hover */
+    border-radius: 10px;
+}
+.links a:hover i {
     color: #374c60;
-    border: 1px solid #374c60;
 }
+
+        .link {
+            cursor: pointer;
+            margin-bottom: 10px;
+            text-align: left;
+            font-size: .9rem;
+        }
+        .toggle-btn {
+            color: #111;
+            border: none;
+            padding: 20px;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 25px; 
+            z-index: 2;
+            background-color: #fff;
+        }
+        .content {
+            flex: 1;
+            padding: 30px;
+            transition: margin-left 0.3s ease; /* Add transition for smooth content movement */
+            margin-right: 60px;
+        }
+        .Name {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .bot {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+     
+   
+     
+        #title-char-count {
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
+    
+        h3 {
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 570px;
+            position: fixed;
+            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.3);
+            background-color: #374c60;
+            padding: 10px;
+            color: #fff;
+            max-width: 180px;
+            width: 100%;
+        }
+        .shadow {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    max-width: 1400px;
+}
+        h4{
+            margin-left: 20px;
+        }
+        .sidebar a{
+            text-decoration: none;
+            color: #fff;
+        }
+        .user-info {
+    margin-top: auto; /* Push user info to the bottom of the sidebar */
+}
+
+.user-info a {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Align items vertically */
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    max-width: 150px;
+    width: 100%;
+}
+
+.user-info a:hover {
+    background-color: #fff; /* Change background color on hover */
+    color: #222; /* Change text color on hover */
+}
+
+.user-info span {
+    margin-right: 10px; /* Add space between username and icon */
+}
+
+.user-info div {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Align items vertically */
+}
+
 .flash {
             position: absolute;
             right: 0;
@@ -161,10 +214,8 @@ table a:hover{
             opacity: 1 !important; /* Override opacity to 1 */
         }
 
-</style>
+    </style>
 </head>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-
 <body>
     <div class="flash">
         {% with messages = get_flashed_messages() %}
@@ -187,54 +238,87 @@ table a:hover{
             </div>
             <div class="links">
                 <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-                <a href="{{ url_for('account') }}" class="link"><i class="material-icons">person</i> Profile</a>
-                <a href="{{ url_for('student_modules') }}" class="link"><i class="material-icons">chrome_reader_mode</i> Modules</a>
-                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">verified</i> Certificates</a>
-                <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="material-icons">grade</i> View Grades</a>
-                <a href="{{ url_for('view_schedule') }}" class="link"><i class="material-icons">event</i> Schedule</a>
-                <a href="{{ url_for('student_change_password') }}" class="link"><i class="material-icons">vpn_key</i> Password</a>
+                <a href="{{ url_for('student_account') }}" class="link"><i class="material-icons">account_circle</i> Profile</a>
+                <a href="{{ url_for('student_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
+                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
+                <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="material-icons">grading</i> View Grades</a>
+                <a href="{{ url_for('view_schedule') }}" class="link"><i class="material-icons">schedule</i> Schedule</a>
+                <a href="{{ url_for('student_change_password') }}" class="link"><i class="material-icons">lock</i> Password</a>
+                
+                
             </div><br><br>
             <div class="user-info">
                 <a href="#" id="logout-link">
-                    <span>{{ user_name }}</span> <i class="material-icons">exit_to_app</i>
+                    <span>{{ user.name }}</span> <i class="material-icons">exit_to_app</i>
                 </a>
             </div>
         </div>
-    <main class="bot">
-        <div class="form-container">
-            <h1 class="title">Change Password</h1>
-            <form method="post">
-                {{ form.hidden_tag() }}
-                <div class="form-group">
-                    <label for="old_password">Old Password:</label>
-                    <input type="password" id="old_password" name="old_password" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="new_password">New Password:</label>
-                    <input type="password" id="new_password" name="new_password" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirm_password">Confirm Password:</label>
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Change Password</button>
-            </form>
-        </div>    
-    </main>
+        
+        <div class="content">
+            <div class="topnav">
+                <h4 class="Name">Announcements</h4>
+            </div>
+            <main>
+                <h1 class="main">Schedule</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Day of Week</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for schedule in schedules %}
+                            <tr>
+                                <td>{{ schedule.id }}</td>
+                                <td>{{ schedule.day_of_week }}</td>
+                                <td>{{ schedule.start_time }}</td>
+                                <td>{{ schedule.end_time }}</td>
+                                <td>{{ schedule.subject.title }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </main>
+        </div>
     </div>
     <script>
-
-var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
-document.getElementById("logout-link").addEventListener("click", confirmLogout);
-
-function confirmLogout(event) {
-    event.preventDefault(); // Prevent the default link behavior
-    var confirmLogout = confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
-        window.location.href = logoutUrl; // Redirect to logout URL
+        var originalContentMargin; // Store the original content margin
+    
+        function toggleDropdown(event, id) {
+    event.preventDefault(); // Prevent default behavior of the link click
+    var dropdown = document.getElementById(id);
+    var isDisplayed = dropdown.style.display === "block";
+    // Hide all dropdowns
+    var allDropdowns = document.querySelectorAll('.sub-links');
+    allDropdowns.forEach(function(dropdown) {
+        dropdown.style.display = 'none';
+    });
+    // Display the clicked dropdown if it wasn't already displayed
+    if (!isDisplayed) {
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none'; // Hide the dropdown if already displayed
     }
 }
-document.addEventListener("DOMContentLoaded", function () {
+
+    
+        function toggleSidebar() {
+            var sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('sidebar-hidden');
+    
+            // Toggle content margin based on sidebar visibility
+            var content = document.querySelector('.content');
+            if (!originalContentMargin) {
+                originalContentMargin = getComputedStyle(content).marginLeft;
+            }
+            content.style.marginLeft = (sidebar.classList.contains('sidebar-hidden')) ? '0' : originalContentMargin;
+        }
+    
+        document.addEventListener("DOMContentLoaded", function () {
             // Select the flash div
             var flashDiv = document.querySelector(".flash");
 
@@ -254,9 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
             fadeInFlash();
             fadeOutFlash();
         });
-
-
     </script>
-
+    
 </body>
 </html>

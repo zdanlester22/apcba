@@ -3,41 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <title>APCBA Portal V1.0 - Student Portal Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        
+
+        table {
+            border-collapse: collapse;
+            width: 100%; /* Adjust the width as needed */
+            max-width: 600px; /* Set a maximum width if desired */
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #374c60;
+            color: #fff;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .container{
+            margin-top: 20px;
+          margin-left: 200px;
+        }
+        .con {
+    max-height: 100%;
+    height: max-content;
+    margin-left: 300px;
+    margin-top: 100px;
+}
+
+
+    </style>
 </head>
 <body>
-    
+    <div class="containe">
+        <button class="toggle-btn" onclick="toggleSidebar()">
+            <span class="material-icons">menu</span>
+        </button>
+        <div class="sidebar">
+            <div class="logo">
+                <h2>APCBA PORTAL V1.0</h2>
+            </div>
+            <div class="links">
+                <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
+                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
+                <a href="{{ url_for('modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
+                <a href="{{ url_for('course') }}" class="link"><i class="material-icons">school</i> Courses</a>
+                <a href="{{ url_for('manage_section') }}" class="link"><i class="material-icons">view_module</i> Sections</a>
+                <a href="{{ url_for('register') }}" class="link"><i class="material-icons">app_registration</i> Register</a>
+                <a href="{{ url_for('users') }}" class="link"><i class="material-icons">group</i> Accounts</a>
+                <a href="{{ url_for('view_teachers') }}" class="link"><i class="material-icons">face</i> Teachers</a>
+                <a href="{{ url_for('view_students') }}" class="link"><i class="material-icons">people</i> Students</a>
+                <a href="{{ url_for('enroll') }}" class="link"><i class="material-icons">assignment_turned_in</i> Enrolled</a>
+                <a href="{{ url_for('view_enrollies') }}" class="link"><i class="material-icons">school</i> Enrollies</a>
+            </div><br><br>
+            <div class="user-info">
+                <a href="#" id="logout-link">
+                    <span>{{ user_name }}</span> <i class="material-icons">exit_to_app</i>
+                </a>
+            </div>
+        </div>
 
+    <main>
+   
 {% block content %}
-<div class="container">
-    <h1>Class</h1>
-    {% if enrollments %}
-    <table>
-        <thead>
-          <tr>
-            <th>Student Name</th>
-            <th>Course Title</th>
-            <th>Section Name</th>
-            <th>Year</th>
-            <th>Approved</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for enrollment in enrollments %}
-          <tr>
-            <td>{{ enrollment.enrolled_student_rel.name }}</td>
-            <td>{{ enrollment.enrolled_course_rel.title }}</td>
-            <td>{{ enrollment.enrolled_section_rel.name }}</td>
-            <td>{{ enrollment.year }}</td>
-            <td>{{ 'Yes' if enrollment.is_approved else 'No' }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-    <p>No enrollments found.</p>
-    {% endif %}
+<div class="con">
+        <h1>Class</h1>
+        {% if enrollments %}
+        <table>
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Course Title</th>
+                <th>Section Name</th>
+                <th>Year</th>
+                <th>Approved</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for enrollment in enrollments %}
+              <tr>
+                <td>{{ enrollment.enrolled_student_rel.name }}</td>
+                <td>{{ enrollment.enrolled_course_rel.title }}</td>
+                <td>{{ enrollment.enrolled_section_rel.name }}</td>
+                <td>{{ enrollment.year }}</td>
+                <td>{{ 'Yes' if enrollment.is_approved else 'No' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+        <p>No enrollments found.</p>
+        {% endif %}
+  
 </div>
 {% endblock %}
+    </main>
 </body>
+<script>
+  var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
+      document.getElementById("logout-link").addEventListener("click", confirmLogout);
+      
+      function confirmLogout(event) {
+          event.preventDefault(); // Prevent the default link behavior
+          var confirmLogout = confirm("Are you sure you want to logout?");
+          if (confirmLogout) {
+              window.location.href = logoutUrl; // Redirect to logout URL
+          }
+      }
+      
+      </script>
 </html>
