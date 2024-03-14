@@ -3,297 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <style>
-        body {
-            font-family: Montserrat, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            display: flex;
-            height: 100vh; /* Set container to 100% viewport height */
-            overflow-x: hidden; /* Hide horizontal overflow */
-        }
-        .sidebar {
-            position: fixed; /* Fix the position of the sidebar */
-            top: 0; /* Position it at the top */
-            bottom: 0; /* Extend it to the bottom */
-            left: 0; /* Position it at the left */
-            width: 200px;
-            background-color: #374c60;
-            color: #0f0f0f;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            transition: opacity 0.3s ease, width 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
-
-        .sidebar-hidden {
-            opacity: 0; /* Hide the sidebar when it's hidden */
-            width: 0; /* Remove the width of the sidebar when hidden */
-            pointer-events: none; /* Disable pointer events when hidden */
-        }
-
-
-        .content {
-            flex: 1;
-            padding: 20px;
-            transition: margin-left 0.3s ease;
-            margin-left: 300px; /* Adjust the initial margin-left to accommodate the sidebar */
-        }
-        .logo {
-            margin-bottom: 20px;
-            display: flex;
-        }
-
-        .logo h2 {
-            color: #fff;
-            text-align: center;
-            margin-top: 10px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .link i {
-    margin-right: 10px;
-    margin-left: 10px; /* Adjust this value as needed */
-}
-
-        .links a {
-    display: flex;
-    align-items: center;
-    text-align: left;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 0;
-    margin-bottom: -7px;
-    font-size: .9rem;
-    font-weight: 600;
-    transition:  color 0.3s ease;
-}
-.links a:hover,
-.links a:hover i {
-    background-color: #fff; /* Change background color on hover */
-    color: #222; /* Change text color on hover */
-    border-radius: 10px;
-}
-.links a:hover i {
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{{ url_for('static', filename='images/style.css') }}">
+<style>
+ h2 {
     color: #374c60;
+    margin-top: 70px;
+    margin-left: 30px;
 }
 
-        .link {
-            cursor: pointer;
-            margin-bottom: 10px;
-            text-align: left;
-            font-size: .9rem;
-        }
-        .toggle-btn {
-            color: #111;
-            border: none;
-            padding: 20px;
-            cursor: pointer;
-            position: absolute;
-            top: 20px;
-            right: 25px; 
-            z-index: 2;
-            background-color: #fff;
-        }
-        .content {
-            flex: 1;
-            padding: 30px;
-            transition: margin-left 0.3s ease; /* Add transition for smooth content movement */
-            margin-right: 60px;
-        }
-        .Name {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
-        }
-        .bot {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .announcement-form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-            margin: 20px;
-        }
-        .announcement-form h2 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-        }
-        .form-group input[type="text"],
-        .form-group textarea {
-            width: 97%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-        }
-        .form-group input[type="submit"] {
-            background-color: #374c60;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-family: Montserrat, sans-serif;
-        }
-        .announcements {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .announcement-item {
-            margin-bottom: 15px;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
-            list-style-type: none;
-            max-height: 300px;
-            height: 100%;
-        }
-        .announcement-item strong {
-            color: #333;
-        }
-        .announcement-item p {
-            color: #666;
-        }
-        .announcement-item small {
-            color: #999;
-        }
-        .update-delete-buttons {
-            margin-top: 10px;
-        }
-        .update-button {
-            background-color: #374c60;
-           color: #fff;
-            text-decoration: none;
-            margin-right: 10px;
-            transition: color 0.3s ease;
-            padding: 10px;
-            border-radius: 10px;
-        }
-        .delete-button {
-            background-color: #374c60;
-            color: #fff;
-            text-decoration: none;
-            margin-right: 10px;
-            transition: color 0.3s ease;
-            padding: 10px;
-            border-radius: 10px;
-        }
-        #content-char-count {
-            font-size: 12px;
-            display: flex;
-            justify-content: end;
-            margin-right: 25px;
-        }
-        #title-char-count {
-            font-size: 12px;
-            display: flex;
-            justify-content: end;
-            margin-right: 25px;
-        }
-        .submit {
-            padding: 13px;
-            background-color: #374c60;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-family: Montserrat, sans-serif;
-        }
-        .submit:hover {
-            background-color: #fff;
-              color: #374c60;
-           border: 1px solid #374c60;
-        }
-        h3 {
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 570px;
-            position: fixed;
-            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.3);
-            background-color: #374c60;
-            padding: 10px;
-            color: #fff;
-            max-width: 180px;
-            width: 100%;
-        }
-        .shadow {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-        }
-        h4{
-            margin-left: 20px;
-        }
-        .sidebar a{
-            text-decoration: none;
-            color: #fff;
-        }
-        .user-info {
-    margin-top: auto; /* Push user info to the bottom of the sidebar */
+.formi {
+    background-color: #f9f9f9;
+    width: 890px;
+    height: auto;
+    padding: 20px;
+    border-radius: 5px;
 }
 
-.user-info a {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
-    text-decoration: none;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
-    max-width: 150px;
-    width: 100%;
-}
-
-.user-info a:hover {
-    background-color: #fff; /* Change background color on hover */
-    color: #222; /* Change text color on hover */
-}
-
-.user-info span {
-    margin-right: 10px; /* Add space between username and icon */
-}
-
-.user-info div {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
-}
-.announcements a:hover{
+.module-form {
+    width: 95%;
     background-color: #fff;
-              color: #374c60;
-           border: 1px solid #374c60;
-           transform: scale(0);
+    color: black;
+    border: none;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-    </style>
+.module-form .form-group {
+    margin-bottom: 20px;
+}
+
+.module-form label {
+    font-weight: bold;
+}
+
+.module-form input[type="text"] {
+    width: 90%;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+}
+.module-form select{
+    width:99.5%;
+    height: 52px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+.module-form input[type="number"]{
+    width: 97%;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+
+}
+.module-form input[type="file"] {
+    width: 97%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.module-form button[type="submit"] {
+    background-color: #374c60;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.module-form button[type="submit"]:hover {
+    background-color: #fff;
+    color: #374c60;
+    border: 1px solid #374c60;
+}
+.mod {
+    background-color: #f9f9f9;
+    width: 200%;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.mod table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mod table th,
+.mod table td {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.mod table th {
+    background-color: #374c60;
+    color: #fff;
+    text-align: left;
+}
+
+.mod table tr:last-child td {
+    border-bottom: none;
+}
+
+table a{
+    background-color: #374c60;
+    color: #fff;
+    text-decoration: none;
+    padding: 7px;
+    border-radius: 5px;
+}
+table a:hover{
+    background-color: #fff;
+    color: #374c60;
+    border: 1px solid #374c60;
+}
+.flash {
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin-top: 100px;
+            margin-right: 25px;
+            z-index: 10;
+            background-color: #374c60;
+            color: #fff;
+            border: 2px solid #374c60;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .flash li{
+            list-style: none;
+            text-align: center;
+            margin-right: 25px;
+        }
+        .fade-in {
+            /* CSS class to fade in flash messages */
+            opacity: 1 !important; /* Override opacity to 1 */
+        }
+
+</style>
 </head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
 <body>
+    <div class="flash">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
     <div class="container">
         <button class="toggle-btn" onclick="toggleSidebar()">
             <span class="material-icons">menu</span>
@@ -304,159 +187,76 @@
             </div>
             <div class="links">
                 <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
-                <a href="{{ url_for('view_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-                <a href="{{ url_for('view_course') }}" class="link"><i class="material-icons">school</i> Courses</a>
-                <a href="{{ url_for('manage_section') }}" class="link"><i class="material-icons">view_module</i> Sections</a>
-                <a href="{{ url_for('register') }}" class="link"><i class="material-icons">app_registration</i> Register</a>
-                <a href="{{ url_for('users') }}" class="link"><i class="material-icons">group</i> Accounts</a>
-                <a href="{{ url_for('view_teachers') }}" class="link"><i class="material-icons">face</i> Teachers</a>
-                <a href="{{ url_for('view_students') }}" class="link"><i class="material-icons">people</i> Students</a>
-                <a href="{{ url_for('enroll') }}" class="link"><i class="material-icons">assignment_turned_in</i> Enrolled</a>
-                <a href="{{ url_for('view_enrollies') }}" class="link"><i class="material-icons">school</i> Enrollies</a>
+                <a href="{{ url_for('account') }}" class="link"><i class="material-icons">person</i> Profile</a>
+                <a href="{{ url_for('student_modules') }}" class="link"><i class="material-icons">chrome_reader_mode</i> Modules</a>
+                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">verified</i> Certificates</a>
+                <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="material-icons">grade</i> View Grades</a>
+                <a href="{{ url_for('view_schedule') }}" class="link"><i class="material-icons">event</i> Schedule</a>
+                <a href="{{ url_for('student_change_password') }}" class="link"><i class="material-icons">vpn_key</i> Password</a>
             </div><br><br>
             <div class="user-info">
                 <a href="#" id="logout-link">
-                    <span>{{ user.name }}</span> <i class="material-icons">exit_to_app</i>
+                    <span>{{ user_name }}</span> <i class="material-icons">exit_to_app</i>
                 </a>
             </div>
         </div>
-        <div class="content">
-            <div class="content">
-                <div class="topnav">
-                    <h4 class="Name">Module</h4>
+    <main class="bot">
+        <div class="form-container">
+            <h1 class="title">Change Password</h1>
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <label for="old_password">Old Password:</label>
+                    <input type="password" id="old_password" name="old_password" class="form-control" required>
                 </div>
-            {% block content %}
-            <h2>Admin Dashboard/Modules</h2>
-             <div class="formi">
-                <form method="POST" enctype="multipart/form-data" class="module-form">
-    
-                    {{ form_module.hidden_tag() }}
-                
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        {{ form_module.title(class="form-control", placeholder="Enter Module Title", required="required") }}
-                    </div>
-                
-                    <div class="form-group">
-                        <label for="year">Year</label>
-                        {{ form_module.year(class="form-control", placeholder="Enter Module Year", required="required") }}
-                    </div>
-                
-                    <div class="form-group">
-                        <label for="course_id">Course</label>
-                        {{ form_module.course_id(class="form-control", required="required") }}
-                    </div>
-                
-                    <div class="form-group">
-                        <label for="pdf_file">PDF File</label>
-                        {{ form_module.pdf_file(class="form-control-file", required="required") }}
-                    </div>
-                
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Create Module</button>
-                    </div>
-                </form>
-                
-            </div>
-            <div class="mod">
-                <h3>Existing Modules</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Year</th>
-                            <th>Course</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for module in modules %}
-                        <tr>
-                            <td>{{ module.title }}</td>
-                            <td>{{ module.year }}</td>
-                            <td>{{ module.course.title }}</td>
-                            <td><a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a></td>
-                        </tr>
-                        {% endfor %}
-                        {% endblock %}
-                    </tbody>
-                </table>
-            </div>
-            
+                <div class="form-group">
+                    <label for="new_password">New Password:</label>
+                    <input type="password" id="new_password" name="new_password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password:</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Change Password</button>
+            </form>
+        </div>    
+    </main>
     </div>
     <script>
-        var originalContentMargin; // Store the original content margin
-    
-        function toggleDropdown(event, id) {
-    event.preventDefault(); // Prevent default behavior of the link click
-    var dropdown = document.getElementById(id);
-    var isDisplayed = dropdown.style.display === "block";
-    // Hide all dropdowns
-    var allDropdowns = document.querySelectorAll('.sub-links');
-    allDropdowns.forEach(function(dropdown) {
-        dropdown.style.display = 'none';
-    });
-    // Display the clicked dropdown if it wasn't already displayed
-    if (!isDisplayed) {
-        dropdown.style.display = 'block';
-    } else {
-        dropdown.style.display = 'none'; // Hide the dropdown if already displayed
+
+var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
+document.getElementById("logout-link").addEventListener("click", confirmLogout);
+
+function confirmLogout(event) {
+    event.preventDefault(); // Prevent the default link behavior
+    var confirmLogout = confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+        window.location.href = logoutUrl; // Redirect to logout URL
     }
 }
+document.addEventListener("DOMContentLoaded", function () {
+            // Select the flash div
+            var flashDiv = document.querySelector(".flash");
 
-    
-        function toggleSidebar() {
-            var sidebar = document.querySelector('.sidebar');
-            sidebar.classList.toggle('sidebar-hidden');
-    
-            // Toggle content margin based on sidebar visibility
-            var content = document.querySelector('.content');
-            if (!originalContentMargin) {
-                originalContentMargin = getComputedStyle(content).marginLeft;
+            // Function to add fade-in class
+            function fadeInFlash() {
+                flashDiv.classList.add("fade-in");
             }
-            content.style.marginLeft = (sidebar.classList.contains('sidebar-hidden')) ? '0' : originalContentMargin;
-        }
-    
-        function countCharacters(inputId, displayId, limit) {
-            var input = document.getElementById(inputId);
-            var characterCount = input.value.length;
-            var display = document.getElementById(displayId);
-            display.textContent = characterCount + "/" + limit + " characters";
-    
-            // Check if character count exceeds the limit
-            if (characterCount > limit) {
-                // Trim the input value to the limit
-                input.value = input.value.slice(0, limit);
-    
-                // Update the character count in the display
-                characterCount = limit;
-                display.textContent = characterCount + "/" + limit + " characters";
-    
-                // Change the color to red
-                display.style.color = 'red';
-            } else {
-                // Reset the color to black
-                display.style.color = 'black';
-            }
-        }
 
-        function confirmSubmit() {
-        return confirm("Are you sure you want to submit this announcement?");
-    }
-      //logout to
-        var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
-        document.getElementById("logout-link").addEventListener("click", confirmLogout);
-
-        function confirmLogout(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            var confirmLogout = confirm("Are you sure you want to logout?");
-            if (confirmLogout) {
-                window.location.href = logoutUrl; // Redirect to logout URL
+            // Function to remove fade-in class after 3 seconds
+            function fadeOutFlash() {
+                setTimeout(function () {
+                    flashDiv.classList.remove("fade-in");
+                }, 5000); // 3 seconds delay
             }
-        }
+
+            // Call the functions
+            fadeInFlash();
+            fadeOutFlash();
+        });
+
 
     </script>
-    
+
 </body>
 </html>

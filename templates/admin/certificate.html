@@ -394,7 +394,6 @@
 }
 .top{
     display: flex;
-    justify-content: right;
     gap: 20px;
     text-align: center;
     align-items: center;
@@ -494,8 +493,8 @@ h4{
             <div class="links">
                 <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
                 <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
-                <a href="{{ url_for('view_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-                <a href="{{ url_for('view_course') }}" class="link"><i class="material-icons">school</i> Courses</a>
+                <a href="{{ url_for('modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
+                <a href="{{ url_for('course') }}" class="link"><i class="material-icons">school</i> Courses</a>
                 <a href="{{ url_for('manage_section') }}" class="link"><i class="material-icons">view_module</i> Sections</a>
                 <a href="{{ url_for('register') }}" class="link"><i class="material-icons">app_registration</i> Register</a>
                 <a href="{{ url_for('users') }}" class="link"><i class="material-icons">group</i> Accounts</a>
@@ -570,10 +569,10 @@ h4{
                             {% endfor %}
                         </tbody>
                     </table>
-                {% else %}
-                    <p>No certificates available.</p>
-                {% endif %}
             </main>
+            {% else %}
+            <p>No certificates available.</p>
+        {% endif %}
         </div>
     </div>
     <script>

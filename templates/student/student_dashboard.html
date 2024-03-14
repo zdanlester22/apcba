@@ -127,12 +127,13 @@
             gap: 20px;
         }
         .announcement-form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-            margin: 20px;
-        }
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+    margin: 20px;
+    max-width: 1300px;
+}
         .announcement-form h2 {
             margin-bottom: 10px;
             color: #333;
@@ -152,6 +153,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             outline: none;
+            font-family: Montserrat, sans-serif;
         }
         .form-group input[type="submit"] {
             background-color: #374c60;
@@ -164,20 +166,23 @@
             font-family: Montserrat, sans-serif;
         }
         .announcements {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-        }
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 1360px;
+}
         .announcement-item {
-            margin-bottom: 15px;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
-            list-style-type: none;
-            max-height: 300px;
-            height: 100%;
-        }
+    margin-bottom: 15px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
+    list-style-type: none;
+    max-height: 300px;
+    height: 100%;
+    line-break: anywhere;
+    max-width: 1280px;
+}
         .announcement-item strong {
             color: #333;
         }
@@ -246,9 +251,10 @@
             width: 100%;
         }
         .shadow {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-        }
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    max-width: 1400px;
+}
         h4{
             margin-left: 20px;
         }
@@ -292,11 +298,27 @@
            transform: scale(0);
 }
 .flash {
-            position: fixed;
+            position: absolute;
+            right: 0;
             top: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            margin-top: 100px;
+            margin-right: 25px;
             z-index: 10;
+            background-color: #374c60;
+            color: #fff;
+            border: 2px solid #374c60;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .flash li{
+            list-style: none;
+            text-align: center;
+            margin-right: 25px;
+        }
+        .fade-in {
+            /* CSS class to fade in flash messages */
+            opacity: 1 !important; /* Override opacity to 1 */
         }
 
     </style>
@@ -323,12 +345,13 @@
             </div>
             <div class="links">
                 <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-                <a href="{{ url_for('account') }}" class="link"><i class="material-icons">person</i> Profile</a>
-                <a href="{{ url_for('student_modules') }}" class="link"><i class="material-icons">chrome_reader_mode</i> Modules</a>
-                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">verified</i> Certificates</a>
-                <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="material-icons">grade</i> View Grades</a>
-                <a href="{{ url_for('view_schedule') }}" class="link"><i class="material-icons">event</i> Schedule</a>
-                <a href="{{ url_for('change_password') }}" class="link"><i class="material-icons">vpn_key</i> Password</a>
+                <a href="{{ url_for('student_account') }}" class="link"><i class="material-icons">account_circle</i> Profile</a>
+                <a href="{{ url_for('student_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
+                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
+                <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="material-icons">grading</i> View Grades</a>
+                <a href="{{ url_for('view_schedule') }}" class="link"><i class="material-icons">schedule</i> Schedule</a>
+                <a href="{{ url_for('student_change_password') }}" class="link"><i class="material-icons">lock</i> Password</a>
+                
                 
             </div><br><br>
             <div class="user-info">
@@ -342,7 +365,8 @@
             <div class="topnav">
                 <h4 class="Name">Announcements</h4>
             </div>
-                <div class="announcements">
+            <div class="announcements">
+                {% if announcements %}
                     {% for announcement in announcements %}
                         <li class="announcement-item">
                             <strong>{{ announcement.title }}</strong>
@@ -350,7 +374,10 @@
                             <small>Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
                         </li>
                     {% endfor %}
-                </div>
+                {% else %}
+                    <p>No announcements posted</p>
+                {% endif %}
+            </div>
             </main>
         </div>
     </div>
@@ -424,7 +451,26 @@
                 window.location.href = logoutUrl; // Redirect to logout URL
             }
         }
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select the flash div
+            var flashDiv = document.querySelector(".flash");
 
+            // Function to add fade-in class
+            function fadeInFlash() {
+                flashDiv.classList.add("fade-in");
+            }
+
+            // Function to remove fade-in class after 3 seconds
+            function fadeOutFlash() {
+                setTimeout(function () {
+                    flashDiv.classList.remove("fade-in");
+                }, 5000); // 3 seconds delay
+            }
+
+            // Call the functions
+            fadeInFlash();
+            fadeOutFlash();
+        });
     </script>
     
 </body>

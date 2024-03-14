@@ -16,7 +16,6 @@
     form {
         margin-top: 100px;
         display: flex;
-        padding: 10px;
         gap: 19px;
 
     }
@@ -100,36 +99,6 @@
             cursor: pointer;
         }
 
-        /* Add the following styles for the table */
-        table {
-        border-collapse: collapse;
-        margin-top: 20px;
-        margin-right: 100px;
-        text-align: center;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 5px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-            color: #333;
-            font-weight: bold;
-        }
-
-        td {
-            background-color: #fff;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        th {
-            background-color: #444;
-            color: #fff;
-        }
 
         .add-subject-btn {
             background-color: #2a235e;
@@ -286,7 +255,6 @@
     background-color: #fff;
     border: 1px solid #888;
     width: 100%;
-    height: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -306,7 +274,7 @@
 
 #add-course-modal form {
     width: 300px;
-    height: 1300px;
+    height: 750px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -337,12 +305,9 @@
 }
 #add-course-modal{
     width: 500px;
-    height: 600px;
+    height: 700px;
 }
-#add-course-modal form{
-    width: 400px;
-    height: 900px;
-}
+
 h5{
     margin-top: 80px;
     margin-bottom: -70px;
@@ -351,62 +316,7 @@ h5{
     font-family: Montserrat, sans-serif;
     color: #374c60;
 }
-th{
-    background-color: #374c60;
-}
-td {
-        height: 50px; /* Add this line */
-        padding: 5px; /* Add this line to maintain existing padding */
-        text-align: left; /* Add this line to maintain existing text alignment */
-    }
-/* Update the CSS styles for the course table */
-table {
-    border-collapse: collapse;
-    margin-top: -10px;
-    width: 90%; /* Make the table take full width */
-  
-}
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 5px; /* Reduce padding for a more compact table */
-    text-align: center;
-    font-size: 14px; /* Reduce font size for smaller text */
-}
-
-
-th {
-    background-color: #374c60; /* Update header background color */
-    color: #fff; /* Update header text color */
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-/* Add hover effect for table rows */
-tr:hover {
-    background-color: #f2f2f2;
-}
-
-/* Adjust button styles */
-.btn {
-    background-color: #2a235e;
-    color: #fff;
-    border: none;
-    padding: 8px 12px; /* Adjust padding for buttons */
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    font-size: 14px;
-}
-
-.btn:hover {
-    background-color: #e07b00;
-    transform: scale(1.05);
-}
-
-/* Ensure consistent font family */
 button,
 label,
 input,
@@ -450,6 +360,142 @@ select {
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
+        /* CSS for table cells */
+        table{
+            border-collapse: collapse;
+        }
+        th,
+        td {
+            border: 1px solid#374c60; /* Add borders to table cells */
+            padding: 10px; /* Add padding to cells */
+            text-align: center; /* Center-align text inside cells */
+            vertical-align: middle; /* Align content vertically */
+        }
+
+        /* CSS for buttons inside table */
+        .add-subject-btn,
+        .btn-primary {
+            display: block; /* Make buttons block elements */
+            margin: auto; /* Center-align the buttons */
+            margin-top: 5px; /* Adjust top margin as needed */
+            margin-bottom: 5px; /* Adjust bottom margin as needed */
+            width: 100px; /* Set a fixed width for the buttons */
+            text-align: center; /* Center-align the text inside buttons */
+        }
+
+        th, td {
+    border: 1px solid #c8cdd2;
+}
+        /* Ensure consistency in button styles */
+        .add-subject-btn,
+        .btn-primary {
+            background-color: #374c60;
+            color: #fff;
+            border: none;
+            padding: 9px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 13px;
+            display: inline-block;
+        }
+
+        .add-subject-btn:hover,
+        .btn-primary:hover {
+            background-color: #fff;
+            color: #374c60;
+            border: 1px solid #374c60;
+  
+        }
+        th{
+            background-color: #374c60;;
+            color: #fff;
+        }
+        .arrow-btn {
+            cursor: pointer;
+        }
+
+        /* Styles for the icon inside the button */
+        .arrow-btn i {
+            /* Add styles to the icon */
+            vertical-align: middle; /* Align the icon vertically */
+            margin-right: 5px; /* Add some spacing between the icon and the text */
+            font-size: 30px;
+            color: #374c60;
+        }
+        .arrow-btn i:hover{
+            content: "show subjects";
+            background-color: #374c60;
+            color: #fff;
+            border-radius: 10px;
+            padding: 2px;
+        }
+/* CSS */
+/* CSS */
+/* CSS */
+/* CSS for Tooltip */
+.arrow-btn {
+    position: relative; /* Ensure the arrow-btn span is a positioned parent */
+}
+
+.arrow-btn .tooltip {
+    visibility: hidden;
+    background-color: #374c60;
+    color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 1;
+    top: calc(50% - 15px); /* Adjust positioning as needed */
+    left: calc(100% + 10px); /* Adjust positioning as needed */
+    width: 70px; /* Set the width */
+    height: 40px; /* Set the height */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.arrow-btn:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+.arrow-btn:hover .tooltip::before {
+    content: "View subjects"; /* Display the text "View subjects" */
+}
+/* CSS for the modal */
+#subject-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%; /* Adjust width as needed */
+    max-width: 600px; /* Set maximum width */
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px;
+    text-align: center;
+}
+
+#subject-modal .modal-content {
+    max-height: 70vh; /* Limit maximum height of modal content */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+}
+
+#subject-modal .exit-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #333; /* Close button color */
+}
+
 </style>
 </head>
 <body>
@@ -473,7 +519,7 @@ select {
                 <h2>APCBA PORTAL V1.0</h2>
             </div>
             <div class="links">
-                <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
+               <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
                 <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
                 <a href="{{ url_for('modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
                 <a href="{{ url_for('course') }}" class="link"><i class="material-icons">school</i> Courses</a>
@@ -523,8 +569,14 @@ select {
         {% for course in courses %}
             <tr class="course-row {% if not course.is_active %}inactive-course{% endif %}">
                 <td>
-                    <span class="arrow-btn" onclick="toggleSubjects('{{ course.id }}')">▶</span> {{ course.title }}
+                    <span class="arrow-btn" onclick="toggleSubjects('{{ course.id }}')">
+                        <i class="material-icons">library_books</i>
+                        <span class="tooltip"></span>
+                    </span>
+                    {{ course.title }}
                 </td>
+                
+                
                 <td>{{ course.abbreviation }}</td>
                 <td>{{ course.school_year }}</td>
                 <td>{{ course.year }}</td>
@@ -533,30 +585,36 @@ select {
                 <td>{{ course.course_type }}</td>
                 <td>{{ 'Active' if course.is_active else 'Inactive' }}</td>
                 <td>
-                    <button class="add-subject-btn" onclick="showAddSubjectForm('{{ course.id }}')">Add Subject</button>
+                    <button class="add-subject-btn" onclick="showAddSubjectForm('{{ course.id }}')">Add Sub</button>
                     <button type="submit" class="btn btn-primary">Update</button>
-                    
-                    <form method="POST" action="{{ url_for('update_course', course_id=course.id) }}">
-        
-                        
-                    </form>
+                    <form method="POST" action="{{ url_for('update_course', course_id=course.id) }}" style="margin-top: 0;"></form>
+ 
                 </td>
             </tr>
-            <!-- Subjects for this course -->
+
+          <div id="subject-modal" class="modal">
+    <div class="modal-content">
+        <button class="exit-btn" onclick="hideModal('subject-modal')">X</button>
+        <div id="subject-modal-content">
             {% for subject in course.subjects %}
-                <tr class="subject-row subject-course-{{ course.id }}" style="display: none;">
-                    <td>SUBJECT</td>
-                    <td>{{ subject.abbreviation }}</td>
-                    <td>{{ subject.title }}</td>
-                    <td>{{ subject.unit }}</td>
-                    <td>{{ subject.teacher }}</td>
-                    <td>
-                        <button method="POST" action="{{ url_for('update_subject', subject_id=subject.id) }}">
-                        </button>
-                    </td>
-                </tr>
+            <div class="subject-info">
+                <p><strong>Abbreviation:</strong> {{ subject.abbreviation }}</p>
+                <p><strong>Title:</strong> {{ subject.title }}</p>
+                <p><strong>Unit:</strong> {{ subject.unit }}</p>
+                <p><strong>Teacher:</strong> {{ subject.teacher }}</p>
+            </div>
             {% endfor %}
-        {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+            
+            
+            
+
+        
+
     </table>
 </div> 
     <!-- Modal for adding a new course (initially hidden) -->
@@ -669,6 +727,24 @@ function toggleSidebar() {
             fadeInFlash();
             fadeOutFlash();
         });
+        function toggleSubjects(courseId) {
+    var subjectRows = document.querySelectorAll('.subject-row.subject-course-' + courseId);
+    var modalContent = document.getElementById('subject-modal-content');
+    
+    // Clear previous content
+    modalContent.innerHTML = '';
+
+    // Populate subjects into the modal
+    subjectRows.forEach(function (row) {
+        var cloneRow = row.cloneNode(true); // Clone the subject row
+        cloneRow.style.display = 'table-row'; // Ensure the cloned row is visible
+        modalContent.appendChild(cloneRow); // Append the cloned row to the modal content
+    });
+
+    // Show the modal
+    var modal = document.getElementById('subject-modal');
+    modal.style.display = 'block';
+}
 
 
 

@@ -80,9 +80,9 @@ def websiteenroll():
 def student_dashboard():
     return render_template('student/student_dashboard.html')
 
-@app.route('/change_password', methods=['GET', 'POST'])
+@app.route('/student_change_password', methods=['GET', 'POST'])
 @login_required
-def change_password():
+def student_change_password():
     form = ChangePasswordForm()
 
     if form.validate_on_submit():
@@ -92,7 +92,7 @@ def change_password():
        
         if not check_password_hash(user.password, form.old_password.data):
             flash('Incorrect current password. Please try again.', 'danger')
-            return redirect(url_for('change_password'))
+            return redirect(url_for('student_change_password'))
 
         
         hashed_password = generate_password_hash(form.new_password.data)
@@ -103,7 +103,7 @@ def change_password():
 
         flash('Password updated successfully!', 'success')
         return redirect(url_for('dashboard')) 
-    return render_template('change_password.html', form=form)
+    return render_template('student/student_change_password.html', form=form)
 
 
 @app.route('/web/enrollies', methods=['GET', 'POST'])
@@ -374,7 +374,7 @@ def dashboard():
         announcement = Announcement(title=form.title.data, content=form.content.data, author_id=current_user.id)
         db.session.add(announcement)
         db.session.commit()
-        flash('Message has been delivered successfully!', 'success')
+        flash('Announcement has been posted successfully!', 'success')
     announcements = Announcement.query.order_by(Announcement.timestamp.desc()).all()
 
     if current_user.is_authenticated:
@@ -477,7 +477,7 @@ def update_announcement(announcement_id):
         announcement.title = form.title.data
         announcement.content = form.content.data
         db.session.commit()
-        flash('Message has been updated successfully!', 'success')  # Moved flash above return
+        flash('Annoucnement has been updated successfully!', 'success')  # Moved flash above return
         return redirect(url_for('dashboard'))
 
     return render_template('admin/update_announcement.html', form=form, announcement=announcement)
@@ -492,7 +492,7 @@ def delete_announcement(announcement_id):
 
     db.session.delete(announcement)
     db.session.commit()
-    flash('Message has been deleted successfully!', 'success')
+    flash('Announcement has been deleted successfully!', 'success')
     return redirect(url_for('dashboard'))
 
 
@@ -584,7 +584,26 @@ def download_certificate(certificate_id):
     return send_file(certificate_path, as_attachment=True)
 
 
-@app.route('/account', methods=['GET', 'POST'])
+@app.route('/student/account', methods=['GET', 'POST'])
+@login_required
+def student_account():
+    form = UserAccountForm(obj=current_user.user_account)
+
+    if form.validate_on_submit():
+        if not current_user.user_account:
+            user_account_instance = UserAccount()
+            form.populate_obj(user_account_instance)
+            user_account_instance.user = current_user
+            db.session.add(user_account_instance)
+        else:
+            form.populate_obj(current_user.user_account)
+
+        db.session.commit()
+        return redirect(url_for('student_account'))
+
+    return render_template('student/student_account.html', form=form)
+
+@app.route('/teacher/account', methods=['GET', 'POST'])
 @login_required
 def account():
     form = UserAccountForm(obj=current_user.user_account)
@@ -601,7 +620,7 @@ def account():
         db.session.commit()
         return redirect(url_for('account'))
 
-    return render_template('student/account.html', form=form)
+    return render_template('teacher/account.html', form=form)
 #######################################################################################################################################################################################
 @app.route('/courses', methods=['GET', 'POST'])
 @login_required
@@ -626,7 +645,7 @@ def course():
         db.session.add(new_course)
         db.session.commit()
         flash('Created successfully!', 'success')
-        return redirect(url_for('view_course'))
+        return redirect(url_for('course'))
     school_year_filter = request.args.get('school_year', type=str)
     semester_filter = request.args.get('semester', type=int)
     course_type_filter = request.args.get('course_type', type=str)
@@ -671,7 +690,7 @@ def update_course(course_id):
 
         db.session.commit()
         flash('Updated successfully!', 'success')
-        return redirect(url_for('view_course'))
+        return redirect(url_for('course'))
 
     return render_template('admin/update_course.html', form=form, course=course)
 
@@ -690,7 +709,7 @@ def update_subject(subject_id):
 
         db.session.commit()
         flash('Updated successfully!', 'success')
-        return redirect(url_for('view_course'))
+        return redirect(url_for('course'))
 
     return render_template('admin/update_subject.html', form=form, subject=subject)
 ##########################################################################################################################################################################################
@@ -809,6 +828,7 @@ def download_module(pdf_filename):
     directory = os.path.join('uploads', 'documents')
     flash('Downloaded successfully!', 'success')
     return send_from_directory(directory, pdf_filename, as_attachment=True)
+
 ###################################################################################ENROLLMENT###############################################################################################################
 @app.route('/enroll', methods=['GET', 'POST'])
 @login_required
