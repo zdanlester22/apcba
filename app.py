@@ -80,7 +80,7 @@ def websiteenroll():
 def student_dashboard():
     return render_template('student/student_dashboard.html')
 
-@app.route('/student_change_password', methods=['GET', 'POST'])
+@app.route('/student/student_change_password', methods=['GET', 'POST'])
 @login_required
 def student_change_password():
     form = ChangePasswordForm()
@@ -105,6 +105,30 @@ def student_change_password():
         return redirect(url_for('dashboard')) 
     return render_template('student/student_change_password.html', form=form)
 
+@app.route('/teacher/student_change_password', methods=['GET', 'POST'])
+@login_required
+def teacher_change_password():
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+      
+        user = User.query.get(current_user.id)
+
+       
+        if not check_password_hash(user.password, form.old_password.data):
+            flash('Incorrect current password. Please try again.', 'danger')
+            return redirect(url_for('teacher_change_password'))
+
+        
+        hashed_password = generate_password_hash(form.new_password.data)
+
+       
+        user.password = hashed_password
+        db.session.commit()
+
+        flash('Password updated successfully!', 'success')
+        return redirect(url_for('dashboard')) 
+    return render_template('teacher/teacher_change_password.html', form=form)
 
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
@@ -262,31 +286,25 @@ def view_teachers():
 @app.route('/students', methods=['GET'])
 @login_required
 def view_students():
-    
     if current_user.role not in ['admin', 'teacher']:
         flash('You are not authorized to view students.', 'danger')
         return redirect(url_for('dashboard'))
 
-    # Retrieve the enrollments associated with the sections taught/advised by the current user
     if current_user.role == 'teacher':
         teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
-        if teacher is not None:
-            sections = teacher.section
-            if sections is not None:
-                enrollments = []
-                if isinstance(sections, list):
-                    for section in sections:
-                        enrollments.extend(section.enrollments)
-                else:
-                    enrollments.extend(sections.enrollments)
-            else:
-                enrollments = []
-        else:
+        if teacher:
+            sections = teacher.sections  # Assuming you have a relationship named 'sections' in Teacher model
             enrollments = []
-    else:  # For admins, retrieve all enrollments
-        enrollments = Enrollment.query.all()
+            for section in sections:
+                enrollments.extend(section.enrollments)
+            return render_template('teacher/view_class.html', authenticated=True, enrollments=enrollments)
+        else:
+            flash('You are not assigned to any sections.', 'warning')
+            return redirect(url_for('dashboard'))
 
-    return render_template('admin/view_students.html', enrollments=enrollments)
+    elif current_user.role == 'admin':
+        enrollments = Enrollment.query.all()  
+        return render_template('admin/view_students.html', authenticated=True, enrollments=enrollments)
 
 
 
@@ -517,7 +535,8 @@ def certificate():
         
     if current_user.role == 'student':
         title_filter = request.args.get('title', default='', type=str)
-        certificates = Certificate.query.filter_by(user_id=current_user.id).order_by(Certificate.id.desc()).all()
+        # Filter certificates based on the current user's ID
+        certificates = Certificate.query.order_by(Certificate.id.desc()).all()
         template = 'student/student_certificate.html'
     elif current_user.role == 'teacher':
         title_filter = request.args.get('title', default='', type=str)
@@ -525,7 +544,7 @@ def certificate():
         template = 'teacher/teacher_certificate.html'
     elif current_user.role == 'admin':
         title_filter = request.args.get('title', default='', type=str)
-        certificates = Certificate.query.filter(Certificate.title.ilike(f'%{title_filter}%')).order_by(Certificate.id.desc()).all()
+        certificates = Certificate.query.order_by(Certificate.id.desc()).all()
         template = 'admin/certificate.html'
     else:
         return redirect(url_for('dashboard'))
@@ -605,7 +624,7 @@ def student_account():
 
 @app.route('/teacher/account', methods=['GET', 'POST'])
 @login_required
-def account():
+def teacher_account():
     form = UserAccountForm(obj=current_user.user_account)
 
     if form.validate_on_submit():
@@ -618,9 +637,9 @@ def account():
             form.populate_obj(current_user.user_account)
 
         db.session.commit()
-        return redirect(url_for('account'))
+        return redirect(url_for('teacher_account'))
 
-    return render_template('teacher/account.html', form=form)
+    return render_template('teacher/teacher_account.html', form=form)
 #######################################################################################################################################################################################
 @app.route('/courses', methods=['GET', 'POST'])
 @login_required
@@ -810,15 +829,19 @@ def modules():
 @app.route('/student/modules', methods=['GET'])
 @login_required
 def student_modules():
+    if current_user.role != 'student':
+        return redirect(url_for('dashboard'))  
     user_name = current_user.name
-    modules = Module.query.all()  # Query all modules accessible to students
+    modules = Module.query.all()  
     return render_template('student/view_modules.html', modules=modules, user_name=user_name)
 
 @app.route('/teacher/modules', methods=['GET'])
 @login_required
 def teacher_modules():
+    if current_user.role != 'teacher':
+        return redirect(url_for('dashboard')) 
     user_name = current_user.name
-    modules = Module.query.all()  # Query all modules accessible to students
+    modules = Module.query.all()  
     return render_template('teacher/view_modules.html', modules=modules, user_name=user_name)
 
 

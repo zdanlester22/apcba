@@ -483,20 +483,22 @@ h4{
             </div>
             <main class="bot">     
                 <div class="top">
-                {% if certificates %}
-                </div>
+                    {% if certificates %}
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>Title</th>
                                 <th>PDF</th>
-                                <th>Actions</th>
+                            
                             </tr>
                         </thead>
                         <tbody>
                             {% for certificate in certificates %}
                                 <tr>
                                     <td>{{ certificate.title }}</td>
+                                    <td>
+                                        <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download</a>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -504,9 +506,6 @@ h4{
                 {% else %}
                     <p>No certificates available.</p>
                 {% endif %}
-            </main>
-        </div>
-    </div>
     <script>
         var originalContentMargin; // Store the original content margin
     
