@@ -264,10 +264,13 @@ align-items: center; /* Align items vertically */
             padding: 70px;
             border-radius: 10px;
             text-align: left;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            max-width: 800px;
-            width: 100%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 200%;
+            width: 120%;
+            margin-left: -128px;
         }
+
+
 
         h3 {
             color: #333;
@@ -347,13 +350,13 @@ align-items: center; /* Align items vertically */
     
         <div class="content">
             <div class="topnav">
-                <h4 class="Name">Profile</h4>
+                <h4 class="Name"> Student's Profile</h4>
             </div>
 
    
       <center>
         <div class="form-container">
-            <form method="post" action="{{ url_for('teacher_account') }}">
+            <form method="post" action="{{ url_for('student_account') }}">
                 {{ form.hidden_tag() }}
                 <!-- Profile Section -->
                 

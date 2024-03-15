@@ -222,15 +222,19 @@
             margin-right: 25px;
         }
         .submit {
-            padding: 13px;
+            padding: 6px;
             color: #fff;
-            background-color: #349b3f;
+            background-color: #374c60;
             border: none;
             border-radius: 5px;
             font-family: Montserrat, sans-serif;
+            width: 100px;
         }
         .submit:hover {
-            transform: scale(1.1);
+            color: #374c60;
+            background-color: #fff;
+            border: 1px solid #374c60;
+            border-radius: 5px;
         }
         h3 {
             font-size: 1rem;
@@ -286,9 +290,7 @@
 }
 /* Styles for the certificate form */
 .form {
-    padding: 20px;
     border-radius: 8px;
-    margin: 20px;
 
 }
 
@@ -363,7 +365,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     font-family: Montserrat, sans-serif;
-    width: 100px;
+    width: 155px;
 }
 
 .button-primary {
@@ -378,14 +380,6 @@
     border: 1px solid #374c60;
 }
 
-.button-danger {
-    background-color: #c03232;
-    color: #fff;
-}
-
-.button-danger:hover {
-    background-color: #9a2525;
-}
 #uploadModal {
     display: none;
 }
@@ -425,15 +419,16 @@
     position: absolute;
     top: 5px;
     right: 10px;
-    font-size: 50px;
+    font-size: 30px;
     cursor: pointer;
+    color: #ccc;
 }
 table a{
     text-decoration: none;
     background-color: #374c60;
     color: #fff;
-    padding: 6px;
-    border-radius: 10px;
+    padding: 8px;
+    border-radius: 5px;
     font-size: 13px;
 }
 table a:hover{
@@ -466,6 +461,16 @@ h4{
         .fade-in {
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
+        }
+        .top {
+            display: flex;
+            gap: 13px;
+            text-align: center;
+            align-items: center;
+        }
+        .form {
+            border-radius: 8px;
+            margin-top: -28px;
         }
 
     </style>
@@ -536,16 +541,27 @@ h4{
                 
                 <br> <br><br> <br><br>   
                 <div class="top">
-                    <button id="uploadBtn" class="button button-primary">Upload</button>
+                    <button id="uploadBtn" class="button button-primary">Upload Certificate</button>
                     <form action="{{ url_for('certificate') }}" class="filter" method="get">
                         {{ form.csrf_token }}
-                        {{ form.title}}
-                        <button type="submit">Filter</button>
+                        {{ form.title(style="padding: 6px; width:150px; border: 1px solid #ccc; border-radius: 5px; margin-right: 10px;")}}
+                        <button type="submit" id="filter" fdprocessedid="dqxonq" style="
+                            color: #fff;
+                            padding: 6px;
+                            background-color: #374c60;
+                            width: 100px;
+                            border-radius: 5px;
+                            border: 1px solid #374c60;
+                            font-family: 'Montserrat';
+                            " onmouseover="this.style.backgroundColor='#fff'; this.style.color='#374c60'; 
+                            this.style.borderColor='#374c60';" onmouseout="this.style.backgroundColor='#374c60'; 
+                            this.style.color='#fff'; this.style.borderColor='#374c60';"
+                            >Filter</button>
                     </form>
                 {% if certificates %}
                 </div>
               
-                    <table class="table">
+                    <table class="table" style="width: 80%;">
                         <thead>
                             <tr>
                                 <th>Title</th>

@@ -168,13 +168,22 @@
             margin-bottom: 5px;
             color: #666;
         }
-        .form-group input[type="text"],
+        .form-group input[type="text"]{
+            width: 97%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            font-family: Montserrat, sans-serif;
+        }
         .form-group textarea {
             width: 97%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             outline: none;
+            height: 300px;
+            font-family: Montserrat, sans-serif;
         }
         .form-group input[type="submit"] {
             background-color: #374c60;
@@ -282,40 +291,43 @@
             color: #fff;
         }
         .user-info {
-    margin-top: auto; /* Push user info to the bottom of the sidebar */
-}
+               margin-top: auto; /* Push user info to the bottom of the sidebar */
+        }
 
-.user-info a {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
-    text-decoration: none;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
-    max-width: 150px;
-    width: 100%;
-}
+        .user-info a {
+            display: flex; /* Use flexbox */
+            align-items: center; /* Align items vertically */
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+            max-width: 150px;
+            width: 100%;
+        }
 
-.user-info a:hover {
-    background-color: #fff; /* Change background color on hover */
-    color: #222; /* Change text color on hover */
-}
+        .user-info a:hover {
+            background-color: #fff; /* Change background color on hover */
+            color: #222; /* Change text color on hover */
+        }
 
-.user-info span {
-    margin-right: 10px; /* Add space between username and icon */
-}
+        .user-info span {
+            margin-right: 10px; /* Add space between username and icon */
+        }
 
-.user-info div {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
-}
-.announcements a:hover{
-    background-color: #fff;
-              color: #374c60;
-           border: 1px solid #374c60;
-           transform: scale(0);
-}
+        .user-info div {
+            display: flex; /* Use flexbox */
+            align-items: center; /* Align items vertically */
+        }
+        .announcements a:hover{
+            background-color: #fff;
+                    color: #374c60;
+                border: 1px solid #374c60;
+                transform: scale(0);
+        }
+        .form-control {
+            font-family: Montserrat, sans-serif;
+        }
 
     </style>
 </head>
@@ -375,7 +387,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="content">Content</label>
-                                <textarea type="text" id="content" name="content" required oninput="countCharacters('content', 'content-char-count', 1000)"></textarea>
+                                <textarea type="text" id="content" name="content" required="" oninput="countCharacters('content', 'content-char-count', 1000)" style="height: 200px;"></textarea>
                                 <span id="content-char-count">0/1000</span>
                             </div>
                             <input type="submit" value="Submit" class="submit" onclick="return confirmSubmit()">

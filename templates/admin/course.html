@@ -72,7 +72,7 @@
             left: 0;
             top: 0;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: #fff;
             text-align: center;
             align-items: center;
             width: 50%;
@@ -157,12 +157,12 @@
     }
 
     #add-subject-form {
-        background-color: #fff;
-        border: 1px solid #888;
-        width: 25%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        height: 430px;
-    }
+    background-color: #fff;
+    border: 1px solid #ccc;
+    width: 25%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 350px;
+}
 
     #add-subject-form .exit-btn {
         position: absolute;
@@ -348,6 +348,7 @@ select {
             border-radius: 10px;
             padding: 2px;
         }
+
         
 /* CSS */
 /* CSS */
@@ -403,6 +404,7 @@ select {
 #subject-modal{
     max-height: 70vh; /* Limit maximum height of modal content */
     overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+    background-color: #fff;
 }
 
 #subject-modal .exit-btn {
@@ -424,14 +426,14 @@ select {
     top: 50%;
     transform: translate(-50%, -50%);
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
+    /* background-color: rgba(0, 0, 0, 0.5); */
     text-align: center;
     align-items: center;
-    width: 60%; /* Adjust width as needed */
-    max-width: 600px; /* Set maximum width */
-    height: 495px;
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+    width: 60%;
+    max-width: 600px;
+    height: 555px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     overflow-y: hidden;
 }
 
@@ -477,7 +479,27 @@ select {
 .arrow-btn:hover .tooltip::before {
     content: "View subjects"; /* Display the text "View subjects" */
 }
+#add-subject-form form {
+    align-items: center;
+    margin-top: 20px;
+    /* width: 255px; */
+    display: inherit;
+    margin-left: 50px;
+}
+#add-subject-form form {
 
+    margin-top: 20px;
+    width: 316px;
+    display: inherit;
+    margin-left: 50px;
+}
+#add-subject-form form input[type="text"] {
+    margin-bottom: 0px;
+}
+h4 {
+    display: block;
+    font-size: 23px;
+}
 </style>
 </head>
 <body>
@@ -598,13 +620,11 @@ select {
     <!-- Modal for adding a new course (initially hidden) -->
     <div id="add-course-modal" class="modal">
         <div class="modal-content">
+            <h4>Add course</h4>
             <button class="exit-btn" onclick="hideModal('add-course-modal')">X</button>
             <form method="POST" action="{{ url_for('course') }}" style="margin-top: 0; color: #374c60;
-           background-color: #fff; border-radius: 5px ;
-            padding: 20px;" >
+           background-color: #fff; border-radius: 5px ;" >
                 {{ form_course.hidden_tag() }}
-                
-                <!-- Left side inputs -->
                 <div style="float: left; width: 50%;">
                     <div>
                         {{ form_course.course_type.label }} {{ form_course.course_type() }}
@@ -652,7 +672,7 @@ select {
     <div id="add-subject-form" class="modal-content" style="display: none;">
         <button class="exit-btn" onclick="hideModal('add-subject-form')">X</button>
         <form method="POST" action="{{ url_for('course') }}">
-            <h2>Add Subject</h2>
+            <h2 style="text-align: center; margin-right: 20px;">Add Subject</h2>
             {{ form_subject.hidden_tag() }}
             {{ form_subject.abbreviation.label }} {{ form_subject.abbreviation() }}<br>
             {{ form_subject.title.label }} {{ form_subject.title() }}<br>

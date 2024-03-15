@@ -147,13 +147,14 @@
             overflow-y: hidden; /* Remove vertical scrollbar */
             display: inline;
         }     
-        .container button{
-            margin-top: 20px;
+        .container button {
+            margin-top: -10px;
             background-color: #374c60;
             color: #fff;
             padding: 10px;
             border: none;
             border-radius: 5px;
+            font-family: Montserrat, sans-serif;
         }
         .enrollies-table button{
             margin-top: -70px;
@@ -192,38 +193,38 @@
             margin-left: -340px;
         }
         .enrollies-table th {
-    background-color: #374c60;
-    color: #fff;
-}
-        .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 350px;
-    top: 0;
-    width: 500px;
-    height: 100%;
-    overflow: auto;
-    padding-top: 60px;
+            background-color: #374c60;
+            color: #fff;
         }
-        .modal-content {
-    background-color: #fefefe;
-    margin: 7%;
-    padding: 30px;
-    border: 1px solid #888;
-    width: 70%;
-    font-size: 1.2rem;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: 30px;
-    text-align: left;
-}
-.page-title {
-    color: #374c60;
-    font-size: 29px;
-    margin-left: -340px;
-}
-.flash {
+                .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 350px;
+            top: 0;
+            width: 500px;
+            height: 100%;
+            overflow: auto;
+            padding-top: 60px;
+                }
+                .modal-content {
+            background-color: #fefefe;
+            margin: 7%;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 70%;
+            font-size: 1.2rem;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: 30px;
+            text-align: left;
+        }
+        .page-title {
+            color: #374c60;
+            font-size: 26px;
+            margin-left: -400px;
+        }
+        .flash {
             position: absolute;
             right: 0;
             top: 0;
@@ -288,7 +289,7 @@
             </div>
         </div>
     <div class="container">
-        <h4 class="page-title">Admin Dashboard/Enrollee</h4>
+        <h4 class="page-title">Admin Dashboard/Enrollies</h4>
         <a href="{{ url_for('view_enrollies') }}" class="view"><button style="margin-left: 300px;">View All Enrollies</button></a>
         <table class="enrollies-table">
             <thead>

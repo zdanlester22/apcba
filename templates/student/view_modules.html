@@ -94,11 +94,11 @@
     border: 1px solid #374c60;
 }
 .mod {
-    width: 200%;
-    padding: 20px;
-    border-radius: 5px;
+    width: 190%;
+    /* padding: 20px; */
+    border-radius: 0px;
     margin-top: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .mod table {
@@ -108,7 +108,7 @@
 
 .mod table th,
 .mod table td {
-    padding: 20px;
+    padding: 11px;
     border-bottom: 1px solid #ddd;
     border: 1px solid #ccc;
     text-align: left;
@@ -136,28 +136,11 @@ table a:hover{
     color: #374c60;
     border: 1px solid #374c60;
 }
-.flash {
-            position: absolute;
-            right: 0;
-            top: 0;
-            margin-top: 100px;
-            margin-right: 25px;
-            z-index: 10;
-            background-color: #374c60;
-            color: #fff;
-            border: 2px solid #374c60;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
+        table{
+            border: 1px solid #ccc;
         }
-        .flash li{
-            list-style: none;
-            text-align: center;
-            margin-right: 25px;
-        }
-        .fade-in {
-            /* CSS class to fade in flash messages */
-            opacity: 1 !important; /* Override opacity to 1 */
+        .container{
+            position: relative;
         }
 
 </style>
@@ -165,17 +148,6 @@ table a:hover{
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 
 <body>
-    <div class="flash">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-    </div>
     <div class="container">
         <button class="toggle-btn" onclick="toggleSidebar()">
             <span class="material-icons">menu</span>
@@ -202,10 +174,10 @@ table a:hover{
     <main class="bot">
         <div class="content">
             <div class="topnav">
-                <h4 class="Name">Module</h4>
+                <h4 class="Name"> Student's Module</h4>
             </div>
         {% block content %}
-        <h2>Modules</h2>
+        <h2>Student's Module</h2>
         <div class="mod">
             <table>
                 <thead>

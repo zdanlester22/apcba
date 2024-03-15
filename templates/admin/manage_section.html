@@ -32,17 +32,19 @@
 
         /* Add borders to the table */
         .table-container {
-            overflow: hidden; /* Hide table overflow */
+            overflow: hidden;
             margin: 20px;
-            border-radius: 10px;
+            width: 1300px;
         }
 
         table {
             border-collapse: collapse;
             margin-left: 300px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border: 1px solid #ccc;
             border-radius: 10px;
+            width: 70%;
+            
         }
 
         th, td {
@@ -158,6 +160,31 @@
       padding: 7px;
       width: 260px;
     }
+    .close-button {
+    position: absolute;
+    top: 5px;
+    right: 3px;
+    background-color: transparent;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    color: #ccc; /* Change color as needed */
+    z-index: 999; /* Ensure the button appears on top */
+}
+.form-group button {
+    width: 100px;
+    font-family: Montserrat, sans-serif;
+}
+.form-group input[type="text"], .form-group select {
+
+    font-family: Montserrat, sans-serif;
+}
+h2 {
+    color: #374c60;
+    margin-left: 30px;
+    margin-top: -50px;
+    font-size: 26px;
+}
     </style>
 </head>
 <body>
@@ -190,12 +217,12 @@
         </div>  
         <div class="form-group">
     <form method="get" action="{{ url_for('manage_section') }}" style="
-    margin-left: 300px;
-    display: flex;
-    margin-top: 120px;
-    gap: 20px;
-">
-        <button id="toggle-button" class="toggle-button" type="button">Add</button>
+            margin-left: 300px;
+            margin-top: 120px;
+            gap: 20px;
+        ">
+             <h2>Admin Dashboard/Sections</h2>
+        <button id="toggle-button" class="toggle-button" type="button">Add section</button>
 
             <input type="text" id="section_name" name="section_name" placeholder="Enter section name">
             <button type="submit">Search</button>
@@ -203,7 +230,8 @@
     </div>
 
     <div id="form-container" class="form-container">
-        <br>
+        <button class="close-button" onclick="closeForm()">X</button>
+        <h4 style="font-size: 20px; margin-top: -5px;">Add section</h4>
         <form method="POST" action="{{ url_for('manage_section') }}" class="form">
             {{ form_section.csrf_token }}
             {{ form_section.hidden_tag() }}
@@ -211,7 +239,7 @@
                 <label for="name" class="form-control-label">Section Name</label>
                 {{ form_section.name(class="form-control") }}
             </div>
-
+    
             <div class="form-group">
                 <label for="year" class="form-control-label">Year</label>
                 {{ form_section.year(class="form-control") }}
@@ -219,8 +247,9 @@
     
             <div class="form-group custom-form-group">
                 <label for="capacity" class="form-control-label">Capacity</label>
-                {{ form_section.capacity(class="form-control") }}
+                {{ form_section.capacity(class="form-control", style="padding: 8px; margin-left:-6px; width: 261px; border-radius: 5px; border: 1px solid #ccc;") }}
             </div>
+    
             <div class="form-group">
                 <label for="course_id" class="form-control-label">Course</label>
                 {{ form_section.course_id(class="form-control") }}
@@ -232,6 +261,7 @@
             <button type="submit" class="btn btn-primary">Create Section</button>
         </form>
     </div>
+    
 
     <div class="table-container">
         <table class="table">

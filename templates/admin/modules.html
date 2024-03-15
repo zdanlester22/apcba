@@ -52,7 +52,7 @@
     font-family: 'Montserrat', sans-serif;
 }
 .module-form select{
-    width:99.5%;
+    width:99.7%;
     height: 52px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -95,17 +95,16 @@
 }
 .mod {
     background-color: #f9f9f9;
-    width: 95%;
-    padding: 20px;
+    width: 100%;
     border-radius: 5px;
     margin-top: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .mod table {
-    width: 100%;
+    width: 105%;
     border-collapse: collapse;
     padding: 5px;
+    border: 1px solid #ccc;
 }
 
 .mod table th,
@@ -161,6 +160,68 @@ table a:hover{
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
+        .create-module-btn {
+            background-color: #374c60;
+            color: #fff;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 30px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .create-module-btn:hover {
+            background-color: #fff;
+            color: #374c60;
+            border: 1px solid #374c60;
+        }
+        #myModal {
+                display: none;
+            }
+            .modal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 100px;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #000;
+        }
+        .content {
+            flex: 1;
+            padding: 30px;
+            transition: margin-left 0.3s ease;
+            margin-right: 60px;
+            width: 100%;
+        }
+        .table{
+            width: 80%;
+        }
+
 </style>
 </head>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
@@ -211,39 +272,40 @@ table a:hover{
             </div>
         {% block content %}
         <h2>Admin Dashboard/Modules</h2>
-         <div class="formi">
-            <form method="POST" enctype="multipart/form-data" class="module-form">
-
-                {{ form_module.hidden_tag() }}
-            
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    {{ form_module.title(class="form-control", placeholder="Enter Module Title", required="required") }}
-                </div>
-            
-                <div class="form-group">
-                    <label for="year">Year</label>
-                    {{ form_module.year(class="form-control", placeholder="Enter Module Year", required="required") }}
-                </div>
-            
-                <div class="form-group">
-                    <label for="course_id">Course</label>
-                    {{ form_module.course_id(class="form-control", required="required") }}
-                </div>
-            
-                <div class="form-group">
-                    <label for="pdf_file">PDF File</label>
-                    {{ form_module.pdf_file(class="form-control-file", required="required") }}
-                </div>
-            
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Create Module</button>
-                </div>
-            </form>
-            
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <form method="POST" enctype="multipart/form-data" class="module-form">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    {{ form_module.hidden_tag() }}
+        
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        {{ form_module.title(class="form-control", placeholder="Enter Module Title", required="required") }}
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        {{ form_module.year(class="form-control", placeholder="Enter Module Year", required="required") }}
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="course_id">Course</label>
+                        {{ form_module.course_id(class="form-control", required="required") }}
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="pdf_file">PDF File</label>
+                        {{ form_module.pdf_file(class="form-control-file", required="required") }}
+                    </div>
+        
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Create Module</button>
+                    </div>
+                </form>
+            </div>
         </div>
+        <button id="openModalBtn" class="create-module-btn" onclick="openModal()">Create Module</button>
         <div class="mod">
-            <h3>Existing Modules</h3>
             <table>
                 <thead>
                     <tr>
@@ -270,6 +332,30 @@ table a:hover{
     </main>
     </div>
     <script>
+           var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("openModalBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+function openModal() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+function closeModal() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 
 var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
 document.getElementById("logout-link").addEventListener("click", confirmLogout);
