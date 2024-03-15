@@ -11,134 +11,122 @@
     <style>
         body {
             font-family: Montserrat, sans-serif;
-            background-color: #fff;
+            background-color: #f8f8f8;
             margin: 0;
             padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            color: #303030;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #555;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
         }
 
         form {
-            max-width: 700px;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin-top: 1600px;
-            width: 100%;
-            color: #303030;
-            border: 1px solid rgb(235, 227, 227);
-            font-family: Montserrat, sans-serif;
-        }
-
-        h1, h2 {
-            color: #5f5959;
-            margin-bottom: 20px;
+            text-align: left;
+            margin-top: 20px;
         }
 
         label {
-            display: block;
+            font-size: 18px;
             margin-bottom: 8px;
-            font-family: Montserrat, sans-serif;
-
+            display: block;
         }
 
         input,
         select,
         textarea {
-            width: 60%;
+            width: calc(100% - 24px);
             padding: 12px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             box-sizing: border-box;
             border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #fff;
+            border-radius: 5px;
+            background-color: #f9f9f9;
             color: #333;
             font-family: Montserrat, sans-serif;
         }
 
-        textarea {
-            resize: vertical;
-        }
-
         button[type="submit"] {
-            background-color: #4caf50;
+            background-color: #ff6b6b;
             color: #fff;
             border: none;
-            padding: 12px 17px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 20px;
             cursor: pointer;
-            border-radius: 10px;
-            margin-left: auto;
-            margin-right: auto;
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto;
+            transition: background-color 0.3s ease;
         }
 
         button[type="submit"]:hover {
-            background-color: #45a049;
-            transform: scale(1.1);
+            background-color: #ff4949;
         }
 
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-bottom: 15px;
+        .required {
+            color: red;
         }
 
-        .form-row label,
-        .form-row input,
-        .form-row select,
-        .form-row textarea,
-        .form-row [type="file"] {
-            width: calc(33.33% - 10px);
-            box-sizing: border-box;
+        .note {
+            font-style: italic;
+            margin-top: 10px;
+            color: #777;
+            text-align: center;
         }
 
-        .form-row textarea {
-            width: 100%;
-        }
-
+        /* Fancy styles for back button */
         .back-button {
             position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-        .back-button a {
-            color: gray;
-            font-size: 30px;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            font-size: 24px;
+            color: #333;
         }
 
         .back-button:hover {
-            transform: scale(1.5);
+            transform: scale(1.1);
         }
 
-        h1 {
-            font-size: 7vh;
-            margin-bottom: 50px;
-        }
-        p{
-           margin-right: 100px;
-           margin-left: 100px;
-           display: block;
-        }
-        .required {
-        color: red;
-        font-size: 20px;
-    }
-    .modal {
+        /* Fancy styles for modal */
+        .modal {
             display: none;
             position: fixed;
-            z-index: 999;
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         .modal-content {
@@ -150,111 +138,529 @@
             padding: 40px;
             border-radius: 10px;
             text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content i {
+            color: #ff9800;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
         }
 
         .exit-button {
-            padding: 8px 20px;
-            background-color: #202e73;
+            background-color: #ff9800;
             color: #fff;
             border: none;
+            padding: 10px 20px;
+            font-size: 18px;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
         }
-        .exit-button:hover{
-            background-color: #fff;
-            color: #202e73;
-            border: 1px solid #202e73;
+
+        .exit-button:hover {
+            background-color: #f57c00;
         }
-        .fas{
-            
-            font-size: 30px; 
+        .mmodal{
+            display: none;
         }
+      
     </style>
 </head>
 
 <body>
-    <div class="back-button">
-        <a href="{{ url_for('websiteenroll') }}"><i class="fas fa-arrow-left"></i></a>
-    </div>
+    <a class="back-button" href="{{ url_for('websiteenroll') }}"><i class="fas fa-arrow-left"></i></a>
     <div id="noteModal" class="modal">
         <div class="modal-content">
             <i class="fas fa-info-circle"></i>
-            <h2>The Form will only accept real information. Please fill it up carefully.</h2>
+            <h2>Please ensure that the information provided is accurate. Fill out the form with care.</h2>
             <button class="exit-button" id="noteExitButton">Got it</button>
         </div>
     </div>
-    <form id="enrollmentForm" method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
+    <div class="container">
         <h1>Enrollment Form</h1>
-        <p>Note:(College and SHS) </p>
-
-        <h2>Enrollee Information</h2>
-        <label for="name">Name:</label><span class="required" maxlength="50">*</span>
-        {{ form.name(placeholder='Ex. Dela Cruz, Juan D.') }}
-
-        <label for="email">Email:</label><span class="required" maxlength="50">*</span>
-        {{ form.email(placeholder='ex. juandelacruz@gmail.com') }}
+        <p class="note">(Note: Fill up the form from the top to bottom.)</p>
         
-
-        <label for="level">Level:</label><span class="required">*</span>
-        {{ form.level(placeholder='Enter your year') }}
-
-        <label for="year">Year:</label><span class="required">*</span>
-        {{ form.year(placeholder='Enter your level') }}
-
-        <label for="address">Address:</label><span class="required" maxlength="50">*</span>
-        {{ form.address(placeholder='Enter your address') }}
-
-        <label for="contact_number">Contact Number:</label><span class="required">*</span>
-        {{ form.contact_number(placeholder='Enter your contact number', pattern='[0-9]{11}', required=True) }}
+                <form id="enrollmentForm" method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div>
+                        <label for="name">Your Name <span class="required" autocomplete="off">*</span></label>
+                        {{ form.name(placeholder='Enter your full name', required=True) }}
+                    </div>
+                    <div>
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        {{ form.email(placeholder='Enter your email address', required=True, autocomplete='off') }}
+                    </div>
+                    <div>
+                        <label for="level">Level <span class="required">*</span></label>
+                        {{ form.level(placeholder='Enter your academic level', required=True) }}
+                    </div>
+                    <div>
+                        <label for="year">Year <span class="required">*</span></label>
+                        {{ form.year(placeholder='Enter your academic year', required=True) }}
+                    </div>
+                    <div>
+                        <label for="address">Address <span class="required">*</span></label>
+                        {{ form.address(placeholder='Enter your address', required=True, autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="contact_number">Contact Number <span class="required">*</span></label>
+                        {{ form.contact_number(placeholder='Enter your contact number', required=True,autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="date_of_birth">Date of Birth <span class="required">*</span></label>
+                        <input type="text" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" required autocomplete="off">
+                    </div>
+                    
+                    <div>
+                        <label for="place_of_birth">Place of Birth <span class="required">*</span></label>
+                        {{ form.place_of_birth(placeholder='Enter your place of birth', required=True, autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="gender">Gender <span class="required">*</span></label>
+                        {{ form.gender(placeholder='Enter your gender', required=True) }}
+                    </div>
+                    <div>
+                        <label for="nationality">Nationality <span class="required">*</span></label>
+                        {{ form.nationality(placeholder='Enter your nationality', required=True, autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="religion">Religion <span class="required">*</span></label>
+                        {{ form.religion(placeholder='Enter your religion', required=True, autocomplete="off") }}
+                    </div>
+                    
         
+                    <h2>Education Information</h2>
+                    <div>
+                        <label for="previous_school_info">Previous School Info <span class="required">*</span></label>
+                        {{ form.previous_school_info(placeholder='Enter your previous school info', required=True, autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="grade_last_completed">Grade Last Completed <span class="required">*</span></label>
+                        {{ form.grade_last_completed(placeholder='Enter your last completed grade', required=True, autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="academic_achievements">Academic Achievements <span class="required">*</span></label>
+                        {{ form.academic_achievements(placeholder='Enter your academic achievements', required=True, autocomplete="off") }}
+                    </div>
         
+                    <h2>Parent/Guardian Information</h2>
+                    <div>
+                        <label for="parent_names">Guardian Name <span class="required">*</span></label>
+                        {{ form.parent_names(placeholder='Enter guardian name', required=True, autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="parent_contact_info">Guardian Contact Number <span class="required">*</span></label>
+                        <input type="text" id="parent_contact_info" name="parent_contact_info" placeholder='Enter guardian contact number' required autocomplete="off">
+                    </div>
+                    <div>
+                        <label for="parent_occupation">Guardian Occupation <span class="required">*</span></label>
+                        {{ form.parent_occupation(placeholder='Enter guardian occupation', required=True, autocomplete="off") }}
+                    </div>
+                    
+                    <div>
+                        <label for="special_needs">Special Needs <span class="required">*</span></label>
+                        {{ form.special_needs(placeholder='Specify any special needs, if applicable', required=True, autocomplete="off") }}
+                    </div>
+                    
+        
+                    <button type="submit">Enroll</button>
+                </form>
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-info-circle"></i>
+            <h2>Thank you for your submission!</h2>
+            <a href="{{ url_for('login') }}" class="exit-button">Go to Login Page</a>
+        </div>
+    </div>
+    <div id="1myModal" class="mmodal">
+        <div class="mmodal-content">
+            <i class="fas fa-info-circle"></i>
+            <h2>Thank you for your submission!</h2>
+            <button class="exit-button" id="exitButton">Close</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            var noteModal = document.getElementById('noteModal');
+            noteModal.style.display = 'block';
 
-        <label for="date_of_birth">Date of Birth:</label><span class="required">*</span>
-        <input class="form-control" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" type="text" required>
+            var noteExitButton = document.getElementById('noteExitButton');
+            noteExitButton.addEventListener('click', function() {
+                noteModal.style.display = 'none';
+            });
 
+            // Date of birth input formatting
+            var dateOfBirthInput = document.getElementById('date_of_birth');
+            dateOfBirthInput.addEventListener('input', function() {
+                var value = this.value;
+                var sanitizedValue = value.replace(/\D/g, ''); // Remove non-numeric characters
 
-        <label for="place_of_birth">Place of Birth:</label><span class="required" maxlength="50">*</span>
-        {{ form.place_of_birth(placeholder='Enter your place of birth') }}
+                if (sanitizedValue.length > 4) {
+                    sanitizedValue = sanitizedValue.slice(0, 4) + '-' + sanitizedValue.slice(4);
+                }
+                if (sanitizedValue.length > 7) {
+                    sanitizedValue = sanitizedValue.slice(0, 7) + '-' + sanitizedValue.slice(7);
+                }
 
-        <label for="gender">Gender:</label><span class="required">*</span>
-        {{ form.gender(placeholder='Male/Female') }}
+                this.value = sanitizedValue;
+            });
 
-        <label for="nationality"maxlength="20">Nationality:</label>
-        {{ form.nationality(placeholder='Enter your nationality') }}
+            // Contact number inputs
+            var contactNumberInputs = document.querySelectorAll('input[name="contact_number"]');
+            var guardianContactInput = document.getElementById('parent_contact_info');
 
-        <label for="religion" maxlength="20">Religion:</label>
-        {{ form.religion(placeholder='Enter your religion') }}
+            function restrictToNumbers(input) {
+                input.value = input.value.replace(/\D/g, '');
+            }
 
-        <h2>Education Information</h2>
-        <label for="previous_school_info">Previous School Info:</label><span class="required" maxlength="50">*</span>
-        {{ form.previous_school_info(placeholder='Previous school info') }}
+            contactNumberInputs.forEach(function(input) {
+                input.addEventListener('input', function(event) {
+                    restrictToNumbers(this);
 
-        <label for="grade_last_completed">Grade Last Completed:</label><span class="required" maxlength="3">*</span>
-        {{ form.grade_last_completed(placeholder='Last grade completed') }}
+                    if (this.value.length > 11) {
+                        this.value = this.value.slice(0, 11);
+                    }
+                });
+            });
 
-        <label for="academic_achievements" maxlength="250">Academic Achievements:</label>
-        {{ form.academic_achievements(placeholder='cademic achievements') }}
+            guardianContactInput.addEventListener('input', function() {
+                restrictToNumbers(this);
 
-        <h2>Parent/Guardian Information</h2>
-        <label for="parent_names">Guardian Name:</label><span class="required" maxlength="50">*</span>
-        {{ form.parent_names(placeholder='Guardian name') }}
+                if (this.value.length > 11) {
+                    this.value = this.value.slice(0, 11);
+                }
+            });
 
-        <label for="parent_contact_info">Contact Number:</label><span class="required">*</span>
-        <input type="text" id="parent_contact_info" name="parent_contact_info" placeholder="Guardian contact number" required>
+            // Limit character input for specified fields
+            function limitCharacterInput(inputElement, maxLength) {
+                inputElement.addEventListener('input', function(event) {
+                    if (this.value.length >= maxLength && event.inputType !== 'deleteContentBackward') {
+                        event.preventDefault();
+                    }
+                });
+            }
 
-        <label for="parent_occupation" maxlength="50">Guardian Occupation:</label>
-        {{ form.parent_occupation(placeholder='Guardian occupation') }}
+            var inputsToLimit = [
+                'name', 'email', 'address', 'place_of_birth', 'nationality', 'religion',
+                'previous_school_info', 'academic_achievements', 'parent_names', 'parent_occupation', 'special_needs'
+            ];
 
-        <h2>Special Needs</h2>
-        <label for="special_needs"maxlength="100">Special Needs:</label>
-        {{ form.special_needs(placeholder='Specify any special needs') }}
-        <br>
-        <button type="submit">Enroll</button>
-    </form>
-</body>
-<script>
+            inputsToLimit.forEach(function(inputId) {
+                var inputElement = document.getElementById(inputId);
+                if (inputElement) {
+                    limitCharacterInput(inputElement, 50);
+                }
+            });
+
+            var dateOfBirthInput = document.getElementById('date_of_birth');
+            if (dateOfBirthInput) {
+                limitCharacterInput(dateOfBirthInput, 10);
+            }
+
+            contactNumberInputs.forEach(function(input) {
+                limitCharacterInput(input, 11);
+            });
+
+            if (guardianContactInput) {
+                limitCharacterInput(guardianContactInput, 11);
+            }
+        });
+
+        // Form submission event
+        document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                return;
+            }
+
+            var formData = new FormData(this);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', this.action, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var modal = document.getElementById('myModal');
+                    modal.style.display = 'block';
+                } else {
+                    console.error('Form submission failed with status: ' + xhr.status);
+                }
+            };
+            xhr.onerror = function() {
+                console.error('Form submission failed.');
+            };
+            xhr.send(formData);
+
+            event.preventDefault();
+        });
+
+        // Close modal event
+        document.getElementById('exitButton').addEventListener('click', function() {
+            var modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        });
+
+        // Email validation
+        document.getElementById('email').addEventListener('input', function(event) {
+            var email = this.value;
+            var isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+            if (!isValidEmail) {
+                this.setCustomValidity('Please enter a valid email address.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+        // Function to restrict character input and limit length
+        function restrictAndLimitInput(inputElement, maxLength) {
+            inputElement.addEventListener('input', function(event) {
+                // Remove non-alphabetic characters
+                var sanitizedValue = this.value.replace(/[^a-zA-Z\s]/g, '');
+
+                // Limit length
+                if (sanitizedValue.length > maxLength) {
+                    sanitizedValue = sanitizedValue.slice(0, maxLength);
+                }
+
+                this.value = sanitizedValue;
+            });
+        }
+
+        // Get the name input element
+        var nameInput = document.getElementById('name');
+        if (nameInput) {
+            restrictAndLimitInput(nameInput, 50);
+        }
+    });
     document.addEventListener('DOMContentLoaded', function() {
+        // Function to restrict character input and limit length
+        function restrictAndLimitInput(inputElement, maxLength) {
+            inputElement.addEventListener('input', function(event) {
+                // Limit length
+                if (this.value.length > maxLength) {
+                    this.value = this.value.slice(0, maxLength);
+                }
+            });
+        }
+
+        // Get the name input element
+        var nameInput = document.getElementById('name');
+        if (nameInput) {
+            restrictAndLimitInput(nameInput, 50);
+        }
+
+        // Get the email input element
+        var emailInput = document.getElementById('email');
+        if (emailInput) {
+            restrictAndLimitInput(emailInput, 50);
+        }
+    });
+        // Disable autocomplete for name input
+        var nameInput = document.getElementById('name');
+        nameInput.setAttribute('autocomplete', 'off');
+        document.addEventListener('DOMContentLoaded', function() {
+        // Function to limit character input
+        function limitCharacterInput(inputElement, maxLength) {
+            inputElement.addEventListener('input', function(event) {
+                // Limit length
+                if (this.value.length > maxLength) {
+                    this.value = this.value.slice(0, maxLength);
+                }
+            });
+        }
+
+        // Get the address input element
+        var addressInput = document.getElementById('address');
+        if (addressInput) {
+            limitCharacterInput(addressInput, 70);
+        }
+    });
+ 
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the contact number input element
+        var contactNumberInput = document.getElementById('contact_number');
+        var nextInput = document.getElementById('date_of_birth');
+
+        if (contactNumberInput && nextInput) {
+            contactNumberInput.addEventListener('input', function() {
+                var value = this.value.trim(); // Remove leading and trailing whitespace
+
+                if (value.length === 11) {
+                    // Enable the next input field
+                    nextInput.removeAttribute('disabled');
+                    nextInput.setCustomValidity('');
+                } else {
+                    // Disable the next input field
+                    nextInput.setAttribute('disabled', 'disabled');
+                    nextInput.setCustomValidity('Please enter 11 numbers for the contact number before proceeding.');
+                }
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the date of birth input element
+        var dateOfBirthInput = document.getElementById('date_of_birth');
+        
+        if (dateOfBirthInput) {
+            dateOfBirthInput.addEventListener('input', function() {
+                var value = this.value.trim(); // Remove leading and trailing whitespace
+                
+                if (value.length > 10) {
+                    // If the length exceeds 8 characters, truncate the value
+                    this.value = value.slice(0, 10);
+                }
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the place of birth input element
+        var placeOfBirthInput = document.getElementById('place_of_birth');
+        
+        if (placeOfBirthInput) {
+            placeOfBirthInput.addEventListener('input', function() {
+                // Remove any digits from the input value
+                this.value = this.value.replace(/[0-9]/g, '');
+
+                // Limit the input to 50 characters
+                if (this.value.length > 50) {
+                    // If the length exceeds 50 characters, truncate the input value
+                    this.value = this.value.slice(0, 50);
+                }
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the religion input element
+        var religionInput = document.getElementById('religion');
+        
+        if (religionInput) {
+            religionInput.addEventListener('input', function() {
+                // Limit the input to 50 characters and disallow numbers
+                var sanitizedValue = this.value.replace(/\d/g, ''); // Remove numbers
+                if (sanitizedValue.length > 50) {
+                    // If the length exceeds 50 characters, truncate the input value
+                    sanitizedValue = sanitizedValue.slice(0, 50);
+                }
+                // Update the input value
+                this.value = sanitizedValue;
+            });
+        }
+
+        // Get the nationality input element
+        var nationalityInput = document.getElementById('nationality');
+        
+        if (nationalityInput) {
+            nationalityInput.addEventListener('input', function() {
+                // Limit the input to 50 characters and disallow numbers
+                var sanitizedValue = this.value.replace(/\d/g, ''); // Remove numbers
+                if (sanitizedValue.length > 50) {
+                    // If the length exceeds 50 characters, truncate the input value
+                    sanitizedValue = sanitizedValue.slice(0, 50);
+                }
+                // Update the input value
+                this.value = sanitizedValue;
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the previous school info input element
+        var previousSchoolInput = document.getElementById('previous_school_info');
+        
+        if (previousSchoolInput) {
+            previousSchoolInput.addEventListener('input', function() {
+                // Limit the input to 50 characters
+                var sanitizedValue = this.value;
+                if (sanitizedValue.length > 50) {
+                    // If the length exceeds 50 characters, truncate the input value
+                    sanitizedValue = sanitizedValue.slice(0, 50);
+                }
+                // Update the input value
+                this.value = sanitizedValue;
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the grade last completed input element
+        var gradeLastCompletedInput = document.getElementById('grade_last_completed');
+        
+        if (gradeLastCompletedInput) {
+            gradeLastCompletedInput.addEventListener('input', function() {
+                // Remove any non-numeric characters
+                var sanitizedValue = this.value.replace(/\D/g, '');
+                
+                // Limit the input to 3 characters
+                if (sanitizedValue.length > 3) {
+                    // If the length exceeds 3 characters, truncate the input value
+                    sanitizedValue = sanitizedValue.slice(0, 3);
+                }
+                
+                // Update the input value
+                this.value = sanitizedValue;
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the academic achievements input element
+        var academicAchievementsInput = document.getElementById('academic_achievements');
+        
+        if (academicAchievementsInput) {
+            academicAchievementsInput.addEventListener('input', function() {
+                // Limit the input to 100 characters
+                if (this.value.length > 100) {
+                    // If the length exceeds 100 characters, truncate the input value
+                    this.value = this.value.slice(0, 100);
+                }
+            });
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the input elements for guardian name, guardian occupation, and special needs
+        var guardianNameInput = document.getElementById('parent_names');
+        var guardianOccupationInput = document.getElementById('parent_occupation');
+        var specialNeedsInput = document.getElementById('special_needs');
+
+        // Function to limit input length and restrict numbers
+        function limitAndRestrictInput(inputElement, maxLength) {
+            if (inputElement) {
+                inputElement.addEventListener('input', function() {
+                    // Remove any numbers from the input value
+                    this.value = this.value.replace(/[0-9]/g, '');
+                    
+                    // Limit the input to maxLength characters
+                    if (this.value.length > maxLength) {
+                        // If the length exceeds maxLength characters, truncate the input value
+                        this.value = this.value.slice(0, maxLength);
+                    }
+                });
+            }
+        }
+
+        // Apply limit and restriction to guardian name input
+        limitAndRestrictInput(guardianNameInput, 50);
+
+        // Apply limit and restriction to guardian occupation input
+        limitAndRestrictInput(guardianOccupationInput, 50);
+
+        // Apply limit and restriction to special needs input
+        limitAndRestrictInput(specialNeedsInput, 100);
+    });
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Modal functionality
         var noteModal = document.getElementById('noteModal');
         noteModal.style.display = 'block';
 
@@ -262,119 +668,38 @@
         noteExitButton.addEventListener('click', function() {
             noteModal.style.display = 'none';
         });
-    });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var dateOfBirthInput = document.getElementById('date_of_birth');
-        dateOfBirthInput.addEventListener('input', function() {
-            var value = this.value;
-            var sanitizedValue = value.replace(/\D/g, ''); // Remove non-numeric characters
+        // Form submission event
+        document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
 
-            if (sanitizedValue.length > 4) {
-                sanitizedValue = sanitizedValue.slice(0, 4) + '-' + sanitizedValue.slice(4);
-            }
-            if (sanitizedValue.length > 7) {
-                sanitizedValue = sanitizedValue.slice(0, 7) + '-' + sanitizedValue.slice(7);
-            }
+            // Perform form validation here if needed
 
-            this.value = sanitizedValue;
+            // Show the submission modal
+            var modal = document.getElementById('myModal');
+            modal.style.display = 'block';
         });
-    });
 
-  document.addEventListener('DOMContentLoaded', function() {
-    var contactNumberInputs = document.querySelectorAll('input[name="contact_number"]');
-    var guardianContactInput = document.getElementById('parent_contact_info');
-
-    // Function to remove non-numeric characters from input value
-    function restrictToNumbers(input) {
-        input.value = input.value.replace(/\D/g, '');
-    }
-
-    // Add event listeners to all contact number inputs
-    contactNumberInputs.forEach(function(input) {
-        input.addEventListener('input', function(event) {
-            restrictToNumbers(this);
-
-            // Check if the input length is greater than 11 and truncate if necessary
-            if (this.value.length > 11) {
-                this.value = this.value.slice(0, 11);
-            }
+        // Close modal event
+        document.getElementById('exitButton').addEventListener('click', function() {
+            var modal = document.getElementById('myModal');
+            modal.style.display = 'none';
         });
-    });
 
-    // Add event listener specifically for the guardian contact input
-    guardianContactInput.addEventListener('input', function() {
-        restrictToNumbers(this);
+        // Email validation
+        document.getElementById('email').addEventListener('input', function(event) {
+            var email = this.value;
+            var isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-        // Check if the input length is greater than 11 and truncate if necessary
-        if (this.value.length > 11) {
-            this.value = this.value.slice(0, 11);
-        }
-    });
-});
-
-
-    // Form submission event
-    document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
-        // Check for form validation errors
-        if (!this.checkValidity()) {
-            // If there are validation errors, prevent modal from showing up
-            event.preventDefault();
-            return;
-        }
-
-        // Submit the form using AJAX
-        var formData = new FormData(this);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', this.action, true);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                // Show the modal upon successful form submission
-                var modal = document.getElementById('myModal');
-                modal.style.display = 'block';
+            if (!isValidEmail) {
+                this.setCustomValidity('Please enter a valid email address.');
             } else {
-                // Handle errors if any
-                console.error('Form submission failed with status: ' + xhr.status);
+                this.setCustomValidity('');
             }
-        };
-        xhr.onerror = function() {
-            // Handle errors if any
-            console.error('Form submission failed.');
-        };
-        xhr.send(formData);
-        
-        // Prevent the default form submission behavior
-        event.preventDefault();
+        });
     });
+    </script>
 
-    // Close modal event
-    document.getElementById('exitButton').addEventListener('click', function() {
-        var modal = document.getElementById('myModal');
-        modal.style.display = 'none';
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-    var emailInput = document.getElementById('email');
-
-    emailInput.addEventListener('input', function(event) {
-        var email = this.value;
-        var isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-        if (!isValidEmail) {
-            // If email is invalid, prevent leaving the field
-            this.setCustomValidity('Please enter a valid email address.');
-        } else {
-            // If email is valid, clear any previous error messages
-            this.setCustomValidity('');
-        }
-    });
-});
-   // Get the input element by its ID
-   var nameInput = document.getElementById('name');
-
-// Set the autocomplete attribute to "off"
-nameInput.setAttribute('autocomplete', 'off');
-
-</script>
-
+</body>
 
 </html>

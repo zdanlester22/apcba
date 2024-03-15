@@ -1,344 +1,402 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <title>Enrollment Form</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <title>APCBA Portal V1.0 - Student Portal Management System</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             font-family: Montserrat, sans-serif;
+            background-color: #f8f8f8;
             margin: 0;
             padding: 0;
+            color: #333;
         }
+
         .container {
-            display: flex;
-            height: 100vh; /* Set container to 100% viewport height */
-            overflow-x: hidden; /* Hide horizontal overflow */
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
             position: relative;
-        }
-        .sidebar {
-            position: fixed; /* Fix the position of the sidebar */
-            top: 0; /* Position it at the top */
-            bottom: 0; /* Extend it to the bottom */
-            left: 0; /* Position it at the left */
-            width: 200px;
-            background-color: #374c60;
-            color: #0f0f0f;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            transition: opacity 0.3s ease, width 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
+            overflow: hidden;
         }
 
-        .sidebar-hidden {
-            opacity: 0; /* Hide the sidebar when it's hidden */
-            width: 0; /* Remove the width of the sidebar when hidden */
-            pointer-events: none; /* Disable pointer events when hidden */
-        }
-
-
-        .content {
-            flex: 1;
-            padding: 20px;
-            transition: margin-left 0.3s ease;
-            margin-left: 300px; /* Adjust the initial margin-left to accommodate the sidebar */
-        }
-        .logo {
-            margin-bottom: 20px;
-            display: flex;
-        }
-
-        .logo h2 {
-            color: #fff;
+        h1 {
+            font-size: 36px;
+            color: #333;
             text-align: center;
-            margin-top: 10px;
-            font-size: 20px;
-            font-weight: bold;
+            margin-bottom: 30px;
         }
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+
+        h2 {
+            font-size: 24px;
+            color: #555;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
         }
-        .link i {
-    margin-right: 10px;
-    margin-left: 10px; /* Adjust this value as needed */
-}
 
-        .links a {
-    display: flex;
-    align-items: center;
-    text-align: left;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 0;
-    margin-bottom: -7px;
-    font-size: .9rem;
-    font-weight: 600;
-    transition:  color 0.3s ease;
-}
-.links a:hover,
-.links a:hover i {
-    background-color: #fff; /* Change background color on hover */
-    color: #222; /* Change text color on hover */
-    border-radius: 10px;
-}
-.links a:hover i {
-    color: #374c60;
-}
-
-        .link {
-            cursor: pointer;
-            margin-bottom: 10px;
+        form {
             text-align: left;
-            font-size: .9rem;
+            margin-top: 20px;
         }
-        .toggle-btn {
-            color: #111;
+
+        label {
+            font-size: 18px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input,
+        select,
+        textarea {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            color: #333;
+            font-family: Montserrat, sans-serif;
+        }
+
+        button[type="submit"] {
+            background-color: #ff6b6b;
+            color: #fff;
             border: none;
-            padding: 20px;
+            padding: 15px 30px;
+            font-size: 20px;
             cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #ff4949;
+        }
+
+        .required {
+            color: red;
+        }
+
+        .note {
+            font-style: italic;
+            margin-top: 10px;
+            color: #777;
+            text-align: center;
+        }
+
+        /* Fancy styles for back button */
+        .back-button {
             position: absolute;
             top: 20px;
-            right: 25px; 
-            z-index: 2;
+            left: 20px;
+            z-index: 1000;
             background-color: #fff;
-        }
-        .content {
-            flex: 1;
-            padding: 30px;
-            transition: margin-left 0.3s ease; /* Add transition for smooth content movement */
-            margin-right: 60px;
-        }
-        .Name {
-            margin-bottom: 20px;
+            padding: 10px 20px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
             font-size: 24px;
             color: #333;
         }
-        .bot {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+
+        .back-button:hover {
+            transform: scale(1.1);
         }
-     
-   
-     
-        #title-char-count {
-            font-size: 12px;
-            display: flex;
-            justify-content: end;
-            margin-right: 25px;
-        }
-    
-        h3 {
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 570px;
+
+        /* Fancy styles for modal */
+        .modal {
+            display: none;
             position: fixed;
-            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.3);
-            background-color: #374c60;
-            padding: 10px;
-            color: #fff;
-            max-width: 180px;
-            width: 100%;
-        }
-        .shadow {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    max-width: 1400px;
-}
-        h4{
-            margin-left: 20px;
-        }
-        .sidebar a{
-            text-decoration: none;
-            color: #fff;
-        }
-        .user-info {
-    margin-top: auto; /* Push user info to the bottom of the sidebar */
-}
-
-.user-info a {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
-    text-decoration: none;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
-    max-width: 150px;
-    width: 100%;
-}
-
-.user-info a:hover {
-    background-color: #fff; /* Change background color on hover */
-    color: #222; /* Change text color on hover */
-}
-
-.user-info span {
-    margin-right: 10px; /* Add space between username and icon */
-}
-
-.user-info div {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
-}
-
-.flash {
-            position: absolute;
-            right: 0;
+            z-index: 1000;
+            left: 0;
             top: 0;
-            margin-top: 100px;
-            margin-right: 25px;
-            z-index: 10;
-            background-color: #374c60;
-            color: #fff;
-            border: 2px solid #374c60;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-        .flash li{
-            list-style: none;
-            text-align: center;
-            margin-right: 25px;
-        }
-        .fade-in {
-            /* CSS class to fade in flash messages */
-            opacity: 1 !important; /* Override opacity to 1 */
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content i {
+            color: #ff9800;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .exit-button {
+            background-color: #ff9800;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .exit-button:hover {
+            background-color: #f57c00;
+        }
     </style>
 </head>
+
 <body>
-    <div class="flash">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+    <a class="back-button" href="{{ url_for('websiteenroll') }}"><i class="fas fa-arrow-left"></i></a>
+    <div id="noteModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-info-circle"></i>
+            <h2>The form will only accept real information. Please fill it up carefully.</h2>
+            <button class="exit-button" id="noteExitButton">Got it</button>
+        </div>
     </div>
     <div class="container">
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <span class="material-icons">menu</span>
-        </button>
-        <div class="sidebar">
-            <div class="logo">
-                <h2>APCBA PORTAL V1.0</h2>
+        <h1>Enrollment Form</h1>
+        <p class="note">(Note: College and SHS)</p>
+        <form id="enrollmentForm" method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div>
+                <label for="name">Your Name <span class="required">*</span></label>
+                {{ form.name(placeholder='Enter your full name') }}
             </div>
-            <div class="links">
-                <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-                <a href="{{ url_for('student_account') }}" class="link"><i class="material-icons">account_circle</i> Profile</a>
-                <a href="{{ url_for('student_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
-                <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="material-icons">grading</i> View Grades</a>
-                <a href="{{ url_for('view_schedule') }}" class="link"><i class="material-icons">schedule</i> Schedule</a>
-                <a href="{{ url_for('student_change_password') }}" class="link"><i class="material-icons">lock</i> Password</a>
-                
-                
-            </div><br><br>
-            <div class="user-info">
-                <a href="#" id="logout-link">
-                    <span>{{ user.name }}</span> <i class="material-icons">exit_to_app</i>
-                </a>
+            <div>
+                <label for="email">Email Address <span class="required">*</span></label>
+                {{ form.email(placeholder='Enter your email address') }}
             </div>
-        </div>
-        
-        <div class="content">
-            <div class="topnav">
-                <h4 class="Name">Announcements</h4>
+            <div>
+                <label for="level">Level <span class="required">*</span></label>
+                {{ form.level(placeholder='Enter your academic level') }}
             </div>
-            <main>
-                <h1 class="main">Schedule</h1>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Day of Week</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Subject</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for schedule in schedules %}
-                            <tr>
-                                <td>{{ schedule.id }}</td>
-                                <td>{{ schedule.day_of_week }}</td>
-                                <td>{{ schedule.start_time }}</td>
-                                <td>{{ schedule.end_time }}</td>
-                                <td>{{ schedule.subject.title }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </main>
-        </div>
+            <div>
+                <label for="year">Year <span class="required">*</span></label>
+                {{ form.year(placeholder='Enter your academic year') }}
+            </div>
+            <div>
+                <label for="address">Address <span class="required">*</span></label>
+                {{ form.address(placeholder='Enter your address') }}
+            </div>
+            <div>
+                <label for="contact_number">Contact Number <span class="required">*</span></label>
+                {{ form.contact_number(placeholder='Enter your contact number') }}
+            </div>
+            <div>
+                <label for="date_of_birth">Date of Birth <span class="required">*</span></label>
+                <input type="text" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" required>
+            </div>
+            <div>
+                <label for="place_of_birth">Place of Birth <span class="required">*</span></label>
+                {{ form.place_of_birth(placeholder='Enter your place of birth') }}
+            </div>
+            <div>
+                <label for="gender">Gender <span class="required">*</span></label>
+                {{ form.gender(placeholder='Enter your gender') }}
+            </div>
+            <div>
+                <label for="nationality">Nationality</label>
+                {{ form.nationality(placeholder='Enter your nationality') }}
+            </div>
+            <div>
+                <label for="religion">Religion</label>
+                {{ form.religion(placeholder='Enter your religion') }}
+            </div>
+
+            <h2>Education Information</h2>
+            <div>
+                <label for="previous_school_info">Previous School Info <span class="required">*</span></label>
+                {{ form.previous_school_info(placeholder='Enter your previous school info') }}
+            </div>
+            <div>
+                <label for="grade_last_completed">Grade Last Completed <span class="required">*</span></label>
+                {{ form.grade_last_completed(placeholder='Enter your last completed grade') }}
+            </div>
+            <div>
+                <label for="academic_achievements">Academic Achievements</label>
+                {{ form.academic_achievements(placeholder='Enter your academic achievements') }}
+            </div>
+
+            <h2>Parent/Guardian Information</h2>
+            <div>
+                <label for="parent_names">Guardian Name <span class="required">*</span></label>
+                {{ form.parent_names(placeholder='Enter guardian name') }}
+            </div>
+            <div>
+                <label for="parent_contact_info">Guardian Contact Number <span class="required">*</span></label>
+                <input type="text" id="parent_contact_info" name="parent_contact_info" placeholder='Enter guardian contact number'>
+            </div>
+            <div>
+                <label for="parent_occupation">Guardian Occupation</label>
+                {{ form.parent_occupation(placeholder='Enter guardian occupation') }}
+            </div>
+
+            <h2>Special Needs</h2>
+            <div>
+                <label for="special_needs">Special Needs</label>
+                {{ form.special_needs(placeholder='Specify any special needs, if applicable') }}
+            </div>
+            <button type="submit">Enroll</button>
+        </form>
     </div>
     <script>
-        var originalContentMargin; // Store the original content margin
-    
-        function toggleDropdown(event, id) {
-    event.preventDefault(); // Prevent default behavior of the link click
-    var dropdown = document.getElementById(id);
-    var isDisplayed = dropdown.style.display === "block";
-    // Hide all dropdowns
-    var allDropdowns = document.querySelectorAll('.sub-links');
-    allDropdowns.forEach(function(dropdown) {
-        dropdown.style.display = 'none';
-    });
-    // Display the clicked dropdown if it wasn't already displayed
-    if (!isDisplayed) {
-        dropdown.style.display = 'block';
-    } else {
-        dropdown.style.display = 'none'; // Hide the dropdown if already displayed
-    }
-}
+        // JavaScript for modal functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            var noteModal = document.getElementById('noteModal');
+            noteModal.style.display = 'block';
 
-    
-        function toggleSidebar() {
-            var sidebar = document.querySelector('.sidebar');
-            sidebar.classList.toggle('sidebar-hidden');
-    
-            // Toggle content margin based on sidebar visibility
-            var content = document.querySelector('.content');
-            if (!originalContentMargin) {
-                originalContentMargin = getComputedStyle(content).marginLeft;
-            }
-            content.style.marginLeft = (sidebar.classList.contains('sidebar-hidden')) ? '0' : originalContentMargin;
-        }
-    
-        document.addEventListener("DOMContentLoaded", function () {
-            // Select the flash div
-            var flashDiv = document.querySelector(".flash");
-
-            // Function to add fade-in class
-            function fadeInFlash() {
-                flashDiv.classList.add("fade-in");
-            }
-
-            // Function to remove fade-in class after 3 seconds
-            function fadeOutFlash() {
-                setTimeout(function () {
-                    flashDiv.classList.remove("fade-in");
-                }, 5000); // 3 seconds delay
-            }
-
-            // Call the functions
-            fadeInFlash();
-            fadeOutFlash();
+            var noteExitButton = document.getElementById('noteExitButton');
+            noteExitButton.addEventListener('click', function () {
+                noteModal.style.display = 'none';
+            });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        var noteModal = document.getElementById('noteModal');
+        noteModal.style.display = 'block';
+
+        var noteExitButton = document.getElementById('noteExitButton');
+        noteExitButton.addEventListener('click', function() {
+            noteModal.style.display = 'none';
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var dateOfBirthInput = document.getElementById('date_of_birth');
+        dateOfBirthInput.addEventListener('input', function() {
+            var value = this.value;
+            var sanitizedValue = value.replace(/\D/g, ''); // Remove non-numeric characters
+
+            if (sanitizedValue.length > 4) {
+                sanitizedValue = sanitizedValue.slice(0, 4) + '-' + sanitizedValue.slice(4);
+            }
+            if (sanitizedValue.length > 7) {
+                sanitizedValue = sanitizedValue.slice(0, 7) + '-' + sanitizedValue.slice(7);
+            }
+
+            this.value = sanitizedValue;
+        });
+    });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var contactNumberInputs = document.querySelectorAll('input[name="contact_number"]');
+    var guardianContactInput = document.getElementById('parent_contact_info');
+
+    // Function to remove non-numeric characters from input value
+    function restrictToNumbers(input) {
+        input.value = input.value.replace(/\D/g, '');
+    }
+
+    // Add event listeners to all contact number inputs
+    contactNumberInputs.forEach(function(input) {
+        input.addEventListener('input', function(event) {
+            restrictToNumbers(this);
+
+            // Check if the input length is greater than 11 and truncate if necessary
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
+        });
+    });
+
+    // Add event listener specifically for the guardian contact input
+    guardianContactInput.addEventListener('input', function() {
+        restrictToNumbers(this);
+
+        // Check if the input length is greater than 11 and truncate if necessary
+        if (this.value.length > 11) {
+            this.value = this.value.slice(0, 11);
+        }
+    });
+});
+
+
+    // Form submission event
+    document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
+        // Check for form validation errors
+        if (!this.checkValidity()) {
+            // If there are validation errors, prevent modal from showing up
+            event.preventDefault();
+            return;
+        }
+
+        // Submit the form using AJAX
+        var formData = new FormData(this);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', this.action, true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Show the modal upon successful form submission
+                var modal = document.getElementById('myModal');
+                modal.style.display = 'block';
+            } else {
+                // Handle errors if any
+                console.error('Form submission failed with status: ' + xhr.status);
+            }
+        };
+        xhr.onerror = function() {
+            // Handle errors if any
+            console.error('Form submission failed.');
+        };
+        xhr.send(formData);
+        
+        // Prevent the default form submission behavior
+        event.preventDefault();
+    });
+
+    // Close modal event
+    document.getElementById('exitButton').addEventListener('click', function() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = 'none';
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+    var emailInput = document.getElementById('email');
+
+    emailInput.addEventListener('input', function(event) {
+        var email = this.value;
+        var isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+        if (!isValidEmail) {
+            // If email is invalid, prevent leaving the field
+            this.setCustomValidity('Please enter a valid email address.');
+        } else {
+            // If email is valid, clear any previous error messages
+            this.setCustomValidity('');
+        }
+    });
+});
+   // Get the input element by its ID
+   var nameInput = document.getElementById('name');
+
+// Set the autocomplete attribute to "off"
+nameInput.setAttribute('autocomplete', 'off');
     </script>
-    
 </body>
+
 </html>
