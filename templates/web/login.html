@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <title>Login - Asia Pacific College of Business and Arts</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         body {
             font-family: Montserrat, sans-serif;
@@ -23,7 +24,7 @@
 
         h1 {
             margin: 0;
-            font-size: 1.7em;
+            font-size: 1.4em;
             font-weight: 800;
         }
 
@@ -33,7 +34,7 @@
             color: #333; /* Dark text color */
             padding: 35px;
             border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             width: 100%; /* Occupy 100% of the screen */
             text-align: center;
             margin-top: 10px;
@@ -104,22 +105,21 @@
             background-color: #374c60;
             color: #fff;
             cursor: pointer;
-            padding: 10px;
+            padding: 9px;
             border: none;
             border-radius: 5px;
             width: 100%; /* Occupy 100% of the width */
             max-width: 200px; /* Maximum width for larger screens */
             font-weight: bold;
-            margin-top: 35px;
+            margin-top: 23px;
         }
-
 
 
         input[type="submit"]:hover {
             background-color: #fff;
             color: #374c60;
             border-radius: 5px;
-            border: 1px solid #374c60;
+            border: 1px solid #c3c2c2;
             transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
 
@@ -135,7 +135,7 @@
         }
 
         img {
-            height: 210px;
+            height: 165px;
             margin-bottom: 5px;
         }
         a{
@@ -151,25 +151,33 @@
            
         }
         .show-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-}
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            }
 
-.show-password img {
-    width: 16px;
-    margin-left: -120px;
-}
+            .show-password img {
+                width: 16px;
+                margin-left: -120px;
+            }
 
-.input-container {
-    position: relative;
-}
+            .input-container {
+                position: relative;
+            }
 
-input[type="password"] {
-    padding-right: 40px; /* Adjusted padding to accommodate the icon */
-}
+            input[type="password"] {
+                padding-right: 40px; /* Adjusted padding to accommodate the icon */
+            }
+            .recaptcha-checkbox-checked .recaptcha-checkbox-checkmark {
+            cursor: pointer;
+            background-position: 0 -600px;
+            }
+            .rc-anchor {
+                border-radius: 10px;
+            }
+
     </style>
 </head>
 
@@ -203,6 +211,7 @@ input[type="password"] {
             </div>
         </div>
         {{ form.submit() }}
+        <div class="g-recaptcha" style="margin-top: 15px; margin-left: 49px; border-radius: 10px;" data-sitekey="6Lf1m5opAAAAACuFrI-andY3rMJNXKa9koczy2Oa"></div>
     </form>
     <script>
          document.addEventListener("DOMContentLoaded", function () {

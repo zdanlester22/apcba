@@ -8,6 +8,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
 import os
+import requests
 from flask_mail import Mail, Message
 
 #'mysql+mysqlconnector://root:@localhost/apcba'
@@ -353,6 +354,17 @@ def delete_student(student_id):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if request.method == 'POST':
+        recaptcha_response = request.form['g-recaptcha-response']
+        secret_key = '6Lf1m5opAAAAAMaNWiL23B60OadpYrBWyGC0owzd'
+        payload = {'response': recaptcha_response, 'secret': secret_key}
+        response = requests.post('https://www.google.com/recaptcha/api/siteverify', payload)
+        result = response.json()
+        
+        if not result['success']:
+            flash('CAPTCHA validation failed.', 'error')
+            return render_template('web/login.html', form=form)
+
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
@@ -365,6 +377,7 @@ def login():
         else:
             flash('Invalid email or password.', 'error')
     return render_template('web/login.html', form=form)
+
 
     
 @app.route('/logout')
