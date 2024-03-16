@@ -56,7 +56,7 @@
             transform: translate(-50%, -50%);
             background-color: #fff;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             border-radius: 5px;
             z-index: 1000;
         }
@@ -99,6 +99,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             margin-top: 5px;
+            font-family: Montserrat, sans-serif;
         }
 
         .form-check-input {
@@ -124,7 +125,7 @@
 
         table {
             width: 100%;
-            max-width: 800px;
+            max-width: 1000px;
             margin: 20px auto;
             border-collapse: collapse;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
@@ -194,6 +195,10 @@
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
+        .select-wrapper .select2-selection__rendered {
+    display: none;
+}
+
     </style>
 </head>
 <body>
@@ -250,25 +255,35 @@
         <!-- Select2 for student_id -->
         <div class="form-group">
           <label for="{{ form.student_id.id }}">{{ form.student_id.label }}</label>
-          {{ form.student_id(class="form-control select2") }}
-        </div>
+          <div class="select-wrapper">
+              {{ form.student_id(class="form-control select2") }}
+          </div>
+      </div>
   
         <!-- Select2 for course_id -->
         <div class="form-group">
           <label for="{{ form.course_id.id }}">{{ form.course_id.label }}</label>
-          {{ form.course_id(class="form-control select2") }}
-        </div>
-        <div class="form-group">
-            <label for="{{ form.year.id }}">{{ form.year.label }}</label>
+          <div class="select-wrapper">
+              {{ form.course_id(class="form-control select2") }}
+          </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="{{ form.year.id }}">{{ form.year.label }}</label>
+        <div class="select-wrapper">
             {{ form.year(class="form-control select2") }}
         </div>
+    </div>
+    
   
         <!-- Select2 for section_id -->
         <div class="form-group">
           <label for="{{ form.section_id.id }}">{{ form.section_id.label }}</label>
-          {{ form.section_id(class="form-control select2") }}
-        </div>
-  
+          <div class="select-wrapper">
+              {{ form.section_id(class="form-control select2") }}
+          </div>
+      </div>
+      
         <div class="form-group">
           <label for="{{ form.is_approved.id }}">{{ form.is_approved.label }}</label>
           {{ form.is_approved(class="form-check-input") }}

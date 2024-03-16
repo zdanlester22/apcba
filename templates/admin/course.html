@@ -120,9 +120,9 @@
             color: #374c60;
             border: 1px solid #374c60;
         }
-        button[type="submit"]{
-            width: 95px;
-        }
+        button[type="submit"] {
+                width: 101px;
+            }
         button[type="button"]:hover {
             background-color: #fff;
             color: #374c60;
@@ -281,12 +281,13 @@ select {
         /* CSS for table cells */
         table{
             border-collapse: collapse;
+            width: 90%;
         }
         th,
         td {
-            border: 1px solid#374c60; /* Add borders to table cells */
-            padding: 10px; /* Add padding to cells */
-            text-align: center; /* Center-align text inside cells */
+            border: 1px solid#ccc; /* Add borders to table cells */
+            padding: 6px; /* Add padding to cells */
+            text-align: left; /* Center-align text inside cells */
             vertical-align: middle; /* Align content vertically */
         }
 
@@ -300,10 +301,6 @@ select {
             width: 100px; /* Set a fixed width for the buttons */
             text-align: center; /* Center-align the text inside buttons */
         }
-
-        th, td {
-    border: 1px solid #c8cdd2;
-}
         /* Ensure consistency in button styles */
         .add-subject-btn,
         .btn-primary {
@@ -500,6 +497,18 @@ h4 {
     display: block;
     font-size: 23px;
 }
+
+.add-subject-btn, .btn-primary {
+    background-color: #374c60;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 12px;
+    display: inline-block;
+}
 </style>
 </head>
 <body>
@@ -579,8 +588,6 @@ h4 {
                     </span>
                     {{ course.title }}
                 </td>
-                
-                
                 <td>{{ course.abbreviation }}</td>
                 <td>{{ course.school_year }}</td>
                 <td>{{ course.year }}</td>
@@ -630,10 +637,22 @@ h4 {
                         {{ form_course.course_type.label }} {{ form_course.course_type() }}
                     </div>
                     <div>
-                        {{ form_course.abbreviation.label }} {{ form_course.abbreviation() }}
+                        <p><strong>{{ form_course.abbreviation.label }}</strong></p>
+                        {{ form_course.abbreviation(class="form-control", maxlength="10", oninput="limitInputLength(this, 10, 'charCount')") }}
+                        {% if form_course.abbreviation.data is not none %}
+                            <span id="charCount">{{ form_course.abbreviation.data|length }}/10</span>
+                        {% else %}
+                        {% endif %}
                     </div>
                     <div>
-                        {{ form_course.title.label }} {{ form_course.title() }}
+                        <p><strong>{{ form_course.title.label }}</strong></p>
+                        {{ form_course.title(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'charCountTitle')") }}
+                        
+                        {% if form_course.title.data is not none %}
+                            <span id="charCountTitle">{{ form_course.title.data|length }}/30</span>
+                        {% else %}
+                        {% endif %}
+                        
                     </div>
                     <div>
                         {{ form_course.year.label }} {{ form_course.year() }}
@@ -674,15 +693,80 @@ h4 {
         <form method="POST" action="{{ url_for('course') }}">
             <h2 style="text-align: center; margin-right: 20px;">Add Subject</h2>
             {{ form_subject.hidden_tag() }}
-            {{ form_subject.abbreviation.label }} {{ form_subject.abbreviation() }}<br>
-            {{ form_subject.title.label }} {{ form_subject.title() }}<br>
-            {{ form_subject.unit.label }} {{ form_subject.unit() }}<br>
+            {{ form_subject.abbreviation.label }}
+            {{ form_subject.abbreviation(class="form-control", maxlength="10", oninput="updateCharCount(this, 'charCount')") }}<br>
+            {{ form_subject.title.label }}
+            {{ form_subject.title(class="form-control", maxlength="30", oninput="updateCharCount(this, 'titleCharCount')") }}<br>
+            {{ form_subject.unit.label }}
+            {{ form_subject.unit(class="form-control", maxlength="1", oninput="updateCharCount(this, 'unitCharCount')") }}<br>
             <input type="hidden" name="course_id" id="subject-course-id" value="">
             <input type="submit" value="Add">
         </form>
     </div>
     
     <script>
+            function updateCharCount(inputField, charCountElementId) {
+        var charCountElement = document.getElementById(charCountElementId);
+        var currentLength = inputField.value.length;
+        var maxLength = parseInt(inputField.getAttribute('maxlength'));
+
+        if (currentLength > maxLength || isNaN(inputField.value)) {
+            // If more than one character or not a number, trim input to one character
+            inputField.value = inputField.value.charAt(0);
+            currentLength = 1; // Update current length
+        }
+        
+        // Update character count display
+        charCountElement.textContent = currentLength + "/" + maxLength;
+    }
+            function updateCharCount(inputField, charCountElementId) {
+        var charCountElement = document.getElementById(charCountElementId);
+        var currentLength = inputField.value.length;
+        var maxLength = parseInt(inputField.getAttribute('maxlength'));
+
+        if (currentLength > maxLength) {
+            inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
+            currentLength = maxLength; // Update current length
+        }
+        
+        // Update character count display
+        charCountElement.textContent = currentLength + "/" + maxLength;
+    }
+          function updateCharCount(inputField, charCountElementId) {
+        var charCountElement = document.getElementById(charCountElementId);
+        var currentLength = inputField.value.length;
+        var maxLength = parseInt(inputField.getAttribute('maxlength'));
+
+        if (currentLength > maxLength) {
+            inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
+            currentLength = maxLength; // Update current length
+        }
+        
+        // Update character count display
+        charCountElement.textContent = currentLength + "/" + maxLength;
+    }
+            function limitInputLength(inputField, maxLength, charCountElementId) {
+        var charCountElement = document.getElementById(charCountElementId);
+        var currentLength = inputField.value.length;
+        
+        if (currentLength > maxLength) {
+            inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
+        }
+        
+        // Update character count display
+        charCountElement.textContent = currentLength + "/" + maxLength;
+    }
+         function limitInputLength(inputField, maxLength, charCountElementId) {
+        var charCountElement = document.getElementById(charCountElementId);
+        var currentLength = inputField.value.length;
+        
+        if (currentLength > maxLength) {
+            inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
+        }
+        
+        // Update character count display
+        charCountElement.textContent = currentLength + "/" + maxLength;
+    }
         function toggleSubjects(courseId) {
             var subjectRows = document.querySelectorAll('.subject-row.subject-course-' + courseId);
             subjectRows.forEach(function (row) {
@@ -727,15 +811,15 @@ function toggleSidebar() {
             form.style.width = 'calc(100% - 300px)';
             table.style.width = 'calc(100% - 300px)';
             form.style.marginLeft = '300px';
-            table.style.width = '90%';
+            table.style.width = '98%';
             th.style.padding = '5px';
             td.style.padding = '5px';
         } else {
             // Hide the sidebar
             sidebar.style.display = 'none';
-            form.style.marginLeft = '0';
-            form.style.width = '95%';
-            table.style.marginLeft = '0';
+            form.style.marginLeft = '2.5%';
+            form.style.width = '98%';
+            table.style.marginLeft = '1%';
             table.style.width = '98%';
         }
     }

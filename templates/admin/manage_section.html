@@ -23,6 +23,7 @@
             padding: 10px;
             border-radius: 5px;
             border: none ;
+            font-family: Montserrat, sans-serif;
 
         }
         .btn-primary:hover{
@@ -185,6 +186,15 @@ h2 {
     margin-top: -50px;
     font-size: 26px;
 }
+.char-count {
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
+    #capacity-char-count{
+        margin-right: 0;
+    }
     </style>
 </head>
 <body>
@@ -237,7 +247,8 @@ h2 {
             {{ form_section.hidden_tag() }}
             <div class="form-group">
                 <label for="name" class="form-control-label">Section Name</label>
-                {{ form_section.name(class="form-control") }}
+                {{ form_section.name(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'name-char-count')") }}
+                <span class="char-count" id="name-char-count">0/30</span>
             </div>
     
             <div class="form-group">
@@ -247,9 +258,10 @@ h2 {
     
             <div class="form-group custom-form-group">
                 <label for="capacity" class="form-control-label">Capacity</label>
-                {{ form_section.capacity(class="form-control", style="padding: 8px; margin-left:-6px; width: 261px; border-radius: 5px; border: 1px solid #ccc;") }}
+                {{ form_section.capacity(class="form-control", style="padding: 8px; margin-left:-6px; width: 261px; border-radius: 5px; border: 1px solid #ccc;", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
+                <span class="char-count" id="capacity-char-count">0/2</span>
             </div>
-    
+
             <div class="form-group">
                 <label for="course_id" class="form-control-label">Course</label>
                 {{ form_section.course_id(class="form-control") }}
@@ -317,8 +329,21 @@ function confirmLogout(event) {
         window.location.href = logoutUrl; // Redirect to logout URL
     }
 }
-
-
+function limitInputLength(inputField, maxLength, charCountElementId) {
+    var charCountElement = document.getElementById(charCountElementId);
+    if (inputField.value.length > maxLength) {
+        inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
+    }
+    // Update character count display
+    charCountElement.textContent = inputField.value.length + "/" + maxLength;
+}
+function limitInputToNumbers(inputField) {
+    inputField.value = inputField.value.replace(/[^\d]/g, ''); // Remove non-numeric characters
+}
+function closeForm() {
+    var formContainer = document.getElementById('form-container');
+    formContainer.style.display = 'none';
+}
     </script>
 
 </body>

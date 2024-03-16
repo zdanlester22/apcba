@@ -74,7 +74,7 @@
     form {
     font-family: Montserrat, sans-serif;
     margin-top: 20px;
-    display: flex;
+    display: flow;
     flex-direction: column;
     align-items: center;
     background-color: #fff;
@@ -163,6 +163,45 @@ h4{
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
+        #password-char-count {
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
+        #name-char-count {
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
+        #email-char-count {
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
+        input[type="text"],
+input[type="tel"],
+input[type="password"],
+select {
+    width: calc(100% - 20px); /* Set the width to be 100% minus the padding */
+    padding: 9px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+/* Adjust the width of the form container to fit the inputs */
+form {
+    width: 420px; /* Adjust the width as needed */
+    margin: auto; /* Center the form horizontally */
+}
+
+
     </style>
 </head>
 <body>
@@ -213,13 +252,25 @@ h4{
            <form method="post" action="{{ url_for('register') }}" id="registrationForm">
             <h2>Register Users</h2>
             {{ form.csrf_token }}
-        
-            <!-- Adding placeholders to form fields -->
-            {{ form.email.label }} {{ form.email(placeholder="Enter your username") }}
-            {{ form.name.label }} {{ form.name(placeholder="Enter your full name") }}
-            {{ form.password.label }} {{ form.password(placeholder="Enter your password") }}
-            
-            <!-- Adding a default role for the select field -->
+            <div class="form-group">
+                {{ form.email.label }}
+                {{ form.email(placeholder="Enter your email", class="form-control", maxlength="30", required="required", oninput="limitEmailLength(this); validateEmailFormat(this)", style="width: 399px") }}
+                <span class="char-count" id="email-char-count">0/30</span>
+                <span class="error-message" id="email-error-message" style="color: red; font-size: 12px;"></span>
+            </div>
+            <div class="form-group">
+                {{ form.name.label }}
+                {{ form.name(placeholder="Enter your full name", style="width: 398px", class="form-control", maxlength="30", oninput="sanitizeNameInput(this); limitNameLength(this)") }}
+                <span class="char-count" id="name-char-count">0/30</span>
+            </div>
+            <div class="form-group">
+                {{ form.password.label(style="margin-left: 8px;") }}
+                {{ form.password(placeholder="Enter your password", class="form-control", style="width: 398px; margin-left: 0px", maxlength="20", required="required", pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+}{\\'\";:?><,.[\\]\\\/\\-]).{8,20}$", oninput="validatePassword(this); updateCharCount(this)") }}
+                <span class="char-count" id="password-char-count">0/20</span>
+                <span class="error-message" id="password-error-message" style="color: red; font-size: 12px;"></span>
+
+            </div>
+
             {{ form.role.label }} {{ form.role(default="Select a role") }}
         
             <br>
@@ -229,6 +280,52 @@ h4{
 
 {% endblock %}
 <script>
+    function sanitizeNameInput(inputField) {
+    inputField.value = inputField.value.replace(/\d/g, ''); // Remove numeric characters
+}
+
+ function limitNameLength(event) {
+    var inputField = event.target;
+    var charCountElement = document.getElementById("name-char-count");
+    var maxLength = 30;
+    var sanitized = '';
+
+    // Iterate through each character of the input
+    for (var i = 0; i < inputField.value.length; i++) {
+        // Check if the character is alphabetic
+        if (/[a-zA-Z]/.test(inputField.value.charAt(i))) {
+            // Add alphabetic characters to the sanitized string
+            sanitized += inputField.value.charAt(i);
+        }
+    }
+
+    // Update the input field value with the sanitized string
+    inputField.value = sanitized;
+
+    // Update character count display
+    charCountElement.textContent = sanitized.length + "/" + maxLength;
+}
+
+// Add event listener to the name input field
+var nameInput = document.getElementById('name');
+nameInput.addEventListener('input', limitNameLength);
+    function validateEmailFormat(inputField) {
+    var email = inputField.value;
+    var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+        // Display error message
+        document.getElementById('email-error-message').textContent = 'Invalid email format';
+        inputField.setCustomValidity('Invalid email format'); // Set custom validation message
+    } else {
+        // Clear error message
+        document.getElementById('email-error-message').textContent = '';
+        inputField.setCustomValidity(''); // Clear custom validation message
+    }
+}
+    function updateCharCount(inputField) {
+    var charCountElement = document.getElementById("password-char-count");
+    charCountElement.textContent = inputField.value.length + "/20";
+}
     var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
 document.getElementById("logout-link").addEventListener("click", confirmLogout);
 
@@ -277,7 +374,34 @@ function toggleSidebar() {
             fadeInFlash();
             fadeOutFlash();
         });
+     
 
+        function limitEmailLength(inputField) {
+        var maxLength = 30;
+        if (inputField.value.length > maxLength) {
+            inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
+        }
+
+        // Update character count display
+        document.getElementById('email-char-count').textContent = inputField.value.length + "/" + maxLength;
+    }
+
+function limitNameLength(inputField) {
+    var charCountElement = document.getElementById("name-char-count");
+    if (inputField.value.length >= 30) {
+        inputField.value = inputField.value.slice(0, 30); // Trim input to max length
+    }
+    charCountElement.textContent = inputField.value.length + "/30";
+}
+    // Function to validate password complexity
+    // Function to validate password format
+    function validatePassword(inputField) {
+        var password = inputField.value;
+        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+        var isValid = passwordRegex.test(password);
+        inputField.setCustomValidity(isValid ? '' : 'Invalid password format');
+        document.getElementById('password-error-message').textContent = isValid ? '' : 'Password must be 8-20 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character';
+    }
 </script>
 </body>
 </html>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <title>Login - Asia Pacific College of Business and Arts</title>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -177,11 +178,39 @@
             .rc-anchor {
                 border-radius: 10px;
             }
+            .hover-link {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-decoration: none;
+    color: #333;
+    font-size: 90px;
+    transition: transform 0.5s ease; /* Add transition for smooth movement */
+}
 
+.hover-link:hover {
+    animation: hoverAnimation 3s infinite; /* Start the animation on hover */
+}
+
+@keyframes hoverAnimation {
+    0% {
+        transform: translate(350px, 200px);
+    }
+    50% {
+        transform: translate(400px, 100px); /* Move to new position */
+    }
+    100% {
+        transform: translate(500px, 900px); /* Return to original position */
+    }
+}
     </style>
 </head>
 
 <body>
+    <a href="{{ url_for('portaluserlogin') }}" style="position: absolute; top: 10px; left: 10px; text-decoration: none; color: #333; font-size: 24px;" class="hover-link">
+        <i class="material-icons">air</i>
+    </a>
+
     <div class="flash">
         {% with messages = get_flashed_messages() %}
             {% if messages %}

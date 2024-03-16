@@ -14,7 +14,6 @@
  h2 {
     color: #374c60;
     margin-top: 70px;
-    margin-left: 30px;
 }
 
 .formi {
@@ -101,7 +100,7 @@
 }
 
 .mod table {
-    width: 105%;
+    width: 900px;
     border-collapse: collapse;
     padding: 5px;
     border: 1px solid #ccc;
@@ -221,6 +220,12 @@ table a:hover{
         .table{
             width: 80%;
         }
+        #year-char-count{
+            font-size: 12px;
+            display: flex;
+            justify-content: end;
+            margin-right: 25px;
+        }
 
 </style>
 </head>
@@ -280,12 +285,14 @@ table a:hover{
         
                     <div class="form-group">
                         <label for="title">Title</label>
-                        {{ form_module.title(class="form-control", placeholder="Enter Module Title", required="required") }}
+                        {{ form_module.title(class="form-control", placeholder="Enter Module Title", required="required", maxlength="50", oninput="limitInputLength(this, 50, 'title-char-count')") }}
+                        <span class="char-count" id="title-char-count">0/50</span>
                     </div>
-        
+                    
                     <div class="form-group">
                         <label for="year">Year</label>
-                        {{ form_module.year(class="form-control", placeholder="Enter Module Year", required="required") }}
+                        {{ form_module.year(class="form-control", placeholder="Enter Module Year", required="required", maxlength="1", oninput="limitInputLength(this, 1, 'year-char-count')") }}
+                        <span class="char-count" id="year-char-count">0/1</span>
                     </div>
         
                     <div class="form-group">
@@ -321,7 +328,7 @@ table a:hover{
                         <td>{{ module.title }}</td>
                         <td>{{ module.year }}</td>
                         <td>{{ module.course.title }}</td>
-                        <td><a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download PDF</a></td>
+                        <td><a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download</a></td>
                     </tr>
                     {% endfor %}
                     {% endblock %}
@@ -332,6 +339,14 @@ table a:hover{
     </main>
     </div>
     <script>
+        function limitInputLength(inputField, maxLength, charCountElementId) {
+    var charCountElement = document.getElementById(charCountElementId);
+    if (inputField.value.length > maxLength) {
+        inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
+    }
+    // Update character count display
+    charCountElement.textContent = inputField.value.length + "/" + maxLength;
+}
            var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal

@@ -21,7 +21,7 @@
             width: 80%; /* Adjust the width as needed */
             max-width: 600px; /* Set a maximum width if desired */
             margin-top: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
         th, td {
@@ -53,7 +53,7 @@
             border-collapse: collapse;
             width: 100%;
             max-width: 100%; /* Use 100% of the container */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             margin-top: 20px;
             table-layout: fixed; /* Use fixed layout to prevent column width issues */
         }
@@ -111,7 +111,7 @@
             background-color: #fefefe;
             margin: 7%;
             padding: 40px;
-            border: 1px solid #888;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             width: 70%;
             font-size: 1.2rem;
             margin-right: auto;
@@ -211,7 +211,7 @@
             background-color: #fefefe;
             margin: 7%;
             padding: 30px;
-            border: 1px solid #888;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 70%;
             font-size: 1.2rem;
             margin-right: auto;
@@ -247,6 +247,17 @@
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
+        .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 500px;
+    top: 0;
+    width: 500px;
+    height: 100%;
+    overflow: auto;
+    padding-top: 60px;
+}
     </style>
    
 </head>
