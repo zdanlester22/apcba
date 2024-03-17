@@ -3,41 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <title>APCBA Portal V1.0 - Student Portal Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        
+
+        table {
+            border-collapse: collapse;
+            width: 100%; /* Adjust the width as needed */
+            max-width: 1100px; /* Set a maximum width if desired */
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #374c60;
+            color: #fff;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .container{
+            margin-top: 20px;
+          margin-left: 200px;
+        }
+        .con {
+            max-height: 100%;
+            height: max-content;
+            margin-left: 300px;
+            margin-top: 60px;
+        }
+
+        /* Modal styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 20% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be adjusted as needed */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Action button */
+.action-button {
+  padding: 10px 20px;
+  background-color: #374c60;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.action-button:hover {
+  background-color: #45a049;
+}
+
+.flash {
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin-top: 100px;
+            margin-right: 25px;
+            z-index: 10;
+            background-color: #374c60;
+            color: #fff;
+            border: 2px solid #374c60;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .flash li{
+            list-style: none;
+            text-align: center;
+            margin-right: 25px;
+        }
+        .fade-in {
+            /* CSS class to fade in flash messages */
+            opacity: 1 !important; /* Override opacity to 1 */
+        }
+        .module-form form input{
+            height: 30px;
+            width: 300px;
+            margin-left: 40px;
+            border-radius: 7px;
+            border: 1px solid #ccc;
+            font-family: Montserrat, sans-serif;
+        }
+        h1{
+            font-size: 1.6rem;
+        }
+        .fas {
+            font-size: 13px;
+        }
+        
+        .form-group1 input[type="text"] {
+            height: 30px;
+            width: 300px;
+            margin-left: 40px;
+            border-radius: 10px;
+            border: 1px solid #ccc; 
+            font-family: Montserrat, sans-serif;
+        }
+        .module-form input{
+            margin-bottom: 20px;
+        }
+
+
+    </style>
 </head>
 <body>
-    
+    <div class="flash">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="containe">
+        <button class="toggle-btn" onclick="toggleSidebar()">
+            <span class="material-icons">menu</span>
+        </button>
+        <div class="sidebar">
+            <div class="logo">
+                <h2>APCBA PORTAL V1.0</h2>
+            </div>
+            <div class="links">
+              <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
+              <a href="{{ url_for('teacher_account') }}" class="link"><i class="material-icons">account_circle</i> Profile</a>
+              <a href="{{ url_for('teacher_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
+              <a href="{{ url_for('view_students') }}" class="link"><i class="material-icons">people</i> Class</a>
+              <a href="{{ url_for('teacher_change_password') }}" class="link"><i class="material-icons">lock</i> Password</a>
+              
+              
+          </div><br><br>
+            <div class="user-info">
+                <a href="#" id="logout-link">
+                    <span></span> <i class="material-icons">exit_to_app</i>
+                </a>
+            </div>
+        </div>
 
+    <main>
+   
 {% block content %}
-<div class="container">
-    <h1>Class</h1>
-    {% if enrollments %}
-    <table>
-        <thead>
-          <tr>
-            <th>Student Name</th>
-            <th>Course Title</th>
-            <th>Section Name</th>
-            <th>Year</th>
-            <th>Approved</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for enrollment in enrollments %}
-          <tr>
-            <td>{{ enrollment.enrolled_student_rel.name }}</td>
-            <td>{{ enrollment.enrolled_course_rel.title }}</td>
-            <td>{{ enrollment.enrolled_section_rel.name }}</td>
-            <td>{{ enrollment.year }}</td>
-            <td>{{ 'Yes' if enrollment.is_approved else 'No' }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-    <p>No enrollments found.</p>
-    {% endif %}
+<div class="con">
+        <h1>Class</h1>
+        {% if enrollments %}
+        <table>
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Course Title</th>
+                <th>Section Name</th>
+                <th>Year</th>
+                <th>Approved</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for enrollment in enrollments %}
+              <tr>
+                <td>{{ enrollment.enrolled_student_rel.name }}</td>
+                <td>{{ enrollment.enrolled_course_rel.title }}</td>
+                <td>{{ enrollment.enrolled_section_rel.name }}</td>
+                <td>{{ enrollment.year }}</td>
+                <td>{{ 'Yes' if enrollment.is_approved else 'No' }}</td>
+                <td><form action="{{ url_for('student_details', student_id=enrollment.student_id) }}" method="GET">
+                    <button type="submit" class="action-button">
+                        Grades
+                    </button>
+                </form></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+        <p>No enrollments found.</p>
+        {% endif %}
+  
 </div>
 {% endblock %}
+
+
+    </main>
 </body>
+<script>
+  var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
+      document.getElementById("logout-link").addEventListener("click", confirmLogout);
+      
+      function confirmLogout(event) {
+          event.preventDefault(); // Prevent the default link behavior
+          var confirmLogout = confirm("Are you sure you want to logout?");
+          if (confirmLogout) {
+              window.location.href = logoutUrl; // Redirect to logout URL
+          }
+      }
+     
+document.addEventListener("DOMContentLoaded", function () {
+            // Select the flash div
+            var flashDiv = document.querySelector(".flash");
+
+            // Function to add fade-in class
+            function fadeInFlash() {
+                flashDiv.classList.add("fade-in");
+            }
+
+            // Function to remove fade-in class after 3 seconds
+            function fadeOutFlash() {
+                setTimeout(function () {
+                    flashDiv.classList.remove("fade-in");
+                }, 5000); // 3 seconds delay
+            }
+
+            // Call the functions
+            fadeInFlash();
+            fadeOutFlash();
+        });
+      </script>
 </html>

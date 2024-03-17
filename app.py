@@ -294,11 +294,13 @@ def view_students():
     if current_user.role == 'teacher':
         teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
         if teacher:
-            sections = teacher.sections  # Assuming you have a relationship named 'sections' in Teacher model
-            enrollments = []
-            for section in sections:
-                enrollments.extend(section.enrollments)
-            return render_template('teacher/view_class.html', authenticated=True, enrollments=enrollments)
+            section = teacher.section  # Changed 'sections' to 'section'
+            if section:
+                enrollments = section.enrollments
+                return render_template('teacher/view_class.html', authenticated=True, enrollments=enrollments)
+            else:
+                flash('You are not assigned to any section.', 'warning')
+                return redirect(url_for('dashboard'))
         else:
             flash('You are not assigned to any sections.', 'warning')
             return redirect(url_for('dashboard'))
@@ -306,6 +308,19 @@ def view_students():
     elif current_user.role == 'admin':
         enrollments = Enrollment.query.all()  
         return render_template('admin/view_students.html', authenticated=True, enrollments=enrollments)
+    
+@app.route('/student_subjects/<int:student_id>', methods=['GET'])
+@login_required
+def student_subjects(student_id):
+    enrolled_subjects = {}
+
+    # Fetch enrolled subjects for the specified student
+    existing_enrollments = Enrollment.query.filter_by(student_id=student_id).all()
+    for enrollment in existing_enrollments:
+        section_id = enrollment.section_id
+        enrolled_subjects[student_id] = Subject.query.filter_by(section_id=section_id).all()
+
+    return render_template('teacher/student_subjects.html', enrolled_subjects=enrolled_subjects.get(student_id, []))
 
 
 
@@ -909,54 +924,60 @@ def enroll():
             flash(f'Students enrolled successfully!', 'success')
 
     return render_template('admin/enroll.html', form=form, student_form=student_form, existing_enrollments=existing_enrollments,user_name=user_name)
-###########################################################################################################################################################################################################
-@app.route('/grades/<int:student_id>', methods=['GET', 'POST'])
-@login_required
-def view_grades(student_id):
-    student = Student.query.get_or_404(student_id)
-    subjects = Subject.query.all()
-    grades = Grades.query.all()
 
-    form = GradeForm()
+@app.route('/enrolled_subjects/<int:student_id>', methods=['GET'])
+@login_required
+def enrolled_subjects(student_id):
+    enrolled_subjects = {}
+
+    # Fetch enrolled subjects for the specified student
+    existing_enrollments = Enrollment.query.filter_by(student_id=student_id).all()
+    for enrollment in existing_enrollments:
+        section_id = enrollment.section_id
+        enrolled_subjects[student_id] = Subject.query.filter_by(section_id=section_id).all()
+
+    return render_template('admin/enrolled_subjects.html', enrolled_subjects=enrolled_subjects.get(student_id, []))
+
+###########################################################################################################################################################################################################
+@app.route('/student_details/<int:student_id>', methods=['GET', 'POST'])
+@login_required
+def student_details(student_id):
+    student = Student.query.get_or_404(student_id)
+    enrolled_subjects = {}
+    subjects = Subject.query.all()
+    grades = {}
+
+    # Fetch enrolled subjects for the specified student
+    existing_enrollments = Enrollment.query.filter_by(student_id=student_id).all()
+    for enrollment in existing_enrollments:
+        section_id = enrollment.section_id
+        enrolled_subjects[student_id] = Subject.query.filter_by(section_id=section_id).all()
+
+    # Fetch grades for the specified student
+    student_grades = Grades.query.filter_by(student_id=student_id).all()
+    for grade in student_grades:
+        grades[grade.subject_id] = grade
+
+    return render_template('teacher/student_details.html', student=student, enrolled_subjects=enrolled_subjects.get(student_id, []), grades=grades, subjects=subjects)
+
+@app.route('/grades/<int:student_id>/<int:subject_id>', methods=['GET', 'POST'])
+@login_required
+def manage_grades(student_id, subject_id):
+    grade = Grades.query.filter_by(student_id=student_id, subject_id=subject_id).first_or_404()
 
     if request.method == 'POST':
-        # Create an empty list to store grades
-        grades = []
+        grade.period_1 = request.form['period_1']
+        grade.period_2 = request.form['period_2']
+        grade.period_3 = request.form['period_3']
+        grade.final_grade = request.form['final_grade']
+        grade.is_passed = True if request.form.get('is_passed') == 'on' else False
 
-        for subject in subjects:
-            period_1 = request.form.get(f'period_1_{subject.id}')
-            period_2 = request.form.get(f'period_2_{subject.id}')
-            period_3 = request.form.get(f'period_3_{subject.id}')
-
-
-            # Check form validation for each subject
-            form.period_1.data = period_1
-            form.period_2.data = period_2
-            form.period_3.data = period_3
-
-            if not form.validate():
-                print(f'Validation Errors for Subject {subject.id}: {form.errors}')
-
-            # Create a new grade instance and add it to the list
-            grade = Grades(
-                student_id=student.id,
-                subject_id=subject.id,
-                period_1=period_1,
-                period_2=period_2,
-                period_3=period_3,
-            )
-            grades.append(grade)
-
-        # Add all grades to the session (but don't commit yet)
-        db.session.add_all(grades)
-
-        # Commit all changes to the database
         db.session.commit()
+        flash('Grade updated successfully', 'success')
+        return redirect(url_for('manage_grades', student_id=student_id, subject_id=subject_id))
 
-        flash('Grades recorded successfully!', 'success')
-        return redirect(url_for('view_grades', student_id=student_id))
+    return render_template('grades.html', grade=grade, student_id=student_id, subject_id=subject_id)
 
-    return render_template('admin/view_grades.html', student=student, subjects=subjects, form=form)
 
 
 @app.route('/grades/student_view', methods=['GET'])

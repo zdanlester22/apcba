@@ -195,12 +195,9 @@ class EnrolliesForm(FlaskForm):
     special_needs = TextAreaField('Special Needs or Accommodations')
 
 class GradeForm(FlaskForm):
-    period_1 = StringField('Period 1', validators=[InputRequired()])
-    period_2 = StringField('Period 2', validators=[InputRequired()])
-    period_3 = StringField('Period 3', validators=[InputRequired()])
-    final_grade = FloatField('Final Grade', render_kw={'readonly': True})
-    is_passed = StringField('Status', render_kw={'readonly': True})
-
+    period_1 = StringField('Period 1')
+    period_2 = StringField('Period 2')
+    period_3 = StringField('Period 3')
     submit = SubmitField('Submit')
 
 class ScheduleForm(FlaskForm):

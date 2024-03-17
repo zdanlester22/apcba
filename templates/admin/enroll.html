@@ -302,6 +302,7 @@
           <th>Course</th>
           <th>Year</th>
           <th>Section Name</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -311,10 +312,17 @@
             <td>{{ enrollment.enrolled_course_rel.title }}</td>
             <td>{{ enrollment.year }}</td>
             <td>{{ enrollment.enrolled_section_rel.name }}</td>
+            <td>
+             
+    <a href="{{ url_for('enrolled_subjects', student_id=enrollment.student_id) }}" class="show-button">
+       Subjects
+    </a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
+    
 
     <script>
       // Initialize Select2 for the specified fields

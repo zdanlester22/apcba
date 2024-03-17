@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Grades</title>
+</head>
+<body>
+    <h1>Manage Grades</h1>
+    <form action="{{ url_for('manage_grades', student_id=student_id, subject_id=subject_id) }}" method="POST">
+        <label for="period_1">Period 1 Grade:</label>
+        <input type="text" id="period_1" name="period_1" value="{{ grade.period_1 }}"><br>
+        <label for="period_2">Period 2 Grade:</label>
+        <input type="text" id="period_2" name="period_2" value="{{ grade.period_2 }}"><br>
+        <label for="period_3">Period 3 Grade:</label>
+        <input type="text" id="period_3" name="period_3" value="{{ grade.period_3 }}"><br>
+        <label for="final_grade">Final Grade:</label>
+        <input type="text" id="final_grade" name="final_grade" value="{{ grade.final_grade }}"><br>
+        <label for="is_passed">Passed:</label>
+        <input type="checkbox" id="is_passed" name="is_passed" {% if grade.is_passed %}checked{% endif %}><br>
+        <input type="submit" value="Update Grade">
+    </form>
+</body>
+</html>

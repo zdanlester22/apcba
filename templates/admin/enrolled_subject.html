@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrolled Subjects</title>
+</head>
+<body>
+    <h1>Enrolled Subjects</h1>
+    <ul>
+        {% for subject in enrolled_subjects %}
+            <li>{{ subject.title }} ({{ subject.abbreviation }})</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
