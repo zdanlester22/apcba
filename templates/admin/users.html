@@ -14,9 +14,9 @@
 
         table {
             border-collapse: collapse;
-            width: 115%;
+            width: 108%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+            margin-top: 16px;
             overflow-x: auto; /* Enable horizontal scrolling on small screens */
 
         }
@@ -25,6 +25,9 @@
             padding: 14px;
             text-align: left;
             border: 1px solid #ddd;
+        }
+        td{
+            background-color: #f6f6fa;
         }
 
         th {
@@ -151,13 +154,57 @@
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
+        .linkd{
+            background-color: rgb(189, 31, 31);
+            color: #fff;
+            text-decoration: none;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .linkd:hover{
+            background-color: #fff;
+            color: rgb(189, 31, 31);
+            border: 1px solid rgb(189, 31, 31);
+        }
+        .linku{
+            background-color: rgb(175, 175, 35);
+            color: #fff;
+            text-decoration: none;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .linku:hover{
+            background-color: #fff;
+            color: rgb(175, 175, 35);
+            border: 1px solid rgb(175, 175, 35);
+        }
+        .link{
+            font-size: 16px;
+        }
+        .hidden-column {
+    display: none;
+}
+
+#toggle-columns-btn {
+    margin-bottom: 10px;
+    color: #fff;
+    background-color: #374c60;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    font-family: Montserrat, sans-serif;
+}
+#toggle-columns-btn:hover{
+    color: #374c60;
+    background-color: #fff;
+    border: 1px solid #374c60;
+}
+
+
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <span class="material-icons">menu</span>
-        </button>
         <div class="sidebar">
             <div class="logo">
                 <h2>APCBA PORTAL V1.0</h2>
@@ -196,20 +243,20 @@
         </div>
         <div class="content">
             <h2>Admin Dashboard/Portal Accounts</h2>
-            <form method="GET" action="{{ url_for('users') }}">
-                <input type="text" name="q" value="{{ search_query }}" placeholder="Search users" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                <button type="submit" style="padding: 10px; color: #fff; background-color: #374c60; border-radius: 5px; border: none;">Search</button>
-            </form>
+        
             <br>
+            <button id="toggle-columns-btn">Toggle Delete/Update Button</button>
+
             <table>
                 <tr>
                     <th>User ID</th>
                     <th>Email</th>
                     <th>Name</th>
                     <th>Role</th>
-                    <th>Update</th>
-                    <th>Delete</th>
                     <th>Enroll</th>
+                    <th class="hidden-column">Update</th>
+                    <th class="hidden-column">Delete</th>
+
                 </tr>
                 {% for user in users %}
                 <tr>
@@ -217,15 +264,15 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.name }}</td>
                     <td>{{ user.role }}</td>
-                    <td><a href="{{ url_for('update_user', user_id=user.id) }}" class="link">Update</a></td>
-                    <td><a href="{{ url_for('delete_user', user_id=user.id) }}" class="link">Delete</a></td>
                     {% if user.role == 'teacher' %}
                     <td><a href="#" class="link" onclick="toggleEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
                     {% elif user.role == 'student' %}
-                    <td><a href="#" class="link" onclick="toggleStudentEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
+                    <td><a href="#" class="linkv" onclick="toggleStudentEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
                     {% else %}
                     <td></td> <!-- Empty cell for users without the 'teacher' or 'student' role -->
                     {% endif %}
+                    <td class="hidden-column"><a href="{{ url_for('update_user', user_id=user.id) }}" class="linku">Update</a></td>
+                    <td class="hidden-column"><a href="{{ url_for('delete_user', user_id=user.id) }}" class="linkd" >Delete</a></td>
                 </tr>
                 {% endfor %}
             </table>
@@ -265,6 +312,26 @@
     </main>
     
     <script>
+          // Function to toggle the visibility of Delete/Update columns
+    function toggleColumns() {
+        var deleteColumn = document.querySelectorAll('th:nth-child(6), td:nth-child(6)');
+        var updateColumn = document.querySelectorAll('th:nth-child(7), td:nth-child(7)');
+
+        // Toggle the visibility of the Delete column
+        deleteColumn.forEach(function(element) {
+            element.classList.toggle('hidden-column');
+        });
+
+        // Toggle the visibility of the Update column
+        updateColumn.forEach(function(element) {
+            element.classList.toggle('hidden-column');
+        });
+    }
+
+    // Add event listener to the toggle button
+    document.getElementById('toggle-columns-btn').addEventListener('click', function() {
+        toggleColumns();
+    });
         function toggleEnrollForm(clickedElement, name) {
             var enrollForm = document.getElementById('enroll-form');
             var teacherIdInput = document.getElementById('teacher-id-input');

@@ -35,7 +35,7 @@
         .table-container {
             overflow: hidden;
             margin: 20px;
-            width: 1300px;
+            width: 1800px;
         }
 
         table {
@@ -44,7 +44,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border: 1px solid #ccc;
             border-radius: 10px;
-            width: 70%;
+            width: 1110px;
             
         }
 
@@ -101,10 +101,9 @@
         transform: translate(-50%, -50%); /* Center it precisely */
         max-width: 400px;
         padding: 20px;
-        border: 1px solid #ccc;
         border-radius: 5px;
         background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
     }
 
     .form-group {
@@ -130,7 +129,7 @@
         width: 100%; /* Button spans full width */
         background-color: #374c60;
         color: #fff;
-        padding: 10px;
+        padding: 7px;
         border-radius: 5px;
         border: none;
         cursor: pointer;
@@ -149,7 +148,7 @@
     width: 262px;
 }
 .form-group button {
-    width: 100px;
+    width: 160px;
 
 }
 .form-group button:hover{
@@ -173,8 +172,9 @@
     z-index: 999; /* Ensure the button appears on top */
 }
 .form-group button {
-    width: 100px;
+    width: 160px;
     font-family: Montserrat, sans-serif;
+    margin-left: 970px;
 }
 .form-group input[type="text"], .form-group select {
 
@@ -195,13 +195,13 @@ h2 {
     #capacity-char-count{
         margin-right: 0;
     }
+    table td{
+        background-color: #f6f6fa;
+    }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <span class="material-icons">menu</span>
-        </button>
         <div class="sidebar">
             <div class="logo">
                 <h2>APCBA PORTAL V1.0</h2>
@@ -233,11 +233,8 @@ h2 {
         ">
              <h2>Admin Dashboard/Sections</h2>
         <button id="toggle-button" class="toggle-button" type="button">Add section</button>
-
-            <input type="text" id="section_name" name="section_name" placeholder="Enter section name">
-            <button type="submit">Search</button>
-    </form>
-    </div>
+            </form>
+            </div>
 
     <div id="form-container" class="form-container">
         <button class="close-button" onclick="closeForm()">X</button>

@@ -20,7 +20,7 @@
         background-color: #fff;
         padding: 20px;
         border-radius: 50px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 0px 20px 5px rgba(0.1, 0.1, 0.1, 0.2);
         width: 500px;
         
     }
@@ -168,18 +168,21 @@ h4{
             display: flex;
             justify-content: end;
             margin-right: 25px;
+            color: red;
         }
         #name-char-count {
             font-size: 12px;
             display: flex;
             justify-content: end;
             margin-right: 25px;
+            color: red;
         }
         #email-char-count {
             font-size: 12px;
             display: flex;
             justify-content: end;
             margin-right: 25px;
+            color: red;
         }
         input[type="text"],
 input[type="tel"],
@@ -201,10 +204,110 @@ form {
     margin: auto; /* Center the form horizontally */
 }
 
+.modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+
+        }
+
+        /* Modal content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            width: 25%;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px 5px rgba(0.1, 0.1, 0.1, 0.2);
+        }
+
+        /* Close button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Modal content */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    width: 25%;
+    text-align: center;
+    border-radius: 10px;
+}
+
+/* Close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Yes button */
+#confirmYes {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#confirmYes:hover {
+    background-color: #45a049;
+}
+
+/* No button */
+#confirmNo {
+    background-color: #f44336; /* Red */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#confirmNo:hover {
+    background-color: #d32f2f;
+}
 
     </style>
 </head>
 <body>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Do you want to register this account?</p>
+            <button id="confirmYes">Yes</button>
+            <button id="confirmNo">No</button>
+        </div>
+    </div>
     <div class="flash">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -217,9 +320,7 @@ form {
         {% endwith %}
     </div>
     <div class="container">
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <span class="material-icons">menu</span>
-        </button>
+ 
         <div class="sidebar">
             <div class="logo">
                 <h2>APCBA PORTAL V1.0</h2>
@@ -280,6 +381,95 @@ form {
 
 {% endblock %}
 <script>
+  
+  var modal = document.getElementById("myModal");
+    var btn = document.querySelector("button[type='submit']");
+    var span = document.getElementsByClassName("close")[0];
+    var confirmYesBtn = document.getElementById("confirmYes");
+    var confirmNoBtn = document.getElementById("confirmNo");
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function(event) {
+        event.preventDefault(); // Prevent default form submission behavior
+
+        // Check if form inputs are valid before showing the modal
+        if (validateFormInputs()) {
+            modal.style.display = "block";
+        }
+    }
+
+    // When the user clicks on <span> (x) or No button, close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    confirmNoBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks Yes button, continue with registration
+    confirmYesBtn.onclick = function() {
+        modal.style.display = "none";
+        // Submit the form (if it's inside a form element)
+        document.getElementById("registrationForm").submit();
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Function to validate form inputs
+    function validateFormInputs() {
+        var email = document.getElementById("email");
+        var name = document.getElementById("name");
+        var password = document.getElementById("password");
+        var isValid = true;
+
+        // Perform validation checks
+        if (email.value.trim() === "") {
+            showError(email, "Email is required");
+            isValid = false;
+        } else {
+            hideError(email);
+        }
+
+        if (name.value.trim() === "") {
+            showError(name, "Name is required");
+            isValid = false;
+        } else {
+            hideError(name);
+        }
+
+        if (password.value.trim() === "") {
+            showError(password, "Password is required");
+            isValid = false;
+        } else {
+            hideError(password);
+        }
+
+        return isValid; // Return true if all inputs are valid
+    }
+
+    // Function to show error message
+    function showError(inputField, errorMessage) {
+        var errorElement = inputField.nextElementSibling; // Get the next element (assumed to be the error message element)
+        errorElement.textContent = errorMessage; // Set the error message text
+        errorElement.style.display = "block"; // Show the error message
+    }
+
+    // Function to hide error message
+    function hideError(inputField) {
+        var errorElement = inputField.nextElementSibling; // Get the next element (assumed to be the error message element)
+        errorElement.textContent = ""; // Clear the error message text
+        errorElement.style.display = "none"; // Hide the error message
+    }
+
+
+
+
     function sanitizeNameInput(inputField) {
     inputField.value = inputField.value.replace(/\d/g, ''); // Remove numeric characters
 }

@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <title>View Subjects</title>
 
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Montserrat, sans-serif;
             background-color: #f4f4f4;
             margin: 20px;
         }
@@ -36,44 +37,51 @@
         tr:hover {
             background-color: #f5f5f5;
         }
-        .flash {
-            position: absolute;
-            right: 0;
-            top: 0;
-            margin-top: 100px;
-            margin-right: 25px;
-            z-index: 10;
+
+        /* Style for schedule section */
+        .schedule {
+            margin-top: 10px;
+        }
+
+        .schedule ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .schedule li {
+            margin-bottom: 5px;
+            border-left: 3px solid #3498db; /* Use a different color for the border */
+            padding-left: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .schedule p {
+            margin: 0;
+            font-size: 14px;
+            color: #888;
+        }
+        table a{
+            text-decoration: none;
             background-color: #374c60;
             color: #fff;
-            border: 2px solid #374c60;
+            padding: 9px;
             border-radius: 5px;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
+            border: 1px solid #ccc;
         }
-        .flash li{
-            list-style: none;
-            text-align: center;
-            margin-right: 25px;
+        table a:hover{
+            color: #374c60;
+            background-color: #fff;
+            border: 1px solid #374c60;
         }
-        .fade-in {
-            /* CSS class to fade in flash messages */
-            opacity: 1 !important; /* Override opacity to 1 */
+        table th{
+            background-color: #374c60;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <div class="flash">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-    </div>
-    <h1>Subjects</h1>
+    <h2>Subjects</h2>
 
     {% if subjects %}
         <table>
@@ -94,7 +102,7 @@
                         <td>{{ subject.unit }}</td>
 
                         <!-- Display the schedule for the current subject -->
-                        <td>
+                        <td class="schedule">
                             {% if subject.schedules %}
                                 <ul>
                                     {% for schedule in subject.schedules %}

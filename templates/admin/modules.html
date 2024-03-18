@@ -31,7 +31,6 @@
     border: none;
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .module-form .form-group {
@@ -100,7 +99,7 @@
 }
 
 .mod table {
-    width: 900px;
+    width: 1090px;
     border-collapse: collapse;
     padding: 5px;
     border: 1px solid #ccc;
@@ -123,9 +122,12 @@
 .mod table tr:last-child td {
     border-bottom: none;
 }
+.mod table td{
+    background-color: #f6f6fa;
+}
 
 table a{
-    background-color: #374c60;
+    background-color: green;
     color: #fff;
     text-decoration: none;
     padding: 7px;
@@ -133,14 +135,14 @@ table a{
 }
 table a:hover{
     background-color: #fff;
-    color: #374c60;
-    border: 1px solid #374c60;
+    color: green;
+    border: 1px solid green;
 }
         .flash {
             position: absolute;
             right: 0;
             top: 0;
-            margin-top: 100px;
+            margin-top: 50px;
             margin-right: 25px;
             z-index: 10;
             background-color: #374c60;
@@ -167,8 +169,8 @@ table a:hover{
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            margin-top: 30px;
             font-family: 'Montserrat', sans-serif;
+            margin-left: 803px;
         }
 
         .create-module-btn:hover {
@@ -195,7 +197,7 @@ table a:hover{
             position: relative;
             background-color: #fff;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
             width: 50%;
             margin-left: auto;
             margin-right: auto;
@@ -212,10 +214,11 @@ table a:hover{
         }
         .content {
             flex: 1;
-            padding: 30px;
             transition: margin-left 0.3s ease;
             margin-right: 60px;
             width: 100%;
+            margin-left: -100px;
+        
         }
         .table{
             width: 80%;
@@ -226,7 +229,27 @@ table a:hover{
             justify-content: end;
             margin-right: 25px;
         }
-
+        .hidden {
+            display: none;
+        }
+        .actions{
+            margin-right: 0;
+        }
+        #toggleActionsBtn{
+            color: #fff;
+            background-color: #374c60;
+            padding: 9px;
+            border-radius: 5px;   
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+        #toggleActionsBtn:hover{
+            color: #374c60;
+            border: 1px solid #374c60;
+            background-color: #fff;
+        }
+        
+        
 </style>
 </head>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
@@ -244,7 +267,6 @@ table a:hover{
         {% endwith %}
     </div>
     <div class="container">
-        <button class="toggle-btn" onclick="toggleSidebar()">
             <span class="material-icons">menu</span>
         </button>
         <div class="sidebar">
@@ -311,7 +333,10 @@ table a:hover{
                 </form>
             </div>
         </div>
-        <button id="openModalBtn" class="create-module-btn" onclick="openModal()">Create Module</button>
+        <div class="action">
+            <button id="openModalBtn" class="create-module-btn" onclick="openModal()">Create Module</button>
+            <button id="toggleActionsBtn" class="button button-primary">Download Modules</button>
+        </div>
         <div class="mod">
             <table>
                 <thead>
@@ -319,7 +344,7 @@ table a:hover{
                         <th>Title</th>
                         <th>Year</th>
                         <th>Course</th>
-                        <th>Action</th>
+                        <th class="actions hidden">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -328,7 +353,7 @@ table a:hover{
                         <td>{{ module.title }}</td>
                         <td>{{ module.year }}</td>
                         <td>{{ module.course.title }}</td>
-                        <td><a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download</a></td>
+                        <td class="actions hidden"><a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download</a></td>
                     </tr>
                     {% endfor %}
                     {% endblock %}
@@ -339,6 +364,28 @@ table a:hover{
     </main>
     </div>
     <script>
+         document.getElementById("toggleActionsBtn").addEventListener("click", function() {
+    var actionsCells = document.querySelectorAll(".actions");
+
+    actionsCells.forEach(function(cell) {
+        cell.classList.toggle("hidden");
+    });
+});
+         document.getElementById("toggleActionsBtn").addEventListener("click", function() {
+        var table = document.getElementById("certificateTable");
+        var rows = table.getElementsByTagName("tr");
+
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName("td");
+            if (cells.length > 0) { // Exclude header row
+                // Toggle the visibility of actions row
+                var actionsRow = rows[i].nextElementSibling;
+                if (actionsRow.classList.contains("actions-row")) {
+                    actionsRow.classList.toggle("hidden");
+                }
+            }
+        }
+    });
         function limitInputLength(inputField, maxLength, charCountElementId) {
     var charCountElement = document.getElementById(charCountElementId);
     if (inputField.value.length > maxLength) {

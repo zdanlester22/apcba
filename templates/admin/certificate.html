@@ -31,7 +31,7 @@
             display: flex;
             flex-direction: column;
             transition: opacity 0.3s ease, width 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
+            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
             border-top-right-radius: 10px;
             border-bottom-right-radius: 10px;
         }
@@ -126,17 +126,6 @@
             flex-direction: column;
             gap: 20px;
             margin-top: -100px;
-        }
-        .announcement-form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-            margin: 20px;
-        }
-        .announcement-form h2 {
-            margin-bottom: 10px;
-            color: #333;
         }
         .form-group {
             margin-bottom: 15px;
@@ -355,6 +344,9 @@
 .table tbody tr:nth-child(even) {
     background-color: #f2f2f2;
 }
+.table td{
+    background-color: #f6f6fa;
+}
 
 /* Styles for the buttons */
 .button {
@@ -386,9 +378,9 @@
 .filter form{
     font-family: Montserrat, sans-serif;
 }
-.top{
+.top {
+    margin-left: 775px;
     display: flex;
-    gap: 20px;
     text-align: center;
     align-items: center;
 }
@@ -401,18 +393,17 @@
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    background-color: rgba(0, 0, 0, 0.4); /* Black background with transparency */
 }
 
 .modal-content {
     background-color: #fefefe; /* White background */
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
-    border: 1px solid #888;
     width: 400px; /* 80% width */
     border-radius: 10px;
     position: relative; /* Position relative to its parent */
-    margin-top: 70px;
+    margin-top: 120px;
+    box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
 }
 
 .close-btn {
@@ -443,7 +434,7 @@ h4{
             position: absolute;
             right: 0;
             top: 0;
-            margin-top: 100px;
+            margin-top: 50px;
             margin-right: 5px;
             z-index: 10;
             background-color: #374c60;
@@ -472,7 +463,48 @@ h4{
             border-radius: 8px;
             margin-top: -28px;
         }
-
+        .hidden {
+            display: none;
+        }
+        .delco{
+            text-decoration: none;
+            background-color: rgb(189, 31, 31);
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 13px;
+         }
+         .delco:hover{
+            background-color: #fff;
+            color: rgb(189, 31, 31);
+            border: 1px solid rgb(189, 31, 31);
+         }
+         .downco{
+            text-decoration: none;
+            background-color: green;
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 13px;
+         }
+         .downco:hover{
+            background-color: #fff;
+            color: green;
+            border: 1px solid green;
+         }
+         .upco{
+            text-decoration: none;
+            background-color: rgb(175, 175, 35);
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 13px;
+         }
+         .upco:hover{
+            background-color: #fff;
+            color: rgb(175, 175, 35);
+            border:1px solid rgb(175, 175, 35);
+         }
     </style>
 </head>
 <body>
@@ -488,8 +520,7 @@ h4{
         {% endwith %}
     </div>
     <div class="container">
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <span class="material-icons">menu</span>
+
         </button>
         <div class="sidebar">
             <div class="logo">
@@ -543,44 +574,28 @@ h4{
                 <br> <br><br> <br><br>   
                 <div class="top">
                     <button id="uploadBtn" class="button button-primary">Upload Certificate</button>
-                    <form action="{{ url_for('certificate') }}" class="filter" method="get">
-                        {{ form.csrf_token }}
-                        {{ form.title(style="padding: 6px; width:150px; border: 1px solid #ccc; border-radius: 5px; margin-right: 10px;")}}
-                        <button type="submit" id="filter" fdprocessedid="dqxonq" style="
-                            color: #fff;
-                            padding: 6px;
-                            background-color: #374c60;
-                            width: 100px;
-                            border-radius: 5px;
-                            border: 1px solid #374c60;
-                            font-family: 'Montserrat';
-                            " onmouseover="this.style.backgroundColor='#fff'; this.style.color='#374c60'; 
-                            this.style.borderColor='#374c60';" onmouseout="this.style.backgroundColor='#374c60'; 
-                            this.style.color='#fff'; this.style.borderColor='#374c60';"
-                            >Filter</button>
-                    </form>
+                    <button id="toggleActionsBtn" class="button button-primary">Toggle Actions</button>
                 {% if certificates %}
                 </div>
-              
-                    <table class="table" style="width: 92%;">
+                <table id="certificateTable" class="table" style="width: 100%;">
                         <thead>
                             <tr>
                                 <th>Title</th>
-                                <th>PDF</th>
-                                <th>Actions</th>
+                                <th class="actions hidden">PDF</th>
+                                <th class="actions hidden">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for certificate in certificates %}
                                 <tr>
                                     <td>{{ certificate.title }}</td>
-                                    <td>
-                                        <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" target="_blank">Download</a>
+                                    <td class="actions hidden">
+                                        <a href="{{ url_for('download_certificate', certificate_id=certificate.id) }}" class="downco"  target="_blank">Download</a>
                                     </td>
-                                    <td>
-                                        <a href="{{ url_for('update_certificate', certificate_id=certificate.id) }}">Update</a>
+                                    <td class="actions hidden">
+                                        <a href="{{ url_for('update_certificate', certificate_id=certificate.id) }}" class="upco" >Update</a>
                                         |
-                                        <a href="{{ url_for('delete_certificate', certificate_id=certificate.id) }}">Delete</a>
+                                        <a href="{{ url_for('delete_certificate', certificate_id=certificate.id) }}" class="delco">Delete</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -593,6 +608,28 @@ h4{
         </div>
     </div>
     <script>
+        document.getElementById("toggleActionsBtn").addEventListener("click", function() {
+    var actionsCells = document.querySelectorAll(".actions");
+
+    actionsCells.forEach(function(cell) {
+        cell.classList.toggle("hidden");
+    });
+});
+         document.getElementById("toggleActionsBtn").addEventListener("click", function() {
+        var table = document.getElementById("certificateTable");
+        var rows = table.getElementsByTagName("tr");
+
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName("td");
+            if (cells.length > 0) { // Exclude header row
+                // Toggle the visibility of actions row
+                var actionsRow = rows[i].nextElementSibling;
+                if (actionsRow.classList.contains("actions-row")) {
+                    actionsRow.classList.toggle("hidden");
+                }
+            }
+        }
+    });
            document.getElementById("title-input").addEventListener("input", function() {
         var input = this.value;
         if (input.length > 50) {

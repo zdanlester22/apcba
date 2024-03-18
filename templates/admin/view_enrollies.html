@@ -21,11 +21,10 @@
             width: 80%; /* Adjust the width as needed */
             max-width: 600px; /* Set a maximum width if desired */
             margin-top: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
         th, td {
-            padding: 15px;
+            padding: 9px;
             text-align: left;
             border: 1px solid #ddd;
         }
@@ -53,19 +52,19 @@
             border-collapse: collapse;
             width: 100%;
             max-width: 100%; /* Use 100% of the container */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             margin-top: 20px;
             table-layout: fixed; /* Use fixed layout to prevent column width issues */
         }
 
         .enrollies-table th,
         .enrollies-table td {
-            padding: 15px;
+            padding: 10px;
             text-align: left;
             border: 1px solid #ddd;
             white-space: nowrap; /* Prevent text wrapping */
             overflow: hidden; /* Hide overflow content */
             text-overflow: ellipsis; /* Display ellipsis for overflow text */
+            background-color: #f6f6fa;
         
         }
 
@@ -76,6 +75,9 @@
 
         .enrollies-table tr:hover {
             background-color: #f5f5f5;
+        }
+        td{
+            background-color: f6f6fa;
         }
 
         .additional-info {
@@ -168,7 +170,7 @@
             border-radius: 5px;
         }
         .enrollies-table{
-            width: 70%;
+            width: 75%;
             margin-left: 300px;
             margin-right: auto;
         }
@@ -222,7 +224,7 @@
         .page-title {
             color: #374c60;
             font-size: 26px;
-            margin-left: -400px;
+            margin-left: -550px;
         }
         .flash {
             position: absolute;
@@ -273,9 +275,6 @@
             {% endif %}
         {% endwith %}
     </div>
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <span class="material-icons">menu</span>
-        </button>
         <div class="sidebar">
             <div class="logo">
                 <h2>APCBA PORTAL V1.0</h2>

@@ -152,15 +152,13 @@
         transform: translate(-50%, -50%);
         overflow: auto;
         width: 300px; /* Adjust width as needed */
-        border: 1px solid #888;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
     }
 
     #add-subject-form {
     background-color: #fff;
-    border: 1px solid #ccc;
     width: 25%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
     height: 350px;
 }
 
@@ -228,7 +226,6 @@
 
 h5{
     margin-top: 80px;
-    margin-bottom: -70px;
     margin-left: 20px;
     font-size: 25px;
     font-family: Montserrat, sans-serif;
@@ -347,168 +344,182 @@ select {
         }
 
         
-/* CSS */
-/* CSS */
-/* CSS */
-/* CSS for Tooltip */
-.arrow-btn {
-    position: relative; /* Ensure the arrow-btn span is a positioned parent */
-}
+        /* CSS */
+        /* CSS */
+        /* CSS */
+        /* CSS for Tooltip */
+        .arrow-btn {
+            position: relative; /* Ensure the arrow-btn span is a positioned parent */
+        }
 
-.arrow-btn .tooltip {
-    visibility: hidden;
-    background-color: #374c60;
-    color: #fff;
-    border-radius: 10px;
-    text-align: center;
-    padding: 5px;
-    border-radius: 5px;
-    position: absolute;
-    z-index: 1;
-    top: calc(50% - 15px); /* Adjust positioning as needed */
-    left: calc(100% + 10px); /* Adjust positioning as needed */
-    width: 70px; /* Set the width */
-    height: 40px; /* Set the height */
-    opacity: 0;
-    transition: opacity 0.3s;
-}
+        .arrow-btn .tooltip {
+            visibility: hidden;
+            background-color: #374c60;
+            color: #fff;
+            border-radius: 10px;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            position: absolute;
+            z-index: 1;
+            top: calc(50% - 15px); /* Adjust positioning as needed */
+            left: calc(100% + 10px); /* Adjust positioning as needed */
+            width: 70px; /* Set the width */
+            height: 40px; /* Set the height */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
 
-.arrow-btn:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-.arrow-btn:hover .tooltip::before {
-    content: "View subjects"; /* Display the text "View subjects" */
-}
-/* CSS for the modal */
-#subject-modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 60%; /* Adjust width as needed */
-    max-width: 600px; /* Set maximum width */
-    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Add shadow effect */
-    border-radius: 10px; /* Rounded corners */
-    padding: 20px;
-    text-align: center;
-    height: 495px;
-}
+        .arrow-btn:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .arrow-btn:hover .tooltip::before {
+            content: "View subjects"; /* Display the text "View subjects" */
+        }
+        /* CSS for the modal */
+        #subject-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%; /* Adjust width as needed */
+            max-width: 600px; /* Set maximum width */
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px;
+            text-align: center;
+            height: 495px;
+        }
 
-#subject-modal{
-    max-height: 70vh; /* Limit maximum height of modal content */
-    overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
-    background-color: #fff;
-}
+        #subject-modal{
+            max-height: 70vh; /* Limit maximum height of modal content */
+            overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+            background-color: #fff;
+        }
 
-#subject-modal .exit-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #333; /* Close button color */
-}
-/* CSS for the modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    overflow: auto;
-    /* background-color: rgba(0, 0, 0, 0.5); */
-    text-align: center;
-    align-items: center;
-    width: 60%;
-    max-width: 600px;
-    height: 555px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    overflow-y: hidden;
-}
+        #subject-modal .exit-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #333; /* Close button color */
+        }
+        /* CSS for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            overflow: auto;
+            /* background-color: rgba(0, 0, 0, 0.5); */
+            text-align: center;
+            align-items: center;
+            width: 60%;
+            max-width: 600px;
+            height: 555px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
+            overflow-y: hidden;
+        }
 
-.exit-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #333; /* Close button color */
-}
+        .exit-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #333; /* Close button color */
+        }
 
-/* CSS for the tooltip */
-.arrow-btn {
-    position: relative; /* Ensure the arrow-btn span is a positioned parent */
-}
+        /* CSS for the tooltip */
+        .arrow-btn {
+            position: relative; /* Ensure the arrow-btn span is a positioned parent */
+        }
 
-.arrow-btn .tooltip {
-    visibility: hidden;
-    background-color: #374c60;
-    color: #fff;
-    border-radius: 10px;
-    text-align: center;
-    padding: 5px;
-    border-radius: 5px;
-    position: absolute;
-    z-index: 1;
-    top: calc(50% - 15px); /* Adjust positioning as needed */
-    left: calc(100% + 10px); /* Adjust positioning as needed */
-    width: 70px; /* Set the width */
-    height: 40px; /* Set the height */
-    opacity: 0;
-    transition: opacity 0.3s;
-}
+        .arrow-btn .tooltip {
+            visibility: hidden;
+            background-color: #374c60;
+            color: #fff;
+            border-radius: 10px;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            position: absolute;
+            z-index: 1;
+            top: calc(50% - 15px); /* Adjust positioning as needed */
+            left: calc(100% + 10px); /* Adjust positioning as needed */
+            width: 70px; /* Set the width */
+            height: 40px; /* Set the height */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
 
-.arrow-btn:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-}
+        .arrow-btn:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
 
-.arrow-btn:hover .tooltip::before {
-    content: "View subjects"; /* Display the text "View subjects" */
-}
-#add-subject-form form {
-    align-items: center;
-    margin-top: 20px;
-    /* width: 255px; */
-    display: inherit;
-    margin-left: 50px;
-}
-#add-subject-form form {
+        .arrow-btn:hover .tooltip::before {
+            content: "View subjects"; /* Display the text "View subjects" */
+        }
+        #add-subject-form form {
+            align-items: center;
+            margin-top: 20px;
+            /* width: 255px; */
+            display: inherit;
+            margin-left: 50px;
+        }
+        #add-subject-form form {
 
-    margin-top: 20px;
-    width: 316px;
-    display: inherit;
-    margin-left: 50px;
-}
-#add-subject-form form input[type="text"] {
-    margin-bottom: 0px;
-}
-h4 {
-    display: block;
-    font-size: 23px;
-}
+            margin-top: 20px;
+            width: 316px;
+            display: inherit;
+            margin-left: 50px;
+        }
+        #add-subject-form form input[type="text"] {
+            margin-bottom: 0px;
+        }
+        h4 {
+            display: block;
+            font-size: 23px;
+        }
 
-.add-subject-btn, .btn-primary {
-    background-color: #374c60;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    font-size: 12px;
-    display: inline-block;
-}
+        button[type="button"] {
+            margin-bottom: 9px;
+            margin-left: 977px;
+        }
+        table{
+            width: 95%;
+        }
+        table td{
+            background-color: #f6f6fa;
+        }
+        button[type="submit"]{
+            background-color: rgb(175, 175, 35);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 12px;
+        }
+        button[type="submit"]:hover{
+            background-color: #fff;
+            color: rgb(175, 175, 35);
+            border:1px solid rgb(175, 175, 35);
+        }
 </style>
 </head>
 <body>
@@ -524,9 +535,6 @@ h4 {
         {% endwith %}
     </div>
     <div class="container">
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <span class="material-icons">menu</span>
-        </button>
         <div class="sidebar">
             <div class="logo">
                 <h2>APCBA PORTAL V1.0</h2>
@@ -551,22 +559,8 @@ h4 {
             </div>
         </div>
 <div class="formi">
-    <h5>Admin Dashboard/Courses</h5>
-        <form method="get" action="{{ url_for('course') }}" class="form">
-        {{ filter_form.hidden_tag() }}
-    
-        <label for="{{ filter_form.school_year.id }}">SY:</label>
-        {{ filter_form.school_year() }}
-    
-        <label for="{{ filter_form.semester.id }}">Sem:</label>
-        {{ filter_form.semester() }}
-    
-        <label for="{{ filter_form.course_type.id }}">Course:</label>
-        {{ filter_form.course_type() }}
-    
-        <button type="submit" fdprocessedid="9ctcvh" style="height: 40px;">Filter</button>
-        <button type="button" class="add-course-btn" onclick="showAddCourseForm()" fdprocessedid="bw4sxc" style="height: 40px;">Add Course</button>
-       </form>
+        <h5>Admin Dashboard/Courses</h5>
+        <button type="button" class="add-course-btn" onclick="showAddCourseForm()" fdprocessedid="bw4sxc" style="height: 35px; width: 160px;">Add Course</button>
       <table>
         <tr>
             <th>Course Title</th>
@@ -657,9 +651,6 @@ h4 {
                     <div>
                         {{ form_course.year.label }} {{ form_course.year() }}
                     </div>
-                    <div>
-                        {{ form_course.Class.label }} {{ form_course.Class() }}
-                    </div>
                 </div>
                 
                 <!-- Right side inputs -->
@@ -669,6 +660,9 @@ h4 {
                     </div>
                     <div>
                         {{ form_course.semesters.label }} {{ form_course.semesters() }}
+                    </div>
+                    <div>
+                        {{ form_course.Class.label }} {{ form_course.Class() }}
                     </div>
                     <div>
                         {{ form_course.is_active.label }} {{ form_course.is_active() }}<br>

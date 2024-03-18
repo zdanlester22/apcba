@@ -36,7 +36,7 @@ body {
     flex: 1;
     padding: 20px;
     transition: margin-left 0.3s ease;
-    margin-left: 300px; /* Adjust the initial margin-left to accommodate the sidebar */
+    margin-left: 280px; /* Adjust the initial margin-left to accommodate the sidebar */
 }
 .logo {
     margin-bottom: 20px;
