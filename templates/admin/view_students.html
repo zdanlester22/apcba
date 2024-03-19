@@ -91,7 +91,7 @@
                 <th>Course Title</th>
                 <th>Section</th>
                 <th>Year</th>
-                <th>Approved</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -101,7 +101,7 @@
                 <td>{{ enrollment.enrolled_course_rel.title }}</td>
                 <td>{{ enrollment.enrolled_section_rel.name }}</td>
                 <td>{{ enrollment.year }}</td>
-                <td>{{ 'Yes' if enrollment.is_approved else 'No' }}</td>
+                <td>{{ 'Active' if enrollment.is_approved else 'In-active' }}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -113,6 +113,7 @@
 </div>
 {% endblock %}
     </main>
+    
 </body>
 <script>
   var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja

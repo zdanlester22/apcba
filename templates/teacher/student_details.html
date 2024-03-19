@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enrolled Subjects</title>
     <style>
-        body {
+         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
         }
+
         .container {
             max-width: 800px;
             margin: 50px auto;
@@ -19,81 +20,155 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             text-align: center;
             margin-bottom: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         th, td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #f2f2f2;
             color: #333;
         }
+
         tr:hover {
             background-color: #f9f9f9;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        /* Close button style */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
     </style>
 </head>
 <body>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Student Details</title>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Enrolled Subjects</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Subject Title</th>
-                        <th>Abbreviation</th>
-                        <th>1st Period</th>
-                        <th>2nd Period</th>
-                        <th>3rd Period</th>
-                        <th>Final</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for subject in enrolled_subjects %}
-                    <tr>
-                        <td>{{ subject.title }}</td>
-                        <td>{{ subject.abbreviation }}</td>
-                        {% if grades.get(subject.id) %}
-                            <td>{{ grades[subject.id].period_1 }}</td>
-                            <td>{{ grades[subject.id].period_2 }}</td>
-                            <td>{{ grades[subject.id].period_3 }}</td>
-                            <td>{{ grades[subject.id].final_grade}}</td>
-                            <td>{{ "Pass" if grades[subject.id].is_passed == True else "Fail" if grades[subject.id].is_passed == False else "N/A" }}</td>
-                        {% endif %}
-                        <td>
-                            <form action="{{ url_for('manage_grades', student_id=student_id, subject_id=subject_id) }}" method="GET">
-                                <button type="submit" class="action-button">
-                                    Grades
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <div class="container">
+        <h1>Enrolled Subjects for {{ student.name }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject Title</th>
+                    <th>Abbreviation</th>
+                    <th>1st Period</th>
+                    <th>2nd Period</th>
+                    <th>3rd Period</th>
+                    <th>Final</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in enrolled_subjects %}
+                <tr>
+                    <td>{{ subject.title }}</td>
+                    <td>{{ subject.abbreviation }}</td>
+                    {% if grades.get(subject.id) %}
+                        <td>{{ grades[subject.id].period_1 }}</td>
+                        <td>{{ grades[subject.id].period_2 }}</td>
+                        <td>{{ grades[subject.id].period_3 }}</td>
+                        <td>{{ grades[subject.id].final_grade }}</td>
+                        <td>{{ "Pass" if grades[subject.id].is_passed == True else "Fail" if grades[subject.id].is_passed == False else "N/A" }}</td>
+                    {% endif %}
+                    <td>
+                        <button class="add-grades-btn" data-subject-id="{{ subject.id }}">Add Grades</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Modal for adding grades -->
+        <div id="grade-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Add Grades</h2>
+                <form id="grade-form-modal" method="post" action="/add_grades/{{ student_id }}">
+                    {{ form.hidden_tag() }}
+                    <input type="hidden" id="subject-id-modal" name="subject_id">
+                    <div>
+                        <label for="period_1">Period 1 Grade</label>
+                        {{ form.period_1(class="form-control") }}
+                    </div>
+                    <div>
+                        <label for="period_2">Period 2 Grade</label>
+                        {{ form.period_2(class="form-control") }}
+                    </div>
+                    <div>
+                        <label for="period_3">Period 3 Grade</label>
+                        {{ form.period_3(class="form-control") }}
+                    </div>
+                    <button type="submit">Add Grades</button>
+                </form>
+            </div>
         </div>
-        
+    </div>
 
-        
-        
-    </body>
-    </html>
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // JavaScript code to show/hide modal and set subject ID
+            document.querySelectorAll('.add-grades-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const subjectId = button.getAttribute('data-subject-id');
+                    document.getElementById('subject-id-modal').value = subjectId;
+                    document.getElementById('grade-modal').style.display = 'block';
+                });
+            });
+
+            // Close the modal when close button or outside modal is clicked
+            document.querySelector('.close').addEventListener('click', () => {
+                document.getElementById('grade-modal').style.display = 'none';
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target == document.getElementById('grade-modal')) {
+                    document.getElementById('grade-modal').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

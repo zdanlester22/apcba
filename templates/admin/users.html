@@ -256,7 +256,6 @@
                     <th>Enroll</th>
                     <th class="hidden-column">Update</th>
                     <th class="hidden-column">Delete</th>
-
                 </tr>
                 {% for user in users %}
                 <tr>
@@ -271,11 +270,17 @@
                     {% else %}
                     <td></td> <!-- Empty cell for users without the 'teacher' or 'student' role -->
                     {% endif %}
+                    {% if user.role != 'admin' %}
                     <td class="hidden-column"><a href="{{ url_for('update_user', user_id=user.id) }}" class="linku">Update</a></td>
-                    <td class="hidden-column"><a href="{{ url_for('delete_user', user_id=user.id) }}" class="linkd" >Delete</a></td>
+                    <td class="hidden-column"><a href="{{ url_for('delete_user', user_id=user.id) }}" class="linkd">Delete</a></td>
+                    {% else %}
+                    <td class="hidden-column"></td> <!-- Empty cell for admin users -->
+                    <td class="hidden-column"></td> <!-- Empty cell for admin users -->
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </table>
+            
         </div>
         <div id="enroll-form" class="enroll-form">
             <div class="form-content">

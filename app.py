@@ -38,6 +38,68 @@ if app.debug:
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:  
+        flash('You are already logged in. Please log out to log in with a different account.', 'info')
+        return redirect(url_for('dashboard'))  
+
+    form = LoginForm()
+    if request.method == 'POST':
+        recaptcha_response = request.form['g-recaptcha-response']
+        secret_key = '6Lf1m5opAAAAAMaNWiL23B60OadpYrBWyGC0owzd'
+        payload = {'response': recaptcha_response, 'secret': secret_key}
+        response = requests.post('https://www.google.com/recaptcha/api/siteverify', payload)
+        result = response.json()
+        
+        if not result['success']:
+            flash('CAPTCHA validation failed.', 'error')
+            return render_template('web/login.html', form=form)
+
+        if form.validate_on_submit():
+            email = form.email.data
+            password = form.password.data
+            user = User.query.filter_by(email=email).first()
+            if user and user.password == password:  
+                if 'user_id' in session:
+                    # Log out the existing user before logging in with a new account
+                    logged_in_user = User.query.get(session['user_id'])
+                    logout_user(logged_in_user)
+
+                login_user(user)
+                session['user_id'] = user.id
+                flash('Logged in successfully!', 'success')
+
+                # Redirect to the page user was trying to access before login, if available
+                next_page = session.get('next', url_for('dashboard'))
+                session.pop('next', None)  # Remove the stored next page from session
+                return redirect(next_page)
+            else:
+                flash('Invalid email or password.', 'error')
+    else:
+        # Store the page user was trying to access before login in the session
+        session['next'] = request.args.get('next', url_for('dashboard'))
+
+    return render_template('web/login.html', form=form)
+
+    
+@app.route('/logout')
+@login_required
+def logout():
+    # Invalidate session
+    session.clear()
+    logout_user()
+    flash('Logged out successfully!', 'success')
+    return redirect(url_for('login'))
+
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = CommentForm()
@@ -366,50 +428,7 @@ def delete_student(student_id):
 
     return redirect(url_for('view_students'))
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if request.method == 'POST':
-        recaptcha_response = request.form['g-recaptcha-response']
-        secret_key = '6Lf1m5opAAAAAMaNWiL23B60OadpYrBWyGC0owzd'
-        payload = {'response': recaptcha_response, 'secret': secret_key}
-        response = requests.post('https://www.google.com/recaptcha/api/siteverify', payload)
-        result = response.json()
-        
-        if not result['success']:
-            flash('CAPTCHA validation failed.', 'error')
-            return render_template('web/login.html', form=form)
 
-    if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
-        user = User.query.filter_by(email=email).first()
-        if user and user.password == password:  
-            login_user(user)
-            session['user_id'] = user.id
-            flash('Logged in successfully!', 'success')
-            return redirect(url_for('dashboard'))
-        else:
-            flash('Invalid email or password.', 'error')
-    return render_template('web/login.html', form=form)
-
-
-    
-@app.route('/logout')
-@login_required
-def logout():
-    # Invalidate session
-    session.clear()
-    logout_user()
-    flash('Logged out successfully!', 'success')
-    return redirect(url_for('login'))
-
-@app.after_request
-def add_header(response):
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
-    return response
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -469,14 +488,22 @@ def register():
 @app.route('/update/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def update_user(user_id):
+    # Check if the current user is an admin
     if current_user.role != 'admin':
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('dashboard'))
 
     user_to_update = User.query.get(user_id)
+
+    # Check if the user to update exists
     if not user_to_update:
         flash('User not found.', 'danger')
         return redirect(url_for('dashboard'))
+
+    # Check if the user being updated is an admin
+    if user_to_update.role == 'admin':
+        flash('Admin user cannot be updated.', 'danger')
+        return redirect(url_for('users'))
 
     form = UpdateUserForm()
     if form.validate_on_submit():
@@ -497,16 +524,23 @@ def update_user(user_id):
 @app.route('/delete/<int:user_id>')
 @login_required
 def delete_user(user_id):
-    if current_user.role != 'admin':
-        return redirect(url_for('users'))
-
     user_to_delete = User.query.get(user_id)
+
+    # Check if the user exists
     if not user_to_delete:
+        flash('User not found!', 'error')
         return redirect(url_for('users'))
 
+    # Check if the current user is an admin
+    if current_user.role == 'admin':
+        # Prevent deletion of admin user
+        flash('Admin user cannot be deleted!', 'error')
+        return redirect(url_for('users'))
+
+    # Proceed with deletion for non-admin users
     db.session.delete(user_to_delete)
     db.session.commit()
-    flash(f'User deleted successfully!', 'success')
+    flash('User deleted successfully!', 'success')
     return redirect(url_for('users'))
 
 @app.route('/admin/update_announcement/<int:announcement_id>', methods=['GET', 'POST'])
@@ -939,12 +973,38 @@ def enrolled_subjects(student_id):
     return render_template('admin/enrolled_subjects.html', enrolled_subjects=enrolled_subjects.get(student_id, []))
 
 ###########################################################################################################################################################################################################
+@app.route('/add_grades/<int:student_id>', methods=['POST'])
+@login_required
+def add_grades(student_id):
+    form = GradeForm()
+
+    if form.validate_on_submit():
+        # Extract form data
+        subject_id = request.form.get('subject_id')
+        period_1 = form.period_1.data
+        period_2 = form.period_2.data
+        period_3 = form.period_3.data
+
+        # Save the grades to the database
+        grade = Grades(student_id=student_id, subject_id=subject_id, period_1=period_1, period_2=period_2, period_3=period_3)
+        db.session.add(grade)
+        db.session.commit()
+
+        flash('Grades added successfully!', 'success')
+    else:
+        # Handle form validation errors here
+        flash('Form validation failed!', 'error')
+
+    # Redirect to the student details page
+    return redirect(url_for('student_details', student_id=student_id))
+
+
 @app.route('/student_details/<int:student_id>', methods=['GET', 'POST'])
 @login_required
 def student_details(student_id):
     student = Student.query.get_or_404(student_id)
     enrolled_subjects = {}
-    subjects = Subject.query.all()
+    subjects = []
     grades = {}
 
     # Fetch enrolled subjects for the specified student
@@ -952,31 +1012,22 @@ def student_details(student_id):
     for enrollment in existing_enrollments:
         section_id = enrollment.section_id
         enrolled_subjects[student_id] = Subject.query.filter_by(section_id=section_id).all()
+        subjects += enrolled_subjects[student_id]
 
     # Fetch grades for the specified student
     student_grades = Grades.query.filter_by(student_id=student_id).all()
     for grade in student_grades:
-        grades[grade.subject_id] = grade
+        grades[grade.subject_id] = {
+            'period_1': grade.period_1,
+            'period_2': grade.period_2,
+            'period_3': grade.period_3,
+            'final_grade': grade.final_grade,
+            'is_passed': grade.is_passed
+        }
 
-    return render_template('teacher/student_details.html', student=student, enrolled_subjects=enrolled_subjects.get(student_id, []), grades=grades, subjects=subjects)
+    form = GradeForm()  # Instantiate the GradeForm
 
-@app.route('/grades/<int:student_id>/<int:subject_id>', methods=['GET', 'POST'])
-@login_required
-def manage_grades(student_id, subject_id):
-    grade = Grades.query.filter_by(student_id=student_id, subject_id=subject_id).first_or_404()
-
-    if request.method == 'POST':
-        grade.period_1 = request.form['period_1']
-        grade.period_2 = request.form['period_2']
-        grade.period_3 = request.form['period_3']
-        grade.final_grade = request.form['final_grade']
-        grade.is_passed = True if request.form.get('is_passed') == 'on' else False
-
-        db.session.commit()
-        flash('Grade updated successfully', 'success')
-        return redirect(url_for('manage_grades', student_id=student_id, subject_id=subject_id))
-
-    return render_template('grades.html', grade=grade, student_id=student_id, subject_id=subject_id)
+    return render_template('teacher/student_details.html', student=student, enrolled_subjects=enrolled_subjects.get(student_id, []), grades=grades, subjects=subjects, student_id=student_id, form=form)
 
 
 
