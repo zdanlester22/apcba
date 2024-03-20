@@ -1,98 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-   
 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        /* Center the button in the form */
-        .btn-primary {
-            display: block;
-            margin: auto;
-            background-color: #2a235e;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            border: none ;
-            font-family: Montserrat, sans-serif;
+     <!-- Core plugin CSS -->
+     <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
+ 
+     <!-- Custom styles for this template -->
+     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
 
+    <title>Admin - Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    
+    <!-- Font Awesome CSS -->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <!-- Custom inline styles -->
+    <style type="text/css">
+        .bg-color{
+            background-color:#374c60 ;
         }
-        .btn-primary:hover{
-            transform: scale(1.1);
-            transition: .5es;
-        }
-
-        /* Add borders to the table */
-        .table-container {
-            overflow: hidden;
-            margin: 20px;
-            width: 1800px;
-        }
-
-        table {
-            border-collapse: collapse;
-            margin-left: 300px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            width: 1110px;
-            
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #374c60;
-            color: #fff;
-        }
-
-        /* Style for hover effect on table rows */
-        tbody tr:hover {
-            background-color: #f5f5f5;
-        }
-        .toggle-button{
-            margin-left: 20px;
-            font-size: 13px;
-        }
-        .container{
-            display: inline-block;
-        }
-
-
-        table a{
-            border: none;
-
-        }
-        .btn-primary {
-    display: block;
-    margin: auto;
-    background-color: #374c60;
-    color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-}
-.btn-primary:hover{
-    color: #374c60;
-    background-color: #fff;
-    border: 1px solid #374c60;
-    transform: scale(1);
-}
- /* Add this CSS to center the form-container */
-  /* Common styles */
   .form-container {
         display: none;
         position: fixed; /* Position it fixed for centering */
@@ -106,60 +46,7 @@
         box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
     }
 
-    .form-group {
-        margin-bottom: 15px;
-        gap: 10px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .form-group input[type="text"],
-    .form-group select {
-        width: calc(100% - 20px); /* Calculate width to adjust for padding */
-        padding: 8px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        outline: none;
-    }
-
-    .form-group button {
-        width: 100%; /* Button spans full width */
-        background-color: #374c60;
-        color: #fff;
-        padding: 7px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-    }
-
-    /* Add specific styles here if needed */
-    .form {
-        text-align: left;
-        width: 300px;
-    }
-    .form-group input[type="text"]{
-    width: 200px;
-
-}
-.form-group input[type="text"] {
-    width: 262px;
-}
-.form-group button {
-    width: 160px;
-
-}
-.form-group button:hover{
-    background-color: #fff;
-          color: #374c60;
-          border: 1px solid #374c60;
-}
-.custom-form-group {
-      padding: 7px;
-      width: 260px;
-    }
+    
     .close-button {
     position: absolute;
     top: 5px;
@@ -198,135 +85,333 @@ h2 {
     table td{
         background-color: #f6f6fa;
     }
+        
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="sidebar">
-            <div class="logo">
-                <h2>APCBA PORTAL V1.0</h2>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Admin</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Class Management
             </div>
-            <div class="links">
-                <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
-                <a href="{{ url_for('modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-                <a href="{{ url_for('course') }}" class="link"><i class="material-icons">school</i> Courses</a>
-                <a href="{{ url_for('manage_section') }}" class="link"><i class="material-icons">view_module</i> Sections</a>
-                <a href="{{ url_for('register') }}" class="link"><i class="material-icons">app_registration</i> Register</a>
-                <a href="{{ url_for('users') }}" class="link"><i class="material-icons">group</i> Accounts</a>
-                <a href="{{ url_for('view_teachers') }}" class="link"><i class="material-icons">face</i> Teachers</a>
-                <a href="{{ url_for('view_students') }}" class="link"><i class="material-icons">people</i> Students</a>
-                <a href="{{ url_for('enroll') }}" class="link"><i class="material-icons">assignment_turned_in</i> Enrolled</a>
-                <a href="{{ url_for('view_enrollies') }}" class="link"><i class="material-icons">school</i> Enrollies</a>
-            </div><br><br>
-            <div class="user-info">
-                <a href="#" id="logout-link">
-                    <span>{{ user_name }}</span> <i class="material-icons">exit_to_app</i>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('certificate') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Certificates</span>
                 </a>
-            </div>
-        </div>  
-        <div class="form-group">
-    <form method="get" action="{{ url_for('manage_section') }}" style="
-            margin-left: 300px;
-            margin-top: 120px;
-            gap: 20px;
-        ">
-             <h2>Admin Dashboard/Sections</h2>
-        <button id="toggle-button" class="toggle-button" type="button">Add section</button>
-            </form>
+            </li>
+
+             <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('modules') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Modules</span>
+                </a>
+            </li>
+
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('course') }}" >
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Section</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Account Management
             </div>
 
-    <div id="form-container" class="form-container">
-        <button class="close-button" onclick="closeForm()">X</button>
-        <h4 style="font-size: 20px; margin-top: -5px;">Add section</h4>
-        <form method="POST" action="{{ url_for('manage_section') }}" class="form">
-            {{ form_section.csrf_token }}
-            {{ form_section.hidden_tag() }}
-            <div class="form-group">
-                <label for="name" class="form-control-label">Section Name</label>
-                {{ form_section.name(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'name-char-count')") }}
-                <span class="char-count" id="name-char-count">0/30</span>
-            </div>
-    
-            <div class="form-group">
-                <label for="year" class="form-control-label">Year</label>
-                {{ form_section.year(class="form-control") }}
-            </div>
-    
-            <div class="form-group custom-form-group">
-                <label for="capacity" class="form-control-label">Capacity</label>
-                {{ form_section.capacity(class="form-control", style="padding: 8px; margin-left:-6px; width: 261px; border-radius: 5px; border: 1px solid #ccc;", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
-                <span class="char-count" id="capacity-char-count">0/2</span>
-            </div>
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Students</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ url_for('view_students') }}">Students Account</a>
+                        <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
+                        <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
+                        <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
+                    </div>
+                </div>
+            </li>
 
-            <div class="form-group">
-                <label for="course_id" class="form-control-label">Course</label>
-                {{ form_section.course_id(class="form-control") }}
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('view_teachers') }}" >
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Teachers</span></a>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-            <div class="form-group">
-                <label for="teacher_id" class="form-control-label">Teacher</label>
-                {{ form_section.teacher_id(class="form-control") }}
+         
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                                <img class="img-profile rounded-circle"
+                                    src="{{ url_for('static', filename='img/undraw_profile.svg') }}" alt="Profile Image">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Certificate</h1>
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+                      
+                            <form method="get" action="{{ url_for('manage_section') }}" >
+                
+                                <button id="toggle-button" class="toggle-button" type="button">Add section</button>
+                                    </form>
+                                    </div>
+                        
+                            <div id="form-container" class="form-container">
+                                <button class="close-button" onclick="closeForm()">X</button>
+                                <h4 style="font-size: 20px; margin-top: -5px;">Add section</h4>
+                                <form method="POST" action="{{ url_for('manage_section') }}" class="form">
+                                    {{ form_section.csrf_token }}
+                                    {{ form_section.hidden_tag() }}
+                                    <div class="form-group">
+                                        <label for="name" class="form-control-label">Section Name</label>
+                                        {{ form_section.name(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'name-char-count')") }}
+                                        <span class="char-count" id="name-char-count">0/30</span>
+                                    </div>
+                            
+                                    <div class="form-group">
+                                        <label for="year" class="form-control-label">Year</label>
+                                        {{ form_section.year(class="form-control") }}
+                                    </div>
+                            
+                                    <div class="form-group custom-form-group">
+                                        <label for="capacity" class="form-control-label">Capacity</label>
+                                        {{ form_section.capacity(class="form-control", style="padding: 8px; margin-left:-6px; width: 261px; border-radius: 5px; border: 1px solid #ccc;", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
+                                        <span class="char-count" id="capacity-char-count">0/2</span>
+                                    </div>
+                        
+                                    <div class="form-group">
+                                        <label for="course_id" class="form-control-label">Course</label>
+                                        {{ form_section.course_id(class="form-control") }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="teacher_id" class="form-control-label">Teacher</label>
+                                        {{ form_section.teacher_id(class="form-control") }}
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Create Section</button>
+                                </form>
+                            </div>
+                            
+                        
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Section Name</th>
+                                            <th>Capacity</th>
+                                            <th>Course</th>
+                                            <th>Year</th>
+                                            <th>Class</th>
+                                            <th>Course type</th>
+                                            <th>Teacher</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for section in sections %}
+                                        <tr>
+                                            <td>{{ section.name }}</td>
+                                            <td>{{ section.capacity }}</td>
+                                            <td>{{ section.course.title }}</td>
+                                            <td>{{ section.year }}</td>
+                                            <td>{{ section.course.Class }}</td>
+                                            <td>{{ section.course.course_type }}</td>
+                                            <td>{{ section.teacher.name }}</td>
+                                            <td>
+                                                <!-- Button to view subjects -->
+                                                <form method="GET" action="{{ url_for('view_subjects') }}">
+                                                    <input type="hidden" name="section_id" value="{{ section.id }}">
+                                                    <input type="hidden" name="course_id" value="{{ section.course.id }}">
+                                                    <button type="submit" class="btn btn-primary">Subjects</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                       
+
+                    </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
             </div>
-            <button type="submit" class="btn btn-primary">Create Section</button>
-        </form>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto ">
+                        <span>Copyright &copy; Asia Pacific College of Bussines and Arts 2024</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
     </div>
-    
+    <!-- End of Page Wrapper -->
 
-    <div class="table-container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Section Name</th>
-                    <th>Capacity</th>
-                    <th>Course</th>
-                    <th>Year</th>
-                    <th>Class</th>
-                    <th>Course type</th>
-                    <th>Teacher</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for section in sections %}
-                <tr>
-                    <td>{{ section.name }}</td>
-                    <td>{{ section.capacity }}</td>
-                    <td>{{ section.course.title }}</td>
-                    <td>{{ section.year }}</td>
-                    <td>{{ section.course.Class }}</td>
-                    <td>{{ section.course.course_type }}</td>
-                    <td>{{ section.teacher.name }}</td>
-                    <td>
-                        <!-- Button to view subjects -->
-                        <form method="GET" action="{{ url_for('view_subjects') }}">
-                            <input type="hidden" name="section_id" value="{{ section.id }}">
-                            <input type="hidden" name="course_id" value="{{ section.course.id }}">
-                            <button type="submit" class="btn btn-primary">Subjects</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <script>
-        document.getElementById('toggle-button').addEventListener('click', function () {
-            var formContainer = document.getElementById('form-container');
-            formContainer.style.display = (formContainer.style.display === 'none' || formContainer.style.display === '') ? 'block' : 'none';
 
-        });
+    <!-- Bootstrap core JavaScript-->
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-        var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
-document.getElementById("logout-link").addEventListener("click", confirmLogout);
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
-function confirmLogout(event) {
-    event.preventDefault(); // Prevent the default link behavior
-    var confirmLogout = confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
-        window.location.href = logoutUrl; // Redirect to logout URL
-    }
-}
-function limitInputLength(inputField, maxLength, charCountElementId) {
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
+
+
+</body>
+<script>
+  function limitInputLength(inputField, maxLength, charCountElementId) {
     var charCountElement = document.getElementById(charCountElementId);
     if (inputField.value.length > maxLength) {
         inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
@@ -341,7 +426,11 @@ function closeForm() {
     var formContainer = document.getElementById('form-container');
     formContainer.style.display = 'none';
 }
+document.getElementById('toggle-button').addEventListener('click', function () {
+            var formContainer = document.getElementById('form-container');
+            formContainer.style.display = (formContainer.style.display === 'none' || formContainer.style.display === '') ? 'block' : 'none';
+
+        });
     </script>
 
-</body>
 </html>

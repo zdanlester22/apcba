@@ -1,397 +1,334 @@
-<!-- web/enrollies.html -->
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-   
 
-        table {
-            border-collapse: collapse;
-            width: 80%; /* Adjust the width as needed */
-            max-width: 600px; /* Set a maximum width if desired */
-            margin-top: 20px;
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+     <!-- Core plugin CSS -->
+     <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
+ 
+     <!-- Custom styles for this template -->
+     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <title>Admin - Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    
+    <!-- Font Awesome CSS -->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <!-- Custom inline styles -->
+    <style type="text/css">
+        .bg-color{
+            background-color:#374c60 ;
         }
-
-        th, td {
-            padding: 9px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #444;
-            color: #fff;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .page-title {
-            font-size: 2em; /* Adjust the font size as needed */
-        }
-
-        .container {
-            margin: 20px;
-            text-align: center;
-            overflow-x: auto; /* Allow horizontal scrolling */
-        }
-
-        .enrollies-table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 100%; /* Use 100% of the container */
-            margin-top: 20px;
-            table-layout: fixed; /* Use fixed layout to prevent column width issues */
-        }
-
-        .enrollies-table th,
-        .enrollies-table td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-            white-space: nowrap; /* Prevent text wrapping */
-            overflow: hidden; /* Hide overflow content */
-            text-overflow: ellipsis; /* Display ellipsis for overflow text */
-            background-color: #f6f6fa;
         
-        }
-
-        .enrollies-table th {
-            background-color: #444;
-            color: #fff;
-        }
-
-        .enrollies-table tr:hover {
-            background-color: #f5f5f5;
-        }
-        td{
-            background-color: f6f6fa;
-        }
-
-        .additional-info {
-           padding: 10px;
-           display: flex;
-           font-family: Montserrat, sans-serif;
-         
-        }
-
-        .show-info-btn {
-            cursor: pointer;
-            color: #fff;
-            background-color: #2a235e;
-            text-decoration: none;
-            padding: 5px;
-            border-radius: 10px;
-            font-family: Montserrat, sans-serif;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 7%;
-            padding: 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            width: 70%;
-            font-size: 1.2rem;
-            margin-right: auto;
-            margin-left: auto;
-            margin-top: 30px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .archive-btn{
-            text-decoration: none;
-            background-color: #374c60;
-            color: #fff;
-            border-radius: 10px;
-            padding: 5px;
-            cursor: pointer;
-        }
-        .container {
-            margin: 20px;
-            text-align: center;
-            overflow-x: auto; /* Allow horizontal scrolling */
-            overflow-y: hidden; /* Remove vertical scrollbar */
-            display: inline;
-        }     
-        .container button {
-            margin-top: -10px;
-            background-color: #374c60;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-family: Montserrat, sans-serif;
-        }
-        .enrollies-table button{
-            margin-top: -70px;
-            background-color: #374c60;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-        }
-        .enrollies-table a{
-            padding: 8px;
-            border-radius: 5px;
-        }
-        .enrollies-table{
-            width: 75%;
-            margin-left: 300px;
-            margin-right: auto;
-        }
-        .enrollies-table button:hover{
-            background-color: #fff;
-          color: #374c60;
-          border: 1px solid #374c60;
-        }
-        .container button:hover{
-            background-color: #fff;
-          color: #374c60;
-          border: 1px solid #374c60;
-        }
-        .enrollies-table a:hover{
-            background-color: #fff;
-          color: #374c60;
-          border: 1px solid #374c60;
-        }
-        .page-title{
-            color: #374c60;
-            font-size: 29px;
-            margin-left: -340px;
-        }
-        .enrollies-table th {
-            background-color: #374c60;
-            color: #fff;
-        }
-                .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 350px;
-            top: 0;
-            width: 500px;
-            height: 100%;
-            overflow: auto;
-            padding-top: 60px;
-                }
-                .modal-content {
-            background-color: #fefefe;
-            margin: 7%;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 70%;
-            font-size: 1.2rem;
-            margin-right: auto;
-            margin-left: auto;
-            margin-top: 30px;
-            text-align: left;
-        }
-        .page-title {
-            color: #374c60;
-            font-size: 26px;
-            margin-left: -550px;
-        }
-        .flash {
-            position: absolute;
-            right: 0;
-            top: 0;
-            margin-top: 100px;
-            margin-right: 25px;
-            z-index: 10;
-            background-color: #374c60;
-            color: #fff;
-            border: 2px solid #374c60;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-        .flash li{
-            list-style: none;
-            text-align: center;
-            margin-right: 25px;
-        }
-        .fade-in {
-            /* CSS class to fade in flash messages */
-            opacity: 1 !important; /* Override opacity to 1 */
-        }
-        .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 500px;
-    top: 0;
-    width: 500px;
-    height: 100%;
-    overflow: auto;
-    padding-top: 60px;
-}
     </style>
-   
 </head>
-<body>
-    <div class="flash">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-    </div>
-        <div class="sidebar">
-            <div class="logo">
-                <h2>APCBA PORTAL V1.0</h2>
-            </div>
-            <div class="links">
-                <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
-                <a href="{{ url_for('modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-                <a href="{{ url_for('course') }}" class="link"><i class="material-icons">school</i> Courses</a>
-                <a href="{{ url_for('manage_section') }}" class="link"><i class="material-icons">view_module</i> Sections</a>
-                <a href="{{ url_for('register') }}" class="link"><i class="material-icons">app_registration</i> Register</a>
-                <a href="{{ url_for('users') }}" class="link"><i class="material-icons">group</i> Accounts</a>
-                <a href="{{ url_for('view_teachers') }}" class="link"><i class="material-icons">face</i> Teachers</a>
-                <a href="{{ url_for('view_students') }}" class="link"><i class="material-icons">people</i> Students</a>
-                <a href="{{ url_for('enroll') }}" class="link"><i class="material-icons">assignment_turned_in</i> Enrolled</a>
-                <a href="{{ url_for('view_enrollies') }}" class="link"><i class="material-icons">school</i> Enrollies</a>
-            </div><br><br>
-            <div class="user-info">
-                <a href="#" id="logout-link">
-                    <span>{{ user_name }}</span> <i class="material-icons">exit_to_app</i>
-                </a>
-            </div>
-        </div>
-    <div class="container">
-        <h4 class="page-title">Admin Dashboard/Enrollies</h4>
-        <a href="{{ url_for('view_enrollies') }}" class="view"><button style="margin-left: 300px;">View All Enrollies</button></a>
-        <table class="enrollies-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for enrollies in enrollies_list %}
-                <tr>
-                    <td>{{ enrollies.name }}</td>
-                    <td>{{ enrollies.email }}</td>
-                    <td>
-                        <a href="{{ url_for('archive_enrollie', enrollie_id=enrollies.id) }}" class="archive-btn">Archive</a>
-                        <button class="show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</button>
-                    </td>
-                </tr>
-                <!-- Hidden additional info for each enrollie -->
-                <div id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
-                    <strong>ENROLLEE INFORMATION:</strong><br><br>
-                    <strong>Level:</strong> {{ enrollies.level }}<br>
-                    <strong>Year:</strong> {{ enrollies.year }}<br>
-                    <strong>Address:</strong> {{ enrollies.address }}<br>
-                    <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
-                    <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
-                    <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
-                    <strong>Gender:</strong> {{ enrollies.gender }}<br>
-                    <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
-                    <strong>Religion:</strong> {{ enrollies.religion }}<br>
-                    <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
-                    <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
-                    <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
-                    <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
-                    <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
-                    <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
-                    <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
                 </div>
-                {% endfor %}
-            </tbody>
-        </table>
-        <!-- Modal Popup -->
-        <div id="myModal" class="modal">
+                <div class="sidebar-brand-text mx-3">Admin</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Class Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('certificate') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Certificates</span>
+                </a>
+            </li>
+
+             <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('modules') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Modules</span>
+                </a>
+            </li>
+
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('course') }}" >
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Section</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Account Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Students</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ url_for('view_students') }}">Students Account</a>
+                        <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
+                        <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
+                        <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('view_teachers') }}" >
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Teachers</span></a>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+         
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                                <img class="img-profile rounded-circle"
+                                    src="{{ url_for('static', filename='img/undraw_profile.svg') }}" alt="Profile Image">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Enrollies</h1>
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+                       
+                        <table class="enrollies-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enrollies in enrollies_list %}
+                                <tr>
+                                    <td>{{ enrollies.name }}</td>
+                                    <td>{{ enrollies.email }}</td>
+                                    <td>
+                                        <a href="{{ url_for('archive_enrollie', enrollie_id=enrollies.id) }}" class="archive-btn">Archive</a>
+                                        <button class="show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</button>
+                                    </td>
+                                </tr>
+                                <!-- Hidden additional info for each enrollie -->
+                                <div id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
+                                    <strong>ENROLLEE INFORMATION:</strong><br><br>
+                                    <strong>Level:</strong> {{ enrollies.level }}<br>
+                                    <strong>Year:</strong> {{ enrollies.year }}<br>
+                                    <strong>Address:</strong> {{ enrollies.address }}<br>
+                                    <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
+                                    <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
+                                    <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
+                                    <strong>Gender:</strong> {{ enrollies.gender }}<br>
+                                    <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
+                                    <strong>Religion:</strong> {{ enrollies.religion }}<br>
+                                    <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
+                                    <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
+                                    <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
+                                    <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
+                                    <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
+                                    <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
+                                    <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
+                                </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Modal Popup -->
+                        <div id="myModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+                                <div id="modal-info-content"></div>
+                            </div>
+                        </div>
+                    </div>
+                       
+
+                    </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto ">
+                        <span>Copyright &copy; Asia Pacific College of Bussines and Arts 2024</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
-                <div id="modal-info-content"></div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
+
+                </div>
             </div>
         </div>
     </div>
-    
-    <script>
-        function toggleInfo(enrollieId) {
-            var modal = document.getElementById('myModal');
-            var modalInfoContent = document.getElementById('modal-info-content');
-            var span = document.getElementsByClassName('close')[0];
-            var enrollies = document.getElementById(`additional-info-${enrollieId}`);
-    
-            // Display modal
-            modal.style.display = 'block';
-    
-            // Populate modal content
-            modalInfoContent.innerHTML = enrollies.innerHTML;
-    
-            // Close modal when the close button is clicked
-            span.onclick = function() {
-                modal.style.display = 'none';
-            };
-    
-            // Close modal when clicking outside the modal content
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            };
-        }
-    
-        function hideInfo(enrollieId) {
-            var enrollies = document.getElementById(`additional-info-${enrollieId}`);
-            enrollies.style.display = 'none';
-        }
 
-        var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
-document.getElementById("logout-link").addEventListener("click", confirmLogout);
+    <!-- Bootstrap core JavaScript-->
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-function confirmLogout(event) {
-    event.preventDefault(); // Prevent the default link behavior
-    var confirmLogout = confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
-        window.location.href = logoutUrl; // Redirect to logout URL
-    }
-}
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
+
+
+</body>
+<script>
 function toggleSidebar() {
         var sidebar = document.querySelector('.sidebar');
         var form = document.querySelector('.container');
@@ -439,7 +376,35 @@ function toggleSidebar() {
             fadeInFlash();
             fadeOutFlash();
         });
-    </script>
+        function toggleInfo(enrollieId) {
+            var modal = document.getElementById('myModal');
+            var modalInfoContent = document.getElementById('modal-info-content');
+            var span = document.getElementsByClassName('close')[0];
+            var enrollies = document.getElementById(`additional-info-${enrollieId}`);
     
-</body>
+            // Display modal
+            modal.style.display = 'block';
+    
+            // Populate modal content
+            modalInfoContent.innerHTML = enrollies.innerHTML;
+    
+            // Close modal when the close button is clicked
+            span.onclick = function() {
+                modal.style.display = 'none';
+            };
+    
+            // Close modal when clicking outside the modal content
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        }
+    
+        function hideInfo(enrollieId) {
+            var enrollies = document.getElementById(`additional-info-${enrollieId}`);
+            enrollies.style.display = 'none';
+        }
+    </script>
+
 </html>

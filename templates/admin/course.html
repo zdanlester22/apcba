@@ -1,705 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-    
-    
-    form {
-        margin-top: 100px;
-        display: flex;
-        gap: 19px;
 
-    }
-    #semester{
-        height: 35px;
-        width: 150px;
-        padding: 8px;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        }
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"],
-        input[type="password"],
-        input[type="email"],
-        select {
-            width: 150px;
-            padding: 8px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button[type="submit"],
-        button[type="button"] {
-            background-color: #2a235e;
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            font-size: 12px;
-        }
-
-        button[type="submit"]:hover,
-        button[type="button"]:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
-        }
-
-        /* Style the modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            overflow: auto;
-            background-color: #fff;
-            text-align: center;
-            align-items: center;
-            width: 50%;
-        }
-
-        /* Position the exit button */
-        .exit-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-
-        .add-subject-btn {
-            background-color: #2a235e;
-            color: #fff;
-            border: none;
-            padding: 10px 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            font-size: 14px;
-        }
-
-        .add-subject-btn:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
-        }
-       
-        button{
-            font-family: Montserrat, sans-serif;
-        }
-        .formi{
-            margin-left: 300px;
-        }
-        .formi a{
-            padding: 5px;
-        }
-        button[type="submit"]:hover {
-            background-color: #fff;
-            color: #374c60;
-            border: 1px solid #374c60;
-        }
-        button[type="submit"] {
-                width: 101px;
-            }
-        button[type="button"]:hover {
-            background-color: #fff;
-            color: #374c60;
-            border: 1px solid #374c60;
-        }
-        .add-subject-btn:hover{
-            background-color: #fff;
-            color: #374c60;
-            border: 1px solid #374c60;
-        }
-        button[type="submit"], button[type="button"] {
-            background-color: #374c60;
-        }
-
-        .add-subject-btn{
-            margin-top: 20px;
-            margin-bottom: 10px;
-            background-color: #374c60;
-        }
-
-    #add-subject-form {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        overflow: auto;
-        width: 300px; /* Adjust width as needed */
-        box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
-    }
-
-    #add-subject-form {
-    background-color: #fff;
-    width: 25%;
-    box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
-    height: 350px;
-}
-
-    #add-subject-form .exit-btn {
-        position: absolute;
-        right: 10px;
-        background: none;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    #add-subject-form form {
-    align-items: center;
-    margin-top: 20px;
-    width: 255px;
-    display: inherit;
-    margin-left: 50px;
-}
-    #add-subject-form form label {
-        margin-bottom: 10px;
-    }
-
-    #add-subject-form form input[type="text"],
-    #add-subject-form form input[type="password"],
-    #add-subject-form form input[type="email"],
-    #add-subject-form form select {
-        width: 90%;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    #add-subject-form form input[type="submit"] {
-        width: 90%;
-        background-color: #374c60;
-        color: #fff;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        font-size: 14px;
-        margin-top: 20px;
-        font-family: Montserrat, sans-serif;
-    }
-
-    #add-subject-form form input[type="submit"]:hover {
-        background-color: #fff;
-    color: #374c60;
-    border: 1px solid #374c60;
-    }
-    #add-subject-form form input[type="number" i]{
-        width: 87%;
-        height: 27px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-    }
-
-.modal{
-    width: 400px;
-    height: 600px;
-}
-
-
-h5{
-    margin-top: 80px;
-    margin-left: 20px;
-    font-size: 25px;
-    font-family: Montserrat, sans-serif;
-    color: #374c60;
-}
-
-button,
-label,
-input,
-select {
-    font-family: 'Montserrat', sans-serif;
-}
-input[type="text"]{
-    margin-bottom: 39px;
-}
-select {
-    width: 150px;
-    padding: 8px;
-    margin-bottom: 34px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-.arrow-btn{
-    cursor: pointer;
-}
-        .flash {
-            position: absolute;
-            right: 0;
-            top: 0;
-            margin-top: 100px;
-            margin-right: 25px;
-            z-index: 10;
-            background-color: #374c60;
-            color: #fff;
-            border: 2px solid #374c60;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-        .flash li{
-            list-style: none;
-            text-align: center;
-            margin-right: 25px;
-        }
-        .fade-in {
-            /* CSS class to fade in flash messages */
-            opacity: 1 !important; /* Override opacity to 1 */
-        }
-        /* CSS for table cells */
-        table{
-            border-collapse: collapse;
-            width: 90%;
-        }
-        th,
-        td {
-            border: 1px solid#ccc; /* Add borders to table cells */
-            padding: 6px; /* Add padding to cells */
-            text-align: left; /* Center-align text inside cells */
-            vertical-align: middle; /* Align content vertically */
-        }
-
-        /* CSS for buttons inside table */
-        .add-subject-btn,
-        .btn-primary {
-            display: block; /* Make buttons block elements */
-            margin: auto; /* Center-align the buttons */
-            margin-top: 5px; /* Adjust top margin as needed */
-            margin-bottom: 5px; /* Adjust bottom margin as needed */
-            width: 100px; /* Set a fixed width for the buttons */
-            text-align: center; /* Center-align the text inside buttons */
-        }
-        /* Ensure consistency in button styles */
-        .add-subject-btn,
-        .btn-primary {
-            background-color: #374c60;
-            color: #fff;
-            border: none;
-            padding: 9px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            font-size: 13px;
-            display: inline-block;
-        }
-
-        .add-subject-btn:hover,
-        .btn-primary:hover {
-            background-color: #fff;
-            color: #374c60;
-            border: 1px solid #374c60;
-  
-        }
-        th{
-            background-color: #374c60;;
-            color: #fff;
-        }
-        .arrow-btn {
-            cursor: pointer;
-        }
-
-        /* Styles for the icon inside the button */
-        .arrow-btn i {
-            /* Add styles to the icon */
-            vertical-align: middle; /* Align the icon vertically */
-            margin-right: 5px; /* Add some spacing between the icon and the text */
-            font-size: 30px;
-            color: #374c60;
-        }
-        .arrow-btn i:hover{
-            content: "show subjects";
-            background-color: #374c60;
-            color: #fff;
-            border-radius: 10px;
-            padding: 2px;
-        }
-
-        
-        /* CSS */
-        /* CSS */
-        /* CSS */
-        /* CSS for Tooltip */
-        .arrow-btn {
-            position: relative; /* Ensure the arrow-btn span is a positioned parent */
-        }
-
-        .arrow-btn .tooltip {
-            visibility: hidden;
-            background-color: #374c60;
-            color: #fff;
-            border-radius: 10px;
-            text-align: center;
-            padding: 5px;
-            border-radius: 5px;
-            position: absolute;
-            z-index: 1;
-            top: calc(50% - 15px); /* Adjust positioning as needed */
-            left: calc(100% + 10px); /* Adjust positioning as needed */
-            width: 70px; /* Set the width */
-            height: 40px; /* Set the height */
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .arrow-btn:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-        .arrow-btn:hover .tooltip::before {
-            content: "View subjects"; /* Display the text "View subjects" */
-        }
-        /* CSS for the modal */
-        #subject-modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 60%; /* Adjust width as needed */
-            max-width: 600px; /* Set maximum width */
-            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
-            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
-            border-radius: 10px; /* Rounded corners */
-            padding: 20px;
-            text-align: center;
-            height: 495px;
-        }
-
-        #subject-modal{
-            max-height: 70vh; /* Limit maximum height of modal content */
-            overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
-            background-color: #fff;
-        }
-
-        #subject-modal .exit-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            color: #333; /* Close button color */
-        }
-        /* CSS for the modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            overflow: auto;
-            /* background-color: rgba(0, 0, 0, 0.5); */
-            text-align: center;
-            align-items: center;
-            width: 60%;
-            max-width: 600px;
-            height: 555px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
-            overflow-y: hidden;
-        }
-
-        .exit-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            color: #333; /* Close button color */
-        }
-
-        /* CSS for the tooltip */
-        .arrow-btn {
-            position: relative; /* Ensure the arrow-btn span is a positioned parent */
-        }
-
-        .arrow-btn .tooltip {
-            visibility: hidden;
-            background-color: #374c60;
-            color: #fff;
-            border-radius: 10px;
-            text-align: center;
-            padding: 5px;
-            border-radius: 5px;
-            position: absolute;
-            z-index: 1;
-            top: calc(50% - 15px); /* Adjust positioning as needed */
-            left: calc(100% + 10px); /* Adjust positioning as needed */
-            width: 70px; /* Set the width */
-            height: 40px; /* Set the height */
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .arrow-btn:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .arrow-btn:hover .tooltip::before {
-            content: "View subjects"; /* Display the text "View subjects" */
-        }
-        #add-subject-form form {
-            align-items: center;
-            margin-top: 20px;
-            /* width: 255px; */
-            display: inherit;
-            margin-left: 50px;
-        }
-        #add-subject-form form {
-
-            margin-top: 20px;
-            width: 316px;
-            display: inherit;
-            margin-left: 50px;
-        }
-        #add-subject-form form input[type="text"] {
-            margin-bottom: 0px;
-        }
-        h4 {
-            display: block;
-            font-size: 23px;
-        }
-
-        button[type="button"] {
-            margin-bottom: 9px;
-            margin-left: 977px;
-        }
-        table{
-            width: 95%;
-        }
-        table td{
-            background-color: #f6f6fa;
-        }
-        button[type="submit"]{
-            background-color: rgb(175, 175, 35);
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            font-size: 12px;
-        }
-        button[type="submit"]:hover{
-            background-color: #fff;
-            color: rgb(175, 175, 35);
-            border:1px solid rgb(175, 175, 35);
-        }
-</style>
-</head>
-<body>
-    <div class="flash">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-    </div>
-    <div class="container">
-        <div class="sidebar">
-            <div class="logo">
-                <h2>APCBA PORTAL V1.0</h2>
-            </div>
-            <div class="links">
-               <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
-                <a href="{{ url_for('modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-                <a href="{{ url_for('course') }}" class="link"><i class="material-icons">school</i> Courses</a>
-                <a href="{{ url_for('manage_section') }}" class="link"><i class="material-icons">view_module</i> Sections</a>
-                <a href="{{ url_for('register') }}" class="link"><i class="material-icons">app_registration</i> Register</a>
-                <a href="{{ url_for('users') }}" class="link"><i class="material-icons">group</i> Accounts</a>
-                <a href="{{ url_for('view_teachers') }}" class="link"><i class="material-icons">face</i> Teachers</a>
-                <a href="{{ url_for('view_students') }}" class="link"><i class="material-icons">people</i> Students</a>
-                <a href="{{ url_for('enroll') }}" class="link"><i class="material-icons">assignment_turned_in</i> Enrolled</a>
-                <a href="{{ url_for('view_enrollies') }}" class="link"><i class="material-icons">school</i> Enrollies</a>
-            </div><br><br>
-            <div class="user-info">
-                <a href="#" id="logout-link">
-                    <span>{{ user_name }}</span> <i class="material-icons">exit_to_app</i>
-                </a>
-            </div>
-        </div>
-<div class="formi">
-        <h5>Admin Dashboard/Courses</h5>
-        <button type="button" class="add-course-btn" onclick="showAddCourseForm()" fdprocessedid="bw4sxc" style="height: 35px; width: 160px;">Add Course</button>
-      <table>
-        <tr>
-            <th>Course Title</th>
-            <th>Abbreviation</th>
-            <th>School Year</th>
-            <th>Year</th>
-            <th>Class</th>
-            <th>Semesters</th>
-            <th>Course Type</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-        {% for course in courses %}
-            <tr class="course-row {% if not course.is_active %}inactive-course{% endif %}">
-                <td>
-                    <span class="arrow-btn" onclick="toggleSubjects('{{ course.id }}')">
-                        <i class="material-icons">library_books</i>
-                        <span class="tooltip"></span>
-                    </span>
-                    {{ course.title }}
-                </td>
-                <td>{{ course.abbreviation }}</td>
-                <td>{{ course.school_year }}</td>
-                <td>{{ course.year }}</td>
-                <td>{{ course.Class }}</td>
-                <td>{{ course.semesters }}</td>
-                <td>{{ course.course_type }}</td>
-                <td>{{ 'Active' if course.is_active else 'Inactive' }}</td>
-                <td>
-                    <button class="add-subject-btn" onclick="showAddSubjectForm('{{ course.id }}')">Add Sub</button>
-                    <button type="submit" class="btn btn-primary">Update</button>
-                    <form method="POST" action="{{ url_for('update_course', course_id=course.id) }}" style="margin-top: 0;"></form>
+     <!-- Core plugin CSS -->
+     <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
  
-                </td>
-            </tr>
+     <!-- Custom styles for this template -->
+     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
 
- <div id="subject-modal" class="modal">
-      <div class="modal-content">
-        <button class="exit-btn" onclick="hideModal('subject-modal')">X</button>
-        <div id="subject-modal-content">
-            {% for subject in course.subjects %}
-            <div class="subject-info">
-                <p><strong>Abbreviation:</strong> {{ subject.abbreviation }}</p>
-                <p><strong>Title:</strong> {{ subject.title }}</p>
-                <p><strong>Unit:</strong> {{ subject.unit }}</p>
-                <p><strong>Teacher:</strong> {{ subject.teacher }}</p>
-            </div>
-            {% endfor %}
-            {% endfor %}
-        </div>
-    </div>
-</div>
+    <title>Admin - Dashboard</title>
 
-            
+    <!-- Custom fonts for this template-->
+    
+    <!-- Font Awesome CSS -->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <!-- Custom inline styles -->
+    <style type="text/css">
+        .bg-color{
+            background-color:#374c60 ;
+        }
         
-    </table>
-</div> 
-    <!-- Modal for adding a new course (initially hidden) -->
-    <div id="add-course-modal" class="modal">
-        <div class="modal-content">
-            <h4>Add course</h4>
-            <button class="exit-btn" onclick="hideModal('add-course-modal')">X</button>
-            <form method="POST" action="{{ url_for('course') }}" style="margin-top: 0; color: #374c60;
-           background-color: #fff; border-radius: 5px ;" >
-                {{ form_course.hidden_tag() }}
-                <div style="float: left; width: 50%;">
-                    <div>
-                        {{ form_course.course_type.label }} {{ form_course.course_type() }}
-                    </div>
-                    <div>
-                        <p><strong>{{ form_course.abbreviation.label }}</strong></p>
-                        {{ form_course.abbreviation(class="form-control", maxlength="10", oninput="limitInputLength(this, 10, 'charCount')") }}
-                        {% if form_course.abbreviation.data is not none %}
-                            <span id="charCount">{{ form_course.abbreviation.data|length }}/10</span>
-                        {% else %}
-                        {% endif %}
-                    </div>
-                    <div>
-                        <p><strong>{{ form_course.title.label }}</strong></p>
-                        {{ form_course.title(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'charCountTitle')") }}
-                        
-                        {% if form_course.title.data is not none %}
-                            <span id="charCountTitle">{{ form_course.title.data|length }}/30</span>
-                        {% else %}
-                        {% endif %}
-                        
-                    </div>
-                    <div>
-                        {{ form_course.year.label }} {{ form_course.year() }}
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Admin</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Class Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('certificate') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Certificates</span>
+                </a>
+            </li>
+
+             <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('modules') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Modules</span>
+                </a>
+            </li>
+
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('course') }}" >
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Section</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Account Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Students</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ url_for('view_students') }}">Students Account</a>
+                        <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
+                        <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
+                        <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
                     </div>
                 </div>
-                
-                <!-- Right side inputs -->
-                <div style="float: right; width: 50%;">
-                    <div>
-                        {{ form_course.school_year.label }} {{ form_course.school_year() }}
+            </li>
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('view_teachers') }}" >
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Teachers</span></a>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+         
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                                <img class="img-profile rounded-circle"
+                                    src="{{ url_for('static', filename='img/undraw_profile.svg') }}" alt="Profile Image">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Course</h1>
                     </div>
-                    <div>
-                        {{ form_course.semesters.label }} {{ form_course.semesters() }}
+
+                    <!-- Content Row -->
+                    <div class="row">
+                        <div class="formi">
+                            
+                            <button type="button" class="add-course-btn" onclick="showAddCourseForm()" fdprocessedid="bw4sxc" style="height: 35px; width: 160px;">Add Course</button>
+                          <table>
+                            <tr>
+                                <th>Course Title</th>
+                                <th>Abbreviation</th>
+                                <th>School Year</th>
+                                <th>Year</th>
+                                <th>Class</th>
+                                <th>Semesters</th>
+                                <th>Course Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            {% for course in courses %}
+                                <tr class="course-row {% if not course.is_active %}inactive-course{% endif %}">
+                                    <td>
+                                        <span class="arrow-btn" onclick="toggleSubjects('{{ course.id }}')">
+                                            <i class="material-icons">library_books</i>
+                                            <span class="tooltip"></span>
+                                        </span>
+                                        {{ course.title }}
+                                    </td>
+                                    <td>{{ course.abbreviation }}</td>
+                                    <td>{{ course.school_year }}</td>
+                                    <td>{{ course.year }}</td>
+                                    <td>{{ course.Class }}</td>
+                                    <td>{{ course.semesters }}</td>
+                                    <td>{{ course.course_type }}</td>
+                                    <td>{{ 'Active' if course.is_active else 'Inactive' }}</td>
+                                    <td>
+                                        <button class="add-subject-btn" onclick="showAddSubjectForm('{{ course.id }}')">Add Sub</button>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                        <form method="POST" action="{{ url_for('update_course', course_id=course.id) }}" style="margin-top: 0;"></form>
+                     
+                                    </td>
+                                </tr>
+                    
+                     <div id="subject-modal" class="modal">
+                          <div class="modal-content">
+                            <button class="exit-btn" onclick="hideModal('subject-modal')">X</button>
+                            <div id="subject-modal-content">
+                                {% for subject in course.subjects %}
+                                <div class="subject-info">
+                                    <p><strong>Abbreviation:</strong> {{ subject.abbreviation }}</p>
+                                    <p><strong>Title:</strong> {{ subject.title }}</p>
+                                    <p><strong>Unit:</strong> {{ subject.unit }}</p>
+                                    <p><strong>Teacher:</strong> {{ subject.teacher }}</p>
+                                </div>
+                                {% endfor %}
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        {{ form_course.Class.label }} {{ form_course.Class() }}
-                    </div>
-                    <div>
-                        {{ form_course.is_active.label }} {{ form_course.is_active() }}<br>
-                    </div>
-                    <div>
-                        <input type="submit" value="Add Course" style="margin-top: 0;
-                        color: #fff;
-                        background-color: #374c60;
-                        border: 1px solid #374c60;
-                        border-radius: 5px;
-                        padding: 8px 30px;">
+                    
+                                
+                            
+                        </table>
+                    </div> 
+                        <!-- Modal for adding a new course (initially hidden) -->
+                        <div id="add-course-modal" class="modal">
+                            <div class="modal-content">
+                                <h4>Add course</h4>
+                                <button class="exit-btn" onclick="hideModal('add-course-modal')">X</button>
+                                <form method="POST" action="{{ url_for('course') }}" style="margin-top: 0; color: #374c60;
+                               background-color: #fff; border-radius: 5px ;" >
+                                    {{ form_course.hidden_tag() }}
+                                    <div style="float: left; width: 50%;">
+                                        <div>
+                                            {{ form_course.course_type.label }} {{ form_course.course_type() }}
+                                        </div>
+                                        <div>
+                                            <p><strong>{{ form_course.abbreviation.label }}</strong></p>
+                                            {{ form_course.abbreviation(class="form-control", maxlength="10", oninput="limitInputLength(this, 10, 'charCount')") }}
+                                            {% if form_course.abbreviation.data is not none %}
+                                                <span id="charCount">{{ form_course.abbreviation.data|length }}/10</span>
+                                            {% else %}
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <p><strong>{{ form_course.title.label }}</strong></p>
+                                            {{ form_course.title(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'charCountTitle')") }}
+                                            
+                                            {% if form_course.title.data is not none %}
+                                                <span id="charCountTitle">{{ form_course.title.data|length }}/30</span>
+                                            {% else %}
+                                            {% endif %}
+                                            
+                                        </div>
+                                        <div>
+                                            {{ form_course.year.label }} {{ form_course.year() }}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Right side inputs -->
+                                    <div style="float: right; width: 50%;">
+                                        <div>
+                                            {{ form_course.school_year.label }} {{ form_course.school_year() }}
+                                        </div>
+                                        <div>
+                                            {{ form_course.semesters.label }} {{ form_course.semesters() }}
+                                        </div>
+                                        <div>
+                                            {{ form_course.Class.label }} {{ form_course.Class() }}
+                                        </div>
+                                        <div>
+                                            {{ form_course.is_active.label }} {{ form_course.is_active() }}<br>
+                                        </div>
+                                        <div>
+                                            <input type="submit" value="Add Course" style="margin-top: 0;
+                                            color: #fff;
+                                            background-color: #374c60;
+                                            border: 1px solid #374c60;
+                                            border-radius: 5px;
+                                            padding: 8px 30px;">
+                    
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Form to add a new subject for a course (initially hidden) -->
+                        <div id="add-subject-form" class="modal-content" style="display: none;">
+                            <button class="exit-btn" onclick="hideModal('add-subject-form')">X</button>
+                            <form method="POST" action="{{ url_for('course') }}">
+                                <h2 style="text-align: center; margin-right: 20px;">Add Subject</h2>
+                                {{ form_subject.hidden_tag() }}
+                                {{ form_subject.abbreviation.label }}
+                                {{ form_subject.abbreviation(class="form-control", maxlength="10", oninput="updateCharCount(this, 'charCount')") }}<br>
+                                {{ form_subject.title.label }}
+                                {{ form_subject.title(class="form-control", maxlength="30", oninput="updateCharCount(this, 'titleCharCount')") }}<br>
+                                {{ form_subject.unit.label }}
+                                {{ form_subject.unit(class="form-control", maxlength="1", oninput="updateCharCount(this, 'unitCharCount')") }}<br>
+                                <input type="hidden" name="course_id" id="subject-course-id" value="">
+                                <input type="submit" value="Add">
+                            </form>
+                        </div>
+                       
 
                     </div>
+                        </div>
+                    </div>
                 </div>
-            </form>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto ">
+                        <span>Copyright &copy; Asia Pacific College of Bussines and Arts 2024</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
+
+                </div>
+            </div>
         </div>
     </div>
-    
-    <!-- Form to add a new subject for a course (initially hidden) -->
-    <div id="add-subject-form" class="modal-content" style="display: none;">
-        <button class="exit-btn" onclick="hideModal('add-subject-form')">X</button>
-        <form method="POST" action="{{ url_for('course') }}">
-            <h2 style="text-align: center; margin-right: 20px;">Add Subject</h2>
-            {{ form_subject.hidden_tag() }}
-            {{ form_subject.abbreviation.label }}
-            {{ form_subject.abbreviation(class="form-control", maxlength="10", oninput="updateCharCount(this, 'charCount')") }}<br>
-            {{ form_subject.title.label }}
-            {{ form_subject.title(class="form-control", maxlength="30", oninput="updateCharCount(this, 'titleCharCount')") }}<br>
-            {{ form_subject.unit.label }}
-            {{ form_subject.unit(class="form-control", maxlength="1", oninput="updateCharCount(this, 'unitCharCount')") }}<br>
-            <input type="hidden" name="course_id" id="subject-course-id" value="">
-            <input type="submit" value="Add">
-        </form>
-    </div>
-    
-    <script>
-            function updateCharCount(inputField, charCountElementId) {
+
+    <!-- Bootstrap core JavaScript-->
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
+
+
+</body>
+<script>
+  function updateCharCount(inputField, charCountElementId) {
         var charCountElement = document.getElementById(charCountElementId);
         var currentLength = inputField.value.length;
         var maxLength = parseInt(inputField.getAttribute('maxlength'));
@@ -783,40 +502,6 @@ select {
         var modal = document.getElementById(modalId);
         modal.style.display = 'none';
     }
-
-        var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
-document.getElementById("logout-link").addEventListener("click", confirmLogout);
-
-function confirmLogout(event) {
-    event.preventDefault(); // Prevent the default link behavior
-    var confirmLogout = confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
-        window.location.href = logoutUrl; // Redirect to logout URL
-    }
-}
-function toggleSidebar() {
-        var sidebar = document.querySelector('.sidebar');
-        var form = document.querySelector('.formi');
-        var table = document.querySelector('table');
-
-        if (sidebar.style.display === 'none') {
-            // Show the sidebar
-            sidebar.style.display = 'block';
-            form.style.width = 'calc(100% - 300px)';
-            table.style.width = 'calc(100% - 300px)';
-            form.style.marginLeft = '300px';
-            table.style.width = '98%';
-            th.style.padding = '5px';
-            td.style.padding = '5px';
-        } else {
-            // Hide the sidebar
-            sidebar.style.display = 'none';
-            form.style.marginLeft = '2.5%';
-            form.style.width = '98%';
-            table.style.marginLeft = '1%';
-            table.style.width = '98%';
-        }
-    }
     document.addEventListener("DOMContentLoaded", function () {
             // Select the flash div
             var flashDiv = document.querySelector(".flash");
@@ -857,8 +542,6 @@ function toggleSidebar() {
     var modal = document.getElementById('subject-modal');
     modal.style.display = 'block';
 }
-
-
     </script>
-</body>
+
 </html>
