@@ -284,17 +284,19 @@ def users():
     # Fetch user data from the database
     users_data = User.query.all()
 
+    # Calculate the total number of accounts
+    number_of_accounts = User.query.count()
+
     # Search functionality
     search_query = request.args.get('q', default='', type=str)
 
     if search_query:
-       users_data = User.query.filter(
-    or_(
-        User.email.ilike(f"%{search_query}%"),
-        User.name.ilike(f"%{search_query}%"),
-    )
-).all()
-
+        users_data = User.query.filter(
+            or_(
+                User.email.ilike(f"%{search_query}%"),
+                User.name.ilike(f"%{search_query}%"),
+            )
+        ).all()
 
     # Handle form submissions
     teacher_form = TeacherForm()
@@ -330,8 +332,9 @@ def users():
                 flash(f'Error adding student: {str(e)}', 'danger')
 
         return redirect(url_for('users'))
+    
 
-    return render_template('admin/users.html', users=users_data, search_query=search_query, teacher_form=teacher_form, student_form=student_form,user_name=user_name)
+    return render_template('admin/users.html', users=users_data, search_query=search_query, teacher_form=teacher_form, student_form=student_form, user_name=user_name, number_of_accounts=number_of_accounts)
 
 
 @app.route('/admin/teachers')
