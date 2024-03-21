@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="icon" href="/static/images/logo.png">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -296,13 +297,13 @@ th {
             <h2>APCBA PORTAL V1.0</h2>
         </div>
         <div class="links">
-            <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-            <a href="{{ url_for('student_account') }}" class="link"><i class="material-icons">account_circle</i> Profile</a>
-            <a href="{{ url_for('student_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-            <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
-            <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="material-icons">grading</i> View Grades</a>
-            <a href="{{ url_for('view_schedule') }}" class="link"><i class="material-icons">schedule</i> Schedule</a>
-            <a href="{{ url_for('student_change_password') }}" class="link"><i class="material-icons">lock</i> Password</a>
+            <a href="/dashboard" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
+            <a href="/student/account" class="link"><i class="material-icons">account_circle</i> Profile</a>
+            <a href="/student/modules" class="link"><i class="material-icons">book</i> Modules</a>
+            <a href="/certificate" class="link"><i class="material-icons">receipt</i> Certificates</a>
+            <a href="/grades/student_view?student_id=29" class="link"><i class="material-icons">grading</i> View Grades</a>
+            <a href="/view_schedule" class="link"><i class="material-icons">schedule</i> Schedule</a>
+            <a href="/student/student_change_password" class="link"><i class="material-icons">lock</i> Password</a>
             
             
         </div><br><br>
@@ -329,20 +330,12 @@ th {
             </tr>
         </thead>
         <tbody>
-            {% for schedule in schedules %}
-                <tr>
-                    <td>{{ schedule.id }}</td>
-                    <td>{{ schedule.day_of_week }}</td>
-                    <td>{{ schedule.start_time }}</td>
-                    <td>{{ schedule.end_time }}</td>
-                    <td>{{ schedule.subject.title }}</td>
-                </tr>
-            {% endfor %}
+            
         </tbody>
     </table>
     </div>
 <script>
-    var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
+    var logoutUrl = "/logout"; // Define logout URL using Jinja
 document.getElementById("logout-link").addEventListener("click", confirmLogout);
 
 function confirmLogout(event) {

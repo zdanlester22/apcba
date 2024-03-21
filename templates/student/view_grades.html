@@ -2,308 +2,47 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-body {
-    font-family: Montserrat, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-.container {
-    display: flex;
-    height: 100vh; /* Set container to 100% viewport height */
-    overflow-x: hidden; /* Hide horizontal overflow */
-}
-.sidebar {
-    position: fixed; /* Fix the position of the sidebar */
-    top: 0; /* Position it at the top */
-    bottom: 0; /* Extend it to the bottom */
-    left: 0; /* Position it at the left */
-    width: 200px;
-    background-color: #374c60;
-    color: #0f0f0f;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    transition: opacity 0.3s ease, width 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
 
-.sidebar-hidden {
-    opacity: 0; /* Hide the sidebar when it's hidden */
-    width: 0; /* Remove the width of the sidebar when hidden */
-    pointer-events: none; /* Disable pointer events when hidden */
-}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
+     <!-- Bootstrap core CSS -->
+     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
-.content {
-    flex: 1;
-    padding: 20px;
-    transition: margin-left 0.3s ease;
-    margin-left: 300px; /* Adjust the initial margin-left to accommodate the sidebar */
-}
-.logo {
-    margin-bottom: 20px;
-    display: flex;
-}
+     <!-- Core plugin CSS -->
+     <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
+ 
+     <!-- Custom styles for this template -->
+     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-.logo h2 {
-    color: #fff;
-    text-align: center;
-    margin-top: 10px;
-    font-size: 20px;
-    font-weight: bold;
-}
-.links {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-.link i {
-margin-right: 10px;
-margin-left: 10px; /* Adjust this value as needed */
-}
+    <title>Admin - Dashboard</title>
 
-.links a {
-display: flex;
-align-items: center;
-text-align: left;
-color: #fff;
-text-decoration: none;
-padding: 10px 0;
-margin-bottom: -7px;
-font-size: .9rem;
-font-weight: 600;
-transition:  color 0.3s ease;
-}
-.links a:hover,
-.links a:hover i {
-background-color: #fff; /* Change background color on hover */
-color: #222; /* Change text color on hover */
-border-radius: 10px;
-}
-.links a:hover i {
-color: #374c60;
-}
+    <!-- Custom fonts for this template-->
+    
+    <!-- Font Awesome CSS -->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
 
-.link {
-    cursor: pointer;
-    margin-bottom: 10px;
-    text-align: left;
-    font-size: .9rem;
-}
-.toggle-btn {
-    color: #111;
-    border: none;
-    padding: 20px;
-    cursor: pointer;
-    position: absolute;
-    top: 20px;
-    right: 25px; 
-    z-index: 2;
-    background-color: #fff;
-}
-.content {
-    flex: 1;
-    padding: 30px;
-    transition: margin-left 0.3s ease; /* Add transition for smooth content movement */
-    margin-right: 60px;
-}
-.Name {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-}
-.bot {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: -100px;
-}
-.announcement-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-    margin: 20px;
-}
-.announcement-form h2 {
-    margin-bottom: 10px;
-    color: #333;
-}
-.form-group {
-    margin-bottom: 15px;
-}
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #666;
-}
-.form-group input[type="text"],
-.form-group textarea {
-    width: 97%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-}
-.form-group input[type="submit"] {
-    background-color: #374c60;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-family: Montserrat, sans-serif;
-}
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-.update-delete-buttons {
-    margin-top: 10px;
-}
-.update-button {
-    color: #fff;
-    background-color: #349b3f;
-    text-decoration: none;
-    margin-right: 10px;
-    transition: color 0.3s ease;
-    padding: 10px;
-    border-radius: 10px;
-}
-.delete-button {
-    color: #fff;
-    background-color: #c03232;
-    text-decoration: none;
-    margin-right: 10px;
-    transition: color 0.3s ease;
-    padding: 10px;
-    border-radius: 10px;
-}
-#content-char-count {
-    font-size: 12px;
-    display: flex;
-    justify-content: end;
-    margin-right: 25px;
-}
-#title-char-count {
-    font-size: 12px;
-    display: flex;
-    justify-content: end;
-    margin-right: 25px;
-}
-.submit {
-    padding: 13px;
-    color: #fff;
-    background-color: #349b3f;
-    border: none;
-    border-radius: 5px;
-    font-family: Montserrat, sans-serif;
-}
-.submit:hover {
-    transform: scale(1.1);
-}
-h3 {
-    font-size: 1rem;
-    text-align: center;
-    margin-top: 570px;
-    position: fixed;
-    box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.3);
-    background-color: #374c60;
-    padding: 10px;
-    color: #fff;
-    max-width: 180px;
-    width: 100%;
-}
-.shadow {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-}
-h4{
-    margin-left: 20px;
-}
-.sidebar a{
-    text-decoration: none;
-    color: #fff;
-}
-.user-info {
-margin-top: auto; /* Push user info to the bottom of the sidebar */
-}
+    <!-- Custom inline styles -->
+    <style type="text/css">
+        .bg-color{
+            background-color:#374c60 ;
+        }
 
-.user-info a {
-display: flex; /* Use flexbox */
-align-items: center; /* Align items vertically */
-text-decoration: none;
-color: #fff;
-padding: 10px 20px;
-border-radius: 10px;
-transition: background-color 0.3s ease;
-max-width: 150px;
-width: 100%;
-}
-
-.user-info a:hover {
-background-color: #fff; /* Change background color on hover */
-color: #222; /* Change text color on hover */
-}
-
-.user-info span {
-margin-right: 10px; /* Add space between username and icon */
-}
-
-.user-info div {
-display: flex; /* Use flexbox */
-align-items: center; /* Align items vertically */
-}
-
-      
-        .grades-table {
-    width: 75%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.grades-table th, .grades-table td {
-    padding: 12px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-.grades-table th {
-    background-color: #2a235e;
-    color: #fff;
-    font-weight: bold;
-}
-
-.grades-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.grades-table tbody tr:hover {
-    background-color: #e5e5e5;
-}
-.bot h1{
-    color: #333;
-    font-size: 6vh;
-    margin-left: 70px;
-    border-bottom: 2px solid gray;
-    width: 100%;
-}
-.flash {
+        .flash {
             position: absolute;
             right: 0;
             top: 0;
             margin-top: 100px;
-            margin-right: 25px;
+            margin-right: 5px;
             z-index: 10;
             background-color: #374c60;
             color: #fff;
@@ -316,186 +55,366 @@ align-items: center; /* Align items vertically */
             list-style: none;
             text-align: center;
             margin-right: 25px;
+            padding: 10px;
         }
         .fade-in {
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
-h2{
-    font-size: 1.5rem;
-    color: #333;
-}
+        img{
+            height: 50px;
+        }   
+
     </style>
 </head>
 
-<body>
-    <div class="flash">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-    </div>
-    <div class="container">
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <span class="material-icons">menu</span>
-        </button>
-        <div class="sidebar">
-            <div class="logo">
-                <h2>APCBA PORTAL V1.0</h2>
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
+                </div>
+                
+                <div class="sidebar-brand-text mx-3">APCBA</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Documents
             </div>
-            <div class="links">
-                <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-                <a href="{{ url_for('student_account') }}" class="link"><i class="material-icons">account_circle</i> Profile</a>
-                <a href="{{ url_for('student_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-                <a href="{{ url_for('certificate') }}" class="link"><i class="material-icons">receipt</i> Certificates</a>
-                <a href="{{ url_for('student_view_grades', student_id=current_user.id) }}" class="link"><i class="material-icons">grading</i> Grades</a>
-                <a href="{{ url_for('view_schedule') }}" class="link"><i class="material-icons">schedule</i> Schedule</a>
-                <a href="{{ url_for('student_change_password') }}" class="link"><i class="material-icons">lock</i> Password</a>
-                
-                
-            </div><br><br>
-            <div class="user-info">
-                <a href="#" id="logout-link">
-                    <span></span> <i class="material-icons">exit_to_app</i>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('certificate') }}">
+                    <i class="fas fa-fw fa-award"></i> <!-- Changed from "fa-cog" to "fa-certificate" -->
+                    <span>Certificates</span>
                 </a>
+            </li>
+            
+
+             <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('student_modules') }}">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Modules</span>
+                </a>
+            </li>
+            
+            
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Academic
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-chalkboard"></i>
+                    <span>Class</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ url_for('view_schedule') }}">Schedule</a>
+                        <a class="collapse-item" href="{{ url_for('student_view_grades', student_id=current_user.id) }}">Grades</a>
+                    </div>
+                </div>
+            </li>
+
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+         
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
+                                <img class="img-profile rounded-circle"
+                                    src="{{ url_for('static', filename='img/undraw_profile.svg') }}" alt="Profile Image">
+                            </a>
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="{{ url_for('student_account') }}">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="{{ url_for('student_change_password') }}">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Change Password <i class="ri-lock-password-fill"></i>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+                            <div class="flash">
+                                {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                            {% for message in messages %}
+                                                <li>{{ message }}</li>
+                                            {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                        </div>
+
+                        <div class="container mt-5">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="btn-group-toggle">
+                                        <div class="btn-group mr-3">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="semesterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Select Semester
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="semesterDropdown">
+                                                <a class="dropdown-item" href="#">Semester 1</a>
+                                                <a class="dropdown-item" href="#">Semester 2</a>
+                                                <a class="dropdown-item" href="#">Semester 3</a>
+                                            </div>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" id="schoolYearDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Select School Year
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="schoolYearDropdown">
+                                                <a class="dropdown-item" href="#">2022-2023</a>
+                                                <a class="dropdown-item" href="#">2023-2024</a>
+                                                <a class="dropdown-item" href="#">2024-2025</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if enrollments %}
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <div class="info-section">
+                                        <p><strong>Student:</strong> {{ student.name }}</p>
+                                        {% for enrollment in enrollments %}
+                                            <p><strong>Course:</strong> {{ enrollment.enrolled_course_rel.title }}</p>
+                                            <p><strong>Section:</strong> {{ enrollment.enrolled_section_rel.name }}</p>
+                                            <p><strong>Semester:</strong> {{ enrollment.enrolled_course_rel.semesters }}</p>
+                                            <p><strong>School Year:</strong> {{ enrollment.enrolled_course_rel.school_year }}</p>
+                                            <p><strong>Year:</strong> {{ enrollment.enrolled_course_rel.year }}</p>
+                                            <p><strong>Class:</strong> {{ enrollment.enrolled_course_rel.Class }}</p>
+                                            {% for section in enrollment.enrolled_course_rel.sections %}
+                                                <p><strong>Teacher:</strong> {{ section.teacher.name }}</p>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <table class="table table-striped table-bordered">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Subject</th>
+                                                <th>Period 1</th>
+                                                <th>Period 2</th>
+                                                <th>Period 3</th>
+                                                <th>Final Grade</th>
+                                                <th>Passed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for grade in grades %}
+                                                <tr>
+                                                    <td>{{ grade.subject.title }}</td>
+                                                    <td>{{ grade.period_1 }}</td>
+                                                    <td>{{ grade.period_2 }}</td>
+                                                    <td>{{ grade.period_3 }}</td>
+                                                    <td>{{ grade.final_grade }}</td>
+                                                    <td>{{ "Pass" if grade.is_passed else "Fail" if grade else 'N/A' }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="row mt-3">
+                                <div class="col-md-12 text-center">
+                                    <h2>Not yet enrolled</h2>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        
+                        
+                        
+                        
+                    
+                    
+
+
+
+                    </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto ">
+                        <span>Copyright &copy; APCBA</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
+
+                </div>
             </div>
         </div>
-    
-        <div class="content">
-            <div class="topnav">
-                <h4 class="Name">Grades</h4>
-            </div>
-    
-    
-        <!-- Display student, section, and course information -->
-        {% if enrollments %}
-            <div class="info-section">
-                <p><strong>Student:</strong> {{ student.name }}</p>
-                {% for enrollment in enrollments %}
-                    <p><strong>Course:</strong> {{ enrollment.enrolled_course_rel.title }} 
-                    <strong>Section:</strong> {{ enrollment.enrolled_section_rel.name}}
-                    <strong>Semester:</strong> {{ enrollment.enrolled_course_rel.semesters }}
-                    <strong>School Year:</strong> {{ enrollment.enrolled_course_rel.school_year }}
-                    <strong>Year:</strong> {{ enrollment.enrolled_course_rel.year }}
-                    <strong>Class:</strong> {{ enrollment.enrolled_course_rel.Class }}</p>
-                    <!-- Inner loop for sections should be placed here -->
-                    {% for section in enrollment.enrolled_course_rel.sections %}
-                        <p><strong>Teacher:</strong> {{ section.teacher.name }}</p>
-                    {% endfor %}
-                {% endfor %}
-            </div>
-    
-            <table class="grades-table">
-                <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Period 1</th>
-                        <th>Period 2</th>
-                        <th>Period 3</th>
-                        <th>Final Grade</th>
-                        <th>Passed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for grade in grades %}
-                        <tr>
-                            <td>{{ grade.subject.title }}</td>
-                            <td>{{ grade.period_1 }}</td>
-                            <td>{{ grade.period_2 }}</td>
-                            <td>{{ grade.period_3 }}</td>
-                            <td>{{ grade.final_grade }}</td>
-                            <td>{{ "Pass" if grade.is_passed else "Fail" if grade else 'N/A' }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-        <center>
-            <h2>Not yet enrolled</h2>
-        </center>
-        {% endif %}
     </div>
-    
+  <script>
 
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select the flash div
+            var flashDiv = document.querySelector(".flash");
 
-    <script>
+            // Function to add fade-in class
+            function fadeInFlash() {
+                flashDiv.classList.add("fade-in");
+            }
 
+            // Function to remove fade-in class after 3 seconds
+            function fadeOutFlash() {
+                setTimeout(function () {
+                    flashDiv.classList.remove("fade-in");
+                }, 5000); // 3 seconds delay
+            }
 
-    
-var originalContentMargin; // Store the original content margin
+            // Call the functions
+            fadeInFlash();
+            fadeOutFlash();
+        });
+        
 
-function toggleDropdown(event, id) {
-event.preventDefault(); // Prevent default behavior of the link click
-var dropdown = document.getElementById(id);
-var isDisplayed = dropdown.style.display === "block";
-// Hide all dropdowns
-var allDropdowns = document.querySelectorAll('.sub-links');
-allDropdowns.forEach(function(dropdown) {
-dropdown.style.display = 'none';
-});
-// Display the clicked dropdown if it wasn't already displayed
-if (!isDisplayed) {
-dropdown.style.display = 'block';
-} else {
-dropdown.style.display = 'none'; // Hide the dropdown if already displayed
-}
-}
+  </script>
+    <!-- Bootstrap core JavaScript-->
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
-function toggleSidebar() {
-    var sidebar = document.querySelector('.sidebar');
-    sidebar.classList.toggle('sidebar-hidden');
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
 
-    // Toggle content margin based on sidebar visibility
-    var content = document.querySelector('.content');
-    if (!originalContentMargin) {
-        originalContentMargin = getComputedStyle(content).marginLeft;
-    }
-    content.style.marginLeft = (sidebar.classList.contains('sidebar-hidden')) ? '0' : originalContentMargin;
-}
+  <!-- Page level plugins -->
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
 
-function countCharacters(inputId, displayId, limit) {
-    var input = document.getElementById(inputId);
-    var characterCount = input.value.length;
-    var display = document.getElementById(displayId);
-    display.textContent = characterCount + "/" + limit + " characters";
+  <!-- Page level custom scripts -->
+  <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
 
-    // Check if character count exceeds the limit
-    if (characterCount > limit) {
-        // Trim the input value to the limit
-        input.value = input.value.slice(0, limit);
-
-        // Update the character count in the display
-        characterCount = limit;
-        display.textContent = characterCount + "/" + limit + " characters";
-
-        // Change the color to red
-        display.style.color = 'red';
-    } else {
-        // Reset the color to black
-        display.style.color = 'black';
-    }
-}
-
-var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
-document.getElementById("logout-link").addEventListener("click", confirmLogout);
-
-function confirmLogout(event) {
-    event.preventDefault(); // Prevent the default link behavior
-    var confirmLogout = confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
-        window.location.href = logoutUrl; // Redirect to logout URL
-    }
-}
-
-
-
-</script>
 
 </body>
 
