@@ -984,12 +984,22 @@ def add_grades(student_id):
     if form.validate_on_submit():
         # Extract form data
         subject_id = request.form.get('subject_id')
-        period_1 = form.period_1.data
-        period_2 = form.period_2.data
-        period_3 = form.period_3.data
+        period_1 = int(form.period_1.data)
+        period_2 = int(form.period_2.data)
+        period_3 = int(form.period_3.data)
+        compute = period_1 + period_2 + period_3
+        result = float(compute / 3)
+
+        if result >= 75:
+            final = str(result)
+            final_grade = "True"
+        else:
+            final = str(result)
+            final_grade = "False"
+
 
         # Save the grades to the database
-        grade = Grades(student_id=student_id, subject_id=subject_id, period_1=period_1, period_2=period_2, period_3=period_3)
+        grade = Grades(student_id=student_id, subject_id=subject_id, period_1=period_1, period_2=period_2, period_3=period_3, final_grade=final, is_passed=final_grade)
         db.session.add(grade)
         db.session.commit()
 
