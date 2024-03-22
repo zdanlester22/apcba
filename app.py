@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app, session, make_response
+from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app, session, make_response,  get_flashed_messages
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
 from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm, ChangePasswordForm
-from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, GradeForm, ScheduleForm, RegistrationForm, CommentForm
+from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm,  Period1Form, Period2Form, Period3Form, ScheduleForm, RegistrationForm, CommentForm
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
@@ -976,40 +976,70 @@ def enrolled_subjects(student_id):
     return render_template('admin/enrolled_subjects.html', enrolled_subjects=enrolled_subjects.get(student_id, []))
 
 ###########################################################################################################################################################################################################
-@app.route('/add_grades/<int:student_id>', methods=['POST'])
+@app.route('/add_grades/<int:student_id>/period1', methods=['GET', 'POST'])
 @login_required
-def add_grades(student_id):
-    form = GradeForm()
-
-    if form.validate_on_submit():
-        # Extract form data
-        subject_id = request.form.get('subject_id')
-        period_1 = int(form.period_1.data)
-        period_2 = int(form.period_2.data)
-        period_3 = int(form.period_3.data)
-        compute = period_1 + period_2 + period_3
-        result = float(compute / 3)
-
-        if result >= 75:
-            final = str(result)
-            final_grade = "True"
-        else:
-            final = str(result)
-            final_grade = "False"
-
-
-        # Save the grades to the database
-        grade = Grades(student_id=student_id, subject_id=subject_id, period_1=period_1, period_2=period_2, period_3=period_3, final_grade=final, is_passed=final_grade)
+def add_grades_period1(student_id):
+    grade = Grades.query.filter_by(student_id=student_id).first() or Grades(student_id=student_id)
+    form = Period1Form(obj=grade)
+    
+    if request.method == 'POST' and form.validate_on_submit():
+        form.populate_obj(grade)
+        grade.subject_id = request.form.get('subject_id')
+        compute_grade(grade)
         db.session.add(grade)
         db.session.commit()
+        flash('Period 1 grade added successfully!', 'success')
+        return redirect(url_for('student_details', student_id=student_id))
+    
+    return render_template('web/student_details.html', form=form, subject_id=request.form.get('subject_id'))
 
-        flash('Grades added successfully!', 'success')
+@app.route('/add_grades/<int:student_id>/period2', methods=['GET', 'POST'])
+@login_required
+def add_grades_period2(student_id):
+    grade = Grades.query.filter_by(student_id=student_id).first() or Grades(student_id=student_id)
+    form = Period2Form(obj=grade)
+    
+    if request.method == 'POST' and form.validate_on_submit():
+        form.populate_obj(grade)
+        grade.subject_id = request.form.get('subject_id')
+        compute_grade(grade)
+        db.session.add(grade)
+        db.session.commit()
+        flash('Period 2 grade added successfully!', 'success')
+        return redirect(url_for('student_details', student_id=student_id))
+    
+    return render_template('web/student_details.html', form=form, subject_id=request.form.get('subject_id'))
+
+@app.route('/add_grades/<int:student_id>/period3', methods=['GET', 'POST'])
+@login_required
+def add_grades_period3(student_id):
+    grade = Grades.query.filter_by(student_id=student_id).first() or Grades(student_id=student_id)
+    form = Period3Form(obj=grade)
+    
+    if request.method == 'POST' and form.validate_on_submit():
+        form.populate_obj(grade)
+        grade.subject_id = request.form.get('subject_id')
+        compute_grade(grade)
+        db.session.add(grade)
+        db.session.commit()
+        flash('Period 3 grade added successfully!', 'success')
+        return redirect(url_for('student_details', student_id=student_id))
+    
+    return render_template('web/student_details.html', form=form, subject_id=request.form.get('subject_id'))
+
+
+def compute_grade(grade):
+    if grade.period_1 and grade.period_2 and grade.period_3:
+        period_1 = int(grade.period_1)
+        period_2 = int(grade.period_2)
+        period_3 = int(grade.period_3)
+        total = period_1 + period_2 + period_3
+        result = total / 3.0
+        grade.final_grade = str(result)
+        grade.is_passed = result >= 75
     else:
-        # Handle form validation errors here
-        flash('Form validation failed!', 'error')
-
-    # Redirect to the student details page
-    return redirect(url_for('student_details', student_id=student_id))
+        grade.final_grade = None
+        grade.is_passed = False
 
 
 @app.route('/student_details/<int:student_id>', methods=['GET', 'POST'])
@@ -1038,9 +1068,21 @@ def student_details(student_id):
             'is_passed': grade.is_passed
         }
 
-    form = GradeForm()  # Instantiate the GradeForm
+    # Format final grades
+    final_grades_formatted = {}
+    for subject_id, grade_info in grades.items():
+        final_grade = grade_info['final_grade']
+        if final_grade is not None:
+            final_grades_formatted[subject_id] = "{:.2f}".format(float(final_grade))
+        else:
+            final_grades_formatted[subject_id] = ""
 
-    return render_template('teacher/student_details.html', student=student, enrolled_subjects=enrolled_subjects.get(student_id, []), grades=grades, subjects=subjects, student_id=student_id, form=form)
+    form1 = Period1Form()  # Instantiate Period1Form
+    form2 = Period2Form()  # Instantiate Period2Form
+    form3 = Period3Form()  # Instantiate Period3Form
+
+    return render_template('teacher/student_details.html', student=student, enrolled_subjects=enrolled_subjects.get(student_id, []), grades=grades, subjects=subjects, student_id=student_id, form1=form1, form2=form2, form3=form3, final_grades_formatted=final_grades_formatted)
+
 
 
 

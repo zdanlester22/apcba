@@ -194,9 +194,15 @@ class EnrolliesForm(FlaskForm):
     parent_occupation = StringField('Occupation of Parents/Guardians', validators=[DataRequired()])
     special_needs = TextAreaField('Special Needs or Accommodations')
 
-class GradeForm(FlaskForm):
+class Period1Form(FlaskForm):
     period_1 = StringField('Period 1')
+    submit = SubmitField('Submit')
+
+class Period2Form(FlaskForm):
     period_2 = StringField('Period 2')
+    submit = SubmitField('Submit')
+
+class Period3Form(FlaskForm):
     period_3 = StringField('Period 3')
     submit = SubmitField('Submit')
 

@@ -147,65 +147,54 @@
                         <td>{{ grades[subject.id].period_1 }}</td>
                         <td>{{ grades[subject.id].period_2 }}</td>
                         <td>{{ grades[subject.id].period_3 }}</td>
-                        <td>{{ grades[subject.id].final_grade }}</td>
+                        <td>{{ final_grades_formatted[subject.id] }}</td>
+
+
+
                         <td>{{ "Pass" if grades[subject.id].is_passed == True else "Fail" if grades[subject.id].is_passed == False else "N/A" }}</td>
                     {% endif %}
                     <td>
-                        <button class="add-grades-btn" data-subject-id="{{ subject.id }}">Add Grades</button>
+                        
+                        <form method="POST" action="/add_grades/{{ student_id }}/period1">
+                            {{ form1.hidden_tag() }}
+                            <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                            <h3>Period 1</h3>
+                            {{ form1.period_1.label }}: {{ form1.period_1(size=10) }}
+                            <br>
+                            {{ form1.submit() }}
+                        </form>
+                        
+                        <form method="POST" action="/add_grades/{{ student_id }}/period2">
+                            {{ form2.hidden_tag() }}
+                            <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                            <h3>Period 2</h3>
+                            {{ form2.period_2.label }}: {{ form2.period_2(size=10) }}
+                            <br>
+                            {{ form2.submit() }}
+                        </form>
+                        
+                        <form method="POST" action="/add_grades/{{ student_id }}/period3">
+                            {{ form3.hidden_tag() }}
+                            <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                            <h3>Period 3</h3>
+                            {{ form3.period_3.label }}: {{ form3.period_3(size=10) }}
+                            <br>
+                            {{ form3.submit() }}
+                        </form>
+                    {% endfor %}
+                    
+                    
+                
                     </td>
                 </tr>
-                {% endfor %}
+            
             </tbody>
         </table>
         
-        <!-- Modal for adding grades -->
-        <div id="grade-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Add Grades</h2>
-                <form id="grade-form-modal" method="post" action="/add_grades/{{ student_id }}">
-                    {{ form.hidden_tag() }}
-                    <input type="hidden" id="subject-id-modal" name="subject_id">
-                    <div>
-                        <label for="period_1">Period 1 Grade</label>
-                        {{ form.period_1(class="form-control") }}
-                    </div>
-                    <div>
-                        <label for="period_2">Period 2 Grade</label>
-                        {{ form.period_2(class="form-control") }}
-                    </div>
-                    <div>
-                        <label for="period_3">Period 3 Grade</label>
-                        {{ form.period_3(class="form-control") }}
-                    </div>
-                    <button type="submit">Add Grades</button>
-                </form>
-            </div>
-        </div>
-    </div>
+      
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // JavaScript code to show/hide modal and set subject ID
-            document.querySelectorAll('.add-grades-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    const subjectId = button.getAttribute('data-subject-id');
-                    document.getElementById('subject-id-modal').value = subjectId;
-                    document.getElementById('grade-modal').style.display = 'block';
-                });
-            });
-
-            // Close the modal when close button or outside modal is clicked
-            document.querySelector('.close').addEventListener('click', () => {
-                document.getElementById('grade-modal').style.display = 'none';
-            });
-
-            window.addEventListener('click', (event) => {
-                if (event.target == document.getElementById('grade-modal')) {
-                    document.getElementById('grade-modal').style.display = 'none';
-                }
-            });
-        });
+  
     </script>
 </body>
 </html>
