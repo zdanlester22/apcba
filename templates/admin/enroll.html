@@ -33,168 +33,7 @@
         .bg-color{
             background-color:#374c60 ;
         }
-        .link:hover {
-            background-color: #e07b00;
-            transform: scale(1.05);
-        }
-
-       
-
-        h2 {
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 0;
-        }
-
-        .show-button {
-          background-color: #374c60;
-            color: #fff;
-            padding: 8px 13px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            margin-top: 90px;
-            margin-right: 20px;
-            font-family: Montserrat, sans-serif;
-
-        }
-
-        .show-button:hover {
-          background-color: #fff;
-          color: #374c60;
-          border: 1px solid #374c60;
-        }
-
-        .enrollment-box {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0px 0px 20px 5px rgba(0.1, 0.1, 0.1, 0.2);
-            border-radius: 5px;
-            z-index: 1000;
-        }
-
-        .show-box {
-            display: block;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            color: #555;
-        }
-
-        .enrollment-box h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        form {
-            text-align: left;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-top: 5px;
-            font-family: Montserrat, sans-serif;
-        }
-
-        .form-check-input {
-            margin-top: 5px;
-        }
-
-        button.btn-primary {
-            background-color: #374c60;
-            color: #fff;
-            padding: 10px 13px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            margin-top: 10px;
-        }
-
-        button.btn-primary:hover {
-          background-color: #fff;
-          color: #374c60;
-          border: 1px solid #374c60;
-        }
-
-        table {
-            width: 100%;
-            max-width: 1150px;
-            margin: 20px auto;
-            border-collapse: collapse;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #374c60;
-            color: #fff;
-        
-        }
-        td{
-          background-color: #f6f6fa;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        img {
-            height: 50px;
-            margin-right: 5px;
-        }
-        h4{
-          color: #374c60;
-        }
-        h4{
-          display: block;
-          margin-top: -80px;
-          margin-bottom: 60px;
-          font-size: 25px;
-          margin-left: 0px;
-          
-        }
-        .show-button {
-          background-color: #374c60;
-            color: #fff;
-            padding: 7px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            margin-top: 200px;
-            margin-right: 20px;
-            text-decoration: none;
-          }
+      
     </style>
 </head>
 
@@ -365,92 +204,102 @@
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
                     </div>
 
-                    <!-- Content Row -->
-                    <div class="row">
-                      {% block content %}
-                      <button class="show-button" onclick="showForm()">Enroll Students Here</button>
-                      <div class="enrollment-box" id="enrollment-box">
-                        <span class="close-button" onclick="hideForm()">X</span>
-                        <form method="post" action="{{ url_for('enroll') }}">
-                          {{ form.hidden_tag() }}
-                    
-                          <!-- Select2 for student_id -->
-                          <div class="form-group">
-                            <label for="{{ form.student_id.id }}">{{ form.student_id.label }}</label>
-                            <div class="select-wrapper">
-                                {{ form.student_id(class="form-control select2") }}
-                            </div>
+                  <!-- Content Row -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            {% block content %}
+            <button class="btn btn-primary show-button" data-toggle="modal" style="margin-bottom: 10px;" data-target="#enrollmentModal">Enroll Students Here</button>
+
+            <div class="modal fade" id="enrollmentModal" tabindex="-1" role="dialog" aria-labelledby="enrollmentModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="enrollmentModalLabel">Enroll Students</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                    
-                          <!-- Select2 for course_id -->
-                          <div class="form-group">
-                            <label for="{{ form.course_id.id }}">{{ form.course_id.label }}</label>
-                            <div class="select-wrapper">
-                                {{ form.course_id(class="form-control select2") }}
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                          <label for="{{ form.year.id }}">{{ form.year.label }}</label>
-                          <div class="select-wrapper">
-                              {{ form.year(class="form-control select2") }}
-                          </div>
-                      </div>
-                      
-                    
-                          <!-- Select2 for section_id -->
-                          <div class="form-group">
-                            <label for="{{ form.section_id.id }}">{{ form.section_id.label }}</label>
-                            <div class="select-wrapper">
-                                {{ form.section_id(class="form-control select2") }}
-                            </div>
-                        </div>
-                        
-                          <div class="form-group">
-                            <label for="{{ form.is_approved.id }}">{{ form.is_approved.label }}</label>
-                            {{ form.is_approved(class="form-check-input") }}
-                          </div>
-                    
-                          <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Enroll</button>
-                          </div>
-                        </form>
-                      </div>
-                    
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Student Name</th>
-                            <th>Course</th>
-                            <th>Year</th>
-                            <th>Section Name</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for enrollment in existing_enrollments %}
-                            <tr>
-                              <td>{{ enrollment.enrolled_student_rel.name }}</td>
-                              <td>{{ enrollment.enrolled_course_rel.title }}</td>
-                              <td>{{ enrollment.year }}</td>
-                              <td>{{ enrollment.enrolled_section_rel.name }}</td>
-                              <td>
-                               
-                      <a href="{{ url_for('enrolled_subjects', student_id=enrollment.student_id) }}" class="show-button">
-                         Subjects
-                      </a>
-                              </td>
-                            </tr>
-                          {% endfor %}
-                        </tbody>
-                      </table>
-                      {% endblock %}
-                    </div>
+                        <div class="modal-body">
+                            <form method="post" action="{{ url_for('enroll') }}">
+                                {{ form.hidden_tag() }}
+
+                                <!-- Select2 for student_id -->
+                                <div class="form-group">
+                                    <label for="{{ form.student_id.id }}">{{ form.student_id.label }}</label>
+                                    <div class="select-wrapper">
+                                        {{ form.student_id(class="form-control select2") }}
+                                    </div>
+                                </div>
+
+                                <!-- Select2 for course_id -->
+                                <div class="form-group">
+                                    <label for="{{ form.course_id.id }}">{{ form.course_id.label }}</label>
+                                    <div class="select-wrapper">
+                                        {{ form.course_id(class="form-control select2") }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.year.id }}">{{ form.year.label }}</label>
+                                    <div class="select-wrapper">
+                                        {{ form.year(class="form-control select2") }}
+                                    </div>
+                                </div>
+
+                                <!-- Select2 for section_id -->
+                                <div class="form-group">
+                                    <label for="{{ form.section_id.id }}">{{ form.section_id.label }}</label>
+                                    <div class="select-wrapper">
+                                        {{ form.section_id(class="form-control select2") }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.is_approved.id }}">{{ form.is_approved.label }}</label>
+                                    {{ form.is_approved(class="form-check-input") }}
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Enroll</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <!-- /.container-fluid -->
             </div>
+
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Course</th>
+                        <th>Year</th>
+                        <th>Section Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in existing_enrollments %}
+                    <tr>
+                        <td>{{ enrollment.enrolled_student_rel.name }}</td>
+                        <td>{{ enrollment.enrolled_course_rel.title }}</td>
+                        <td>{{ enrollment.year }}</td>
+                        <td>{{ enrollment.enrolled_section_rel.name }}</td>
+                        <td>
+                            <a href="{{ url_for('enrolled_subjects', student_id=enrollment.student_id) }}" class="btn btn-primary">
+                                Subjects
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
             <!-- End of Main Content -->
 
             <!-- Footer -->

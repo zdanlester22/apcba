@@ -205,30 +205,34 @@
                     </div>
 
                     <!-- Content Row -->
-                    <div class="row">
-                       
-                       
-            {% if teachers %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Teacher ID</th>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for teacher in teachers %}
-                        <tr>
-                            <td>{{ teacher.teacher_id }}</td>
-                            <td>{{ teacher.name }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No teachers found.</p>
-        {% endif %}
-    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if teachers %}
+                                    <table class="table">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Teacher ID</th>
+                                                <th>Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for teacher in teachers %}
+                                                <tr>
+                                                    <td>{{ teacher.teacher_id }}</td>
+                                                    <td>{{ teacher.name }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <p>No teachers found.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
                        
 
                     </div>

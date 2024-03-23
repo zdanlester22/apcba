@@ -257,88 +257,89 @@ h2 {
                     </div>
 
                     <!-- Content Row -->
-                    <div class="row">
-                      
-                            <form method="get" action="{{ url_for('manage_section') }}" >
-                
-                                <button id="toggle-button" class="toggle-button" type="button">Add section</button>
-                                    </form>
-                                    </div>
-                        
-                            <div id="form-container" class="form-container">
-                                <button class="close-button" onclick="closeForm()">X</button>
-                                <h4 style="font-size: 20px; margin-top: -5px;">Add section</h4>
-                                <form method="POST" action="{{ url_for('manage_section') }}" class="form">
-                                    {{ form_section.csrf_token }}
-                                    {{ form_section.hidden_tag() }}
-                                    <div class="form-group">
-                                        <label for="name" class="form-control-label">Section Name</label>
-                                        {{ form_section.name(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'name-char-count')") }}
-                                        <span class="char-count" id="name-char-count">0/30</span>
-                                    </div>
-                            
-                                    <div class="form-group">
-                                        <label for="year" class="form-control-label">Year</label>
-                                        {{ form_section.year(class="form-control") }}
-                                    </div>
-                            
-                                    <div class="form-group custom-form-group">
-                                        <label for="capacity" class="form-control-label">Capacity</label>
-                                        {{ form_section.capacity(class="form-control", style="padding: 8px; margin-left:-6px; width: 261px; border-radius: 5px; border: 1px solid #ccc;", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
-                                        <span class="char-count" id="capacity-char-count">0/2</span>
-                                    </div>
-                        
-                                    <div class="form-group">
-                                        <label for="course_id" class="form-control-label">Course</label>
-                                        {{ form_section.course_id(class="form-control") }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="teacher_id" class="form-control-label">Teacher</label>
-                                        {{ form_section.teacher_id(class="form-control") }}
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Create Section</button>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form method="get" action="{{ url_for('manage_section') }}">
+                                    <button id="toggle-button" class="btn btn-primary toggle-button" style="margin-bottom: 10px;" type="button">Add Section</button>
                                 </form>
                             </div>
-                            
-                        
-                            <div class="table-container">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Section Name</th>
-                                            <th>Capacity</th>
-                                            <th>Course</th>
-                                            <th>Year</th>
-                                            <th>Class</th>
-                                            <th>Course type</th>
-                                            <th>Teacher</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for section in sections %}
-                                        <tr>
-                                            <td>{{ section.name }}</td>
-                                            <td>{{ section.capacity }}</td>
-                                            <td>{{ section.course.title }}</td>
-                                            <td>{{ section.year }}</td>
-                                            <td>{{ section.course.Class }}</td>
-                                            <td>{{ section.course.course_type }}</td>
-                                            <td>{{ section.teacher.name }}</td>
-                                            <td>
-                                                <!-- Button to view subjects -->
-                                                <form method="GET" action="{{ url_for('view_subjects') }}">
-                                                    <input type="hidden" name="section_id" value="{{ section.id }}">
-                                                    <input type="hidden" name="course_id" value="{{ section.course.id }}">
-                                                    <button type="submit" class="btn btn-primary">Subjects</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                        </div>
+                    </div>
+                    
+                    <div id="form-container" class="container-fluid form-container">
+                        <button class="btn btn-danger close-button" onclick="closeForm()">X</button>
+                        <h4 style="font-size: 20px; margin-top: -5px;">Add Section</h4>
+                        <form method="POST" action="{{ url_for('manage_section') }}" class="form">
+                            {{ form_section.csrf_token }}
+                            {{ form_section.hidden_tag() }}
+                            <div class="form-group">
+                                <label for="name" class="form-control-label">Section Name</label>
+                                {{ form_section.name(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'name-char-count')") }}
+                                <span class="char-count" id="name-char-count">0/30</span>
                             </div>
-                       
+                    
+                            <div class="form-group">
+                                <label for="year" class="form-control-label">Year</label>
+                                {{ form_section.year(class="form-control") }}
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="capacity" class="form-control-label">Capacity</label>
+                                {{ form_section.capacity(class="form-control", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
+                                <span class="char-count" id="capacity-char-count">0/2</span>
+                            </div>
+                    
+                            <div class="form-group">
+                                <label for="course_id" class="form-control-label">Course</label>
+                                {{ form_section.course_id(class="form-control") }}
+                            </div>
+                            <div class="form-group">
+                                <label for="teacher_id" class="form-control-label">Teacher</label>
+                                {{ form_section.teacher_id(class="form-control") }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Section</button>
+                        </form>
+                    </div>
+                    
+                    <div class="container-fluid table-container">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Section Name</th>
+                                    <th>Capacity</th>
+                                    <th>Course</th>
+                                    <th>Year</th>
+                                    <th>Class</th>
+                                    <th>Course Type</th>
+                                    <th>Teacher</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for section in sections %}
+                                <tr>
+                                    <td>{{ section.name }}</td>
+                                    <td>{{ section.capacity }}</td>
+                                    <td>{{ section.course.title }}</td>
+                                    <td>{{ section.year }}</td>
+                                    <td>{{ section.course.Class }}</td>
+                                    <td>{{ section.course.course_type }}</td>
+                                    <td>{{ section.teacher.name }}</td>
+                                    <td>
+                                        <!-- Button to view subjects -->
+                                        <form method="GET" action="{{ url_for('view_subjects') }}">
+                                            <input type="hidden" name="section_id" value="{{ section.id }}">
+                                            <input type="hidden" name="course_id" value="{{ section.course.id }}">
+                                            <button type="submit" class="btn btn-primary">Subjects</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
 
                     </div>
                         </div>

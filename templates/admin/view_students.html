@@ -205,44 +205,43 @@
                     </div>
 
                     <!-- Content Row -->
-                    <div class="row">
-                       
-                       
-                        {% block content %}
-                        <div class="con">
-                               
-                                {% if enrollments %}
-                                <table>
-                                    <thead>
-                                      <tr>
-                                        <th>Student Name</th>
-                                        <th>Course Title</th>
-                                        <th>Section</th>
-                                        <th>Year</th>
-                                        <th>Status</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {% for enrollment in enrollments %}
-                                      <tr>
-                                        <td>{{ enrollment.enrolled_student_rel.name }}</td>
-                                        <td>{{ enrollment.enrolled_course_rel.title }}</td>
-                                        <td>{{ enrollment.enrolled_section_rel.name }}</td>
-                                        <td>{{ enrollment.year }}</td>
-                                        <td>{{ 'Active' if enrollment.is_approved else 'In-active' }}</td>
-                                      </tr>
-                                      {% endfor %}
-                                    </tbody>
-                                  </table>
-                                {% else %}
-                                <p>No enrollments found.</p>
-                                {% endif %}
-                          
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% block content %}
+                                <div class="con">
+                                    {% if enrollments %}
+                                    <table class="table">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Student Name</th>
+                                                <th>Course Title</th>
+                                                <th>Section</th>
+                                                <th>Year</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for enrollment in enrollments %}
+                                            <tr>
+                                                <td>{{ enrollment.enrolled_student_rel.name }}</td>
+                                                <td>{{ enrollment.enrolled_course_rel.title }}</td>
+                                                <td>{{ enrollment.enrolled_section_rel.name }}</td>
+                                                <td>{{ enrollment.year }}</td>
+                                                <td>{{ 'Active' if enrollment.is_approved else 'In-active' }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% else %}
+                                    <p>No enrollments found.</p>
+                                    {% endif %}
+                                </div>
+                                {% endblock %}
+                            </div>
                         </div>
-                        {% endblock %}
-                       
-
                     </div>
+                    
                         </div>
                     </div>
                 </div>

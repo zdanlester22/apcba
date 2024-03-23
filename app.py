@@ -196,7 +196,16 @@ def teacher_change_password():
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
     form = EnrolliesForm()
+    
     if form.validate_on_submit():
+        # Check if the user has already submitted an application with the same name and email
+        existing_application = Enrollies.query.filter_by(email=form.email.data).first()
+        
+        if existing_application:
+            flash('This email is already used.', 'error')
+            return render_template('web/enrollies.html', form=form)
+            # Render the template with the form so the user can correct the input
+            
         try:
 
             date_of_birth = datetime.strptime(form.date_of_birth.data, "%Y-%m-%d")
@@ -250,6 +259,7 @@ def enrollies():
 
     enrollies_list = Enrollies.query.all()
     return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list)
+
 
 @app.route('/admin/view_enrollies')
 def view_enrollies():
@@ -856,7 +866,6 @@ def view_subjects():
 
     current_app.logger.info(f"Number of subjects found: {len(subjects)}")
 
-    flash('Subjects!', 'success')
     return render_template('admin/view_subjects.html', subjects=subjects)
 
 

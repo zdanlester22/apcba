@@ -33,6 +33,12 @@
         .bg-color{
             background-color:#374c60 ;
         }
+        img{
+            width: 50px;
+        }
+        #openModalBtn{
+            margin-bottom: 10px;
+        }
         
     </style>
 </head>
@@ -48,7 +54,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
@@ -201,74 +207,86 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Certificate</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Modules</h1>
                     </div>
 
                     <!-- Content Row -->
                     <div class="row">
                         {% block content %}
-                    
-                        <div id="myModal" class="modal">
-                            <div class="modal-content">
-                                <form method="POST" enctype="multipart/form-data" class="module-form">
-                                    <span class="close" onclick="closeModal()">&times;</span>
-                                    {{ form_module.hidden_tag() }}
+                        <div id="myModal" class="modal fade">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Create Module</h5>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <form method="POST" enctype="multipart/form-data" class="module-form">
+                                        <div class="modal-body">
+                                            {{ form_module.hidden_tag() }}
                         
-                                    <div class="form-group">
-                                        <label for="title">Title</label>
-                                        {{ form_module.title(class="form-control", placeholder="Enter Module Title", required="required", maxlength="50", oninput="limitInputLength(this, 50, 'title-char-count')") }}
-                                        <span class="char-count" id="title-char-count">0/50</span>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="year">Year</label>
-                                        {{ form_module.year(class="form-control", placeholder="Enter Module Year", required="required", maxlength="1", oninput="limitInputLength(this, 1, 'year-char-count')") }}
-                                        <span class="char-count" id="year-char-count">0/1</span>
-                                    </div>
+                                            <div class="form-group">
+                                                <label for="title">Title</label>
+                                                {{ form_module.title(class="form-control", placeholder="Enter Module Title", required="required", maxlength="50", oninput="limitInputLength(this, 50, 'title-char-count')") }}
+                                                <span class="char-count" id="title-char-count">0/50</span>
+                                            </div>
                         
-                                    <div class="form-group">
-                                        <label for="course_id">Course</label>
-                                        {{ form_module.course_id(class="form-control", required="required") }}
-                                    </div>
+                                            <div class="form-group">
+                                                <label for="year">Year</label>
+                                                {{ form_module.year(class="form-control", placeholder="Enter Module Year", required="required", maxlength="1", oninput="limitInputLength(this, 1, 'year-char-count')") }}
+                                                <span class="char-count" id="year-char-count">0/1</span>
+                                            </div>
                         
-                                    <div class="form-group">
-                                        <label for="pdf_file">PDF File</label>
-                                        {{ form_module.pdf_file(class="form-control-file", required="required") }}
-                                    </div>
+                                            <div class="form-group">
+                                                <label for="course_id">Course</label>
+                                                {{ form_module.course_id(class="form-control", required="required") }}
+                                            </div>
                         
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary">Create Module</button>
-                                    </div>
-                                </form>
+                                            <div class="form-group">
+                                                <label for="pdf_file">PDF File</label>
+                                                {{ form_module.pdf_file(class="form-control-file", required="required") }}
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Create Module</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
+                        <!-- Button to open modal -->
                         <div class="action">
-                            <button id="openModalBtn" class="create-module-btn" onclick="openModal()">Create Module</button>
-                            <button id="toggleActionsBtn" class="button button-primary">Download Modules</button>
+                            <button id="openModalBtn" class="btn btn-primary create-module-btn" data-toggle="modal" data-target="#myModal">Create Module</button>
                         </div>
+                        
+                    
+                        <!-- Table -->
                         <div class="mod">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Year</th>
-                                        <th>Course</th>
-                                        <th class="actions hidden">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for module in modules %}
-                                    <tr>
-                                        <td>{{ module.title }}</td>
-                                        <td>{{ module.year }}</td>
-                                        <td>{{ module.course.title }}</td>
-                                        <td class="actions hidden"><a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download>Download</a></td>
-                                    </tr>
-                                    {% endfor %}
-                                    {% endblock %}
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Year</th>
+                                            <th>Course</th>
+                                            <th class="actions">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for module in modules %}
+                                        <tr>
+                                            <td>{{ module.title }}</td>
+                                            <td>{{ module.year }}</td>
+                                            <td>{{ module.course.title }}</td>
+                                            <td class="actions"><a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download class="btn btn-primary">Download</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
+                        {% endblock %}
+                    </div>
 
                     </div>
                         </div>

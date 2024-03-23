@@ -55,6 +55,7 @@
             margin-bottom: 8px;
             display: block;
         }
+        
 
         input,
         select,
@@ -171,11 +172,47 @@
         .mmodal{
             display: none;
         }
+        .flash {
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin-top: 100px;
+            margin-right: 5px;
+            z-index: 10;
+            background-color: #374c60;
+            color: #fff;
+            border: 2px solid #374c60;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+
+        }
+        .flash li{
+            list-style: none;
+            text-align: center;
+            margin-right: 25px;
+            padding: 10px;
+        }
+        .fade-in {
+            /* CSS class to fade in flash messages */
+            opacity: 1 !important; /* Override opacity to 1 */
+        }
       
     </style>
 </head>
 
 <body>
+    <div class="row">
+        <div class="flash">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
     <a class="back-button" href="{{ url_for('websiteenroll') }}"><i class="fas fa-arrow-left"></i></a>
     <div id="noteModal" class="modal">
         <div class="modal-content">
@@ -289,16 +326,15 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Modal functionality
-            var noteModal = document.getElementById('noteModal');
-            noteModal.style.display = 'block';
-
-            var noteExitButton = document.getElementById('noteExitButton');
-            noteExitButton.addEventListener('click', function() {
-                noteModal.style.display = 'none';
-            });
-
+ document.addEventListener('DOMContentLoaded', function() {
+            var flashMessages = document.querySelector('.flash');
+            if (flashMessages) {
+                flashMessages.classList.add('fade-in');
+                setTimeout(function() {
+                    flashMessages.classList.remove('fade-in');
+                }, 5000); // Adjust the time (in milliseconds) as needed
+            }
+        });
             // Date of birth input formatting
             var dateOfBirthInput = document.getElementById('date_of_birth');
             dateOfBirthInput.addEventListener('input', function() {
@@ -374,39 +410,9 @@
             if (guardianContactInput) {
                 limitCharacterInput(guardianContactInput, 11);
             }
-        });
 
         // Form submission event
-        document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
-            if (!this.checkValidity()) {
-                event.preventDefault();
-                return;
-            }
 
-            var formData = new FormData(this);
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', this.action, true);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var modal = document.getElementById('myModal');
-                    modal.style.display = 'block';
-                } else {
-                    console.error('Form submission failed with status: ' + xhr.status);
-                }
-            };
-            xhr.onerror = function() {
-                console.error('Form submission failed.');
-            };
-            xhr.send(formData);
-
-            event.preventDefault();
-        });
-
-        // Close modal event
-        document.getElementById('exitButton').addEventListener('click', function() {
-            var modal = document.getElementById('myModal');
-            modal.style.display = 'none';
-        });
 
         // Email validation
         document.getElementById('email').addEventListener('input', function(event) {
@@ -657,29 +663,6 @@
     });
 
 
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Modal functionality
-        var noteModal = document.getElementById('noteModal');
-        noteModal.style.display = 'block';
-
-        var noteExitButton = document.getElementById('noteExitButton');
-        noteExitButton.addEventListener('click', function() {
-            noteModal.style.display = 'none';
-        });
-
-        // Form submission event
-        document.getElementById('enrollmentForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-
-            // Perform form validation here if needed
-
-            // Show the submission modal
-            var modal = document.getElementById('myModal');
-            modal.style.display = 'block';
-        });
-
         // Close modal event
         document.getElementById('exitButton').addEventListener('click', function() {
             var modal = document.getElementById('myModal');
@@ -697,9 +680,13 @@
                 this.setCustomValidity('');
             }
         });
-    });
+        window.history.replaceState({}, document.title, window.location.href.split('?')[0]);
     </script>
 
 </body>
 
 </html>
+
+
+
+

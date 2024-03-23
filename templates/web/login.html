@@ -178,37 +178,19 @@
             .rc-anchor {
                 border-radius: 10px;
             }
-            .hover-link {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    text-decoration: none;
-    color: #333;
-    font-size: 90px;
-    transition: transform 0.5s ease; /* Add transition for smooth movement */
-}
-
-.hover-link:hover {
-    animation: hoverAnimation 3s infinite; /* Start the animation on hover */
-}
-
-@keyframes hoverAnimation {
-    0% {
-        transform: translate(350px, 200px);
-    }
-    50% {
-        transform: translate(400px, 100px); /* Move to new position */
-    }
-    100% {
-        transform: translate(500px, 900px); /* Return to original position */
-    }
-}
+            #backButton{
+                font-size: 50px;
+            }
+            #backButton:hover{
+                transform: scale(1.5);
+            }
+        
     </style>
 </head>
 
 <body>
-    <a href="{{ url_for('portaluserlogin') }}" style="position: absolute; top: 10px; left: 10px; text-decoration: none; color: #333; font-size: 24px;" class="hover-link">
-        <i class="material-icons">air</i>
+    <a href="{{ url_for('portaluserlogin') }}" id="backButton" style="position: absolute; top: 10px; left: 10px; text-decoration: none; color: #333; font-size: 30px;" class="hover-link">
+        <i class="material-icons">arrow_back</i>
     </a>
 
     <div class="flash">
@@ -273,7 +255,7 @@
         icon.querySelector("img").src = "{{ url_for('static', filename='images/eye.jpg') }}";
     }
 }
-
+window.history.replaceState({}, document.title, window.location.href.split('?')[0]);
 
     </script>
 </body>

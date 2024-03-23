@@ -128,7 +128,7 @@ class SubjectForm(FlaskForm):
 class FilterForm(FlaskForm):
     school_year = StringField('School Year')
     semester = IntegerField('Semester')
-    course_type = SelectField('Course Type', choices=[('', 'All'), ('shs', 'SHS'), ('college', 'College')])
+    course_type = SelectField('Course Type', choices=[('', 'All'), ('SHS', 'SHS'), ('College', 'College')])
 
 class SectionForm(FlaskForm):
     name = StringField('Section Name', validators=[DataRequired()])

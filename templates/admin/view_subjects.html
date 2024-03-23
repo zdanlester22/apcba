@@ -5,146 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>View Subjects</title>
 
     <style>
-        body {
-            font-family: Montserrat, sans-serif;
-            background-color: #f4f4f4;
-            margin: 20px;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        /* Style for schedule section */
-        .schedule {
-            margin-top: 10px;
-        }
-
-        .schedule ul {
-            padding: 0;
-            list-style-type: none;
-        }
-
-        .schedule li {
-            margin-bottom: 5px;
-            border-left: 3px solid #3498db; /* Use a different color for the border */
-            padding-left: 10px;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .schedule p {
-            margin: 0;
-            font-size: 14px;
-            color: #888;
-        }
-        table a{
-            text-decoration: none;
-            background-color: #374c60;
-            color: #fff;
-            padding: 9px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        table a:hover{
-            color: #374c60;
-            background-color: #fff;
-            border: 1px solid #374c60;
-        }
-        table th{
-            background-color: #374c60;
-            color: #fff;
-        }
+        /* Custom styles if needed */
     </style>
 </head>
 <body>
-    <h2>Subjects</h2>
+    <div class="container mt-5">
+        <h2>Add a schedule?</h2>
 
-    {% if subjects %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Abbreviation</th>
-                    <th>Title</th>
-                    <th>Unit</th>
-                    <th>Schedule</th>
-                    <th>Action</th> <!-- Add a new header for the action column -->
-                </tr>
-            </thead>
-            <tbody>
-                {% for subject in subjects %}
-                    <tr>
-                        <td>{{ subject.abbreviation }}</td>
-                        <td>{{ subject.title }}</td>
-                        <td>{{ subject.unit }}</td>
+        {% if subjects %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Abbreviation</th>
+                            <th>Title</th>
+                            <th>Unit</th>
+                            <th>Schedule</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subject in subjects %}
+                            <tr>
+                                <td>{{ subject.abbreviation }}</td>
+                                <td>{{ subject.title }}</td>
+                                <td>{{ subject.unit }}</td>
+                                <td>
+                                    <ul class="list-unstyled">
+                                        {% if subject.schedules %}
+                                            {% for schedule in subject.schedules %}
+                                                <li>{{ schedule.day_of_week }} - {{ schedule.start_time }} to {{ schedule.end_time }}</li>
+                                            {% endfor %}
+                                        {% else %}
+                                            <li>No schedule available for this subject.</li>
+                                        {% endif %}
+                                    </ul>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('add_schedule', section_id=subject.section.id, subject_id=subject.id) }}" class="btn btn-primary">Add Schedule</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No subjects available for the selected section and course.</p>
+        {% endif %}
+    </div>
 
-                        <!-- Display the schedule for the current subject -->
-                        <td class="schedule">
-                            {% if subject.schedules %}
-                                <ul>
-                                    {% for schedule in subject.schedules %}
-                                        <li>{{ schedule.day_of_week }} - {{ schedule.start_time }} to {{ schedule.end_time }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% else %}
-                                <p>No schedule available for this subject.</p>
-                            {% endif %}
-                        </td>
-
-                        <!-- Add a button to add schedule for the current subject -->
-                        <td>
-                            <a href="{{ url_for('add_schedule', section_id=subject.section.id, subject_id=subject.id) }}" class="btn btn-primary">Add Schedule</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No subjects available for the selected section and course.</p>
-    {% endif %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-         document.addEventListener("DOMContentLoaded", function () {
-            // Select the flash div
-            var flashDiv = document.querySelector(".flash");
-
-            // Function to add fade-in class
-            function fadeInFlash() {
-                flashDiv.classList.add("fade-in");
-            }
-
-            // Function to remove fade-in class after 3 seconds
-            function fadeOutFlash() {
-                setTimeout(function () {
-                    flashDiv.classList.remove("fade-in");
-                }, 3000); // 3 seconds delay
-            }
-
-            // Call the functions
-            fadeInFlash();
-            fadeOutFlash();
+        document.addEventListener("DOMContentLoaded", function () {
+            // Your JavaScript code here
         });
     </script>
 </body>
