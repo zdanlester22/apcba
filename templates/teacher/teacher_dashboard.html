@@ -1,308 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <title>APCBA Portal V1.0 - Student Portal Management System</title>
-    <style>
-        body {
-            font-family: Montserrat, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            display: flex;
-            height: 100vh; /* Set container to 100% viewport height */
-            overflow-x: hidden; /* Hide horizontal overflow */
-            position: relative;
-        }
-        .sidebar {
-            position: fixed; /* Fix the position of the sidebar */
-            top: 0; /* Position it at the top */
-            bottom: 0; /* Extend it to the bottom */
-            left: 0; /* Position it at the left */
-            width: 200px;
-            background-color: #374c60;
-            color: #0f0f0f;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            transition: opacity 0.3s ease, width 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+     <!-- Bootstrap core CSS -->
+     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+     <!-- Core plugin CSS -->
+     <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
+ 
+     <!-- Custom styles for this template -->
+     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <title>Admin - Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    
+    <!-- Font Awesome CSS -->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <!-- Custom inline styles -->
+    <style type="text/css">
+        .bg-color{
+            background-color:#374c60 ;
         }
 
-        .sidebar-hidden {
-            opacity: 0; /* Hide the sidebar when it's hidden */
-            width: 0; /* Remove the width of the sidebar when hidden */
-            pointer-events: none; /* Disable pointer events when hidden */
-        }
-
-
-        .content {
-            flex: 1;
-            padding: 20px;
-            transition: margin-left 0.3s ease;
-            margin-left: 300px; /* Adjust the initial margin-left to accommodate the sidebar */
-        }
-        .logo {
-            margin-bottom: 20px;
-            display: flex;
-        }
-
-        .logo h2 {
-            color: #fff;
-            text-align: center;
-            margin-top: 10px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .link i {
-    margin-right: 10px;
-    margin-left: 10px; /* Adjust this value as needed */
-}
-
-        .links a {
-    display: flex;
-    align-items: center;
-    text-align: left;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 0;
-    margin-bottom: -7px;
-    font-size: .9rem;
-    font-weight: 600;
-    transition:  color 0.3s ease;
-}
-.links a:hover,
-.links a:hover i {
-    background-color: #fff; /* Change background color on hover */
-    color: #222; /* Change text color on hover */
-    border-radius: 10px;
-}
-.links a:hover i {
-    color: #374c60;
-}
-
-        .link {
-            cursor: pointer;
-            margin-bottom: 10px;
-            text-align: left;
-            font-size: .9rem;
-        }
-        .toggle-btn {
-            color: #111;
-            border: none;
-            padding: 20px;
-            cursor: pointer;
-            position: absolute;
-            top: 20px;
-            right: 25px; 
-            z-index: 2;
-            background-color: #fff;
-        }
-        .content {
-            flex: 1;
-            padding: 30px;
-            transition: margin-left 0.3s ease; /* Add transition for smooth content movement */
-            margin-right: 60px;
-        }
-        .Name {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
-        }
-        .bot {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .announcement-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0.2, 0.2, 0.2, 0.2);
-    margin: 20px;
-    max-width: 1300px;
-}
-        .announcement-form h2 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-        }
-        .form-group input[type="text"],
-        .form-group textarea {
-            width: 97%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-            font-family: Montserrat, sans-serif;
-        }
-        .form-group input[type="submit"] {
-            background-color: #374c60;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-family: Montserrat, sans-serif;
-        }
-        .announcements {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 1360px;
-}
-        .announcement-item {
-    margin-bottom: 15px;
-    padding: 30px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
-    list-style-type: none;
-    max-height: 300px;
-    height: 100%;
-    line-break: anywhere;
-    max-width: 1280px;
-}
-        .announcement-item strong {
-            color: #333;
-        }
-        .announcement-item p {
-            color: #666;
-        }
-        .announcement-item small {
-            color: #999;
-        }
-        .update-delete-buttons {
-            margin-top: 10px;
-        }
-        .update-button {
-            background-color: #374c60;
-           color: #fff;
-            text-decoration: none;
-            margin-right: 10px;
-            transition: color 0.3s ease;
-            padding: 10px;
-            border-radius: 10px;
-        }
-        .delete-button {
-            background-color: #374c60;
-            color: #fff;
-            text-decoration: none;
-            margin-right: 10px;
-            transition: color 0.3s ease;
-            padding: 10px;
-            border-radius: 10px;
-        }
-        #content-char-count {
-            font-size: 12px;
-            display: flex;
-            justify-content: end;
-            margin-right: 25px;
-        }
-        #title-char-count {
-            font-size: 12px;
-            display: flex;
-            justify-content: end;
-            margin-right: 25px;
-        }
-        .submit {
-            padding: 13px;
-            background-color: #374c60;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-family: Montserrat, sans-serif;
-        }
-        .submit:hover {
-            background-color: #fff;
-              color: #374c60;
-           border: 1px solid #374c60;
-        }
-        h3 {
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 570px;
-            position: fixed;
-            box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.3);
-            background-color: #374c60;
-            padding: 10px;
-            color: #fff;
-            max-width: 180px;
-            width: 100%;
-        }
-        .shadow {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    max-width: 1400px;
-}
-        h4{
-            margin-left: 20px;
-        }
-        .sidebar a{
-            text-decoration: none;
-            color: #fff;
-        }
-        .user-info {
-    margin-top: auto; /* Push user info to the bottom of the sidebar */
-}
-
-.user-info a {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
-    text-decoration: none;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
-    max-width: 150px;
-    width: 100%;
-}
-
-.user-info a:hover {
-    background-color: #fff; /* Change background color on hover */
-    color: #222; /* Change text color on hover */
-}
-
-.user-info span {
-    margin-right: 10px; /* Add space between username and icon */
-}
-
-.user-info div {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Align items vertically */
-}
-.announcements a:hover{
-    background-color: #fff;
-              color: #374c60;
-           border: 1px solid #374c60;
-           transform: scale(0);
-}
-.flash {
+        .flash {
             position: absolute;
             right: 0;
             top: 0;
             margin-top: 100px;
-            margin-right: 25px;
+            margin-right: 5px;
             z-index: 10;
             background-color: #374c60;
             color: #fff;
@@ -315,91 +55,429 @@
             list-style: none;
             text-align: center;
             margin-right: 25px;
+            padding: 10px;
         }
         .fade-in {
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
+        img{
+            height: 50px;
+
+        }
+        .announcements {
+            margin-top: 20px; /* Adjust margin as needed */
+        }
+
+        .announcement-item {
+            background-color: #fff; /* Light gray background */
+            border: 1px solid #dee2e6; /* Gray border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px; /* Padding around each announcement item */
+            margin-bottom: 10px; /* Space between announcement items */
+            list-style-type: none;
+        }
+
+        .announcement-item strong {
+            font-size: 18px; /* Larger font size for announcement title */
+        }
+
+        .announcement-item p {
+            margin-top: 5px; /* Space between title and content */
+        }
+
+        .announcement-item small {
+            color: #888e93; /* Gray color for timestamp */
+            margin-right: 5px;
+            opacity: 55%;
+
+        }
+        #modsky .modal-content {
+        background-color: #ffffff; /* Background color */
+        border-radius: 10px; /* Rounded corners */
+    }
+
+    /* Modal header styling */
+    #modsky .modal-header {
+        border-bottom: none; /* Remove border */
+    }
+
+    /* Modal title styling */
+    #modsky .modal-title {
+        color: #333333; /* Title color */
+        font-size: 16px; /* Title font size */
+        border-bottom: 1px solid #ccc;
+        width: 100%;
+    }
+
+    /* Close button styling */
+    #modsky .close {
+        color: #333333; /* Close button color */
+        opacity: 1; /* Make close button fully visible */
+    }
+
+    /* Modal body styling */
+    #modsky .modal-body {
+        padding: 20px; /* Padding */
+    }
+
+    /* Announcement count text styling */
+    #announcementCount {
+        font-size: 16px; /* Font size */
+        color: #ff0b0b; /* Text color */
+        text-align: center;
+        margin-top: -37px;
+    }
+    #uploadModal .modal-dialog {
+            max-width: 600px;
+        }
 
     </style>
 </head>
-<body>
-    <div class="flash">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-    </div>
-    <div class="container">
-        <button class="toggle-btn" onclick="toggleSidebar()">
-            <span class="material-icons">menu</span>
-        </button>
-        <div class="sidebar">
-            <div class="logo">
-                <h2>APCBA PORTAL V1.0</h2>
-            </div>
-            <div class="links">
-                <a href="{{ url_for('dashboard') }}" class="link"><i class="material-icons">dashboard</i> Dashboard</a>
-                <a href="{{ url_for('teacher_account') }}" class="link"><i class="material-icons">account_circle</i> Profile</a>
-                <a href="{{ url_for('teacher_modules') }}" class="link"><i class="material-icons">book</i> Modules</a>
-                <a href="{{ url_for('view_students') }}" class="link"><i class="material-icons">people</i> Class</a>
-                <a href="{{ url_for('teacher_change_password') }}" class="link"><i class="material-icons">lock</i> Password</a>
-                
-                
-            </div><br><br>
-            <div class="user-info">
-                <a href="#" id="logout-link">
-                    <span>{{ user.name }}</span> <i class="material-icons">exit_to_app</i>
-                </a>
+
+<body id="page-top">
+    <div class="modal fade" id="modsky" tabindex="-1" role="dialog" aria-labelledby="modskyLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="announcementCount"></p>
+                </div>
             </div>
         </div>
-        
-        <div class="content">
-            <div class="topnav">
-                <h4 class="Name">Announcements</h4>
+    </div>
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
+                </div>
+                
+                <div class="sidebar-brand-text mx-3">APCBA</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Documents
             </div>
+            
+
+             <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('teacher_modules') }}">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Modules</span>
+                </a>
+            </li>
+            
+            
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Academic
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-chalkboard"></i>
+                    <span>Class</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a href="{{ url_for('view_students') }}" class="collapse-item">Class</a>
+                    </div>
+                </div>
+            </li>
+
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+         
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.name }}</span>
+                                <img class="img-profile rounded-circle"
+                                    src="{{ url_for('static', filename='img/undraw_profile.svg') }}" alt="Profile Image">
+                            </a>
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="{{ url_for('teacher_account') }}">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="{{ url_for('teacher_change_password') }}">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Change Password <i class="ri-lock-password-fill"></i>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                    </div>
+
+                    <!-- Content Row -->
+                    <div class="row">
+                            <div class="flash">
+                                {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                            {% for message in messages %}
+                                                <li>{{ message }}</li>
+                                            {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                    
+                       <div class="container">
+    <div class="row">
+        <div class="col-md-12">
             <div class="announcements">
                 {% if announcements %}
                     {% for announcement in announcements %}
-                        <li class="announcement-item">
-                            <strong>{{ announcement.title }}</strong>
-                            <p>{{ announcement.content }}</p>
-                            <small>Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-                        </li>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ announcement.title }}</h5>
+                                <p class="card-text">{{ announcement.content }}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                                </p>
+                            </div>
+                        </div>
                     {% endfor %}
                 {% else %}
-                    <p>No announcements posted</p>
+                    <div class="alert alert-info" role="alert">
+                        No announcements posted.
+                    </div>
                 {% endif %}
             </div>
-            </main>
         </div>
     </div>
-    <script>
-        var originalContentMargin; // Store the original content margin
-    
-        function toggleDropdown(event, id) {
-    event.preventDefault(); // Prevent default behavior of the link click
-    var dropdown = document.getElementById(id);
-    var isDisplayed = dropdown.style.display === "block";
-    // Hide all dropdowns
-    var allDropdowns = document.querySelectorAll('.sub-links');
-    allDropdowns.forEach(function(dropdown) {
-        dropdown.style.display = 'none';
-    });
-    // Display the clicked dropdown if it wasn't already displayed
-    if (!isDisplayed) {
-        dropdown.style.display = 'block';
-    } else {
-        dropdown.style.display = 'none'; // Hide the dropdown if already displayed
-    }
-}
+</div>
 
-    
+
+
+
+                    </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto ">
+                        <span>Copyright &copy; APCBA</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+  <script>
+     document.addEventListener("DOMContentLoaded", function () {
+        var announcementCount = 0; // Initialize announcement count
+
+        // Function to fetch announcement count from server
+        function fetchAnnouncementCount() {
+
+            announcementCount = 5;
+            document.getElementById('announcementCount').innerText = 'Check out the latest announcements. ';
+        }
+
+        // Function to show the modal
+        function showModal() {
+            $('#modsky').modal('show');
+        }
+
+        // Check if the user is logged in (assuming you have a variable to indicate user authentication status)
+        var isLoggedIn = true; // Replace this with your actual check for user authentication
+
+        // If user is logged in, fetch the announcement count and show the modal
+        if (isLoggedIn) {
+            fetchAnnouncementCount();
+            showModal();
+        }
+    });
+
+document.addEventListener("DOMContentLoaded", function () {
+        var overlay = document.getElementById("overlay");
+        var modal = document.getElementById("announcementModal");
+
+        // Check if the user is logged in
+        var isLoggedIn = "{{ user.is_authenticated }}"; // Assuming you have a variable to indicate user authentication status
+
+        // Check if the announcement has been shown before
+        var announcementShown = localStorage.getItem("announcementShown");
+
+        function showAnnouncementModal() {
+            // Assume announcementsCount is fetched from the server-side and passed as a variable
+            var announcementsCount = 3; // Example value, replace it with the actual count
+
+            if (announcementsCount > 0 && !announcementShown) {
+                // Show the overlay
+                overlay.style.display = "block";
+
+                // Show the modal
+                modal.style.display = "block";
+
+                // Fade out the modal and overlay after 3 seconds
+                setTimeout(function () {
+                    modal.style.opacity = 0;
+                    overlay.style.opacity = 0;
+                    setTimeout(function () {
+                        modal.style.display = "none";
+                        overlay.style.display = "none";
+                        // Set the announcementShown flag to true
+                        localStorage.setItem("announcementShown", true);
+                    }, 1000); // Wait for 1 second for the fade out animation to complete
+                }, 3000); // Wait for 3 seconds before fading out
+            }
+        }
+
+        // If user is logged in and announcement has not been shown before, show the modal
+        if (isLoggedIn) {
+            showAnnouncementModal();
+        }
+
+        // Function to show modal when the user clicks logout link
+        function showModalOnLogout(event) {
+            event.preventDefault(); // Prevent default link behavior
+            // Logout logic goes here
+            // Once logout is confirmed, reset the announcementShown flag
+            localStorage.removeItem("announcementShown");
+        }
+
+        // Event listener for logout link
+        document.getElementById("logout-link").addEventListener("click", showModalOnLogout);
+    });
+
+
+            var originalContentMargin; // Store the original content margin
+        
+            function toggleDropdown(event, id) {
+        event.preventDefault(); // Prevent default behavior of the link click
+        var dropdown = document.getElementById(id);
+        var isDisplayed = dropdown.style.display === "block";
+        // Hide all dropdowns
+        var allDropdowns = document.querySelectorAll('.sub-links');
+        allDropdowns.forEach(function(dropdown) {
+            dropdown.style.display = 'none';
+        });
+        // Display the clicked dropdown if it wasn't already displayed
+        if (!isDisplayed) {
+            dropdown.style.display = 'block';
+        } else {
+            dropdown.style.display = 'none'; // Hide the dropdown if already displayed
+        }
+    }    
         function toggleSidebar() {
             var sidebar = document.querySelector('.sidebar');
             sidebar.classList.toggle('sidebar-hidden');
@@ -412,43 +490,7 @@
             content.style.marginLeft = (sidebar.classList.contains('sidebar-hidden')) ? '0' : originalContentMargin;
         }
     
-        function countCharacters(inputId, displayId, limit) {
-            var input = document.getElementById(inputId);
-            var characterCount = input.value.length;
-            var display = document.getElementById(displayId);
-            display.textContent = characterCount + "/" + limit + " characters";
-    
-            // Check if character count exceeds the limit
-            if (characterCount > limit) {
-                // Trim the input value to the limit
-                input.value = input.value.slice(0, limit);
-    
-                // Update the character count in the display
-                characterCount = limit;
-                display.textContent = characterCount + "/" + limit + " characters";
-    
-                // Change the color to red
-                display.style.color = 'red';
-            } else {
-                // Reset the color to black
-                display.style.color = 'black';
-            }
-        }
-
-        function confirmSubmit() {
-        return confirm("Are you sure you want to submit this announcement?");
-    }
-      //logout to
-        var logoutUrl = "{{ url_for('logout') }}"; // Define logout URL using Jinja
-        document.getElementById("logout-link").addEventListener("click", confirmLogout);
-
-        function confirmLogout(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            var confirmLogout = confirm("Are you sure you want to logout?");
-            if (confirmLogout) {
-                window.location.href = logoutUrl; // Redirect to logout URL
-            }
-        }
+  
         document.addEventListener("DOMContentLoaded", function () {
             // Select the flash div
             var flashDiv = document.querySelector(".flash");
@@ -469,7 +511,28 @@
             fadeInFlash();
             fadeOutFlash();
         });
-    </script>
-    
+        
+
+  </script>
+    <!-- Bootstrap core JavaScript-->
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
+
+
 </body>
+
 </html>
