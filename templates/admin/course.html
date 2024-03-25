@@ -287,6 +287,9 @@
                                                     <button type="submit" class="btn btn-primary btn-sm" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">Update</button>
                                                     <!-- Form to delete the course -->
                             
+                                                    <button class="btn btn-primary" style="border: 1px solid #e3e6f0; width: 75px;" data-toggle="modal" data-target="#subject-modal-{{ course.id }}">
+                                                    Subject
+                                                    </button>
                                                     </form>
                                                 </div>
                                             </td>
@@ -304,16 +307,28 @@
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <!-- List of subjects -->
-                                                                {% for subject in course.subjects %}
-                                                                <div class="subject-info">
-                                                                    <p><strong>Abbreviation:</strong> {{ subject.abbreviation }}</p>
-                                                                    <p><strong>Title:</strong> {{ subject.title }}</p>
-                                                                    <p><strong>Unit:</strong> {{ subject.unit }}</p>
-                                                                    <p><strong>Teacher:</strong> {{ subject.teacher }}</p>
-                                                                </div>
-                                                                {% endfor %}
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Abbreviation</th>
+                                                                            <th>Title</th>
+                                                                            <th>Unit</th>
+                                                                            <th>Teacher</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {% for subject in course.subjects %}
+                                                                        <tr>
+                                                                            <td>{{ subject.abbreviation }}</td>
+                                                                            <td>{{ subject.title }}</td>
+                                                                            <td>{{ subject.unit }}</td>
+                                                                            <td>{{ subject.teacher }}</td>
+                                                                        </tr>
+                                                                        {% endfor %}
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
+                                                            
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                             </div>

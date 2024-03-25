@@ -852,13 +852,41 @@ def manage_section():
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
                            form_section=form_section, user_name=user_name)
 
+@app.route('/add_schedule/<int:section_id>', methods=['GET', 'POST'])
+@login_required
+def add_schedule(section_id):
+    form = ScheduleForm()
 
+    section = Section.query.get_or_404(section_id)
+    subjects = Subject.query.filter_by(section_id=section.id).all()
+
+    if form.validate_on_submit():
+        day_of_week = form.day_of_week.data
+        start_time = form.start_time.data
+        end_time = form.end_time.data
+
+        try:
+            for subject in subjects:
+                new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, subject_id=subject.id)
+                db.session.add(new_schedule)
+
+            db.session.commit()
+            current_app.logger.info("Schedules added successfully")
+            return redirect(url_for('view_subjects', section_id=section_id, course_id=section.course_id))
+
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Error adding schedules: {str(e)}")
+   
+    return render_template('admin/view_subjects.html', form=form, section=section, subjects=subjects)
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
     section_id = request.args.get('section_id', type=int)
     course_id = request.args.get('course_id', type=int)
     current_app.logger.info(f"section_id: {section_id}, course_id: {course_id}")
+    
+    section = Section.query.get(section_id)
     subjects = Subject.query.filter_by(section_id=section_id, course_id=course_id).all()
 
     for subject in subjects:
@@ -866,7 +894,10 @@ def view_subjects():
 
     current_app.logger.info(f"Number of subjects found: {len(subjects)}")
 
-    return render_template('admin/view_subjects.html', subjects=subjects)
+    form = ScheduleForm()
+    
+    return render_template('admin/view_subjects.html', subjects=subjects, section=section, form=form)
+
 
 
 ################################################################################################################################################################################################################    
@@ -988,10 +1019,10 @@ def enrolled_subjects(student_id):
 @app.route('/add_grades/<int:student_id>/period1', methods=['GET', 'POST'])
 @login_required
 def add_grades_period1(student_id):
-    grade = Grades.query.filter_by(student_id=student_id).first() or Grades(student_id=student_id)
-    form = Period1Form(obj=grade)
+    form = Period1Form()
     
     if request.method == 'POST' and form.validate_on_submit():
+        grade = Grades(student_id=student_id)
         form.populate_obj(grade)
         grade.subject_id = request.form.get('subject_id')
         compute_grade(grade)
@@ -1005,10 +1036,10 @@ def add_grades_period1(student_id):
 @app.route('/add_grades/<int:student_id>/period2', methods=['GET', 'POST'])
 @login_required
 def add_grades_period2(student_id):
-    grade = Grades.query.filter_by(student_id=student_id).first() or Grades(student_id=student_id)
-    form = Period2Form(obj=grade)
+    form = Period2Form()
     
     if request.method == 'POST' and form.validate_on_submit():
+        grade = Grades(student_id=student_id)
         form.populate_obj(grade)
         grade.subject_id = request.form.get('subject_id')
         compute_grade(grade)
@@ -1022,10 +1053,10 @@ def add_grades_period2(student_id):
 @app.route('/add_grades/<int:student_id>/period3', methods=['GET', 'POST'])
 @login_required
 def add_grades_period3(student_id):
-    grade = Grades.query.filter_by(student_id=student_id).first() or Grades(student_id=student_id)
-    form = Period3Form(obj=grade)
+    form = Period3Form()
     
     if request.method == 'POST' and form.validate_on_submit():
+        grade = Grades(student_id=student_id)
         form.populate_obj(grade)
         grade.subject_id = request.form.get('subject_id')
         compute_grade(grade)
@@ -1115,32 +1146,6 @@ def student_view_grades():
         return redirect(url_for('dashboard'))
 
 ###############################################################################################################################################################
-@app.route('/add_schedule/<int:section_id>', methods=['GET', 'POST'])
-@login_required
-def add_schedule(section_id):
-    form = ScheduleForm()
-
-    section = Section.query.get_or_404(section_id)
-    subjects = Subject.query.filter_by(section_id=section.id).all()
-
-    if form.validate_on_submit():
-        day_of_week = form.day_of_week.data
-        start_time = form.start_time.data
-        end_time = form.end_time.data
-
-        try:
-            for subject in subjects:
-                new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, subject_id=subject.id)
-                db.session.add(new_schedule)
-
-            db.session.commit()
-            current_app.logger.info("Schedules added successfully")
-            return redirect(url_for('view_subjects', section_id=section_id))
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.error(f"Error adding schedules: {str(e)}")
-   
-    return render_template('admin/add_schedule.html', form=form, section=section, subjects=subjects)
 
 @app.route('/view_schedule')
 @login_required
