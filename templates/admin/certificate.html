@@ -107,7 +107,7 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('certificate') }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-award"></i>
                     <span>Certificates</span>
                 </a>
             </li>
@@ -115,22 +115,29 @@
              <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('modules') }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-book"></i>
                     <span>Modules</span>
                 </a>
             </li>
 
              <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('course') }}" >
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-graduation-cap"></i>
                     <span>Courses</span>
                 </a>
             </li>
 
              <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-folder"></i>
                     <span>Section</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('users') }}">
+                    <i class="fas fa-fw fa-key"></i>
+                    <span>Portal Accounts</span>
                 </a>
             </li>
 
@@ -145,9 +152,9 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Students</span>
+                aria-expanded="true" aria-controls="collapsePages">
+                <i class="fas fa-user-graduate"></i>
+                <span>Students</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -162,7 +169,7 @@
             <!-- Nav Item - Charts -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('view_teachers') }}" >
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i class="fas fa-user"></i>
                     <span>Teachers</span></a>
             </li>
 
@@ -339,7 +346,7 @@
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                     <a href="{{ url_for('delete_certificate', certificate_id=certificate.id) }}" class="btn btn-danger">Delete</a>
                                    {% endfor %}
-                                    Actual delete action -->
+                                   
                                 </div>
                                 </div>
                           
@@ -351,18 +358,17 @@
             </div>
             <!-- End of Main Content -->
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Asia Pacific College of Business and Arts 2024</span>
-                    </div>
-                </div>
-            </footer>
             <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
-
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Asia Pacific College of Business and Arts 2024</span>
+                </div>
+            </div>
+        </footer>
     </div>
     <!-- End of Page Wrapper -->
 
