@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Teacher to Subject</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Assign Teacher to Subject</h2>
+        <form method="post">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                <label for="teacher_id">Select Teacher:</label>
+                {{ form.teacher_id(class="form-control") }}
+            </div>
+            <button type="submit" class="btn btn-primary">Assign Teacher</button>
+        </form>
+    </div>
+    
+    
+</body>
+</html>

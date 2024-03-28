@@ -41,16 +41,7 @@ class CertificateForm(FlaskForm):
 
 
 class UserAccountForm(FlaskForm):
-   # Program Information
-    course = StringField('Course')
-    year_level = StringField('Year Level')
-    lrn = StringField("DedEd Learner's Reference Number (LRN)")
-    curriculum_year = StringField('Curriculum Year')
-    
-    # Personal Data
-    last_name = StringField('Last Name', validators=[DataRequired()])
-    first_name = StringField('First Name', validators=[DataRequired()])
-    middle_name = StringField('Middle Name', validators=[DataRequired()])
+
 
     place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired()])
@@ -208,8 +199,9 @@ class Period3Form(FlaskForm):
 
 class ScheduleForm(FlaskForm):
     day_of_week = StringField('Day of Week', validators=[InputRequired()])
-    start_time = TimeField('Start Time', validators=[InputRequired()])
-    end_time = TimeField('End Time', validators=[InputRequired()])
+    start_time = StringField('Start Time', validators=[InputRequired()])
+    end_time = StringField('End Time', validators=[InputRequired()])
+    room = StringField('Room')
     submit = SubmitField('Add Schedule')
 
 class ChangePasswordForm(FlaskForm):
@@ -223,3 +215,10 @@ class CommentForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     comment = TextAreaField('Comment', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class AssignTeacherToSubjectForm(FlaskForm):
+    teacher_id = SelectField('Teacher', coerce=int, validators=[DataRequired()])
+    submit = SubmitField('Assign Teacher')
+    
+    def set_teacher_choices(self, teachers):
+        self.teacher_id.choices = [(teacher.id, teacher.name) for teacher in teachers]

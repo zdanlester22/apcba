@@ -3,7 +3,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.utils import secure_filename
 from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
 from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm, ChangePasswordForm
-from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm,  Period1Form, Period2Form, Period3Form, ScheduleForm, RegistrationForm, CommentForm
+from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, AssignTeacherToSubjectForm,  Period1Form, Period2Form, Period3Form, ScheduleForm, RegistrationForm, CommentForm
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
@@ -270,7 +270,6 @@ def view_enrollies():
 @app.route('/admin/view_archived_enrollies')
 def view_archived_enrollies():
     archived_enrollies_list = Enrollies.query.filter_by(is_archived=True).all()
-    flash('Archives!', 'success')
     return render_template('admin/view_archived_enrollies.html', archived_enrollies_list=archived_enrollies_list)
 
 @app.route('/admin/archive_enrollie/<int:enrollie_id>')
@@ -852,6 +851,101 @@ def manage_section():
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
                            form_section=form_section, user_name=user_name)
 
+@app.route('/assign_teacher_to_subject/<int:subject_id>', methods=['GET', 'POST'])
+@login_required
+def assign_teacher_to_subject(subject_id):
+    # Fetch subject from the database
+    subject = Subject.query.get_or_404(subject_id)
+    
+    # Create form instance
+    form = AssignTeacherToSubjectForm()
+
+    # Fetch teachers from the database
+    teachers = Teacher.query.all()
+
+    # Set choices for teacher_id field in the form
+    form.set_teacher_choices(teachers)
+
+    # Validate form submission
+    if form.validate_on_submit():
+        selected_teacher_id = form.teacher_id.data
+        teacher = Teacher.query.get(selected_teacher_id)
+        
+        if teacher:
+            # Check if the teacher is already associated with the subject
+            if teacher not in subject.teachers:
+                subject.teachers.append(teacher)
+                db.session.commit()
+                flash('Teacher assigned to subject successfully!', 'success')
+            else:
+                flash('Teacher is already assigned to this subject!', 'warning')
+        else:
+            flash('Teacher not found!', 'error')
+
+        # Redirect to the view_subjects route with both section_id and course_id parameters
+        return redirect(url_for('view_subjects', section_id=subject.section_id, course_id=subject.course_id))
+
+    # Render the template with the form
+    return render_template('admin/assign_teacher_to_subject.html', form=form, subject=subject, teachers=teachers)
+
+@app.route('/my_subjects', methods=['GET'])
+@login_required
+def my_subjects():
+    if current_user.role != 'teacher':
+        flash('You are not authorized to view this page.', 'danger')
+        return redirect(url_for('dashboard'))
+
+    teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
+    if teacher:
+        subjects = teacher.subjects
+        return render_template('teacher/my_subjects.html', subjects=subjects)
+    else:
+        flash('You are not assigned to teach any subjects.', 'warning')
+        return redirect(url_for('dashboard'))
+    
+@app.route('/subject/<int:subject_id>/my_students', methods=['GET'])
+@login_required
+def my_students(subject_id):
+    if current_user.role != 'teacher':
+        flash('You are not authorized to view this page.', 'danger')
+        return redirect(url_for('dashboard'))
+
+    subject = Subject.query.get(subject_id)
+
+    if not subject:
+        flash('Subject not found.', 'danger')
+        return redirect(url_for('dashboard'))
+
+    # Retrieve the enrolled students for the subject
+    enrolled_students = Student.query.join(Enrollment).filter(
+        Enrollment.section_id == subject.section_id,
+        Enrollment.course_id == subject.course_id
+    ).all()
+
+    # Fetch grades for the enrolled students in the specified subject
+    grades = {}
+    for student in enrolled_students:
+        student_grades = Grades.query.filter_by(student_id=student.id, subject_id=subject_id).first()
+        if student_grades:
+            grades[student.id] = student_grades
+
+    # Format final grades
+    final_grades_formatted = {}
+    for student_id, grade in grades.items():
+        final_grade = grade.final_grade
+        if final_grade is not None:
+            final_grades_formatted[student_id] = "{:.2f}".format(float(final_grade))
+        else:
+            final_grades_formatted[student_id] = ""
+
+    form1 = Period1Form()  # Instantiate Period1Form
+    form2 = Period2Form()  # Instantiate Period2Form
+    form3 = Period3Form()  # Instantiate Period3Form
+
+    return render_template('teacher/my_students.html', subject=subject, enrolled_students=enrolled_students, grades=grades, final_grades_formatted=final_grades_formatted, form1=form1, form2=form2, form3=form3)
+
+
+
 @app.route('/add_schedule/<int:section_id>', methods=['GET', 'POST'])
 @login_required
 def add_schedule(section_id):
@@ -864,10 +958,11 @@ def add_schedule(section_id):
         day_of_week = form.day_of_week.data
         start_time = form.start_time.data
         end_time = form.end_time.data
+        room = form.room.data  # Get room data from form
 
         try:
             for subject in subjects:
-                new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, subject_id=subject.id)
+                new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, room=room, subject_id=subject.id)
                 db.session.add(new_schedule)
 
             db.session.commit()
@@ -879,6 +974,7 @@ def add_schedule(section_id):
             current_app.logger.error(f"Error adding schedules: {str(e)}")
    
     return render_template('admin/view_subjects.html', form=form, section=section, subjects=subjects)
+
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
@@ -1020,52 +1116,86 @@ def enrolled_subjects(student_id):
 @login_required
 def add_grades_period1(student_id):
     form = Period1Form()
-    
+    subject_id = request.form.get('subject_id')
+    grade = Grades.query.filter_by(student_id=student_id, subject_id=subject_id).first()
+
     if request.method == 'POST' and form.validate_on_submit():
-        grade = Grades(student_id=student_id)
-        form.populate_obj(grade)
-        grade.subject_id = request.form.get('subject_id')
-        compute_grade(grade)
-        db.session.add(grade)
-        db.session.commit()
-        flash('Period 1 grade added successfully!', 'success')
-        return redirect(url_for('student_details', student_id=student_id))
+        if grade:
+            # If grade exists, update the existing grade
+            form.populate_obj(grade)
+            compute_grade(grade)
+            db.session.commit()
+            flash('Period 1 grade updated successfully!', 'success')
+        else:
+            # If grade doesn't exist, create a new one
+            grade = Grades(student_id=student_id)
+            form.populate_obj(grade)
+            grade.subject_id = subject_id
+            compute_grade(grade)
+            db.session.add(grade)
+            db.session.commit()
+            flash('Period 1 grade added successfully!', 'success')
+        
+        return redirect(url_for('my_students', subject_id=subject_id))
     
-    return render_template('web/student_details.html', form=form, subject_id=request.form.get('subject_id'))
+    return render_template('web/my_students.html', form=form, subject_id=subject_id)
 
 @app.route('/add_grades/<int:student_id>/period2', methods=['GET', 'POST'])
 @login_required
 def add_grades_period2(student_id):
     form = Period2Form()
-    
+    subject_id = request.form.get('subject_id')
+    grade = Grades.query.filter_by(student_id=student_id, subject_id=subject_id).first()
+
     if request.method == 'POST' and form.validate_on_submit():
-        grade = Grades(student_id=student_id)
-        form.populate_obj(grade)
-        grade.subject_id = request.form.get('subject_id')
-        compute_grade(grade)
-        db.session.add(grade)
-        db.session.commit()
-        flash('Period 2 grade added successfully!', 'success')
-        return redirect(url_for('student_details', student_id=student_id))
+        if grade:
+            # If grade exists, update the existing grade
+            form.populate_obj(grade)
+            compute_grade(grade)
+            db.session.commit()
+            flash('Period 2 grade updated successfully!', 'success')
+        else:
+            # If grade doesn't exist, create a new one
+            grade = Grades(student_id=student_id)
+            form.populate_obj(grade)
+            grade.subject_id = subject_id
+            compute_grade(grade)
+            db.session.add(grade)
+            db.session.commit()
+            flash('Period 2 grade added successfully!', 'success')
+        
+        return redirect(url_for('my_students', subject_id=subject_id))
     
-    return render_template('web/student_details.html', form=form, subject_id=request.form.get('subject_id'))
+    return render_template('web/my_students.html', form=form, subject_id=subject_id)
 
 @app.route('/add_grades/<int:student_id>/period3', methods=['GET', 'POST'])
 @login_required
 def add_grades_period3(student_id):
     form = Period3Form()
-    
+    subject_id = request.form.get('subject_id')
+    grade = Grades.query.filter_by(student_id=student_id, subject_id=subject_id).first()
+
     if request.method == 'POST' and form.validate_on_submit():
-        grade = Grades(student_id=student_id)
-        form.populate_obj(grade)
-        grade.subject_id = request.form.get('subject_id')
-        compute_grade(grade)
-        db.session.add(grade)
-        db.session.commit()
-        flash('Period 3 grade added successfully!', 'success')
-        return redirect(url_for('student_details', student_id=student_id))
+        if grade:
+            # If grade exists, update the existing grade
+            form.populate_obj(grade)
+            compute_grade(grade)
+            db.session.commit()
+            flash('Period 3 grade updated successfully!', 'success')
+        else:
+            # If grade doesn't exist, create a new one
+            grade = Grades(student_id=student_id)
+            form.populate_obj(grade)
+            grade.subject_id = subject_id
+            compute_grade(grade)
+            db.session.add(grade)
+            db.session.commit()
+            flash('Period 3 grade added successfully!', 'success')
+        
+        return redirect(url_for('my_students', subject_id=subject_id))
     
-    return render_template('web/student_details.html', form=form, subject_id=request.form.get('subject_id'))
+    return render_template('web/my_students.html', form=form, subject_id=subject_id)
+
 
 
 def compute_grade(grade):

@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -15,7 +16,7 @@
      <!-- Custom styles for this template -->
      <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-    <title>Admin - Dashboard</title>
+     <title>APCBA-PORTAL</title>
 
     <!-- Custom fonts for this template-->
     
@@ -283,8 +284,8 @@
                                                     <button class="btn btn-primary btn-sm add-subject-btn" onclick="showAddSubjectForm('{{ course.id }}');$('#add-subject-form').modal('show');" style="border: 1px solid #e3e6f0; width: 67px;">Add Sub</button>
 
 
-                                                    <!-- Button to update the course -->
-                                                    <button type="submit" class="btn btn-primary btn-sm" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">Update</button>
+                                                    <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn btn-primary btn-sm" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">Update</a>
+
                                                     <!-- Form to delete the course -->
                             
                                                     <button class="btn btn-primary" style="border: 1px solid #e3e6f0; width: 75px;" data-toggle="modal" data-target="#subject-modal-{{ course.id }}">
@@ -366,7 +367,7 @@
                 </div>
             </div>
                        <!-- Modal for adding a new course (initially hidden) -->
-<<!-- Modal for adding a new course (initially hidden) -->
+<!-- Modal for adding a new course (initially hidden) -->
 <div id="add-course-modal" class="modal fade">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -428,7 +429,7 @@
 
                         
                        <!-- Form to add a new subject for a course (initially hidden) -->
-                       <div id="add-subject-form" class="modal fade">
+                       <div id="add-subject-form" class="modal fade" style="z-index: 1060;">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">

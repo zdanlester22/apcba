@@ -64,6 +64,9 @@
         img{
             height: 50px;
         }   
+        .custom-td {
+        border: 1px solid #dee2e6; /* Apply a border to the td elements */
+        }
 
     </style>
 </head>
@@ -208,54 +211,67 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Modules</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Subject</h1>
                     </div>
 
-                 <!-- Content Row -->
-<main class="formi container">
-    <div class="module-form">
-        <h1>Change Password</h1>
-        <form method="post" style="display: inline-grid; padding: 30px;">
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                <label for="old_password">Old Password:</label>
-                <div class="input-group">
-                    <input type="password" id="old_password" name="old_password" class="form-control" style="width: 300px;" required>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" id="eye_old_password" onclick="togglePasswordVisibility('old_password', 'eye_old_password')">
-                            <i class="fas fa-eye-slash"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- Repeat the same structure for other password fields -->
-            <div class="form-group">
-                <label for="new_password">New Password:</label>
-                <div class="input-group">
-                    <input type="password" id="new_password" name="new_password" class="form-control" required>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" id="eye_new_password" onclick="togglePasswordVisibility('new_password', 'eye_new_password')">
-                            <i class="fas fa-eye-slash"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password:</label>
-                <div class="input-group">
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" id="eye_confirm_password" onclick="togglePasswordVisibility('confirm_password', 'eye_confirm_password')">
-                            <i class="fas fa-eye-slash"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Change Password</button>
-        </form>
-    </div>    
-</main>
-
+                    <!-- Content Row -->
+                                    <!-- Module Tables -->
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                          <div class="col-md-12">
+                                
+                                            <div class="con">
+                                
+                                              <div class="table-responsive">
+                                                <table class="table">
+                                                  <thead class="thead-dark"> <!-- Apply Bootstrap class for dark header -->
+                                                    <tr>
+                                                      <th class="custom-th">Subject</th>
+                                                      <th class="custom-th">Abbreviation</th> <!-- Add custom class for custom styling -->
+                                                      <th class="custom-th">Course </th>
+                                                      <th class="custom-th">Section Name</th>
+                                                      <th class="custom-th">Year</th>                                 
+                                                      <th class="custom-th">Action</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                    {% for subject in subjects %}
+                                                    <tr>
+                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.title }}</td>
+                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.abbreviation }}</td>
+                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.course.title }}</td>
+                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.section.name }}</td>
+                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.section.year }}</td>
+                                                      <td style=" border: 1px solid #dee2e6;">
+                                                        <form action="{{ url_for('my_students', subject_id=subject.id) }}">
+                                                          <button type="submit" class="btn btn-primary">
+                                                            Grades
+                                                          </button>
+                                                        </form>
+                                                      </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                    
+                                              
+                                            </div>
+                                            
+                                          </div>
+                                        </div>
+                                        <div class="pagination justify-content-end">
+                                            <button class="btn btn-primary" id="nextBtn">Next</button>
+                                            </div>
+                                      </div>
+                                      
+                                        
+                        
+                                   
+                    <!-- Pagination -->
+            
+                                            
+                        
                         
                         
                     
@@ -311,6 +327,53 @@
             </div>
         </div>
     </div>
+  <script>
+         document.addEventListener("DOMContentLoaded", function() {
+    const tables = document.querySelectorAll('.table-container');
+    let currentIndex = 0;
+
+    function showTable(index) {
+        tables.forEach((table, i) => {
+            if (i === index) {
+                table.style.display = 'block';
+            } else {
+                table.style.display = 'none';
+            }
+        });
+    }
+
+    function nextTable() {
+        currentIndex = (currentIndex + 1) % tables.length;
+        showTable(currentIndex);
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', nextTable);
+});
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select the flash div
+            var flashDiv = document.querySelector(".flash");
+
+            // Function to add fade-in class
+            function fadeInFlash() {
+                flashDiv.classList.add("fade-in");
+            }
+
+            // Function to remove fade-in class after 3 seconds
+            function fadeOutFlash() {
+                setTimeout(function () {
+                    flashDiv.classList.remove("fade-in");
+                }, 5000); // 3 seconds delay
+            }
+
+            // Call the functions
+            fadeInFlash();
+            fadeOutFlash();
+        });
+        
+
+  </script>
     <!-- Bootstrap core JavaScript-->
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
@@ -328,69 +391,6 @@
   <!-- Page level custom scripts -->
   <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
   <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-     const tables = document.querySelectorAll('.table-container');
-     let currentIndex = 0;
- 
-     // Function to show table based on index
-     function showTable(index) {
-         tables.forEach((table, i) => {
-             if (i === index) {
-                 table.style.display = 'block';
-             } else {
-                 table.style.display = 'none';
-             }
-         });
-     }
- 
-     // Function to toggle password visibility
-     function togglePasswordVisibility(inputId, buttonId) {
-         var passwordInput = document.getElementById(inputId);
-         var toggleButton = document.getElementById(buttonId);
- 
-         if (passwordInput.type === "password") {
-             passwordInput.type = "text";
-             toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
-         } else {
-             passwordInput.type = "password";
-             toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
-         }
-     }
- 
-     // Function to handle flash message fading
-     function handleFlashMessage() {
-         var flashDiv = document.querySelector(".flash");
- 
-         function fadeInFlash() {
-             flashDiv.classList.add("fade-in");
-         }
- 
-         function fadeOutFlash() {
-             setTimeout(function () {
-                 flashDiv.classList.remove("fade-in");
-             }, 3000); // 3 seconds delay
-         }
- 
-         fadeInFlash();
-         fadeOutFlash();
-     }
- 
-     // Event listener for 'Next' button
-     function nextTable() {
-         currentIndex = (currentIndex + 1) % tables.length;
-         showTable(currentIndex);
-     }
- 
-     // Add event listener for 'Next' button click
-     document.getElementById('nextBtn').addEventListener('click', nextTable);
- 
-     // Initialize flash message handling
-     handleFlashMessage();
- });
- 
-   </script>
 
 
 </body>

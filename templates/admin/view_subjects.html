@@ -6,7 +6,7 @@
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>View Subjects</title>
+    <title>APCBA-PORTAL</title>
 
     <style>
         /* Custom styles if needed */
@@ -17,62 +17,77 @@
         <h2>Add a schedule?</h2>
     
         {% if subjects %}
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="thead-dark">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Abbreviation</th>
+                        <th>Title</th>
+                        <th>Unit</th>
+                        <th>Schedule</th>
+                        <th>Assigned Teacher</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in subjects %}
                         <tr>
-                            <th>Abbreviation</th>
-                            <th>Title</th>
-                            <th>Unit</th>
-                            <th>Schedule</th>
-                            <th>Action</th>
+                            <td>{{ subject.abbreviation }}</td>
+                            <td>{{ subject.title }}</td>
+                            <td>{{ subject.unit }}</td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    {% if subject.schedules %}
+                                        {% for schedule in subject.schedules %}
+                                            <li>{{ schedule.day_of_week }} -{{ schedule.room }}- {{ schedule.start_time }} to {{ schedule.end_time }}</li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <li>No schedule available for this subject.</li>
+                                    {% endif %}
+                                </ul>
+                            </td>
+                            <td>
+                                {% if subject.teachers %}
+                                    {% for teacher in subject.teachers %}
+                                        {{ teacher.name }}<br>
+                                    {% endfor %}
+                                {% else %}
+                                    <em>No teacher assigned</em><br>
+                                    <a href="{{ url_for('assign_teacher_to_subject', subject_id=subject.id) }}" class="btn btn-primary">Assign Teacher</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form id="add-schedule-form-{{ subject.id }}" method="post" action="{{ url_for('add_schedule', section_id=section.id, subject_id=subject.id) }}">
+                                    {{ form.csrf_token }}
+                                    <!-- Move the hidden field for subject_id inside the form -->
+                                    <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                                    
+                                    <label for="day_of_week">Day of Week:</label>
+                                    {{ form.day_of_week(class="form-control") }}
+                                    
+                                    <label for="start_time">Start Time:</label>
+                                    {{ form.start_time(class="form-control") }}
+                                    
+                                    <label for="end_time">End Time:</label>
+                                    {{ form.end_time(class="form-control") }}
+                                
+                                    <!-- Add a field for room -->
+                                    <label for="room">Room:</label>
+                                    {{ form.room(class="form-control") }}
+                                    
+                                    <!-- Move the button inside the form -->
+                                    <button type="submit" class="btn btn-primary" onclick="disableSubmit(this)" data-subject-id="{{ subject.id }}">Add Schedule</button>
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for subject in subjects %}
-                            <tr>
-                                <td>{{ subject.abbreviation }}</td>
-                                <td>{{ subject.title }}</td>
-                                <td>{{ subject.unit }}</td>
-                                <td>
-                                    <ul class="list-unstyled">
-                                        {% if subject.schedules %}
-                                            {% for schedule in subject.schedules %}
-                                                <li>{{ schedule.day_of_week }} - {{ schedule.start_time }} to {{ schedule.end_time }}</li>
-                                            {% endfor %}
-                                        {% else %}
-                                            <li>No schedule available for this subject.</li>
-                                        {% endif %}
-                                    </ul>
-                                </td>
-                                <td>
-                                    <form method="post" action="{{ url_for('add_schedule', section_id=section.id, subject_id=subject.id) }}">
-                                        {{ form.csrf_token }}
-                                        
-                                        <!-- Add a hidden field for subject_id -->
-                                        <input type="hidden" name="subject_id" value="{{ subject.id }}">
-                                        
-                                        <label for="day_of_week">Day of Week:</label>
-                                        {{ form.day_of_week(class="form-control") }}
-                                        
-                                        <label for="start_time">Start Time:</label>
-                                        {{ form.start_time(class="form-control") }}
-                                        
-                                        <label for="end_time">End Time:</label>
-                                        {{ form.end_time(class="form-control") }}
-                                        
-                                        <button type="submit" class="btn btn-primary">Add Schedule</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <p>No subjects available for the selected section and course.</p>
-        {% endif %}
-    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No subjects available for the selected section and course.</p>
+    {% endif %}
+    
     
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -82,6 +97,18 @@
         document.addEventListener("DOMContentLoaded", function () {
             // Your JavaScript code here
         });
+
+        function disableSubmit(button) {
+        // Disable all submit buttons
+        var allButtons = document.querySelectorAll('button[type="submit"]');
+        allButtons.forEach(function(btn) {
+            if (btn !== button) {
+                btn.disabled = true;
+                // Optionally, you can change the text of the disabled buttons to indicate submission in progress
+                btn.textContent = 'Adding Schedule...';
+            }
+        });
+    }
     </script>
 </body>
 </html>

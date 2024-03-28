@@ -1,5 +1,6 @@
 
-
+<link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+<title>APCBA-PORTAL</title>
 {% block content %}
   <h2>Update Subject</h2>
   <form method="POST" action="{{ url_for('update_subject', subject_id=subject.id) }}">

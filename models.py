@@ -126,7 +126,8 @@ class Subject(db.Model):
     section = db.relationship('Section', back_populates='subjects')
     grades = db.relationship('Grades', back_populates='subject', lazy=True)
     schedules = db.relationship('Schedule', back_populates='subject', lazy=True)
-
+    teachers = db.relationship('Teacher', secondary='subject_teacher_association', back_populates='subjects')
+    
 
 
 class Teacher(db.Model):
@@ -135,7 +136,18 @@ class Teacher(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
     section = db.relationship('Section', back_populates='teacher', uselist=False) 
-    
+    subjects = db.relationship('Subject', secondary='subject_teacher_association', back_populates='teachers')
+
+
+
+subject_teacher_association = db.Table('subject_teacher_association',
+    db.Column('subject_id', db.Integer, db.ForeignKey('subject.id')), 
+    db.Column('teacher_id', db.Integer, db.ForeignKey('teacher.id'))  
+)
+
+
+
+
 
 
 class Module(db.Model):
@@ -228,8 +240,9 @@ class Schedule(db.Model):
     __tablename__ = 'schedule'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     day_of_week = db.Column(db.String(20), nullable=False)
-    start_time = db.Column(db.Time, nullable=False)
-    end_time = db.Column(db.Time, nullable=False)
+    start_time = db.Column(db.String(8), nullable=False)  
+    end_time = db.Column(db.String(8), nullable=False)    
+    room = db.Column(db.String(50))  
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
     subject = db.relationship('Subject', back_populates='schedules', lazy=True)
 

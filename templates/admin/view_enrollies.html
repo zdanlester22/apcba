@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -15,7 +16,7 @@
      <!-- Custom styles for this template -->
      <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-    <title>Admin - Dashboard</title>
+     <title>APCBA-PORTAL</title>
 
     <!-- Custom fonts for this template-->
     
@@ -152,6 +153,7 @@ td{
                 <a class="nav-link" href="{{ url_for('view_teachers') }}" >
                     <i class="fas fa-user"></i>
                     <span>Teachers</span></a>
+                    
             </li>
 
 
@@ -223,6 +225,9 @@ td{
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Enrollees</h1>
+                        <a href="{{ url_for('view_archived_enrollies') }}" class="btn btn-primary" style="margin-right: 29px;">View Archived Enrollies</a>
+
+
                     </div>
 
                     <!-- Content Row -->

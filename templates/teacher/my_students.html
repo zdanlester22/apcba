@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrolled Subjects</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        /* Close button style */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .flash {
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin-top: 50px;
+            margin-right: 5px;
+            z-index: 10;
+            background-color: #374c60;
+            color: #fff;
+            border: 2px solid #374c60;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .flash li{
+            list-style: none;
+            text-align: center;
+            margin-right: 25px;
+        }
+        .fade-in {
+            /* CSS class to fade in flash messages */
+            opacity: 1 !important; /* Override opacity to 1 */
+        }
+
+        
+    </style>
+    
+</head>
+<body>
+    <div class="flash">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="container">
+        <h1>Students Enrolled in {{ subject.title }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>1st Period</th>
+                    <th>2nd Period</th>
+                    <th>3rd Period</th>
+                    <th>Final</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in enrolled_students %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        {% if grades.get(student.id) %}
+                        <!-- Display grades if available -->
+                        <td>{{ grades[student.id].period_1 }}</td>
+                        <td>{{ grades[student.id].period_2 }}</td>
+                        <td>{{ grades[student.id].period_3 }}</td>
+                        <td>{{ final_grades_formatted[student.id] }}</td>
+                        <td>{{ "Pass" if grades[student.id].is_passed else "Fail" }}</td>
+                    {% else %}
+                        <!-- Display placeholder if grades are not available -->
+                        <td colspan="5">Grades not available</td>
+                    {% endif %}
+                        <td>
+                            <!-- Forms for submitting grades -->
+                            <form method="POST" action="{{ url_for('add_grades_period1', student_id=student.id) }}">
+                                {{ form1.hidden_tag() }}
+                                <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                                <h3>Period 1</h3>
+                                {{ form1.period_1.label }}: {{ form1.period_1(size=10) }}
+                                <br>
+                                <button type="submit">Submit Period 1</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('add_grades_period2', student_id=student.id) }}">
+                                {{ form2.hidden_tag() }}
+                                <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                                <h3>Period 2</h3>
+                                {{ form2.period_2.label }}: {{ form2.period_2(size=10) }}
+                                <br>
+                                <button type="submit">Submit Period 2</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('add_grades_period3', student_id=student.id) }}">
+                                {{ form3.hidden_tag() }}
+                                <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                                <h3>Period 3</h3>
+                                {{ form3.period_3.label }}: {{ form3.period_3(size=10) }}
+                                <br>
+                                <button type="submit">Submit Period 3</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+      
+
+    <script>
+  
+    </script>
+</body>
+</html>
+
+ 
