@@ -243,43 +243,51 @@ td{
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for enrollies in enrollies_list %}
-                                        <tr>
-                                            <td>{{ enrollies.name }}</td>
-                                            <td>{{ enrollies.email }}</td>
-                                            <td>
-                                                <a href="{{ url_for('archive_enrollie', enrollie_id=enrollies.id) }}" class="btn btn-primary">Archive</a>
-                                                <button class="btn btn-info show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</button>
-                                            </td>
-                                        </tr>
-                                        <!-- Hidden additional info for each enrollie -->
-                                        <tr id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
-                                            <td colspan="3">
-                        
-                                                <strong>Level:</strong> {{ enrollies.level }}<br>
-                                                <strong>Year:</strong> {{ enrollies.year }}<br>
-                                                <strong>Address:</strong> {{ enrollies.address }}<br>
-                                                <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
-                                                <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
-                                                <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
-                                                <strong>Gender:</strong> {{ enrollies.gender }}<br>
-                                                <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
-                                                <strong>Religion:</strong> {{ enrollies.religion }}<br>
-                                                <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
-                                                <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
-                                                <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
-                                                <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
-                                                <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
-                                                <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
-                                                <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
+                                        {% if enrollies_list %}
+                                            {% for enrollies in enrollies_list %}
+                                            <tr>
+                                                <td>{{ enrollies.name }}</td>
+                                                <td>{{ enrollies.email }}</td>
+                                                <td>
+                                                    <a href="{{ url_for('archive_enrollie', enrollie_id=enrollies.id) }}" class="btn btn-primary">Archive</a>
+                                                    <button class="btn btn-info show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</button>
+                                                </td>
+                                            </tr>
+                                            <!-- Hidden additional info for each enrollie -->
+                                            <tr id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
+                                                <td colspan="3">
+                                                    <strong>Level:</strong> {{ enrollies.level }}<br>
+                                                    <strong>Year:</strong> {{ enrollies.year }}<br>
+                                                    <strong>Address:</strong> {{ enrollies.address }}<br>
+                                                    <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
+                                                    <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
+                                                    <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
+                                                    <strong>Gender:</strong> {{ enrollies.gender }}<br>
+                                                    <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
+                                                    <strong>Religion:</strong> {{ enrollies.religion }}<br>
+                                                    <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
+                                                    <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
+                                                    <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
+                                                    <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
+                                                    <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
+                                                    <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
+                                                    <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
+                                                </td>
+                                                
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="3">No Enrollies</td>
+                                            </tr>
+                                        {% endif %}
                                     </tbody>
+                                    
                                 </table>
                             </div>
                         </div>
                     </div>
+                    
                     <div id="myModal" class="modal fade" role="dialog">
                         <div class="modal-dialog">
                             <!-- Modal content -->

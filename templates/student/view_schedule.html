@@ -222,26 +222,35 @@
                     <!-- Content Row -->
                     <div class="row">
 
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Day of Week</th>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
-                                    <!-- Add more columns if needed -->
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for schedule in schedules %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="thead-dark">
                                     <tr>
-                                        <td>{{ schedule.day_of_week }}</td>
-                                        <td>{{ schedule.start_time }}</td>
-                                        <td>{{ schedule.end_time }}</td>
-                                        <!-- Add more cells if needed -->
+                                        <th>Day of Week</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <!-- Add more columns if needed -->
                                     </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {% if schedules %}
+                                        {% for schedule in schedules %}
+                                            <tr>
+                                                <td>{{ schedule.day_of_week }}</td>
+                                                <td>{{ schedule.start_time }}</td>
+                                                <td>{{ schedule.end_time }}</td>
+                                                <!-- Add more cells if needed -->
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3">Not Enrolled Yet</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
                     
                         </div>
                         

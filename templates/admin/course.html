@@ -64,6 +64,12 @@
         .fade-in {
             /* CSS class to fade in flash messages */
             opacity: 1}
+            .center-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            }
+
     </style>
 </head>
 
@@ -105,7 +111,7 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('certificate') }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-award"></i>
                     <span>Certificates</span>
                 </a>
             </li>
@@ -113,7 +119,7 @@
              <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('modules') }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-book"></i>
                     <span>Modules</span>
                 </a>
             </li>
@@ -125,12 +131,20 @@
                 </a>
             </li>
 
-             <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-folder"></i>
                     <span>Section</span>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('users') }}">
+                    <i class="fas fa-fw fa-key"></i>
+                    <span>Portal Accounts</span>
+                </a>
+            </li>
+
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -144,7 +158,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
+                    <i class="fas fa-user-graduate"></i>
                     <span>Students</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -160,7 +174,7 @@
             <!-- Nav Item - Charts -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('view_teachers') }}" >
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i class="fas fa-user"></i>
                     <span>Teachers</span></a>
             </li>
 
@@ -284,7 +298,8 @@
                                                     <button class="btn btn-primary btn-sm add-subject-btn" onclick="showAddSubjectForm('{{ course.id }}');$('#add-subject-form').modal('show');" style="border: 1px solid #e3e6f0; width: 67px;">Add Sub</button>
 
 
-                                                    <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn btn-primary btn-sm" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">Update</a>
+                                                    <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn btn-primary btn-sm center-text" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">Update</a>
+
 
                                                     <!-- Form to delete the course -->
                             
@@ -529,6 +544,17 @@
 
 </body>
 <script>
+    $(document).ready(function() {
+      // Initialize all dropdowns
+      $('.dropdown-toggle').dropdown();
+    });
+  </script><script>
+  $(document).ready(function() {
+    // Initialize all dropdowns
+    $('.dropdown-toggle').dropdown();
+  });
+
+    
        // Function to show the add subject form
     function showAddSubjectForm(courseId) {
         $('#subject-course-id').val(courseId);

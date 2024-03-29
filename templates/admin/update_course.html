@@ -1,38 +1,124 @@
-{% block content %}
-  <h2 style="text-align: center;">Update Course</h2>
-  <form method="POST" action="{{ url_for('update_course', course_id=course.id) }}" style="max-width: 400px; margin: auto;">
-    {{ form.hidden_tag() }}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+     <!-- Core plugin CSS -->
+     <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
+ 
+     <!-- Custom styles for this template -->
+     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+     <title>APCBA-PORTAL</title>
+
+    <!-- Custom fonts for this template-->
     
-    <div style="margin-bottom: 15px;">
-      <label for="course_type" style="display: block; margin-bottom: 5px; font-weight: bold;">Course Type</label>
-      <input type="text" name="course_type" id="course_type" value="{{ course.course_type }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
-    </div>
+    <!-- Font Awesome CSS -->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
 
-    <div style="margin-bottom: 15px;">
-      <label for="abbreviation" style="display: block; margin-bottom: 5px; font-weight: bold;">Abbreviation</label>
-      <input type="text" name="abbreviation" id="abbreviation" value="{{ course.abbreviation }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
-    </div>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <div style="margin-bottom: 15px;">
-      <label for="title" style="display: block; margin-bottom: 5px; font-weight: bold;">Title</label>
-      <input type="text" name="title" id="title" value="{{ course.title }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
-    </div>
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-    <div style="margin-bottom: 15px;">
-      <label for="school_year" style="display: block; margin-bottom: 5px; font-weight: bold;">School Year</label>
-      <input type="text" name="school_year" id="school_year" value="{{ course.school_year }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
-    </div>
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+</head>
+<body>
 
-    <div style="margin-bottom: 15px;">
-      <label for="semesters" style="display: block; margin-bottom: 5px; font-weight: bold;">Semesters</label>
-      <input type="text" name="semesters" id="semesters" value="{{ course.semesters }}" style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; margin-top: 5px;">
-    </div>
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white text-center">
+          <h2>Update Course</h2>
+        </div>
+        <div class="card-body">
+          <form method="POST" action="{{ url_for('update_course', course_id=course.id) }}" class="needs-validation" novalidate>
+            {{ form.hidden_tag() }}
 
-    <div style="margin-bottom: 15px;">
-      <label for="is_active" style="display: block; margin-bottom: 5px; font-weight: bold;">Is Active</label>
-      <input type="checkbox" name="is_active" id="is_active" {% if course.is_active %}checked{% endif %} style="margin-top: 5px;">
-    </div>
+            <div class="mb-3">
+              <label for="course_type" class="form-label">Course Type</label>
+              <input type="text" class="form-control" id="course_type" name="course_type" value="{{ course.course_type }}" required>
+              <div class="invalid-feedback">
+                Please provide a course type.
+              </div>
+            </div>
 
-    <button type="submit" class="btn btn-primary" style="background-color: #e07b00; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s;">Update Course</button>
-  </form>
+            <div class="mb-3">
+              <label for="abbreviation" class="form-label">Abbreviation</label>
+              <input type="text" class="form-control" id="abbreviation" name="abbreviation" value="{{ course.abbreviation }}" required>
+              <div class="invalid-feedback">
+                Please provide an abbreviation.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="title" class="form-label">Title</label>
+              <input type="text" class="form-control" id="title" name="title" value="{{ course.title }}" required>
+              <div class="invalid-feedback">
+                Please provide a title.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="school_year" class="form-label">School Year</label>
+              <input type="text" class="form-control" id="school_year" name="school_year" value="{{ course.school_year }}" required>
+              <div class="invalid-feedback">
+                Please provide a school year.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="semesters" class="form-label">Semesters</label>
+              <input type="text" class="form-control" id="semesters" name="semesters" value="{{ course.semesters }}" required>
+              <div class="invalid-feedback">
+                Please provide the number of semesters.
+              </div>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="is_active" name="is_active" {% if course.is_active %}checked{% endif %}>
+              <label class="form-check-label" for="is_active">Is Active</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Update Course</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
+
+<!-- Bootstrap JS -->
+   <!-- Bootstrap core JavaScript-->
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
+
+
+</body>
+</html>

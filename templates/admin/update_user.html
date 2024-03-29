@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <title>APCBA-PORTAL</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -35,10 +36,8 @@
         }
 
         label {
-            display: block;
             font-size: 16px;
             font-weight: bold;
-            margin-bottom: 10px;
             color: #333;
         }
 
@@ -48,33 +47,28 @@
             width: 100%;
             padding: 10px;
             font-size: 14px;
-            border: 1px solid #ccc;
+            border: 1px solid #ced4da;
             border-radius: 4px;
             box-sizing: border-box;
             margin-bottom: 15px;
         }
 
         button {
-            display: inline-block;
+            width: 100%;
             padding: 10px 16px;
             font-size: 16px;
             font-weight: bold;
             text-align: center;
-            text-decoration: none;
-            background-color: #374c60;
+            background-color: #007bff;
             color: #fff;
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.2s;
             cursor: pointer;
             border: none;
-            display: block;
-            margin: auto;
         }
 
         button:hover {
-            background-color: #fff;
-            color: #374c60;
-            border: 1px solid #374c60;
+            background-color: #0056b3;
         }
 
         p {
@@ -97,23 +91,22 @@
     <form method="post" action="{{ url_for('update_user', user_id=user.id) }}">
         {{ form.csrf_token }}
         
-        <div>
+        <div class="form-group">
             <label for="new_email">Email:</label>
             {{ form.new_email() }}
         </div>
         
-        <div>
+        <div class="form-group">
             <label for="new_name">Name:</label>
             {{ form.new_name() }}
         </div>
         
-        
-        <div>
+        <div class="form-group">
             <label for="new_password">Password:</label>
             {{ form.new_password() }}
         </div>
         
-        <div>
+        <div class="form-group">
             <label for="new_role">Role:</label>
             {{ form.new_role() }}
         </div>
@@ -122,6 +115,11 @@
     </form>
     
     <p><a href="{{ url_for('users') }}">Back to Accounts</a></p>
+
+    <!-- Bootstrap JS and jQuery (for Bootstrap functionalities) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

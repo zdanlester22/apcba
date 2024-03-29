@@ -6,16 +6,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
 
      <!-- Core plugin CSS -->
      <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
  
      <!-- Custom styles for this template -->
      <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
-
      <title>APCBA-PORTAL</title>
 
     <!-- Custom fonts for this template-->
@@ -34,7 +33,40 @@
         .bg-color{
             background-color:#374c60 ;
         }
-   
+        .close-btn {
+            cursor: pointer;
+        }
+
+        #uploadModal .modal-dialog {
+            max-width: 600px;
+        }
+        img{
+            width: 50px;
+        }
+        .flash {
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin-top: 100px;
+            margin-right: 5px;
+            z-index: 10;
+            background-color: #374c60;
+            color: #fff;
+            border: 2px solid #374c60;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .flash li{
+            list-style: none;
+            text-align: center;
+            margin-right: 25px;
+            padding: 10px;
+        }
+        .fade-in {
+            /* CSS class to fade in flash messages */
+            opacity: 1 !important; /* Override opacity to 1 */
+        }
     </style>
 </head>
 
@@ -49,7 +81,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
@@ -120,9 +152,9 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>Students</span>
+                aria-expanded="true" aria-controls="collapsePages">
+                <i class="fas fa-user-graduate"></i>
+                <span>Students</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -208,67 +240,81 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-            
-                    <!-- Content Row -->
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-8">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h2 class="text-center">Register Users</h2>
-                                    </div>
-                                    <div class="card-body">
-                                        {% block content %}
-                                        <form method="post" action="{{ url_for('register') }}" id="registrationForm">
-                                            {{ form.csrf_token }}
-                                            <div class="form-group">
-                                                {{ form.email.label }}
-                                                {{ form.email(placeholder="Enter your email", class="form-control", maxlength="30", required="required", oninput="limitEmailLength(this); validateEmailFormat(this)") }}
-                                                <small class="form-text text-muted">Please enter a valid email address.</small>
-                                            </div>
-                                            <div class="form-group">
-                                                {{ form.name.label }}
-                                                {{ form.name(placeholder="Enter your full name", class="form-control", maxlength="30", oninput="sanitizeNameInput(this); limitNameLength(this)") }}
-                                            </div>
-                                            <div class="form-group">
-                                                {{ form.password.label }}
-                                                {{ form.password(placeholder="Enter your password", class="form-control", maxlength="20", required="required", pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+}{\\'\";:?><,.[\\]\\\/\\-]).{8,20}$", oninput="validatePassword(this); updateCharCount(this)") }}
-                                                <small class="form-text text-muted">Password must be 8-20 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.</small>
-                                            </div>
-                    
-                                            <div class="form-group">
-                                                {{ form.role.label }}
-                                                {{ form.role(class="form-control") }}
-                                            </div>
-                    
-                                            <button type="submit" class="btn btn-primary btn-block">Register</button>
-                                        </form>
-                                        {% endblock %}
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Register Users Manually</h1>
+                    </div>
+                    <div class="row">
+                        <div class="flash">
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                        {% for message in messages %}
+                                            <li>{{ message }}</li>
+                                        {% endfor %}
+                                {% endif %}
+                            {% endwith %}
                         </div>
                     </div>
-                    
-        
+                    <!-- Content Row -->
+                    <div class="container">
+                        <div class="row">
+                            {% block content %}
+                            <form method="post" action="{{ url_for('register') }}" id="registrationForm">
+                             {{ form.csrf_token }}
+                             <div class="form-group">
+                                 {{ form.email.label }}
+                                 {{ form.email(placeholder="Enter your email", class="form-control", maxlength="50", required="required", oninput="limitEmailLength(this); validateEmailFormat(this)", style="width: 399px") }}
+                                 <span class="char-count" id="email-char-count">0/50</span>
+                                 <span class="error-message" id="email-error-message" style="color: red; font-size: 12px;"></span>
+                             </div>
+                             <div class="form-group">
+                                 {{ form.name.label }}
+                                 {{ form.name(placeholder="Enter your full name", style="width: 398px", class="form-control", maxlength="50", oninput="sanitizeNameInput(this); limitNameLength(this)") }}
+                                 <span class="char-count" id="name-char-count">0/50</span>
+                             </div>
+                             <div class="form-group">
+                                {{ form.password.label(style="margin-left: 8px;") }}
+                                <div class="input-group">
+                                    {{ form.password(placeholder="Enter your password", class="form-control", style="width: 350px; margin-left: 0px", maxlength="20", required="required", pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+}{\\'\";:?><,.[\\]\\\/\\-]).{8,20}$", oninput="validatePassword(this); updateCharCount(this)") }}
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility()">
+                                            <i class="fas fa-eye"></i> <!-- Assuming you are using Font Awesome for icons -->
+                                        </button>
+                                    </div>
+                                </div>
+                                <span class="char-count" id="password-char-count">0/20</span>
+                                <span class="error-message" id="password-error-message" style="color: red; font-size: 12px;"></span>
+                            </div>
+                 
+                             <div class="form-group">
+                                <label for="role">Role</label>
+                                {{ form.role(class="form-control") }} <!-- Apply Bootstrap form-control class to the role dropdown -->
+                            </div>
+                         
+                             <br>
+                             <button type="submit" class="btn btn-primary">Register</button>
+                         </form>
+                         
+                 
+                 {% endblock %}
+                        </div>
+                    </div>
                 </div>
+            </div>
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
-
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto ">
-                        <span>Copyright &copy; Asia Pacific College of Bussines and Arts 2024</span>
-                    </div>
-                </div>
-            </footer>
             <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
-
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Asia Pacific College of Business and Arts 2024</span>
+                </div>
+            </div>
+        </footer>
     </div>
     <!-- End of Page Wrapper -->
 
@@ -278,25 +324,28 @@
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+                    <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">
+                    Are you sure you want to delete this certificate?
+                </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
-
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+</div>
+
 
     <!-- Bootstrap core JavaScript-->
   <!-- Bootstrap core JavaScript-->
@@ -319,102 +368,28 @@
 
 </body>
 <script>
-  var modal = document.getElementById("myModal");
-    var btn = document.querySelector("button[type='submit']");
-    var span = document.getElementsByClassName("close")[0];
-    var confirmYesBtn = document.getElementById("confirmYes");
-    var confirmNoBtn = document.getElementById("confirmNo");
+     function togglePasswordVisibility() {
+        var passwordInput = document.getElementById("password");
+        var icon = document.querySelector("#password ~ .input-group-append button i");
 
-    // When the user clicks the button, open the modal 
-    btn.onclick = function(event) {
-        event.preventDefault(); // Prevent default form submission behavior
-
-        // Check if form inputs are valid before showing the modal
-        if (validateFormInputs()) {
-            modal.style.display = "block";
-        }
-    }
-
-    // When the user clicks on <span> (x) or No button, close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    confirmNoBtn.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    // When the user clicks Yes button, continue with registration
-    confirmYesBtn.onclick = function() {
-        modal.style.display = "none";
-        // Submit the form (if it's inside a form element)
-        document.getElementById("registrationForm").submit();
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    // Function to validate form inputs
-    function validateFormInputs() {
-        var email = document.getElementById("email");
-        var name = document.getElementById("name");
-        var password = document.getElementById("password");
-        var isValid = true;
-
-        // Perform validation checks
-        if (email.value.trim() === "") {
-            showError(email, "Email is required");
-            isValid = false;
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
         } else {
-            hideError(email);
+            passwordInput.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
         }
-
-        if (name.value.trim() === "") {
-            showError(name, "Name is required");
-            isValid = false;
-        } else {
-            hideError(name);
-        }
-
-        if (password.value.trim() === "") {
-            showError(password, "Password is required");
-            isValid = false;
-        } else {
-            hideError(password);
-        }
-
-        return isValid; // Return true if all inputs are valid
     }
-
-    // Function to show error message
-    function showError(inputField, errorMessage) {
-        var errorElement = inputField.nextElementSibling; // Get the next element (assumed to be the error message element)
-        errorElement.textContent = errorMessage; // Set the error message text
-        errorElement.style.display = "block"; // Show the error message
-    }
-
-    // Function to hide error message
-    function hideError(inputField) {
-        var errorElement = inputField.nextElementSibling; // Get the next element (assumed to be the error message element)
-        errorElement.textContent = ""; // Clear the error message text
-        errorElement.style.display = "none"; // Hide the error message
-    }
-
-
-
-
-    function sanitizeNameInput(inputField) {
+       function sanitizeNameInput(inputField) {
     inputField.value = inputField.value.replace(/\d/g, ''); // Remove numeric characters
 }
 
  function limitNameLength(event) {
     var inputField = event.target;
     var charCountElement = document.getElementById("name-char-count");
-    var maxLength = 30;
+    var maxLength = 50;
     var sanitized = '';
 
     // Iterate through each character of the input
@@ -453,26 +428,55 @@ nameInput.addEventListener('input', limitNameLength);
     var charCountElement = document.getElementById("password-char-count");
     charCountElement.textContent = inputField.value.length + "/20";
 }
-
-function toggleSidebar() {
-        var sidebar = document.querySelector('.sidebar');
-        var form = document.querySelector('.container');
-        var table = document.querySelector('.content');
-
-        if (sidebar.style.display === 'none') {
-            sidebar.style.display = 'block';
-
-
-        } else {
-            // Hide the sidebar
-            sidebar.style.display = 'none';
-            form.style.width = '100%';
-            table.style.width = '100%';
-            table.style.marginLeft = '400px';
-            table.style.marginRight = '500px';
+          function limitEmailLength(inputField) {
+        var maxLength = 50;
+        if (inputField.value.length > maxLength) {
+            inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
         }
+
+        // Update character count display
+        document.getElementById('email-char-count').textContent = inputField.value.length + "/" + maxLength;
+    }
+
+function limitNameLength(inputField) {
+    var charCountElement = document.getElementById("name-char-count");
+    if (inputField.value.length >= 50) {
+        inputField.value = inputField.value.slice(0, 50); // Trim input to max length
+    }
+    charCountElement.textContent = inputField.value.length + "/50";
+}
+    // Function to validate password complexity
+    // Function to validate password format
+    function validatePassword(inputField) {
+        var password = inputField.value;
+        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+        var isValid = passwordRegex.test(password);
+        inputField.setCustomValidity(isValid ? '' : 'Invalid password format');
+        document.getElementById('password-error-message').textContent = isValid ? '' : 'Password must be 8-20 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character';
     }
     document.addEventListener("DOMContentLoaded", function () {
+    // Select the flash div
+    var flashDiv = document.querySelector(".flash");
+
+    // Function to add fade-in class
+    function fadeInFlash() {
+        flashDiv.classList.add("fade-in");
+        flashDiv.style.opacity = "1"; // Ensure flash is visible
+    }
+
+    // Function to remove fade-in class after 3 seconds
+    function fadeOutFlash() {
+        setTimeout(function () {
+            flashDiv.classList.remove("fade-in");
+        }, 3000); // 3 seconds delay
+    }
+
+    // Call the functions
+    fadeInFlash();
+    fadeOutFlash();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
             // Select the flash div
             var flashDiv = document.querySelector(".flash");
 
@@ -492,34 +496,7 @@ function toggleSidebar() {
             fadeInFlash();
             fadeOutFlash();
         });
-     
 
-        function limitEmailLength(inputField) {
-        var maxLength = 30;
-        if (inputField.value.length > maxLength) {
-            inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
-        }
-
-        // Update character count display
-        document.getElementById('email-char-count').textContent = inputField.value.length + "/" + maxLength;
-    }
-
-function limitNameLength(inputField) {
-    var charCountElement = document.getElementById("name-char-count");
-    if (inputField.value.length >= 30) {
-        inputField.value = inputField.value.slice(0, 30); // Trim input to max length
-    }
-    charCountElement.textContent = inputField.value.length + "/30";
-}
-    // Function to validate password complexity
-    // Function to validate password format
-    function validatePassword(inputField) {
-        var password = inputField.value;
-        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
-        var isValid = passwordRegex.test(password);
-        inputField.setCustomValidity(isValid ? '' : 'Invalid password format');
-        document.getElementById('password-error-message').textContent = isValid ? '' : 'Password must be 8-20 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character';
-    }
     </script>
 
 </html>

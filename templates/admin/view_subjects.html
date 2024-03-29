@@ -14,7 +14,8 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h2>Add a schedule?</h2>
+        <h2 class="h4">Add Schedule?</h2>
+
     
         {% if subjects %}
         <div class="table-responsive">
@@ -76,6 +77,7 @@
                                     {{ form.room(class="form-control") }}
                                     
                                     <!-- Move the button inside the form -->
+                                    <br>
                                     <button type="submit" class="btn btn-primary" onclick="disableSubmit(this)" data-subject-id="{{ subject.id }}">Add Schedule</button>
                                 </form>
                             </td>
