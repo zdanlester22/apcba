@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash,  se
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
-from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm,FilterForm, SectionForm, ChangePasswordForm
+from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm, FilterForm, SectionForm, ChangePasswordForm
 from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, AssignTeacherToSubjectForm,  Period1Form, Period2Form, Period3Form, ScheduleForm, RegistrationForm, CommentForm
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,6 +10,7 @@ from sqlalchemy import or_
 import os
 import requests
 from flask_mail import Mail, Message
+from collections import defaultdict
 
 #'mysql+mysqlconnector://root:@localhost/apcba'
 #'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
@@ -720,9 +721,6 @@ def teacher_account():
 def course():
     user_name = current_user.name
     form_course = CourseForm()
-    form_subject = SubjectForm()
-    filter_form = FilterForm()
-    form_subject.set_course_choices(Course.query.all())
     
     if form_course.validate_on_submit():
         new_course = Course(
@@ -737,33 +735,13 @@ def course():
         )
         db.session.add(new_course)
         db.session.commit()
-        flash('Created successfully!', 'success')
+        flash('Course created successfully!', 'success')
         return redirect(url_for('course'))
-    school_year_filter = request.args.get('school_year', type=str)
-    semester_filter = request.args.get('semester', type=int)
-    course_type_filter = request.args.get('course_type', type=str)
-    courses_query = Course.query
-    if school_year_filter:
-        courses_query = courses_query.filter_by(school_year=school_year_filter)
-    if semester_filter:
-        courses_query = courses_query.filter_by(semesters=semester_filter)
-    if course_type_filter:
-        courses_query = courses_query.filter_by(course_type=course_type_filter)
+    
+    courses = Course.query.all()
 
-    courses = courses_query.all()
+    return render_template('admin/course.html', courses=courses, form_course=form_course, user_name=user_name)
 
-    if form_subject.validate_on_submit():
-        new_subject = Subject(
-            abbreviation=form_subject.abbreviation.data,
-            title=form_subject.title.data,
-            unit=form_subject.unit.data,
-            course_id=form_subject.course_id.data,
-        )
-        db.session.add(new_subject)
-        db.session.commit()
-        return redirect(url_for('course'))
-
-    return render_template('admin/course.html', courses=courses, form_course=form_course, form_subject=form_subject, filter_form=filter_form,user_name=user_name)
 
 @app.route('/update_course/<int:course_id>', methods=['GET', 'POST'])
 @login_required
@@ -849,7 +827,29 @@ def manage_section():
         return redirect(url_for('manage_section'))
 
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
-                           form_section=form_section, user_name=user_name)
+                       form_section=form_section, form_subject=SubjectForm(), user_name=user_name)
+
+
+@app.route('/subjects/add', methods=['POST'])
+@login_required
+def add_subject():
+    form_subject = SubjectForm()
+    
+    if form_subject.validate_on_submit():
+        new_subject = Subject(
+            abbreviation=form_subject.abbreviation.data,
+            title=form_subject.title.data,
+            unit=form_subject.unit.data,
+            section_id=form_subject.section_id.data
+        )
+        db.session.add(new_subject)
+        db.session.commit()
+        flash('Subject added successfully!', 'success')
+    else:
+        flash('Failed to add subject. Please check the form inputs.', 'danger')
+    
+    return redirect(url_for('manage_section'))
+
 
 @app.route('/assign_teacher_to_subject/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
@@ -898,7 +898,13 @@ def my_subjects():
     teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
     if teacher:
         subjects = teacher.subjects
-        return render_template('teacher/my_subjects.html', subjects=subjects)
+        
+        # Group subjects by their sections
+        subjects_by_section = defaultdict(list)
+        for subject in subjects:
+            subjects_by_section[subject.section].append(subject)
+        
+        return render_template('teacher/my_subjects.html', subjects_by_section=subjects_by_section)
     else:
         flash('You are not assigned to teach any subjects.', 'warning')
         return redirect(url_for('dashboard'))
@@ -916,10 +922,9 @@ def my_students(subject_id):
         flash('Subject not found.', 'danger')
         return redirect(url_for('dashboard'))
 
-    # Retrieve the enrolled students for the subject
+    # Retrieve the enrolled students for the subject's section
     enrolled_students = Student.query.join(Enrollment).filter(
-        Enrollment.section_id == subject.section_id,
-        Enrollment.course_id == subject.course_id
+        Enrollment.section_id == subject.section_id
     ).all()
 
     # Fetch grades for the enrolled students in the specified subject
@@ -943,7 +948,6 @@ def my_students(subject_id):
     form3 = Period3Form()  # Instantiate Period3Form
 
     return render_template('teacher/my_students.html', subject=subject, enrolled_students=enrolled_students, grades=grades, final_grades_formatted=final_grades_formatted, form1=form1, form2=form2, form3=form3)
-
 
 
 @app.route('/add_schedule/<int:section_id>', methods=['GET', 'POST'])
@@ -974,16 +978,14 @@ def add_schedule(section_id):
             current_app.logger.error(f"Error adding schedules: {str(e)}")
    
     return render_template('admin/view_subjects.html', form=form, section=section, subjects=subjects)
-
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
     section_id = request.args.get('section_id', type=int)
-    course_id = request.args.get('course_id', type=int)
-    current_app.logger.info(f"section_id: {section_id}, course_id: {course_id}")
+    current_app.logger.info(f"section_id: {section_id}")
     
     section = Section.query.get(section_id)
-    subjects = Subject.query.filter_by(section_id=section_id, course_id=course_id).all()
+    subjects = Subject.query.filter_by(section_id=section_id).all()
 
     for subject in subjects:
         subject.schedules = Schedule.query.filter_by(subject_id=subject.id).all()

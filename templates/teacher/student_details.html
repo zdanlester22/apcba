@@ -135,7 +135,6 @@
                     <th>3rd Period</th>
                     <th>Final</th>
                     <th>Status</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -153,39 +152,11 @@
 
                         <td>{{ "Pass" if grades[subject.id].is_passed == True else "Fail" if grades[subject.id].is_passed == False else "N/A" }}</td>
                     {% endif %}
-                    <td>
-                        
-                        <form method="POST" action="/add_grades/{{ student_id }}/period1">
-                            {{ form1.hidden_tag() }}
-                            <input type="hidden" name="subject_id" value="{{ subject.id }}">
-                            <h3>Period 1</h3>
-                            {{ form1.period_1.label }}: {{ form1.period_1(size=10) }}
-                            <br>
-                            {{ form1.submit() }}
-                        </form>
-                        
-                        <form method="POST" action="/add_grades/{{ student_id }}/period2">
-                            {{ form2.hidden_tag() }}
-                            <input type="hidden" name="subject_id" value="{{ subject.id }}">
-                            <h3>Period 2</h3>
-                            {{ form2.period_2.label }}: {{ form2.period_2(size=10) }}
-                            <br>
-                            {{ form2.submit() }}
-                        </form>
-                        
-                        <form method="POST" action="/add_grades/{{ student_id }}/period3">
-                            {{ form3.hidden_tag() }}
-                            <input type="hidden" name="subject_id" value="{{ subject.id }}">
-                            <h3>Period 3</h3>
-                            {{ form3.period_3.label }}: {{ form3.period_3(size=10) }}
-                            <br>
-                            {{ form3.submit() }}
-                        </form>
+                    
                     {% endfor %}
                     
                     
                 
-                    </td>
                 </tr>
             
             </tbody>

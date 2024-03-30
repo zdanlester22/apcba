@@ -235,22 +235,26 @@
                                                     </tr>
                                                   </thead>
                                                   <tbody>
+                                                    {% for section, subjects in subjects_by_section.items() %}
                                                     {% for subject in subjects %}
                                                     <tr>
-                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.title }}</td>
-                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.abbreviation }}</td>
-                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.course.title }}</td>
-                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.section.name }}</td>
-                                                      <td style=" border: 1px solid #dee2e6;">{{ subject.section.year }}</td>
-                                                      <td style=" border: 1px solid #dee2e6;">
-                                                        <form action="{{ url_for('my_students', subject_id=subject.id) }}">
-                                                          <button type="submit" class="btn btn-primary">
-                                                            Grades
-                                                          </button>
-                                                        </form>
-                                                      </td>
+                                                        <td style="border: 1px solid #dee2e6;">{{ subject.title }}</td> <!-- Subject title -->
+                                                        <td style="border: 1px solid #dee2e6;">{{ subject.abbreviation }}</td> <!-- Subject abbreviation -->
+                                                        <td style="border: 1px solid #dee2e6;">{{ section.course.title }}</td> <!-- Course title -->
+                                                        <td style="border: 1px solid #dee2e6;">{{ section.name }}</td> <!-- Section name -->
+                                                        <td style="border: 1px solid #dee2e6;">{{ section.year }}</td> <!-- Section year -->
+                                                        <td style="border: 1px solid #dee2e6;">
+                                                            <form action="{{ url_for('my_students', subject_id=subject.id) }}">
+                                                                <button type="submit" class="btn btn-primary">
+                                                                    Grades
+                                                                </button>
+                                                            </form>
+                                                        </td>
                                                     </tr>
                                                     {% endfor %}
+                                                    {% endfor %}
+                                                    
+                                                    
                                                   </tbody>
                                                 </table>
                                               </div>

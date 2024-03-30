@@ -294,65 +294,19 @@
                                             <td>
                                                 <!-- Buttons for actions -->
                                                 <div class="btn-group" role="group">
-                                                    <!-- Button to add a subject -->
-                                                    <button class="btn btn-primary btn-sm add-subject-btn" onclick="showAddSubjectForm('{{ course.id }}');$('#add-subject-form').modal('show');" style="border: 1px solid #e3e6f0; width: 67px;">Add Sub</button>
-
+                                        
+                                        
 
                                                     <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn btn-primary btn-sm center-text" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">Update</a>
 
 
-                                                    <!-- Form to delete the course -->
                             
-                                                    <button class="btn btn-primary" style="border: 1px solid #e3e6f0; width: 75px;" data-toggle="modal" data-target="#subject-modal-{{ course.id }}">
-                                                    Subject
-                                                    </button>
+                                        
                                                     </form>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <!-- Modal for subjects -->
-                                        <tr>
-                                            <td colspan="9">
-                                                <div id="subject-modal-{{ course.id }}" class="modal fade">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Subjects for {{ course.title }}</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <table class="table">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Abbreviation</th>
-                                                                            <th>Title</th>
-                                                                            <th>Unit</th>
-                                                                            <th>Teacher</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        {% for subject in course.subjects %}
-                                                                        <tr>
-                                                                            <td>{{ subject.abbreviation }}</td>
-                                                                            <td>{{ subject.title }}</td>
-                                                                            <td>{{ subject.unit }}</td>
-                                                                            <td>{{ subject.teacher }}</td>
-                                                                        </tr>
-                                                                        {% endfor %}
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                            
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                            
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -442,37 +396,7 @@
 </div>
 
 
-                        
-                       <!-- Form to add a new subject for a course (initially hidden) -->
-                       <div id="add-subject-form" class="modal fade" style="z-index: 1060;">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Add Subject</h5>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button> <!-- Adjusted close button -->
-                                </div>
-                                <div class="modal-body">
-                                    <form method="POST" action="{{ url_for('course') }}">
-                                        {{ form_subject.hidden_tag() }}
-                                        <div class="form-group">
-                                            {{ form_subject.abbreviation.label }}
-                                            {{ form_subject.abbreviation(class="form-control", maxlength="10", oninput="updateCharCount(this, 'charCount')") }}
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_subject.title.label }}
-                                            {{ form_subject.title(class="form-control", maxlength="30", oninput="updateCharCount(this, 'titleCharCount')") }}
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_subject.unit.label }}
-                                            {{ form_subject.unit(class="form-control", maxlength="1", oninput="updateCharCount(this, 'unitCharCount')") }}
-                                        </div>
-                                        <input type="hidden" name="course_id" id="subject-course-id" value="">
-                                        <button type="submit" class="btn btn-primary">Add</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     </div>
                         </div>
                     </div>

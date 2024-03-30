@@ -120,8 +120,6 @@ class Subject(db.Model):
     abbreviation = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     unit = db.Column(db.Integer)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    course = db.relationship('Course', back_populates='subjects', lazy=True)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'))
     section = db.relationship('Section', back_populates='subjects')
     grades = db.relationship('Grades', back_populates='subject', lazy=True)
@@ -217,7 +215,7 @@ class Course(db.Model):
     semesters = db.Column(db.String(20), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     sections = db.relationship('Section', back_populates='course', lazy=True)
-    subjects = db.relationship('Subject', back_populates='course', lazy=True)
+
 
 
 class Grades(db.Model):

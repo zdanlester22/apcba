@@ -110,10 +110,7 @@ class SubjectForm(FlaskForm):
     abbreviation = StringField('Abbreviation', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
     unit = IntegerField('Unit', validators=[DataRequired()])
-    course_id = SelectField('Course', coerce=int, validators=[DataRequired()])
-    def set_course_choices(self, courses):
-        self.course_id.choices = [(course.id, course.title) for course in courses]
-
+    section_id = IntegerField('Section ID', validators=[DataRequired()])
 
     
 class FilterForm(FlaskForm):

@@ -309,43 +309,80 @@ h2 {
                             <button type="submit" class="btn btn-primary">Create Section</button>
                         </form>
                     </div>
-                    
-                    <div class="container-fluid table-container">
-                        <table class="table">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Section Name</th>
-                                    <th>Capacity</th>
-                                    <th>Course</th>
-                                    <th>Year</th>
-                                    <th>Class</th>
-                                    <th>Course Type</th>
-                                    <th>Teacher</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for section in sections %}
-                                <tr>
-                                    <td>{{ section.name }}</td>
-                                    <td>{{ section.capacity }}</td>
-                                    <td>{{ section.course.title }}</td>
-                                    <td>{{ section.year }}</td>
-                                    <td>{{ section.course.Class }}</td>
-                                    <td>{{ section.course.course_type }}</td>
-                                    <td>{{ section.teacher.name }}</td>
-                                    <td>
-                                        <!-- Button to view subjects -->
-                                        <form method="GET" action="{{ url_for('view_subjects') }}">
-                                            <input type="hidden" name="section_id" value="{{ section.id }}">
-                                            <input type="hidden" name="course_id" value="{{ section.course.id }}">
-                                            <button type="submit" class="btn btn-primary">Subjects</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+<div class="container-fluid table-container">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Section Name</th>
+                <th>Capacity</th>
+                <th>Course</th>
+                <th>Year</th>
+                <th>Class</th>
+                <th>Course Type</th>
+                <th>Teacher</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for section in sections %}
+            <tr>
+                <td>{{ section.name }}</td>
+                <td>{{ section.capacity }}</td>
+                <td>{{ section.course.title }}</td>
+                <td>{{ section.year }}</td>
+                <td>{{ section.course.Class }}</td>
+                <td>{{ section.course.course_type }}</td>
+                <td>{{ section.teacher.name }}</td>
+                <td>
+                    <form method="GET" action="{{ url_for('view_subjects') }}">
+                        <input type="hidden" name="section_id" value="{{ section.id }}">
+                        <input type="hidden" name="course_id" value="{{ section.course.id }}">
+                        <button type="submit" class="btn btn-primary">Subjects</button>
+                    </form>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSubjectModal{{ section.id }}">
+                        Add Subject
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="addSubjectModal{{ section.id }}" tabindex="-1" role="dialog" aria-labelledby="addSubjectModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addSubjectModalLabel">Add Subject to {{ section.name }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Form for adding subjects -->
+                                    <form method="POST" action="{{ url_for('add_subject') }}">
+                                        {{ form_subject.hidden_tag() }}
+                                        <input type="hidden" name="section_id" value="{{ section.id }}">
+                                        <div class="form-group">
+                                            <label for="abbreviation">Abbreviation:</label>
+                                            <input type="text" class="form-control" id="abbreviation" name="abbreviation" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="title">Title:</label>
+                                            <input type="text" class="form-control" id="title" name="title" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="unit">Unit:</label>
+                                            <input type="number" class="form-control" id="unit" name="unit" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Add Subject</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
                     </div>
                     
 
