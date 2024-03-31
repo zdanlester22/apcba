@@ -495,44 +495,57 @@
                     </div>
 
                     <!-- Content Row -->
-                    <div class="row">
-                    
-
-                        <table>
-                            <tr>
-                                <th>User ID</th>
-                                <th>Email</th>
-                                <th>Name</th>
-                                <th>Role</th>
-                                <th>Enroll</th>
-                                <th>Update</th>
-                                <th>Delete</th>
-                            </tr>
-                            {% for user in users %}
-                            <tr>
-                                <td>{{ user.id }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.name }}</td>
-                                <td>{{ user.role }}</td>
-                                {% if user.role == 'teacher' %}
-                                <td><a href="#" class="link" onclick="toggleEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
-                                {% elif user.role == 'student' %}
-                                <td><a href="#" class="linkv" onclick="toggleStudentEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
-                                {% else %}
-                                <td></td> <!-- Empty cell for users without the 'teacher' or 'student' role -->
-                                {% endif %}
-                                {% if user.role != 'admin' %}
-                                <td ><a href="{{ url_for('update_user', user_id=user.id) }}" class="linku">Update</a></td>
-                                <td><a href="{{ url_for('delete_user', user_id=user.id) }}" class="linkd">Delete</a></td>
-                                {% else %}
-                                <td></td> <!-- Empty cell for admin users -->
-                                <td></td> <!-- Empty cell for admin users -->
-                                {% endif %}
-                            </tr>
-                            {% endfor %}
-                        </table>
-                        
+                    <div class="row" >
+                        <div class="col-md-6 offset-md-6">
+                            <div class="input-group mb-3" style="position: relative;">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()" style="width: 200px; position: absolute; right: 0;">
+                            </div>
+                        </div>
                     </div>
+                    
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-md-12">
+                            
+                            <table id="userTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Email</th>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Enroll</th>
+                                        <th>Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.name }}</td>
+                                        <td>{{ user.role }}</td>
+                                        {% if user.role == 'teacher' %}
+                                        <td><a href="#" class="link" onclick="toggleEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
+                                        {% elif user.role == 'student' %}
+                                        <td><a href="#" class="linkv" onclick="toggleStudentEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
+                                        {% else %}
+                                        <td></td> <!-- Empty cell for users without the 'teacher' or 'student' role -->
+                                        {% endif %}
+                                        {% if user.role != 'admin' %}
+                                        <td><a href="{{ url_for('update_user', user_id=user.id) }}" class="linku">Update</a></td>
+                                        {% else %}
+                                        <td></td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                                    <tr id="noResultsRow" style="display: none;">
+                                        <td colspan="6">No results found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
                     <div id="enroll-form" class="enroll-form">
                         <div class="form-content">
                             <button class="exit-button" onclick="toggleEnrollForm()">X</button>
@@ -637,6 +650,46 @@
 
 </body>
 <script>
+  function filterTable() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue, noResultsRow;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("userTable");
+    tr = table.getElementsByTagName("tr");
+    noResultsRow = document.getElementById("noResultsRow");
+
+    // Initially assume no results found
+    var noResults = true;
+
+    // Loop through all table rows, and hide/show based on search query
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var rowMatch = false;
+        for (var j = 0; j < td.length; j++) {
+            if (td[j]) {
+                txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    rowMatch = true;
+                    noResults = false; // At least one result found
+                    break; // Break the loop if any of the columns match
+                }
+            }
+        }
+        if (rowMatch) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+
+    // Show/hide the "No results found" row based on search results
+    if (noResults) {
+        noResultsRow.style.display = ""; // Show no results row
+    } else {
+        noResultsRow.style.display = "none"; // Hide no results row
+    }
+}
         // Function to toggle the visibility of Delete/Update columns
         function toggleColumns() {
         var deleteColumn = document.querySelectorAll('th:nth-child(6), td:nth-child(6)');
