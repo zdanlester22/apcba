@@ -361,9 +361,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="title">{{ form_course.title.label }}</label>
-                                {{ form_course.title(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'charCountTitle')") }}
+                                {{ form_course.title(class="form-control", maxlength="50", oninput="limitInputLength(this, 50, 'charCountTitle')") }}
                                 {% if form_course.title.data %}
-                                    <span id="charCountTitle">{{ form_course.title.data|length }}/30</span>
+                                    <span id="charCountTitle">{{ form_course.title.data|length }}/50</span>
                                 {% endif %}
                             </div>
                             <div class="form-group">
