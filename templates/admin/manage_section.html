@@ -337,7 +337,7 @@ h2 {
                     <form method="GET" action="{{ url_for('view_subjects') }}">
                         <input type="hidden" name="section_id" value="{{ section.id }}">
                         <input type="hidden" name="course_id" value="{{ section.course.id }}">
-                        <button type="submit" class="btn btn-primary">Subjects</button>
+                        <button type="submit" style="background-color: #b4b150; border: none;" class="btn btn-primary">Subjects</button>
                     </form>
                     <br>
                     <button type="button" style="padding: 7px;" class="btn btn-primary" data-toggle="modal" data-target="#addSubjectModal{{ section.id }}">

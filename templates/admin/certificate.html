@@ -262,7 +262,7 @@
                                                 <div class="form-group">
                                                     {{ form.title.label(class="form-control-label") }}
                                                     {{ form.title(class="form-control", placeholder="Enter Title", id="title-input") }}
-                                                    <span id="title-char-count">0/50 characters</span>
+                                                    <span id="title-char-count">0/75 characters</span>
                                                 </div>
                                                 <div class="form-group">
                                                     {{ form.pdf.label(class="form-control-label") }}
@@ -412,6 +412,27 @@
 
 </body>
 <script>
+     document.addEventListener("DOMContentLoaded", function() {
+        var titleInput = document.getElementById("title-input");
+        var charCount = document.getElementById("title-char-count");
+
+        titleInput.addEventListener("input", function() {
+            var currentLength = titleInput.value.length;
+            var maxLength = 75; // Change this value to the desired max length
+            charCount.textContent = currentLength + "/" + maxLength + " characters";
+            
+            // Optionally, you can limit the input length dynamically
+            if (currentLength > maxLength) {
+                titleInput.value = titleInput.value.slice(0, maxLength);
+            }
+        });
+    });
+    
+    // Call the countCharacters function initially to set the initial character count
+    window.onload = function() {
+        countCharacters('title-input', 'title-char-count', 50);
+    }
+     
     document.addEventListener("DOMContentLoaded", function () {
     // Select the flash div
     var flashDiv = document.querySelector(".flash");

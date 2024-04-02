@@ -6,16 +6,19 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <meta name="description" content="">
     <meta name="author" content="">
+
+     <!-- Bootstrap core CSS -->
+     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
      <!-- Core plugin CSS -->
      <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
  
      <!-- Custom styles for this template -->
      <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
-     <title>APCBA-PORTAL</title>
+
+    <title>Admin - Dashboard</title>
 
     <!-- Custom fonts for this template-->
     
@@ -33,287 +36,35 @@
         .bg-color{
             background-color:#374c60 ;
         }
-        table {
-            border-collapse: collapse;
-            width: 108%;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 16px;
-            overflow-x: auto; /* Enable horizontal scrolling on small screens */
 
-        }
-
-        th, td {
-            padding: 14px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        td{
-            background-color: #f6f6fa;
-        }
-
-        th {
-            background-color: #374c60;
-            color: #fff;
-            padding: 7px;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .enroll-form {
-            margin-top: 20px;
-        }
-
-        .enroll-form label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .enroll-form input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-        }
-
-        .enroll-form button {
-            padding: 10px 15px;
-        }
-
-        /* Responsive styles using media queries */
-        @media (max-width: 1000px) {
-            table {
-                width: 150%;
-                overflow-x: auto;
-            }
-
-            th, td {
-                padding: 20px;
-            }
-
-            .enroll-form label {
-                margin-bottom: 5px;
-            }
-
-            .enroll-form input {
-                padding: 8px;
-                margin-bottom: 10px;
-            }
-
-            .enroll-form button {
-                padding: 8px 12px;
-            }
-        }
-
-        .enroll-form {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #ffffff;
-            padding: 20px;
-            border: 1px solid #cccccc;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-    
-        .form-content {
-            position: relative;
-        }
-    
-        .exit-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
-            font-size: 16px;
-            color: #999999;
-        }
-    
-        .exit-button:hover {
-            color: #ff0000;
-        }
-        .content {
-              margin-right: 200px; /* Set a margin to the right when sidebar is visible */
-          }
-        table a{
-            background-color: #374c60;
-             color: #fff;
-             text-decoration: none;
-             padding:5px;
-             border-radius: 5px;
-        }
-        table a:hover {
-            background-color: #fff;
-            color: #374c60;
-            border: 1px solid #374c60;
-            text-decoration: none;
-        }
         .flash {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    background-color: #374c60;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.flash li {
-    list-style: none;
-    margin: 5px 0;
-}
-
-.flash.fade-in {
-    opacity: 1;
-}
-        .linkd{
-            background-color: rgb(189, 31, 31);
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin-top: 100px;
+            margin-right: 5px;
+            z-index: 10;
+            background-color: #374c60;
             color: #fff;
-            text-decoration: none;
-            padding: 5px;
+            border: 2px solid #374c60;
             border-radius: 5px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
         }
-        .linkd:hover{
-            background-color: #fff;
-            color: rgb(189, 31, 31);
-            border: 1px solid rgb(189, 31, 31);
-            text-decoration: none;
-
+        .flash li{
+            list-style: none;
+            text-align: center;
+            margin-right: 25px;
+            padding: 10px;
         }
-        .linku{
-            background-color: rgb(175, 175, 35);
-            color: #fff;
-            text-decoration: none;
-            padding: 5px;
-            border-radius: 5px;
+        .fade-in {
+            /* CSS class to fade in flash messages */
+            opacity: 1 !important; /* Override opacity to 1 */
         }
-        .linku:hover{
-            background-color: #fff;
-            color: rgb(175, 175, 35);
-            border: 1px solid rgb(175, 175, 35);
-            text-decoration: none;
-        }
-        .link{
-            font-size: 16px;
-        }
-        .hidden-column {
-    display: none;
-}
+        img{
+            height: 50px;
+        }   
 
-#toggle-columns-btn {
-    margin-bottom: 10px;
-    color: #fff;
-    background-color: #374c60;
-    padding: 8px;
-    border: none;
-    border-radius: 5px;
-    font-family: Montserrat, sans-serif;
-}
-#toggle-columns-btn:hover{
-    color: #374c60;
-    background-color: #fff;
-    border: 1px solid #374c60;
-}
-.enroll-form {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-
-    .enroll-form .form-content {
-        max-width: 400px;
-        margin: 0 auto;
-    }
-
-    .enroll-form .exit-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: none;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
-        color: #333333;
-    }
-
-    .enroll-form h2 {
-        margin-bottom: 20px;
-        color: #333333;
-    }
-
-    .enroll-form form {
-        margin-top: 10px;
-    }
-
-    .enroll-form form label {
-        display: block;
-        margin-bottom: 5px;
-        color: #333333;
-    }
-
-    .enroll-form form input[type="text"] {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #cccccc;
-        border-radius: 3px;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-    }
-
-    .enroll-form form button {
-        background-color: #007bff;
-        color: #ffffff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 3px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .enroll-form form button:hover {
-        background-color: #0056b3;
-    }
-   /* Table styles */
-   table {
-        width: 100%;
-        border-collapse: collapse;
-        border-spacing: 0;
-    }
-
-    th, td {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 15px;
-    }
-
-    th {
-        background-color: #646469;
-    }
-
-
-    tr:hover {
-        background-color: #f1f1f1;
-    }
-
-
-  
     </style>
 </head>
 
@@ -328,9 +79,10 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
-                <div class="sidebar-brand-text mx-3">Admin</div>
+                
+                <div class="sidebar-brand-text mx-3">APCBA</div>
             </a>
 
             <!-- Divider -->
@@ -348,46 +100,19 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Class Management
+                Documents
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('certificate') }}">
-                    <i class="fas fa-fw fa-award"></i>
-                    <span>Certificates</span>
-                </a>
-            </li>
 
              <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('modules') }}">
+                <a class="nav-link collapsed" href="{{ url_for('student_modules') }}">
                     <i class="fas fa-fw fa-book"></i>
                     <span>Modules</span>
                 </a>
             </li>
-
-             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('course') }}" >
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Courses</span>
-                </a>
-            </li>
-
-             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
-                    <i class="fas fa-folder"></i>
-                    <span>Section</span>
-                </a>
-            </li>
-
             
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('users') }}">
-                    <i class="fas fa-fw fa-key"></i>
-                    <span>Portal Accounts</span>
-                </a>
-            </li>
+            
 
 
             <!-- Divider -->
@@ -395,32 +120,24 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Account Management
+                Academic
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>Students</span>
+                    <i class="fas fa-fw fa-chalkboard"></i>
+                    <span>Class</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ url_for('view_students') }}">Students Account</a>
-                        <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
-                        <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
-                        <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
+                        <a href="{{ url_for('view_students') }}" class="collapse-item">Advisory</a>
+                        <a href="{{ url_for('my_subjects') }}" class="collapse-item">Subject</a>
                     </div>
                 </div>
             </li>
 
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('view_teachers') }}" >
-                    <i class="fas fa-user"></i>
-                    <span>Teachers</span></a>
-            </li>
 
 
             <!-- Divider -->
@@ -457,20 +174,21 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
                                 <img class="img-profile rounded-circle"
                                     src="{{ url_for('static', filename='img/undraw_profile.svg') }}" alt="Profile Image">
+                            </a>
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ url_for('teacher_account') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ url_for('teacher_change_password') }}">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
+                                    Change Password <i class="ri-lock-password-fill"></i>
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
@@ -490,19 +208,9 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Accounts</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Modules</h1>
                     </div>
-                    <div class="row">
-                        <div class="flash">
-                            {% with messages = get_flashed_messages() %}
-                                {% if messages %}
-                                        {% for message in messages %}
-                                            <li>{{ message }}</li>
-                                        {% endfor %}
-                                {% endif %}
-                            {% endwith %}
-                        </div>
-                    </div>
+
                     <!-- Content Row -->
                     <div class="row">
                         <div class="flash">
@@ -517,48 +225,70 @@
                             {% endwith %}
                         </div>
                         <div class="container">
-                            <h1>Enrolled Subjects for {{ student.name }}</h1>
+                            <h1>Students Enrolled in {{ subject.title }}</h1>
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Subject Title</th>
-                                        <th>Abbreviation</th>
+                                        <th>Name</th>
                                         <th>1st Period</th>
                                         <th>2nd Period</th>
                                         <th>3rd Period</th>
                                         <th>Final</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for subject in enrolled_subjects %}
-                                    <tr>
-                                        <td>{{ subject.title }}</td>
-                                        <td>{{ subject.abbreviation }}</td>
-                                        {% if grades.get(subject.id) %}
-                                            <td>{{ grades[subject.id].period_1 }}</td>
-                                            <td>{{ grades[subject.id].period_2 }}</td>
-                                            <td>{{ grades[subject.id].period_3 }}</td>
-                                            <td>{{ final_grades_formatted[subject.id] }}</td>
-                    
-                    
-                    
-                                            <td>{{ "Pass" if grades[subject.id].is_passed == True else "Fail" if grades[subject.id].is_passed == False else "N/A" }}</td>
+                                    {% for student in enrolled_students %}
+                                        <tr>
+                                            <td>{{ student.name }}</td>
+                                            {% if grades.get(student.id) %}
+                                            <!-- Display grades if available -->
+                                            <td>{{ grades[student.id].period_1 }}</td>
+                                            <td>{{ grades[student.id].period_2 }}</td>
+                                            <td>{{ grades[student.id].period_3 }}</td>
+                                            <td>{{ final_grades_formatted[student.id] }}</td>
+                                            <td>{{ "Pass" if grades[student.id].is_passed else "Fail" }}</td>
+                                        {% else %}
+                                            <!-- Display placeholder if grades are not available -->
+                                            <td colspan="5">Grades not available</td>
                                         {% endif %}
-                                        
-                                        {% endfor %}
-                                        
-                                        
-                                    
-                                    </tr>
-                                
+                                            <td>
+                                                <!-- Forms for submitting grades -->
+                                                <form method="POST" action="{{ url_for('add_grades_period1', student_id=student.id) }}">
+                                                    {{ form1.hidden_tag() }}
+                                                    <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                                                    <h3>Period 1</h3>
+                                                    {{ form1.period_1.label }}: {{ form1.period_1(size=10) }}
+                                                    <br>
+                                                    <button type="submit">Submit Period 1</button>
+                                                </form>
+                                                <form method="POST" action="{{ url_for('add_grades_period2', student_id=student.id) }}">
+                                                    {{ form2.hidden_tag() }}
+                                                    <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                                                    <h3>Period 2</h3>
+                                                    {{ form2.period_2.label }}: {{ form2.period_2(size=10) }}
+                                                    <br>
+                                                    <button type="submit">Submit Period 2</button>
+                                                </form>
+                                                <form method="POST" action="{{ url_for('add_grades_period3', student_id=student.id) }}">
+                                                    {{ form3.hidden_tag() }}
+                                                    <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                                                    <h3>Period 3</h3>
+                                                    {{ form3.period_3.label }}: {{ form3.period_3(size=10) }}
+                                                    <br>
+                                                    <button type="submit">Submit Period 3</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
-                            
-                    
-
-            
-            
+                        </div>
+                    </div>        
+                   
+        
+                    </div>
                     </div>
                 </div>
                 <!-- /.container-fluid -->
@@ -569,7 +299,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto ">
-                        <span>Copyright &copy; Asia Pacific College of Bussines and Arts 2024</span>
+                        <span>Copyright &copy; APCBA</span>
                     </div>
                 </div>
             </footer>
@@ -606,7 +336,32 @@
             </div>
         </div>
     </div>
+  <script>
+ 
 
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select the flash div
+            var flashDiv = document.querySelector(".flash");
+
+            // Function to add fade-in class
+            function fadeInFlash() {
+                flashDiv.classList.add("fade-in");
+            }
+
+            // Function to remove fade-in class after 3 seconds
+            function fadeOutFlash() {
+                setTimeout(function () {
+                    flashDiv.classList.remove("fade-in");
+                }, 5000); // 3 seconds delay
+            }
+
+            // Call the functions
+            fadeInFlash();
+            fadeOutFlash();
+        });
+        
+
+  </script>
     <!-- Bootstrap core JavaScript-->
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
@@ -627,85 +382,5 @@
 
 
 </body>
-<script>
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Select the flash div
-            var flashDiv = document.querySelector(".flash");
-
-            // Function to add fade-in class
-            function fadeInFlash() {
-                flashDiv.classList.add("fade-in");
-            }
-
-            // Function to remove fade-in class after 3 seconds
-            function fadeOutFlash() {
-                setTimeout(function () {
-                    flashDiv.classList.remove("fade-in");
-                }, 3000); // 3 seconds delay
-            }
-
-            // Call the functions
-            fadeInFlash();
-            fadeOutFlash();
-        });
-
-    </script>
 
 </html>
-
-
-
-
-
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Enrolled Subjects for "{{ student.name }}"</h1>
-</div>
-<!-- Content Row -->
-<div class="row">
-    <div class="container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Subject Title</th>
-                    <th>Abbreviation</th>
-                    <th>1st Period</th>
-                    <th>2nd Period</th>
-                    <th>3rd Period</th>
-                    <th>Final</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for subject in enrolled_subjects %}
-                <tr>
-                    <td>{{ subject.title }}</td>
-                    <td>{{ subject.abbreviation }}</td>
-                    {% if grades.get(subject.id) %}
-                        <td>{{ grades[subject.id].period_1 }}</td>
-                        <td>{{ grades[subject.id].period_2 }}</td>
-                        <td>{{ grades[subject.id].period_3 }}</td>
-                        <td>{{ final_grades_formatted[subject.id] }}</td>
-
-
-
-                        <td>{{ "Pass" if grades[subject.id].is_passed == True else "Fail" if grades[subject.id].is_passed == False else "N/A" }}</td>
-                    {% endif %}
-                    
-                    {% endfor %}
-                    
-                    
-                
-                </tr>
-            
-            </tbody>
-        </table>
-    </div>
-    
-        
-
-
-
-
-</div>
-</div>
