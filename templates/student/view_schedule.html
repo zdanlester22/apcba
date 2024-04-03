@@ -17,8 +17,7 @@
  
      <!-- Custom styles for this template -->
      <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
-
-    <title>Admin - Dashboard</title>
+     <title>APCBA-PORTAL</title>
 
     <!-- Custom fonts for this template-->
     
@@ -226,27 +225,30 @@
                             <table class="table">
                                 <thead class="thead-dark">
                                     <tr>
+                                        <th>Subject</th>
                                         <th>Day of Week</th>
+                                        <th>Room</th>
                                         <th>Start Time</th>
                                         <th>End Time</th>
-                                        <!-- Add more columns if needed -->
+                                        <!-- Add more headers if needed -->
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% if schedules %}
-                                        {% for schedule in schedules %}
-                                            <tr>
+                                    {% for subject, schedules in subject_schedules.items() %}
+                                        <tr>
+                                            <td rowspan="{{ schedules|length }}">{{ subject.title }}</td>
+                                            {% for schedule in schedules %}
+                                                {% if loop.index > 1 %}
+                                                    </tr><tr>
+                                                {% endif %}
                                                 <td>{{ schedule.day_of_week }}</td>
+                                                <td>{{ schedule.room }}</td>
                                                 <td>{{ schedule.start_time }}</td>
                                                 <td>{{ schedule.end_time }}</td>
                                                 <!-- Add more cells if needed -->
-                                            </tr>
-                                        {% endfor %}
-                                    {% else %}
-                                        <tr>
-                                            <td colspan="3">Not Enrolled Yet</td>
+                                            {% endfor %}
                                         </tr>
-                                    {% endif %}
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>

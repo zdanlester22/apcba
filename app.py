@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app, session, make_response,  get_flashed_messages
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
-from models import db, User, Announcement, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
-from forms import LoginForm,  AnnouncementForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm, FilterForm, SectionForm, ChangePasswordForm
+from models import db, User,TesdaEnrollies, Announcement,SeniorEnrollies, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
+from forms import LoginForm,  AnnouncementForm ,TesdaEnrolliesForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm, FilterForm, SeniorEnrolliesForm, SectionForm, ChangePasswordForm
 from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, AssignTeacherToSubjectForm,  Period1Form, Period2Form, Period3Form, ScheduleForm, RegistrationForm, CommentForm
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -124,17 +124,11 @@ def index():
 
     return render_template('web/index.html', form=form)
 
-@app.route('/web/websiteabout')
-def websiteabout():
-    return render_template('web/websiteabout.html')
 
-@app.route('/web/websitecontact')
-def websitecontact():
-    return render_template('web/websitecontact.html')
 
-@app.route('/web/portaluserlogin')
-def portaluserlogin():
-    return render_template('web/portaluserlogin.html')
+@app.route('/web/Level')
+def level():
+    return render_template('web/level.html')
 
 @app.route('/web/websiteenroll')
 def websiteenroll():
@@ -193,6 +187,137 @@ def teacher_change_password():
         flash('Password updated successfully!', 'success')
         return redirect(url_for('dashboard')) 
     return render_template('teacher/teacher_change_password.html', form=form)
+
+@app.route('/web/senior_enrollies', methods=['GET', 'POST'])
+def senior_enrollies():
+    form = SeniorEnrolliesForm()
+
+    if form.validate_on_submit():
+        existing_application = SeniorEnrollies.query.filter_by(email=form.email.data).first()
+
+        if existing_application:
+            flash('This email is already used.', 'error')
+            return render_template('web/senior_enrollies.html', form=form)
+
+        try:
+            date_of_birth = datetime.strptime(form.date_of_birth.data, "%Y-%m-%d")
+            password = date_of_birth.strftime("%Y-%m-%d")
+
+            new_senior_enrollies = SeniorEnrollies(
+                name=form.name.data,
+                email=form.email.data,
+                year=form.year.data,
+                address=form.address.data,
+                contact_number=form.contact_number.data,
+                date_of_birth=form.date_of_birth.data,
+                place_of_birth=form.place_of_birth.data,
+                gender=form.gender.data,
+                nationality=form.nationality.data,
+                religion=form.religion.data,
+                previous_school_info=form.previous_school_info.data,
+                grade_last_completed=form.grade_last_completed.data,
+                academic_achievements=form.academic_achievements.data,
+                parent_names=form.parent_names.data,
+                parent_contact_info=form.parent_contact_info.data,
+                parent_occupation=form.parent_occupation.data,
+                special_needs=form.special_needs.data,
+                lrn=form.lrn.data
+            )
+
+            db.session.add(new_senior_enrollies)
+            db.session.commit()
+
+            user = User(
+                name=form.name.data,
+                password=password,
+                email=form.email.data,
+                role='student'
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            student = Student(
+                student_id=user.id,
+                name=form.name.data
+            )
+            db.session.add(student)
+            db.session.commit()
+
+            flash('Enrollment successful!', 'success')
+            return redirect(url_for('senior_enrollies'))
+
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error during enrollment: {str(e)}")
+
+    enrollies_list = SeniorEnrollies.query.all()
+    return render_template('web/senior_enrollies.html', form=form, enrollies_list=enrollies_list)
+
+@app.route('/web/tesda_enrollies', methods=['GET', 'POST'])
+def tesda_enrollies():
+    form = TesdaEnrolliesForm()
+
+    if form.validate_on_submit():
+        existing_application = TesdaEnrollies.query.filter_by(email=form.email.data).first()
+
+        if existing_application:
+            flash('This email is already used.', 'error')
+            return render_template('web/tesda_enrollies.html', form=form)
+
+        try:
+            date_of_birth = datetime.strptime(form.date_of_birth.data, "%Y-%m-%d")
+            password = date_of_birth.strftime("%Y-%m-%d")
+
+            new_tesda_enrollies = TesdaEnrollies(
+                name=form.name.data,
+                email=form.email.data,
+                year=form.year.data,
+                address=form.address.data,
+                contact_number=form.contact_number.data,
+                date_of_birth=form.date_of_birth.data,
+                place_of_birth=form.place_of_birth.data,
+                gender=form.gender.data,
+                nationality=form.nationality.data,
+                religion=form.religion.data,
+                previous_school_info=form.previous_school_info.data,
+                grade_last_completed=form.grade_last_completed.data,
+                academic_achievements=form.academic_achievements.data,
+                parent_names=form.parent_names.data,
+                parent_contact_info=form.parent_contact_info.data,
+                parent_occupation=form.parent_occupation.data,
+                special_needs=form.special_needs.data,
+                lrn=form.lrn.data
+            )
+
+            db.session.add(new_tesda_enrollies)
+            db.session.commit()
+
+            user = User(
+                name=form.name.data,
+                password=password,
+                email=form.email.data,
+                role='student'
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            student = Student(
+                student_id=user.id,
+                name=form.name.data
+            )
+            db.session.add(student)
+            db.session.commit()
+
+            flash('Enrollment successful!', 'success')
+            return redirect(url_for('tesda_enrollies'))
+
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error during enrollment: {str(e)}")
+
+    enrollies_list = SeniorEnrollies.query.all()
+    return render_template('web/tesda_enrollies.html', form=form, enrollies_list=enrollies_list)
+
 
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
@@ -877,13 +1002,13 @@ def assign_teacher_to_subject(subject_id):
                 subject.teachers.append(teacher)
                 db.session.commit()
                 flash('Teacher assigned to subject successfully!', 'success')
-            else:
+            else: 
                 flash('Teacher is already assigned to this subject!', 'warning')
         else:
             flash('Teacher not found!', 'error')
 
         # Redirect to the view_subjects route with both section_id and course_id parameters
-        return redirect(url_for('view_subjects', section_id=subject.section_id, course_id=subject.course_id))
+        return redirect(url_for('view_subjects', section_id=subject.section_id))
 
     # Render the template with the form
     return render_template('admin/assign_teacher_to_subject.html', form=form, subject=subject, teachers=teachers)
@@ -965,19 +1090,29 @@ def add_schedule(section_id):
         room = form.room.data  # Get room data from form
 
         try:
-            for subject in subjects:
-                new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, room=room, subject_id=subject.id)
-                db.session.add(new_schedule)
+            # Check for schedule conflicts
+            existing_schedules = Schedule.query.filter_by(day_of_week=day_of_week).filter(
+                (Schedule.start_time < end_time) & (Schedule.end_time > start_time)
+            ).all()
+            if existing_schedules:
+                flash('Schedule conflict detected. Please choose a different time.', 'error')
+            else:
+                for subject in subjects:
+                    new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, room=room, subject_id=subject.id)
+                    db.session.add(new_schedule)
 
-            db.session.commit()
-            current_app.logger.info("Schedules added successfully")
-            return redirect(url_for('view_subjects', section_id=section_id, course_id=section.course_id))
+                db.session.commit()
+                flash('Schedules added successfully', 'success')
+                return redirect(url_for('view_subjects', section_id=section_id, course_id=section.course_id))
 
         except Exception as e:
             db.session.rollback()
             current_app.logger.error(f"Error adding schedules: {str(e)}")
-   
+            flash('An error occurred while adding schedule. Please try again later.', 'error')
+
     return render_template('admin/view_subjects.html', form=form, section=section, subjects=subjects)
+
+  
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
@@ -1272,27 +1407,60 @@ def student_view_grades():
         if not enrollments:
             flash('No enrollments found for this student.', 'info')
 
-        return render_template('student/view_grades.html', student=student, grades=grades, enrollments=enrollments)
-    else:
+        # Query all teachers
+        teachers = Teacher.query.all()
 
+        # Dictionary to store teacher names and their subjects
+        teacher_subjects = {}
+
+        # Loop through each teacher
+        for teacher in teachers:
+            # Get the teacher's name
+            teacher_name = teacher.name
+
+            # Get the subjects taught by the teacher
+            subjects_taught = [subject.title for subject in teacher.subjects]
+
+            # Store the teacher's subjects in the dictionary
+            teacher_subjects[teacher_name] = subjects_taught
+
+        return render_template('student/view_grades.html', student=student, grades=grades, enrollments=enrollments, teacher_subjects=teacher_subjects)
+    else:
         return redirect(url_for('dashboard'))
 
 ###############################################################################################################################################################
-
-@app.route('/view_schedule')
+@app.route('/student/view_schedule', methods=['GET'])
 @login_required
 def view_schedule():
-    try:
-        user_enrollments = Enrollment.query.filter_by(student_id=current_user.id).all()
-        course_ids = [enrollment.course_id for enrollment in user_enrollments]
-        section_ids = [enrollment.section_id for enrollment in user_enrollments]
-        schedules = Schedule.query.filter(Schedule.subject.has(Subject.course_id.in_(course_ids)), Schedule.subject.has(Subject.section_id.in_(section_ids))).all()
-        
-        return render_template('student/view_schedule.html', schedules=schedules)
-    except Exception as e:
-        current_app.logger.error(f"Error retrieving schedules: {str(e)}")
+    if current_user.is_authenticated and current_user.role == 'student':
+        student = current_user.student
+        grades = Grades.query.filter_by(student_id=student.id).all()
+        enrollments = Enrollment.query.filter_by(student_id=student.id).all()
 
+
+        if not enrollments:
+            flash('No enrollments found for this student.', 'info')
+
+        # Get all unique subjects
+        subjects = set(grade.subject for grade in grades)
+
+        # Create a dictionary to store schedules for each subject
+        subject_schedules = {}
+
+        # Iterate over each subject
+        for subject in subjects:
+            # Get the schedules for the subject
+            schedules = Schedule.query.filter_by(subject_id=subject.id).all()
+            # Store the schedules in the dictionary
+            subject_schedules[subject] = schedules
+
+        return render_template('student/view_schedule.html', subject_schedules=subject_schedules)
+    else:
         return redirect(url_for('dashboard'))
+
+
+
+
 
 
 if __name__ == '__main__':

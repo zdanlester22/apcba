@@ -193,6 +193,52 @@ class Enrollies(db.Model):
     special_needs = db.Column(db.String(255))
     is_archived = db.Column(db.Boolean, default=False)
 
+class SeniorEnrollies(db.Model):
+    __tablename__ = 'seniorenrollies'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    address = db.Column(db.String(255))
+    year = db.Column(db.String(20), nullable=False)
+    lrn = db.Column(db.String(12), unique=True, nullable=False)
+    contact_number = db.Column(db.String(15))
+    date_of_birth = db.Column(db.Date)
+    place_of_birth = db.Column(db.String(100))
+    gender = db.Column(db.String(10))
+    nationality = db.Column(db.String(50))
+    religion = db.Column(db.String(50))
+    previous_school_info = db.Column(db.String(100))
+    grade_last_completed = db.Column(db.String(10))
+    academic_achievements = db.Column(db.String(255))
+    parent_names = db.Column(db.String(200))
+    parent_contact_info = db.Column(db.String(30))
+    parent_occupation = db.Column(db.String(100))
+    special_needs = db.Column(db.String(255))
+    is_archived = db.Column(db.Boolean, default=False)
+
+class TesdaEnrollies(db.Model):
+    __tablename__ = 'tesdaenrollies'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    address = db.Column(db.String(255))
+    year = db.Column(db.String(20), nullable=False)
+    lrn = db.Column(db.String(12), unique=True, nullable=False)
+    contact_number = db.Column(db.String(15))
+    date_of_birth = db.Column(db.Date)
+    place_of_birth = db.Column(db.String(100))
+    gender = db.Column(db.String(10))
+    nationality = db.Column(db.String(50))
+    religion = db.Column(db.String(50))
+    previous_school_info = db.Column(db.String(100))
+    grade_last_completed = db.Column(db.String(10))
+    academic_achievements = db.Column(db.String(255))
+    parent_names = db.Column(db.String(200))
+    parent_contact_info = db.Column(db.String(30))
+    parent_occupation = db.Column(db.String(100))
+    special_needs = db.Column(db.String(255))
+    is_archived = db.Column(db.Boolean, default=False)
+
 
 class Student(db.Model):
     __tablename__ = 'student'

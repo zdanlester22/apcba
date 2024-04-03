@@ -222,11 +222,11 @@
         </div>
     </div>
     <div class="container">
-        <h1>College</h1>
+        <h1>Senior High</h1>
         <h1>Enrollment Form</h1>
         <p class="note">(Note: Fill up the form from the top to bottom.)</p>
         
-                <form id="enrollmentForm" method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
+                <form id="enrollmentForm" method="post" action="{{ url_for('senior_enrollies') }}" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
                     <div>
                         <label for="name">Your Name <span class="required" autocomplete="off">*</span></label>
@@ -236,14 +236,16 @@
                         <label for="email">Email Address <span class="required">*</span></label>
                         {{ form.email(placeholder='Enter your email address', required=True, autocomplete='off') }}
                     </div>
-                    <div>
-                        <label for="level">Level <span class="required">*</span></label>
-                        {{ form.level(placeholder='Enter your academic level', required=True) }}
-                    </div>
+                
                     <div>
                         <label for="year">Year <span class="required">*</span></label>
                         {{ form.year(placeholder='Enter your academic year', required=True) }}
                     </div>
+                    <div>
+                        <label for="lrn">LRN (Learner Reference Number) <span class="required">*</span></label>
+                        {{ form.lrn(placeholder='Enter your LRN', required=True) }}
+                    </div>
+                    
                     <div>
                         <label for="address">Address <span class="required">*</span></label>
                         {{ form.address(placeholder='Enter your address', required=True, autocomplete="off") }}
