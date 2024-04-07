@@ -225,16 +225,14 @@ td{
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Enrollees Tesda</h1>
-                        <a href="{{ url_for('view_tesda_enrollies') }}" class="btn btn-primary" style=" width: 120px;">Tesda</a>
-                        <a href="{{ url_for('view_enrollies') }}" class="btn btn-primary" style=" width: 120px;">College</a>
-                        <a href="{{ url_for('view_senior_enrollies') }}" class="btn btn-primary" style="margin-right: 200px; width: 120px;">SHS</a>
-                        <a href="{{ url_for('view_archived_tesda') }}" class="btn btn-primary" style="margin-right: 29px;"> Accepted Tesda</a>
-
-
                     </div>
 
                     <!-- Content Row -->
                     <div class="container">
+                        <a href="{{ url_for('view_enrollies') }}" class="btn btn-primary" style=" width: 120px;margin-bottom: 10px;">College</a>
+                        <a href="{{ url_for('view_senior_enrollies') }}" class="btn btn-primary" style="width: 120px;margin-bottom: 10px;">SHS</a>
+                        <a href="{{ url_for('view_tesda_enrollies') }}" class="btn btn-primary" style=" margin-right: 200px; width: 120px; margin-bottom: 10px;">TESDA</a>
+                        <a href="{{ url_for('view_archived_enrollies') }}" class="btn btn-primary" style="margin-right: 20px;margin-bottom: 10px;"> Accepted TESDA</a>
                         <div class="row">
                             <div class="col">
                                 <table class="table enrollies-table">

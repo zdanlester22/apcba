@@ -69,7 +69,19 @@
             justify-content: center;
             align-items: center;
             }
+            #courseSearch {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
 
+.input-group-append .input-group-text {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.table {
+    margin-top: 10px; /* Adjust as needed */
+}
     </style>
 </head>
 
@@ -264,6 +276,12 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <button type="button" class="btn btn-primary add-course-btn" data-toggle="modal" data-target="#add-course-modal">Add Course</button>
+                                <div class="input-group mb-3" style="width: 300px; margin-left: 70%; margin-top: -38px;">
+                                    <input type="text"  id="courseSearch" class="form-control" placeholder="Search by Course Title...">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="table-responsive">
                                 <table class="table">
@@ -281,6 +299,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr id="noResultsRow" style="display: none;">
+                                            <td colspan="9" class="text-center">No results</td>
+                                        </tr>
                                         {% for course in courses %}
                                         <tr>
                                             <td>{{ course.title }}</td>
@@ -294,23 +315,15 @@
                                             <td>
                                                 <!-- Buttons for actions -->
                                                 <div class="btn-group" role="group">
-                                        
-                                        
-
                                                     <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn btn-primary btn-sm center-text" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">Update</a>
-
-
-                            
-                                        
-                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
-                            
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -468,6 +481,21 @@
 
 </body>
 <script>
+        $(document).ready(function() {
+        $('#courseSearch').on('keyup', function() {
+            var query = $(this).val().toLowerCase();
+            var found = false; // Flag to track if any matching items are found
+            $('table tbody tr').each(function() {
+                var rowText = $(this).text().toLowerCase();
+                var isMatch = rowText.indexOf(query) > -1;
+                $(this).toggle(isMatch);
+                if (isMatch) {
+                    found = true;
+                }
+            });
+            $('#noResultsRow').toggle(!found); // Show/hide "No results" row based on the flag
+        });
+    });
     $(document).ready(function() {
       // Initialize all dropdowns
       $('.dropdown-toggle').dropdown();

@@ -337,14 +337,15 @@ h2 {
                     <form method="GET" action="{{ url_for('view_subjects') }}">
                         <input type="hidden" name="section_id" value="{{ section.id }}">
                         <input type="hidden" name="course_id" value="{{ section.course.id }}">
-                        <button type="submit" style="background-color: #b4b150; border: none;" class="btn btn-primary">Subjects</button>
+                        <button type="submit" style="background-color: #b4b150; border: none;  width:140px " class="btn btn-primary">Assign Schedule</button>
                     </form>
-                  
-                    <button type="button" style="padding: 7px;" class="btn btn-primary" data-toggle="modal" data-target="#addSubjectModal{{ section.id }}">
+                    <br>
+                    <button type="button" style="padding: 7px; width:140px ;" class="btn btn-primary" data-toggle="modal" data-target="#addSubjectModal{{ section.id }}">
                         Add Subject
                     </button>
-                    <form action="{{ url_for('archive_section', section_id=section.id) }}" method="post" onsubmit="return confirm('Are you sure you want to archive this section?');">
-                        <button type="submit" class="btn btn-danger">Finished</button>
+                    <br><br>
+                    <form action="{{ url_for('archive_section', section_id=section.id) }}"  method="post" onsubmit="return confirm('Are you sure you want to archive this section?');">
+                        <button type="submit" class="btn btn-danger" style="width: 140px;">Archive Course</button>
                     </form>
                     
                     <!-- Modal -->

@@ -257,10 +257,7 @@ td{
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         
                         <h1 class="h3 mb-0 text-gray-800">Enrollees College</h1>
-                        <a href="{{ url_for('view_tesda_enrollies') }}" class="btn btn-primary" style=" width: 120px;">Tesda</a>
-                        <a href="{{ url_for('view_enrollies') }}" class="btn btn-primary" style=" width: 120px;">College</a>
-                        <a href="{{ url_for('view_senior_enrollies') }}" class="btn btn-primary" style="margin-right: 200px; width: 120px;">SHS</a>
-                        <a href="{{ url_for('view_archived_enrollies') }}" class="btn btn-primary" style="margin-right: 29px;"> Accepted College</a>
+
 
 
                     </div>
@@ -277,6 +274,11 @@ td{
                     <div class="container">
                         <div class="row">
                             <div class="col">
+                                <a href="{{ url_for('view_enrollies') }}" class="btn btn-primary" style=" width: 120px;margin-bottom: 10px;">College</a>
+                                <a href="{{ url_for('view_senior_enrollies') }}" class="btn btn-primary" style="width: 120px;margin-bottom: 10px;">SHS</a>
+                                <a href="{{ url_for('view_tesda_enrollies') }}" class="btn btn-primary" style=" margin-right: 200px; width: 120px; margin-bottom: 10px;">TESDA</a>
+                                <a href="{{ url_for('view_archived_enrollies') }}" class="btn btn-primary" style="margin-right: 20px;margin-bottom: 10px;"> Accepted College</a>
+                                
                                 <table class="table enrollies-table">
                                     <thead class="thead-dark">
                                         <tr>
@@ -299,8 +301,9 @@ td{
                                             <!-- Hidden additional info for each enrollie -->
                                             <tr id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
                                                 <td colspan="3">
-                                                    <strong>Level:</strong> {{ enrollies.level }}<br>
+                                                    <strong>Name:</strong> {{ enrollies.name }}<br>
                                                     <strong>Year:</strong> {{ enrollies.year }}<br>
+                                                    <strong>Course:</strong> {{ enrollies.track_strand }}<br>
                                                     <strong>Address:</strong> {{ enrollies.address }}<br>
                                                     <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
                                                     <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>

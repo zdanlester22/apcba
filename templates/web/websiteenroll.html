@@ -5,156 +5,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enroll</title>
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+    <!-- Link Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'JetBrains Mono', monospace;
-            background-color: #fff;
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
             color: #303030;
         }
 
-        nav {
-            color: white;
-            padding: 10px;
+        .header-section {
+            background-color: #374c60;
+            padding: 50px 0;
             text-align: center;
-            position: relative;
+            color: #fff;
         }
 
-        nav a {
-            color: gray;
-            text-decoration: none;
-            font-size: 30px;
+        .header-content {
+            z-index: 1;
         }
 
-        .back-button {
-            position: absolute;
-            left: 20px;
-            margin-top: 10px;
-        }
-        .back-button:hover{
-            transform: scale(1.5);
+        .header-content h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
-        .header-image {
-            width: 100%;
-            max-width: 400px;
-            margin: 20px auto;
-            display: block;
-            border-radius: 75px;
-            margin-top: 50px;
-            border: 1px solid rgb(216, 211, 211);
-            height: 400px;
-            margin-bottom: 50px;
+        .header-content p {
+            font-size: 18px;
+            margin-bottom: 40px;
         }
 
-        .enrollment-instructions {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: justify;
-        }
-
-        .boody {
-            display: flex;
-        }
-        .enrollment-instructions h2{
-            color: rgb(97, 96, 96);
-            margin-left: -300px;
-            margin-top: 100px;
-        }
-        .enrollment-instructions p{
-            color: gray;
-            margin-left: -300px;
-            margin-top: 20px;
-        }
-
-        .container {
-            display: flex;
-            justify-content: space-between;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 30px;
+        .enroll-button {
+            display: inline-block;
+            padding: 10px 40px;
             background-color: #fff;
+            color: #374c60;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .enroll-button:hover {
+            background-color: #e6e6e6;
+        }
+
+        .courses-section {
+            padding: 50px 0;
+        }
+
+        .course-card {
+            background-color: #374c60;
+            color: #fff;
             border-radius: 15px;
-            margin-bottom: 50px;
-            border: 1px solid rgb(216, 211, 211);
+            padding: 20px;
+            margin-bottom: 20px;
+            height: 350px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
-        .courses1, .courses2 {
-            flex-basis: 45%;
-            padding: 10px;
+        .course-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
         }
 
-        .courses1 h1, .courses2 h1 {
+        .course-title {
             font-size: 24px;
+            font-weight: bold;
             margin-bottom: 10px;
         }
 
-        .courses1 p, .courses2 p {
-            margin: 5px 0;
-            color: #303030;
+        .course-description {
+            font-size: 16px;
         }
-
-        .link {
-            display: block;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #374c60;
-            color: #fff;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .link:hover {
-            background-color: #48647e;
-        }
-        .enrollment-instructions{
-            margin-left: 300px;
-            margin-right: 50px;
-        }
-   
     </style>
 </head>
 <body>
-    <nav>
-        <div class="back-button">
-            <a href="{{ url_for('index') }}"><i class="fas fa-arrow-left"></i></a>
-        </div>
-    </nav>
-    <div class="boody">
-        <img class="header-image" src="{{ url_for('static', filename='images/enroll.jpg') }}" alt="Header Image">
-
-        <div class="enrollment-instructions">
-            <h2>Enroll with easy steps</h2>
-            <p>step 1: Click the button below "Enroll here" and fill<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; out the form.</p>
-            <p>step 2: Wait for 3-5 days process for your enrollment <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; confirmation in your gmail.</p>
-            <p>step 3: The admin will process your enrollment for <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;additional information and once it is done, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; you will receive your portal account.</p>
-            <br><P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and Congratulations! you are now enrolled.</P>
+    <!-- Header Section -->
+    <div class="header-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 offset-md-2 header-content">
+                    <h1>Enroll with Ease</h1>
+                    <p>Lookout for the offered courses below!!</p>
+                    <a href="{{ url_for('level') }}" class="enroll-button">Enroll Now</a>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="container">
-        <div class="courses1">
-            <h1>FOR COLLEGE</h1>
-            <p>Bachelor in Science in Tourism Management</p>
-            <p>Bachelor in Education</p>
-            <p>Bachelor in Secondary Education</p>
-        </div>
 
-        <div class="courses2">
-            <h1>FOR SHS</h1>
-            <p>STEM - Science, Technology and Engineering Mathematics</p>
-            <p>ABM - Accountancy, Business and Management</p>
-            <p>HUMSS - Humanities and Social Sciences</p>
-            <p>GAS - General Academic Strand</p>
-            <p>ICT - Information Communication and Technology</p>
-            <p>IA - Industrial Arts</p>
-            <p>HE - Home Economics</p>
+    <!-- Courses Section -->
+    <div class="container courses-section">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-globe-americas course-icon"></i>
+                    <h2 class="course-title">Bachelor in Science in Tourism Management</h2>
+                    <p class="course-description">Explore the exciting world of tourism and hospitality with our comprehensive program.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-chalkboard-teacher course-icon"></i>
+                    <h2 class="course-title">Bachelor in Education</h2>
+                    <p class="course-description">Shape the future generation with our top-notch education curriculum and training.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-calculator course-icon"></i>
+                    <h2 class="course-title">STEM - Science, Technology and Engineering Mathematics</h2>
+                    <p class="course-description">Prepare for a career at the forefront of innovation and technology.</p>
+                </div>
+            </div>
+            <!-- Add more courses here -->
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-user-graduate course-icon"></i>
+                    <h2 class="course-title">Bachelor in Secondary Education</h2>
+                    <p class="course-description">Empower the next generation with your knowledge and expertise in secondary education.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-chart-line course-icon"></i>
+                    <h2 class="course-title">ABM - Accountancy, Business and Management</h2>
+                    <p class="course-description">Develop essential skills in accounting, business, and management for a successful career in the corporate world.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-globe course-icon"></i>
+                    <h2 class="course-title">HUMSS - Humanities and Social Sciences</h2>
+                    <p class="course-description">Explore diverse perspectives on society, culture, and human behavior through our humanities and social sciences program.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-book course-icon"></i>
+                    <h2 class="course-title">GAS - General Academic Strand</h2>
+                    <p class="course-description">Build a strong foundation in various academic disciplines and prepare for higher education.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-laptop-code course-icon"></i>
+                    <h2 class="course-title">ICT - Information Communication and Technology</h2>
+                    <p class="course-description">Master the latest technologies and tools in information communication and technology to thrive in the digital age.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-tools course-icon"></i>
+                    <h2 class="course-title">IA - Industrial Arts</h2>
+                    <p class="course-description">Develop practical skills in woodworking, metalworking, and other industrial arts disciplines.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card">
+                    <i class="fas fa-utensils course-icon"></i>
+                    <h2 class="course-title">HE - Home Economics</h2>
+                    <p class="course-description">Learn essential life skills in cooking, nutrition, sewing, and other areas of home economics.</p>
+                </div>
+            </div>
         </div>
     </div>
-         <a href="{{ url_for('level') }}" class="link">Fill up the form here</a>
 </body>
 </html>

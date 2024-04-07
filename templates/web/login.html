@@ -180,6 +180,7 @@
             }
             #backButton{
                 font-size: 50px;
+                color: #374c60;
             }
             #backButton:hover{
                 transform: scale(1.5);
@@ -189,9 +190,10 @@
 </head>
 
 <body>
-    <a href="{{ url_for('index') }}" id="backButton" style="position: absolute; top: 10px; left: 10px; text-decoration: none; color: #333; font-size: 30px;" class="hover-link">
-        <i class="material-icons">home</i>
+    <a href="{{ url_for('index') }}" id="backButton" style="position: absolute; top: 10px; left: 10px; text-decoration: none; color: #376c60; font-size: 30px;" class="hover-link">
+        <i class="material-icons" style="font-size: 30px;">home</i>
     </a>
+    
 
     <div class="flash">
         {% with messages = get_flashed_messages() %}
