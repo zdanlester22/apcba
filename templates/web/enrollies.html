@@ -237,8 +237,8 @@
                         {{ form.email(placeholder='Enter your email address', required=True, autocomplete='off') }}
                     </div>
                     <div>
-                        <label for="level">Level <span class="required">*</span></label>
-                        {{ form.level(placeholder='Enter your academic level', required=True) }}
+                        <label for="track_strand">Course<span class="required">*</span></label>
+                        {{ form.track_strand(class="form-control", required=true) }}
                     </div>
                     <div>
                         <label for="year">Year <span class="required">*</span></label>
@@ -281,7 +281,7 @@
                         {{ form.previous_school_info(placeholder='Enter your previous school info', required=True, autocomplete="off") }}
                     </div>
                     <div>
-                        <label for="grade_last_completed">Grade Last Completed <span class="required">*</span></label>
+                        <label for="grade_last_completed">Grade/Class Last Completed<span class="required">*</span></label>
                         {{ form.grade_last_completed(placeholder='Enter your last completed grade', required=True, autocomplete="off") }}
                     </div>
                     <div>
@@ -291,7 +291,7 @@
         
                     <h2>Parent/Guardian Information</h2>
                     <div>
-                        <label for="parent_names">Guardian Name <span class="required">*</span></label>
+                        <label for="parent_names">Names of Parents/Guardians<span class="required">*</span></label>
                         {{ form.parent_names(placeholder='Enter guardian name', required=True, autocomplete="off") }}
                     </div>
                     <div>

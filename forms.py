@@ -102,7 +102,7 @@ class CourseForm(FlaskForm):
     year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
     Class = StringField('Class', validators=[DataRequired()])
     semesters = SelectField('Semesters', choices=[('1st Semester', '1st Semester'), ('2nd Semester', '2nd Semester')], validators=[DataRequired()])
-    course_type = SelectField('Type', choices=[('SHS', 'SHS'), ('College', 'College')], validators=[DataRequired()])
+    course_type = SelectField('Type', choices=[('SHS', 'SHS'), ('College', 'College'), ('TESDA', 'TESDA')], validators=[DataRequired()])
     is_active = BooleanField('Active', default=True)
     submit = SubmitField('Create Course')
 
@@ -163,8 +163,22 @@ class EnrollmentForm(FlaskForm):
 class EnrolliesForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    level = SelectField('Choose your level', choices=[('college', 'College'), ('senior_high', 'Senior High School')],
-                        validators=[DataRequired()])
+    track_strand_choices = [
+        ('GAs', 'General Academic Strand (GAs)'),
+        ('STEM', 'STEM (Science, Technology, Engineering, Mathematics)'),
+        ('ABM', 'ABM (Accountancy, Business, Management)'),
+        ('TVL-Home Economics-Tourism', 'TVL-Home Economics (Tourism Promotion Services NC II)'),
+        ('TVL-Home Economics-Events', 'TVL-Home Economics (Events Management NC III)'),
+        ('TVL-Home Economics-Housekeeping', 'TVL-Home Economics (Housekeeping NC II)'),
+        ('TVL-Industrial Arts', 'TVL-Industrial Arts (Shielded Metal Arc Welding NC II & Pipefitting NC II)'),
+        ('TVL-ICT', 'TVL-ICT (Computer System Services NC II)'),
+        ('TVL-Home Economics-Food', 'TVL-Home Economics (Food and Beverages NC II)'),
+        ('TVL-Home Economics-Ship', 'TVL-Home Economics (Ship Caterings Services NC II)'),
+        ('HUMMS', 'HUMMS (Humanities and Social Sciences)'),
+        ('TVL-Agri-Fishery Arts', 'TVL-Agri-Fishery Arts (Agri-Crops Production NC II)')
+    ]
+    track_strand = SelectField('Track & Strand', choices=track_strand_choices, validators=[DataRequired()])
+
     address = StringField('Home Address', validators=[DataRequired()])
     year_choices = [ ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
     year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
@@ -185,11 +199,9 @@ class EnrolliesForm(FlaskForm):
 class SeniorEnrolliesForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    level = SelectField('Choose your level', choices=[('college', 'College'), ('senior_high', 'Senior High School')],
-                        validators=[DataRequired()])
     address = StringField('Home Address', validators=[DataRequired()])
     year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12')]
-    year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
+    year = SelectField('Year', choices=year_choices, validators=[DataRequired()])
     lrn = StringField('LRN (Learner Reference Number)', validators=[DataRequired(), Length(min=12, max=12)])
     contact_number = StringField('Contact Number', validators=[DataRequired()])
     date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
@@ -204,14 +216,44 @@ class SeniorEnrolliesForm(FlaskForm):
     parent_contact_info = StringField('Contact Information of Parents/Guardians', validators=[DataRequired()])
     parent_occupation = StringField('Occupation of Parents/Guardians', validators=[DataRequired()])
     special_needs = TextAreaField('Special Needs or Accommodations')
+    track_strand_choices = [
+        ('GAs', 'General Academic Strand (GAs)'),
+        ('STEM', 'STEM (Science, Technology, Engineering, Mathematics)'),
+        ('ABM', 'ABM (Accountancy, Business, Management)'),
+        ('TVL-Home Economics-Tourism', 'TVL-Home Economics (Tourism Promotion Services NC II)'),
+        ('TVL-Home Economics-Events', 'TVL-Home Economics (Events Management NC III)'),
+        ('TVL-Home Economics-Housekeeping', 'TVL-Home Economics (Housekeeping NC II)'),
+        ('TVL-Industrial Arts', 'TVL-Industrial Arts (Shielded Metal Arc Welding NC II & Pipefitting NC II)'),
+        ('TVL-ICT', 'TVL-ICT (Computer System Services NC II)'),
+        ('TVL-Home Economics-Food', 'TVL-Home Economics (Food and Beverages NC II)'),
+        ('TVL-Home Economics-Ship', 'TVL-Home Economics (Ship Caterings Services NC II)'),
+        ('HUMMS', 'HUMMS (Humanities and Social Sciences)'),
+        ('TVL-Agri-Fishery Arts', 'TVL-Agri-Fishery Arts (Agri-Crops Production NC II)')
+    ]
+    track_strand = SelectField('Track & Strand', choices=track_strand_choices, validators=[DataRequired()])
+
 
 class TesdaEnrolliesForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    level = SelectField('Choose your level', choices=[('college', 'College'), ('senior_high', 'Senior High School')],
-                        validators=[DataRequired()])
+    track_strand_choices = [
+        ('GAs', 'General Academic Strand (GAs)'),
+        ('STEM', 'STEM (Science, Technology, Engineering, Mathematics)'),
+        ('ABM', 'ABM (Accountancy, Business, Management)'),
+        ('TVL-Home Economics-Tourism', 'TVL-Home Economics (Tourism Promotion Services NC II)'),
+        ('TVL-Home Economics-Events', 'TVL-Home Economics (Events Management NC III)'),
+        ('TVL-Home Economics-Housekeeping', 'TVL-Home Economics (Housekeeping NC II)'),
+        ('TVL-Industrial Arts', 'TVL-Industrial Arts (Shielded Metal Arc Welding NC II & Pipefitting NC II)'),
+        ('TVL-ICT', 'TVL-ICT (Computer System Services NC II)'),
+        ('TVL-Home Economics-Food', 'TVL-Home Economics (Food and Beverages NC II)'),
+        ('TVL-Home Economics-Ship', 'TVL-Home Economics (Ship Caterings Services NC II)'),
+        ('HUMMS', 'HUMMS (Humanities and Social Sciences)'),
+        ('TVL-Agri-Fishery Arts', 'TVL-Agri-Fishery Arts (Agri-Crops Production NC II)')
+    ]
+    track_strand = SelectField('Track & Strand', choices=track_strand_choices, validators=[DataRequired()])
+
     address = StringField('Home Address', validators=[DataRequired()])
-    year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12')]
+    year_choices = [ ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
     year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
     contact_number = StringField('Contact Number', validators=[DataRequired()])
     date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
@@ -226,6 +268,7 @@ class TesdaEnrolliesForm(FlaskForm):
     parent_contact_info = StringField('Contact Information of Parents/Guardians', validators=[DataRequired()])
     parent_occupation = StringField('Occupation of Parents/Guardians', validators=[DataRequired()])
     special_needs = TextAreaField('Special Needs or Accommodations')
+
     
 class Period1Form(FlaskForm):
     period_1 = StringField('Period 1')

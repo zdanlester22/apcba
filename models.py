@@ -109,6 +109,7 @@ class Section(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     year = db.Column(db.String(20), nullable=False)
     course = db.relationship('Course', back_populates='sections', lazy=True)
+    is_archived = db.Column(db.Boolean, default=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.teacher_id'))
     teacher = db.relationship('Teacher', back_populates='section', uselist=False)
     subjects = db.relationship('Subject', back_populates='section', lazy=True) 
@@ -168,6 +169,7 @@ class Enrollment(db.Model):
     enrolled_student_rel = db.relationship('Student', back_populates='enrollments', single_parent=True)
     enrolled_course_rel = db.relationship('Course', backref='enrollments_course')
     enrolled_section_rel = db.relationship('Section', backref='enrollments_section')
+    
 
 
 class Enrollies(db.Model):
@@ -175,7 +177,7 @@ class Enrollies(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    level = db.Column(db.String(20), nullable=False)
+    track_strand = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(255))
     year = db.Column(db.String(20), nullable=False)
     contact_number = db.Column(db.String(15))
@@ -195,35 +197,36 @@ class Enrollies(db.Model):
 
 class SeniorEnrollies(db.Model):
     __tablename__ = 'seniorenrollies'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    address = db.Column(db.String(255))
+    address = db.Column(db.String(255), nullable=False)  # Make address nullable=False
     year = db.Column(db.String(20), nullable=False)
-    lrn = db.Column(db.String(12), unique=True, nullable=False)
-    contact_number = db.Column(db.String(15))
-    date_of_birth = db.Column(db.Date)
-    place_of_birth = db.Column(db.String(100))
-    gender = db.Column(db.String(10))
-    nationality = db.Column(db.String(50))
-    religion = db.Column(db.String(50))
-    previous_school_info = db.Column(db.String(100))
-    grade_last_completed = db.Column(db.String(10))
-    academic_achievements = db.Column(db.String(255))
-    parent_names = db.Column(db.String(200))
-    parent_contact_info = db.Column(db.String(30))
-    parent_occupation = db.Column(db.String(100))
-    special_needs = db.Column(db.String(255))
+    lrn = db.Column(db.String(12), nullable=False, unique=True)
+    contact_number = db.Column(db.String(15), nullable=False)  # Make contact_number nullable=False
+    date_of_birth = db.Column(db.String(10), nullable=False)  # Change to String as we are storing date as string
+    place_of_birth = db.Column(db.String(100), nullable=False)  # Make place_of_birth nullable=False
+    gender = db.Column(db.String(10), nullable=False)
+    nationality = db.Column(db.String(50), nullable=False)
+    religion = db.Column(db.String(50), nullable=False)
+    previous_school_info = db.Column(db.String(255), nullable=True)  # Make previous_school_info nullable=True
+    grade_last_completed = db.Column(db.String(10), nullable=True)  # Make grade_last_completed nullable=True
+    academic_achievements = db.Column(db.Text, nullable=True)  # Make academic_achievements nullable=True
+    parent_names = db.Column(db.String(200), nullable=False)
+    parent_contact_info = db.Column(db.String(30), nullable=False)
+    parent_occupation = db.Column(db.String(100), nullable=False)
+    special_needs = db.Column(db.Text, nullable=True)  # Make special_needs nullable=True
     is_archived = db.Column(db.Boolean, default=False)
-
+    track_strand = db.Column(db.String(100), nullable=False)
+    
 class TesdaEnrollies(db.Model):
     __tablename__ = 'tesdaenrollies'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
+    track_strand = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(255))
     year = db.Column(db.String(20), nullable=False)
-    lrn = db.Column(db.String(12), unique=True, nullable=False)
     contact_number = db.Column(db.String(15))
     date_of_birth = db.Column(db.Date)
     place_of_birth = db.Column(db.String(100))

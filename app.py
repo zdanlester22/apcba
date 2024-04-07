@@ -188,7 +188,7 @@ def teacher_change_password():
         return redirect(url_for('dashboard')) 
     return render_template('teacher/teacher_change_password.html', form=form)
 
-@app.route('/web/senior_enrollies', methods=['GET', 'POST'])
+@app.route('/web/senior_enrollies/add', methods=['GET', 'POST'])
 def senior_enrollies():
     form = SeniorEnrolliesForm()
 
@@ -206,8 +206,9 @@ def senior_enrollies():
             new_senior_enrollies = SeniorEnrollies(
                 name=form.name.data,
                 email=form.email.data,
-                year=form.year.data,
                 address=form.address.data,
+                year=form.year.data,
+                lrn=form.lrn.data,
                 contact_number=form.contact_number.data,
                 date_of_birth=form.date_of_birth.data,
                 place_of_birth=form.place_of_birth.data,
@@ -221,26 +222,20 @@ def senior_enrollies():
                 parent_contact_info=form.parent_contact_info.data,
                 parent_occupation=form.parent_occupation.data,
                 special_needs=form.special_needs.data,
-                lrn=form.lrn.data
+                track_strand=form.track_strand.data
             )
 
             db.session.add(new_senior_enrollies)
             db.session.commit()
 
-            user = User(
+            # Create a new user with student role
+            new_user = User(
                 name=form.name.data,
-                password=password,
                 email=form.email.data,
+                password=password,
                 role='student'
             )
-            db.session.add(user)
-            db.session.commit()
-
-            student = Student(
-                student_id=user.id,
-                name=form.name.data
-            )
-            db.session.add(student)
+            db.session.add(new_user)
             db.session.commit()
 
             flash('Enrollment successful!', 'success')
@@ -249,9 +244,17 @@ def senior_enrollies():
         except Exception as e:
             db.session.rollback()
             app.logger.error(f"Error during enrollment: {str(e)}")
+            flash('Error during enrollment. Please try again later.', 'error')
 
-    enrollies_list = SeniorEnrollies.query.all()
-    return render_template('web/senior_enrollies.html', form=form, enrollies_list=enrollies_list)
+    return render_template('web/senior_enrollies.html', form=form)
+
+@app.route('/admin/view_senior_enrollies')
+def view_senior_enrollies():
+    user_name = current_user.name
+    enrollies_list = SeniorEnrollies.query.filter_by(is_archived=False).all()
+    return render_template('admin/senior_enrollies.html', enrollies_list=enrollies_list, user_name=user_name)
+
+
 
 @app.route('/web/tesda_enrollies', methods=['GET', 'POST'])
 def tesda_enrollies():
@@ -265,12 +268,11 @@ def tesda_enrollies():
             return render_template('web/tesda_enrollies.html', form=form)
 
         try:
-            date_of_birth = datetime.strptime(form.date_of_birth.data, "%Y-%m-%d")
-            password = date_of_birth.strftime("%Y-%m-%d")
 
             new_tesda_enrollies = TesdaEnrollies(
                 name=form.name.data,
                 email=form.email.data,
+                track_strand=form.track_strand.data,
                 year=form.year.data,
                 address=form.address.data,
                 contact_number=form.contact_number.data,
@@ -285,28 +287,13 @@ def tesda_enrollies():
                 parent_names=form.parent_names.data,
                 parent_contact_info=form.parent_contact_info.data,
                 parent_occupation=form.parent_occupation.data,
-                special_needs=form.special_needs.data,
-                lrn=form.lrn.data
+                special_needs=form.special_needs.data
+                
             )
 
             db.session.add(new_tesda_enrollies)
             db.session.commit()
 
-            user = User(
-                name=form.name.data,
-                password=password,
-                email=form.email.data,
-                role='student'
-            )
-            db.session.add(user)
-            db.session.commit()
-
-            student = Student(
-                student_id=user.id,
-                name=form.name.data
-            )
-            db.session.add(student)
-            db.session.commit()
 
             flash('Enrollment successful!', 'success')
             return redirect(url_for('tesda_enrollies'))
@@ -318,29 +305,109 @@ def tesda_enrollies():
     enrollies_list = SeniorEnrollies.query.all()
     return render_template('web/tesda_enrollies.html', form=form, enrollies_list=enrollies_list)
 
+@app.route('/admin/archive_enrollie/<int:enrollie_id>')
+@login_required
+def archive_enrollie_shs(enrollie_id):
+    enrollie = SeniorEnrollies.query.get(enrollie_id)
+    if enrollie:
+        try:
+           
+
+            user = User(
+                name=enrollie.name,
+                password=enrollie.date_of_birth,
+                email=enrollie.email,
+                role='student'
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            student = Student(
+                student_id=user.id,
+                name=enrollie.name
+            )
+            db.session.add(student)
+            db.session.commit()
+
+            enrollie.is_archived = True
+            db.session.commit()
+            flash('Archived successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie: {str(e)}")
+            flash('Error archiving enrollie.', 'error')
+    return redirect(url_for('senior_enrollies'))
+
+@app.route('/admin/view_archived_tesda')
+def view_archived_shs():
+    archived_shs_enrollies_list = TesdaEnrollies.query.filter_by(is_archived=True).all()
+    return render_template('admin/view_archived_shs.html', archived_shs_enrollies_list=archived_shs_enrollies_list)
+
+
+@app.route('/admin/archive_enrollie/<int:enrollie_id>')
+@login_required
+def archive_enrollie_tesda(enrollie_id):
+    enrollie = TesdaEnrollies.query.get(enrollie_id)
+    if enrollie:
+        try:
+           
+
+            user = User(
+                name=enrollie.name,
+                password=enrollie.date_of_birth,
+                email=enrollie.email,
+                role='student'
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            student = Student(
+                student_id=user.id,
+                name=enrollie.name
+            )
+            db.session.add(student)
+            db.session.commit()
+
+            enrollie.is_archived = True
+            db.session.commit()
+            flash('Archived successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie: {str(e)}")
+            flash('Error archiving enrollie.', 'error')
+    return redirect(url_for('tesda_enrollies'))
+
+@app.route('/admin/view_archived_tesda')
+def view_archived_tesda():
+    archived_tesda_enrollies_list = TesdaEnrollies.query.filter_by(is_archived=True).all()
+    return render_template('admin/view_archived_tesda.html', archived_tesda_enrollies_list=archived_tesda_enrollies_list)
+
+
+
+@app.route('/admin/view_tesda_enrollies')
+def view_tesda_enrollies():
+    user_name = current_user.name
+    enrollies_list = TesdaEnrollies.query.filter_by(is_archived=False).all()
+    return render_template('admin/tesda_enrollies.html', enrollies_list=enrollies_list, user_name=user_name)
+
 
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
     form = EnrolliesForm()
     
     if form.validate_on_submit():
-        # Check if the user has already submitted an application with the same name and email
         existing_application = Enrollies.query.filter_by(email=form.email.data).first()
         
         if existing_application:
             flash('This email is already used.', 'error')
             return render_template('web/enrollies.html', form=form)
-            # Render the template with the form so the user can correct the input
             
         try:
-
-            date_of_birth = datetime.strptime(form.date_of_birth.data, "%Y-%m-%d")
-            password = date_of_birth.strftime("%Y-%m-%d")
-
+    
             new_enrollies = Enrollies(
                 name=form.name.data,
                 email=form.email.data,
-                level=form.level.data,
+                track_strand=form.track_strand.data,
                 year=form.year.data,
                 address=form.address.data,
                 contact_number=form.contact_number.data,
@@ -360,21 +427,6 @@ def enrollies():
 
             db.session.add(new_enrollies)
             db.session.commit()
-            user = User(
-                name=form.name.data,
-                password=password,
-                email=form.email.data,
-                role='student'
-            )
-            db.session.add(user)
-            db.session.commit()
-
-            student = Student(
-                student_id=user.id,
-                name=form.name.data
-            )
-            db.session.add(student)
-            db.session.commit()
 
             flash('Enrollment successful!', 'success')
             return redirect(url_for('enrollies'))
@@ -387,7 +439,41 @@ def enrollies():
     return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list)
 
 
-@app.route('/admin/view_enrollies')
+@app.route('/admin/accepeted_enrollie_College/<int:enrollie_id>')
+@login_required
+def archive_enrollie(enrollie_id):
+    enrollie = Enrollies.query.get(enrollie_id)
+    if enrollie:
+        try:
+           
+
+            user = User(
+                name=enrollie.name,
+                password=enrollie.date_of_birth,
+                email=enrollie.email,
+                role='student'
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            student = Student(
+                student_id=user.id,
+                name=enrollie.name
+            )
+            db.session.add(student)
+            db.session.commit()
+
+            enrollie.is_archived = True
+            db.session.commit()
+            flash('Archived successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie: {str(e)}")
+            flash('Error archiving enrollie.', 'error')
+    return redirect(url_for('view_enrollies'))
+
+
+@app.route('/admin/enrollies')
 def view_enrollies():
     user_name = current_user.name
     enrollies_list = Enrollies.query.filter_by(is_archived=False).all()
@@ -398,15 +484,7 @@ def view_archived_enrollies():
     archived_enrollies_list = Enrollies.query.filter_by(is_archived=True).all()
     return render_template('admin/view_archived_enrollies.html', archived_enrollies_list=archived_enrollies_list)
 
-@app.route('/admin/archive_enrollie/<int:enrollie_id>')
-@login_required
-def archive_enrollie(enrollie_id):
-    enrollie = Enrollies.query.get(enrollie_id)
-    if enrollie:
-        enrollie.is_archived = True
-        db.session.commit()
-        flash('Archived successfully!', 'success')
-    return redirect(url_for('view_enrollies'))
+
 
 @app.route('/admin/users', methods=['GET', 'POST'])
 @login_required
@@ -659,27 +737,6 @@ def update_user(user_id):
     return render_template('admin/update_user.html', form=form, user=user_to_update)
 
 
-@app.route('/delete/<int:user_id>')
-@login_required
-def delete_user(user_id):
-    user_to_delete = User.query.get(user_id)
-
-    # Check if the user exists
-    if not user_to_delete:
-        flash('User not found!', 'error')
-        return redirect(url_for('users'))
-
-    # Check if the current user is an admin
-    if current_user.role == 'admin':
-        # Prevent deletion of admin user
-        flash('Admin user cannot be deleted!', 'error')
-        return redirect(url_for('users'))
-
-    # Proceed with deletion for non-admin users
-    db.session.delete(user_to_delete)
-    db.session.commit()
-    flash('User deleted successfully!', 'success')
-    return redirect(url_for('users'))
 
 @app.route('/admin/update_announcement/<int:announcement_id>', methods=['GET', 'POST'])
 @login_required
@@ -890,37 +947,22 @@ def update_course(course_id):
 
     return render_template('admin/update_course.html', form=form, course=course)
 
-@app.route('/update_subject/<int:subject_id>', methods=['GET', 'POST'])
-@login_required
-def update_subject(subject_id):
-    subject = Subject.query.get_or_404(subject_id)
-    form = SubjectForm(obj=subject)
-    form.course_id.choices = [(course.id, course.title) for course in Course.query.all()]
-
-    if form.validate_on_submit():
-        subject.abbreviation = form.abbreviation.data
-        subject.title = form.title.data
-        subject.unit = form.unit.data
-        subject.course_id = form.course_id.data
-
-        db.session.commit()
-        flash('Updated successfully!', 'success')
-        return redirect(url_for('course'))
-
-    return render_template('admin/update_subject.html', form=form, subject=subject)
 ##########################################################################################################################################################################################
-@app.route('/sections', methods=['GET', 'POST'])
-@login_required
+@app.route('/manage_section', methods=['GET', 'POST'])
 def manage_section():
-    user_name = current_user.name
+    user_name = current_user.name  # Assuming you're using Flask-Login for user authentication
     form_section = SectionForm()
+    form_subject = SubjectForm()  # Creating an instance of the SubjectForm
+
     course_id_filter = request.args.get('course_id', type=int)
     section_name_filter = request.args.get('section_name', type=str)
     sections_query = Section.query
+
     if course_id_filter:
         sections_query = sections_query.filter_by(course_id=course_id_filter)
     if section_name_filter:
         sections_query = sections_query.filter(Section.name.ilike(f'%{section_name_filter}%'))
+
     sections = sections_query.all()
     courses = Course.query.all()
     form_section.course_id.choices = [(course.id, course.title) for course in courses]
@@ -937,22 +979,29 @@ def manage_section():
             course_id=form_section.course_id.data,
             teacher_id=selected_teacher_id
         )
+
         db.session.add(new_section)
         db.session.commit()
-        flash('Created successfully!', 'success')
+        flash('Section created successfully!', 'success')
 
-        course = Course.query.get(form_section.course_id.data)
-        if course:
-            subjects_from_course = Subject.query.filter_by(course_id=course.id).all()
-            for subject in subjects_from_course:
-                subject.section_id = new_section.id
-                db.session.add(subject)
-        
-        db.session.commit()
+        # Redirect to the same page to clear the form fields
         return redirect(url_for('manage_section'))
 
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
-                       form_section=form_section, form_subject=SubjectForm(), user_name=user_name)
+                           form_section=form_section, form_subject=form_subject, user_name=user_name)
+
+@app.route('/archive_section/<int:section_id>', methods=['POST'])
+def archive_section(section_id):
+    section = Section.query.get_or_404(section_id)
+
+    # Archive the section
+    section.is_archived = True
+    db.session.commit()
+    flash('Section archived successfully!', 'success')
+
+    # Redirect back to the manage section page or wherever appropriate
+    return redirect(url_for('manage_section'))
+
 
 
 @app.route('/subjects/add', methods=['POST'])
@@ -1075,42 +1124,44 @@ def my_students(subject_id):
     return render_template('teacher/my_students.html', subject=subject, enrolled_students=enrolled_students, grades=grades, final_grades_formatted=final_grades_formatted, form1=form1, form2=form2, form3=form3)
 
 
-@app.route('/add_schedule/<int:section_id>', methods=['GET', 'POST'])
+@app.route('/add_schedule/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
-def add_schedule(section_id):
-    form = ScheduleForm()
-
-    section = Section.query.get_or_404(section_id)
-    subjects = Subject.query.filter_by(section_id=section.id).all()
+def add_schedule(subject_id):
+    subject = Subject.query.get_or_404(subject_id)
+    form = ScheduleForm(request.form)  # Instantiate the schedule form
 
     if form.validate_on_submit():
+        # Extract schedule details from the form
         day_of_week = form.day_of_week.data
         start_time = form.start_time.data
         end_time = form.end_time.data
-        room = form.room.data  # Get room data from form
+        room = form.room.data
 
         try:
             # Check for schedule conflicts
-            existing_schedules = Schedule.query.filter_by(day_of_week=day_of_week).filter(
-                (Schedule.start_time < end_time) & (Schedule.end_time > start_time)
-            ).all()
-            if existing_schedules:
-                flash('Schedule conflict detected. Please choose a different time.', 'error')
+            existing_schedule = Schedule.query.filter_by(day_of_week=day_of_week, subject_id=subject_id).first()
+            if existing_schedule:
+                flash(f'Schedule conflict detected for {subject.title}. Please choose a different time.', 'error')
             else:
-                for subject in subjects:
-                    new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, room=room, subject_id=subject.id)
-                    db.session.add(new_schedule)
+                # Create a new schedule object
+                new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, room=room, subject_id=subject_id)
 
+                # Add the new schedule to the database
+                db.session.add(new_schedule)
                 db.session.commit()
-                flash('Schedules added successfully', 'success')
-                return redirect(url_for('view_subjects', section_id=section_id, course_id=section.course_id))
 
+                flash('Schedule added successfully', 'success')
         except Exception as e:
             db.session.rollback()
-            current_app.logger.error(f"Error adding schedules: {str(e)}")
-            flash('An error occurred while adding schedule. Please try again later.', 'error')
+            current_app.logger.error(f"Error adding schedule: {str(e)}")
+            flash('An error occurred while adding the schedule. Please try again later.', 'error')
 
-    return render_template('admin/view_subjects.html', form=form, section=section, subjects=subjects)
+        # Redirect to the subjects page after adding the schedule
+        return redirect(url_for('view_subjects', section_id=subject.section_id))
+
+    return render_template('admin/add_schedule.html', subject=subject, form=form)
+
+
 
   
 @app.route('/view_subjects', methods=['GET'])

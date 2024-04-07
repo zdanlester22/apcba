@@ -339,11 +339,14 @@ h2 {
                         <input type="hidden" name="course_id" value="{{ section.course.id }}">
                         <button type="submit" style="background-color: #b4b150; border: none;" class="btn btn-primary">Subjects</button>
                     </form>
-                    <br>
+                  
                     <button type="button" style="padding: 7px;" class="btn btn-primary" data-toggle="modal" data-target="#addSubjectModal{{ section.id }}">
                         Add Subject
                     </button>
-
+                    <form action="{{ url_for('archive_section', section_id=section.id) }}" method="post" onsubmit="return confirm('Are you sure you want to archive this section?');">
+                        <button type="submit" class="btn btn-danger">Finished</button>
+                    </form>
+                    
                     <!-- Modal -->
                     <div class="modal fade" id="addSubjectModal{{ section.id }}" tabindex="-1" role="dialog" aria-labelledby="addSubjectModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">

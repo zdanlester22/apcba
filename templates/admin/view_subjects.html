@@ -300,76 +300,10 @@
                                                     </td>
                                                     <td>
                                                       <!-- Modal for Add Schedule -->
-                                    <div class="modal fade" id="addScheduleModal" tabindex="-1" role="dialog" aria-labelledby="addScheduleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="addScheduleModalLabel">Add Schedule</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <!-- Add Schedule Form -->
-                                                    <form id="add-schedule-form" method="POST" action="{{ url_for('add_schedule', section_id=section.id, subject_id=subject.id) }}">
-                                                        {{ form.csrf_token }}
-                                                        <!-- Move the hidden field for subject_id inside the form -->
-                                                        <input type="hidden" name="subject_id" value="{{ subject.id }}">
-                                                        
-                                                        <div class="form-group">
-                                                            <label for="day_of_week">Day of Week:</label>
-                                                            <select class="form-control" id="day_of_week" name="day_of_week">
-                                                                <option value="Monday">Monday</option>
-                                                                <option value="Tuesday">Tuesday</option>
-                                                                <option value="Wednesday">Wednesday</option>
-                                                                <option value="Thursday">Thursday</option>
-                                                                <option value="Friday">Friday</option>
-                                                            </select>
-                                                        </div>
+                               <!-- Button to add schedule for a specific subject -->
+                               <a href="{{ url_for('add_schedule', subject_id=subject.id) }}" class="btn btn-primary">Add Schedule</a>
 
-                                                        <div class="form-group">
-                                                            <label for="start_time">Start Time:</label>
-                                                            <select class="form-control" id="start_time" name="start_time">
-                                                                <!-- JavaScript will dynamically populate the options here -->
-                                                            </select>
-                                                        </div>
-                                                        
-                                                        <div class="form-group">
-                                                            <label for="end_time">End Time:</label>
-                                                            <select class="form-control" id="end_time" name="end_time">
-                                                                <!-- JavaScript will dynamically populate the options here -->
-                                                            </select>
-                                                        </div>
 
-                                                        <div class="form-group">
-                                                            <label for="room">Room:</label>
-                                                            <select class="form-control" id="room" name="room">
-                                                                <option value="Room 101">Room 101</option>
-                                                                <option value="Room 102">Room 102</option>
-                                                                <option value="Room 103">Room 103</option>
-                                                                <option value="Room 103">Room 104</option>
-                                                                <option value="Room 103">Room 105</option>
-                                                                <option value="Room 103">Room 106</option>
-                                                                <option value="Room 103">Room 107</option>
-                                                                <!-- Add more options as needed -->
-                                                            </select>
-                                                        </div>
-                                                        
-
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary" onclick="disableSubmit(this)">Add Schedule</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Button to trigger modal -->
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addScheduleModal">
-                                        Add Schedule
-                                    </button>
 
                                                     </td>
                                                 </tr>
@@ -487,24 +421,7 @@ document.addEventListener("DOMContentLoaded", function () {
             fadeInFlash();
             fadeOutFlash();
         });
-        var startTimeSelect = document.getElementById("start_time");
-    for (var hour = 7; hour <= 17; hour++) {
-        for (var minute = 0; minute < 60; minute += 30) {
-            var timeString = ((hour % 12) || 12) + ':' + (minute < 10 ? '0' : '') + minute + ' ' + (hour < 12 ? 'AM' : 'PM');
-            var option = new Option(timeString, timeString);
-            startTimeSelect.add(option);
-        }
-    }
 
-    // Populate end time options
-    var endTimeSelect = document.getElementById("end_time");
-    for (var hour = 7; hour <= 17; hour++) {
-        for (var minute = 0; minute < 60; minute += 30) {
-            var timeString = ((hour % 12) || 12) + ':' + (minute < 10 ? '0' : '') + minute + ' ' + (hour < 12 ? 'AM' : 'PM');
-            var option = new Option(timeString, timeString);
-            endTimeSelect.add(option);
-        }
-    }
     </script>
 
 </html>
