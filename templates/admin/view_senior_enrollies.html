@@ -233,9 +233,9 @@ td{
                     <!-- Content Row -->
                     <div class="container">
                         <a href="{{ url_for('view_enrollies') }}" class="btn btn-primary" style=" width: 120px;margin-bottom: 10px;">College</a>
-                        <a href="{{ url_for('view_senior_enrollies') }}" class="btn btn-primary" style="width: 120px;margin-bottom: 10px;">SHS</a>
+                        <a href="{{ url_for('view_senior_enrollies') }}" class="btn btn-success" style="width: 120px;margin-bottom: 10px;">SHS</a>
                         <a href="{{ url_for('view_tesda_enrollies') }}" class="btn btn-primary" style=" margin-right: 200px; width: 120px; margin-bottom: 10px;">TESDA</a>
-                        <a href="{{ url_for('view_archived_enrollies') }}" class="btn btn-primary" style="margin-right: 20px;margin-bottom: 10px;"> Accepted SHS</a>
+                        <a href="{{ url_for('view_archived_shs') }}" class="btn btn-primary" style="margin-right: 20px;margin-bottom: 10px;"> Accepted SHS</a>
                         <div class="row">
                             <div class="col">
                                 <table class="table enrollies-table">
@@ -253,7 +253,7 @@ td{
                                                 <td>{{ enrollies.name }}</td>
                                                 <td>{{ enrollies.email }}</td>
                                                 <td>
-                                                    <a href="{{ url_for('archive_enrollie', enrollie_id=enrollies.id) }}" class="btn btn-primary">Archive</a>
+                                                    <a href="{{ url_for('archive_enrollie_shs', enrollie_id=enrollies.id) }}" class="btn btn-primary">Accept</a>
                                                     <button class="btn btn-info show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</button>
                                                 </td>
                                             </tr>

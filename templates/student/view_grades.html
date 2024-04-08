@@ -293,8 +293,8 @@
                                                                         <td>{{ grade.period_1 }}</td>
                                                                         <td>{{ grade.period_2 }}</td>
                                                                         <td>{{ grade.period_3 }}</td>
-                                                                        <td>{{ grade.final_grade }}</td>
-                                                                        <td>{{ "Passed" if grade.is_passed else "Failed" }}</td>
+                                                                        <td>{{ "%0.2f"|format(grade.final_grade|float) }}</td>
+                                                                        <td>{{ "Passed" if grade.is_passed is defined and grade.is_passed else "Failed" if grade.is_passed is defined and not grade.is_passed else "N/A" }}</td>
                                                                     {% endfor %}
                                                                 {% else %}
                                                                     <td>N/A</td>

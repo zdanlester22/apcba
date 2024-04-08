@@ -228,15 +228,6 @@ def senior_enrollies():
             db.session.add(new_senior_enrollies)
             db.session.commit()
 
-            # Create a new user with student role
-            new_user = User(
-                name=form.name.data,
-                email=form.email.data,
-                password=password,
-                role='student'
-            )
-            db.session.add(new_user)
-            db.session.commit()
 
             flash('Enrollment successful!', 'success')
             return redirect(url_for('senior_enrollies'))
@@ -252,7 +243,7 @@ def senior_enrollies():
 def view_senior_enrollies():
     user_name = current_user.name
     enrollies_list = SeniorEnrollies.query.filter_by(is_archived=False).all()
-    return render_template('admin/senior_enrollies.html', enrollies_list=enrollies_list, user_name=user_name)
+    return render_template('admin/view_senior_enrollies.html', enrollies_list=enrollies_list, user_name=user_name)
 
 
 
@@ -305,82 +296,6 @@ def tesda_enrollies():
     enrollies_list = SeniorEnrollies.query.all()
     return render_template('web/tesda_enrollies.html', form=form, enrollies_list=enrollies_list)
 
-@app.route('/admin/archive_enrollie/<int:enrollie_id>')
-@login_required
-def archive_enrollie_shs(enrollie_id):
-    enrollie = SeniorEnrollies.query.get(enrollie_id)
-    if enrollie:
-        try:
-           
-
-            user = User(
-                name=enrollie.name,
-                password=enrollie.date_of_birth,
-                email=enrollie.email,
-                role='student'
-            )
-            db.session.add(user)
-            db.session.commit()
-
-            student = Student(
-                student_id=user.id,
-                name=enrollie.name
-            )
-            db.session.add(student)
-            db.session.commit()
-
-            enrollie.is_archived = True
-            db.session.commit()
-            flash('Archived successfully!', 'success')
-        except Exception as e:
-            db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
-    return redirect(url_for('senior_enrollies'))
-
-@app.route('/admin/view_archived_tesda')
-def view_archived_shs():
-    archived_shs_enrollies_list = TesdaEnrollies.query.filter_by(is_archived=True).all()
-    return render_template('admin/view_archived_shs.html', archived_shs_enrollies_list=archived_shs_enrollies_list)
-
-
-@app.route('/admin/archive_enrollie/<int:enrollie_id>')
-@login_required
-def archive_enrollie_tesda(enrollie_id):
-    enrollie = TesdaEnrollies.query.get(enrollie_id)
-    if enrollie:
-        try:
-           
-
-            user = User(
-                name=enrollie.name,
-                password=enrollie.date_of_birth,
-                email=enrollie.email,
-                role='student'
-            )
-            db.session.add(user)
-            db.session.commit()
-
-            student = Student(
-                student_id=user.id,
-                name=enrollie.name
-            )
-            db.session.add(student)
-            db.session.commit()
-
-            enrollie.is_archived = True
-            db.session.commit()
-            flash('Archived successfully!', 'success')
-        except Exception as e:
-            db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
-    return redirect(url_for('tesda_enrollies'))
-
-@app.route('/admin/view_archived_tesda')
-def view_archived_tesda():
-    archived_tesda_enrollies_list = TesdaEnrollies.query.filter_by(is_archived=True).all()
-    return render_template('admin/view_archived_tesda.html', archived_tesda_enrollies_list=archived_tesda_enrollies_list)
 
 
 
@@ -388,7 +303,7 @@ def view_archived_tesda():
 def view_tesda_enrollies():
     user_name = current_user.name
     enrollies_list = TesdaEnrollies.query.filter_by(is_archived=False).all()
-    return render_template('admin/tesda_enrollies.html', enrollies_list=enrollies_list, user_name=user_name)
+    return render_template('admin/view_tesda_enrollies.html', enrollies_list=enrollies_list, user_name=user_name)
 
 
 @app.route('/web/enrollies', methods=['GET', 'POST'])
@@ -437,6 +352,81 @@ def enrollies():
 
     enrollies_list = Enrollies.query.all()
     return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list)
+
+#########
+@app.route('/admin/accepeted_enrollie_SHS/<int:enrollie_id>')
+@login_required
+def archive_enrollie_shs(enrollie_id):
+    enrollie = SeniorEnrollies.query.get(enrollie_id)
+    if enrollie:
+        try:
+            user = User(
+                name=enrollie.name,
+                password=enrollie.date_of_birth,
+                email=enrollie.email,
+                role='student'
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            student = Student(
+                student_id=user.id,
+                name=enrollie.name
+            )
+            db.session.add(student)
+            db.session.commit()
+
+            enrollie.is_archived = True
+            db.session.commit()
+            flash('Archived successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie: {str(e)}")
+            flash('Error archiving enrollie.', 'error')
+    return redirect(url_for('view_senior_enrollies'))
+
+@app.route('/admin/view_archived_shs')
+def view_archived_shs():
+    archived_shs_enrollies_list = SeniorEnrollies.query.filter_by(is_archived=True).all()
+    return render_template('admin/view_archived_shs.html', archived_shs_enrollies_list=archived_shs_enrollies_list)
+
+@app.route('/admin/accepeted_enrollie_TESDA/<int:enrollie_id>')
+@login_required
+def archive_enrollie_tesda(enrollie_id):
+    enrollie = TesdaEnrollies.query.get(enrollie_id)
+    if enrollie:
+        try:
+            user = User(
+                name=enrollie.name,
+                password=enrollie.date_of_birth,
+                email=enrollie.email,
+                role='student'
+            )
+            db.session.add(user)
+            db.session.commit()
+
+            student = Student(
+                student_id=user.id,
+                name=enrollie.name
+            )
+            db.session.add(student)
+            db.session.commit()
+
+            enrollie.is_archived = True
+            db.session.commit()
+            flash('Archived successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie: {str(e)}")
+            flash('Error archiving enrollie.', 'error')
+    return redirect(url_for('view_tesda_enrollies'))
+
+@app.route('/admin/view_archived_tesda')
+def view_archived_tesda():
+    archived_tesda_enrollies_list = TesdaEnrollies.query.filter_by(is_archived=True).all()
+    return render_template('admin/view_archived_tesda.html', archived_tesda_enrollies_list=archived_tesda_enrollies_list)
+
+#########
 
 
 @app.route('/admin/accepeted_enrollie_College/<int:enrollie_id>')
