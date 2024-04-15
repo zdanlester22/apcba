@@ -513,7 +513,6 @@
                                         <th>Email</th>
                                         <th>Name</th>
                                         <th>Role</th>
-                                        <th>Enroll</th>
                                         <th>Update</th>
                                     </tr>
                                 </thead>
@@ -524,13 +523,6 @@
                                         <td>{{ user.email }}</td>
                                         <td>{{ user.name }}</td>
                                         <td>{{ user.role }}</td>
-                                        {% if user.role == 'teacher' %}
-                                        <td><a href="#" class="link" onclick="toggleEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
-                                        {% elif user.role == 'student' %}
-                                        <td><a href="#" class="linkv" onclick="toggleStudentEnrollForm(this, '{{ user.name }}')" data-user-id="{{ user.id }}">Verify</a></td>
-                                        {% else %}
-                                        <td></td> <!-- Empty cell for users without the 'teacher' or 'student' role -->
-                                        {% endif %}
                                         {% if user.role != 'admin' %}
                                         <td><a href="{{ url_for('update_user', user_id=user.id) }}" class="linku">Update</a></td>
                                         {% else %}
@@ -538,6 +530,7 @@
                                         {% endif %}
                                     </tr>
                                     {% endfor %}
+                                    
                                     <tr id="noResultsRow" style="display: none;">
                                         <td colspan="6">No results found</td>
                                     </tr>

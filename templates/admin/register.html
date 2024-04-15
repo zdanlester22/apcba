@@ -274,7 +274,7 @@
                              <div class="form-group">
                                 {{ form.password.label(style="margin-left: 8px;") }}
                                 <div class="input-group">
-                                    {{ form.password(placeholder="Enter your password", class="form-control", style="width: 350px; margin-left: 0px", maxlength="20", required="required", pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+}{\\'\";:?><,.[\\]\\\/\\-]).{8,20}$", oninput="validatePassword(this); updateCharCount(this)") }}
+                                    {{ form.password(placeholder="Enter your password", class="form-control", style="width: 350px; margin-left: 0px", maxlength="20", required="required",) }}
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility()">
                                             <i class="fas fa-eye"></i> <!-- Assuming you are using Font Awesome for icons -->

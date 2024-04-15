@@ -235,35 +235,25 @@
                                 </thead>
                                 <tbody>
                                     {% for subject, schedules in subject_schedules.items() %}
-                                        <tr>
-                                            <td rowspan="{{ schedules|length }}">{{ subject.title }}</td>
-                                            {% for schedule in schedules %}
-                                                {% if loop.index > 1 %}
-                                                    </tr><tr>
+                                        {% for schedule in schedules %}
+                                            <tr>
+                                                {% if loop.index == 1 %}
+                                                    <td rowspan="{{ schedules|length }}">{{ subject.title }}</td>
                                                 {% endif %}
                                                 <td>{{ schedule.day_of_week }}</td>
                                                 <td>{{ schedule.room }}</td>
                                                 <td>{{ schedule.start_time }}</td>
                                                 <td>{{ schedule.end_time }}</td>
                                                 <!-- Add more cells if needed -->
-                                            {% endfor %}
-                                        </tr>
+                                            </tr>
+                                        {% endfor %}
                                     {% endfor %}
                                 </tbody>
                             </table>
+                            
                         </div>
                         
-                    
-                        </div>
-                        
-                        
-                        
-                        
-                        
-                    
-                    
-
-
+                    </div>
 
                     </div>
                     </div>

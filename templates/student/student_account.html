@@ -216,7 +216,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Profile</h1>
                     </div>
 
                     <!-- Content Row -->
@@ -235,262 +235,161 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-container">
-                                    <form method="post" action="{{ url_for('student_account') }}">
+                                    {% if user_account %}
+                                    <form method="POST">
                                         {{ form.hidden_tag() }}
-                                        <!-- Profile Section -->
-                                        <div class="form-group">
-                                            <!-- Personal Information -->
-                                            <h3>Personal Information</h3>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <label>{{ form.place_of_birth.label }}</label>
-                                                    {{ form.place_of_birth(size=20, required=True, class="form-control", placeholder='Place of Birth') }}
-                                                </div>
-                                                <div class="col">
-                                                    <label>{{ form.age.label }}</label>
-                                                    {{ form.age(size=20, required=True, class="form-control", placeholder='Age') }}
-                                                </div>
-                                                <div class="col">
-                                                    <label>{{ form.gender.label }}</label>
-                                                    {{ form.gender(required=True, class="form-control") }}
-                                                </div>
-                                                <div class="col">
-                                                    <label>{{ form.civil_status.label }}</label>
-                                                    {{ form.civil_status(size=20, required=True, class="form-control", placeholder='Civil Status') }}
-                                                </div>
-                                                <div class="col">
-                                                    <label>{{ form.nationality.label }}</label>
-                                                    {{ form.nationality(size=20, required=True, class="form-control", placeholder='Nationality') }}
-                                                </div>
-                                            </div>
-                                        </div>
-                    
-                                        <!-- Current Address -->
-                                       <!-- Current Address -->
-                                            <div class="form-group">
-                                                <h3>Current Address</h3>
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <label>{{ form.current_country.label }}</label>
-                                                        {{ form.current_country(size=20, required=True, class="form-control", placeholder='Country') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.current_region.label }}</label>
-                                                        {{ form.current_region(size=20, required=True, class="form-control", placeholder='Region') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.current_province.label }}</label>
-                                                        {{ form.current_province(size=20, required=True, class="form-control", placeholder='Province') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.current_municipality.label }}</label>
-                                                        {{ form.current_municipality(size=20, required=True, class="form-control", placeholder='Municipality') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.current_complete_address.label }}</label>
-                                                        {{ form.current_complete_address(rows=4, required=True, class="form-control", placeholder='Complete Address') }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Permanent Address -->
-                                            <div class="form-group">
-                                                <h3>Permanent Address</h3>
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <label>{{ form.permanent_country.label }}</label>
-                                                        {{ form.permanent_country(size=20, required=True, class="form-control", placeholder='Country') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.permanent_region.label }}</label>
-                                                        {{ form.permanent_region(size=20, required=True, class="form-control", placeholder='Region') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.permanent_province.label }}</label>
-                                                        {{ form.permanent_province(size=20, required=True, class="form-control", placeholder='Province') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.permanent_municipality.label }}</label>
-                                                        {{ form.permanent_municipality(size=20, required=True, class="form-control", placeholder='Municipality') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.permanent_complete_address.label }}</label>
-                                                        {{ form.permanent_complete_address(rows=4, required=True, class="form-control", placeholder='Complete Address') }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                    
-                                        <!-- Contact Information -->
-                                       <!-- Contact Information -->
-                                        <div class="form-group">
+                                        <h3>Personal Information</h3>
+                                                            <div class="form-row">
+                                                                <div class="col">
+                                                                    <label for="user_id">User ID:</label>
+                                                                    <input class="form-control" type="text" id="user_id" name="user_id" value="{{ user_account.user_id }}" readonly>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <label for="lrn">LRN:</label>
+                                                                    <input class="form-control" type="text" id="lrn" name="lrn" value="{{ user_account.lrn }}" >
+                                                                </div>
+                                                                <div class="col">
+                                                                    <label for="name">Name:</label>
+                                                                    <input class="form-control" type="text" id="name" name="name" value="{{ user_account.name }}"readonly>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <label for="email">Email:</label>
+                                                                    <input class="form-control" type="email" id="email" name="email" value="{{ user_account.email }}" readonly>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <label for="track_strand">Track/Strand:</label>
+                                                                    <input class="form-control" type="text" id="track_strand" name="track_strand" value="{{ user_account.track_strand }}" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                          <!-- Contact Information -->
+                                          <div class="form-group">
                                             <h3>Contact Information</h3>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <label>{{ form.school_issued_mobile.label }}</label>
-                                                    {{ form.school_issued_mobile(size=20, required=True, class="form-control", placeholder='School Issued Mobile') }}
+                                                    <label for="address">Address:</label>
+                                                    <input class="form-control"  type="text" id="address" name="address" value="{{ user_account.address }}">
                                                 </div>
                                                 <div class="col">
-                                                    <label>{{ form.school_email.label }}</label>
-                                                    {{ form.school_email(size=20, required=True, class="form-control", placeholder='School Email') }}
+                                                    <label for="year">Year:</label>
+                                                    <input class="form-control"  type="text" id="year" name="year" value="{{ user_account.year }}" readonly>
                                                 </div>
                                                 <div class="col">
-                                                    <label>{{ form.personal_country_code.label }}</label>
-                                                    {{ form.personal_country_code(size=20, required=True, class="form-control", placeholder='Personal Country Code') }}
+                                                    <label for="contact_number">Contact Number:</label>
+                                                    <input class="form-control"  type="text" id="contact_number" name="contact_number" value="{{ user_account.contact_number }}">
                                                 </div>
                                                 <!-- Repeat the pattern for other contact information fields -->
                                             </div>
-                                        </div>
-
-                                        <!-- Religion and Social Media -->
-                                        <div class="form-group">
-                                            <h3>Religion and Social Media</h3>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <label>{{ form.religion.label }}</label>
-                                                    {{ form.religion(size=20, required=True, class="form-control", placeholder='Religion') }}
-                                                </div>
-                                                <div class="col">
-                                                    <label>{{ form.facebook.label }}</label>
-                                                    {{ form.facebook(size=20, class="form-control", placeholder='Facebook') }}
-                                                </div>
-                                                <div class="col">
-                                                    <label>{{ form.twitter.label }}</label>
-                                                    {{ form.twitter(size=20, class="form-control", placeholder='Twitter') }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                    
                                         <!-- Educational Data -->
-                                       <!-- Educational Data -->
-                                            <div class="form-group">
-                                                <h3>Educational Data</h3>
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <label>{{ form.school_level.label }}</label>
-                                                        {{ form.school_level(size=20, required=True, class="form-control", placeholder='School Level') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.school_name.label }}</label>
-                                                        {{ form.school_name(size=20, required=True, class="form-control", placeholder='School Name') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.course.label }}</label>
-                                                        {{ form.course(size=20, required=True, class="form-control", placeholder='Course') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.year_graduated.label }}</label>
-                                                        {{ form.year_graduated(size=20, class="form-control", placeholder='Year Graduated') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.last_school_attended.label }}</label>
-                                                        {{ form.last_school_attended(size=20, required=True, class="form-control", placeholder='Last School Attended') }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Economic Data -->
-                                            <div class="form-group">
-                                                <h3>Economic Data</h3>
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <label>{{ form.father_last_name.label }}</label>
-                                                        {{ form.father_last_name(size=20, required=True, class="form-control", placeholder='Father Last Name') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.father_first_name.label }}</label>
-                                                        {{ form.father_first_name(size=20, required=True, class="form-control", placeholder='Father First Name') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.father_middle_name.label }}</label>
-                                                        {{ form.father_middle_name(size=20, required=True, class="form-control", placeholder='Father Middle Name') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.father_occupation.label }}</label>
-                                                        {{ form.father_occupation(size=20, required=True, class="form-control", placeholder='Father Occupation') }}
-                                                    </div>
-                                                    <div class="col">
-                                                        <label>{{ form.father_contact_no.label }}</label>
-                                                        {{ form.father_contact_no(size=20, required=True, class="form-control", placeholder='Father Contact No') }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                    <!-- Mother's Information -->
-                    <div class="form-group">
-                        <h3>Mother's Information</h3>
-                        <div class="form-row">
-                            <div class="col">
-                                <label>{{ form.mother_last_name.label }}</label>
-                                {{ form.mother_last_name(size=20, required=True, class="form-control", placeholder='Mother Last Name') }}
-                            </div>
-                            <div class="col">
-                                <label>{{ form.mother_first_name.label }}</label>
-                                {{ form.mother_first_name(size=20, required=True, class="form-control", placeholder='Mother First Name') }}
-                            </div>
-                            <div class="col">
-                                <label>{{ form.mother_middle_name.label }}</label>
-                                {{ form.mother_middle_name(size=20, required=True, class="form-control", placeholder='Mother Middle Name') }}
-                            </div>
-                            <div class="col">
-                                <label>{{ form.mother_occupation.label }}</label>
-                                {{ form.mother_occupation(size=20, required=True, class="form-control", placeholder='Mother Occupation') }}
-                            </div>
-                            <div class="col">
-                                <label>{{ form.mother_contact_no.label }}</label>
-                                {{ form.mother_contact_no(size=20, required=True, class="form-control", placeholder='Mother Contact No') }}
-                            </div>
-                        </div>
-                    </div>
-
-                    
-                                        <!-- Guardian Information -->
                                         <div class="form-group">
-                                            <h3>Guardian Information</h3>
+                                            <h3>Educational Data</h3>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <label>{{ form.guardian_occupation.label }}</label>
-                                                    {{ form.guardian_occupation(size=20, required=True, class="form-control", placeholder='Guardian Occupation') }}
+                                                    <label for="date_of_birth">Date of Birth:</label>
+                                                    <input class="form-control"  type="date" id="date_of_birth" name="date_of_birth" value="{{ user_account.date_of_birth}}">
                                                 </div>
                                                 <div class="col">
-                                                    <label>{{ form.guardian_relationship.label }}</label>
-                                                    {{ form.guardian_relationship(size=20, required=True, class="form-control", placeholder='Guardian Relationship') }}
+                                                    <label for="place_of_birth">Place of Birth:</label>
+                                                    <input class="form-control"  type="text" id="place_of_birth" name="place_of_birth" value="{{ user_account.place_of_birth }}">
                                                 </div>
                                                 <div class="col">
-                                                    <label>{{ form.guardian_contact_no.label }}</label>
-                                                    {{ form.guardian_contact_no(size=20, required=True, class="form-control", placeholder='Guardian Contact No') }}
+                                                    <label for="gender">Gender:</label>
+                                                    <input class="form-control"  type="text" id="gender" name="gender" value="{{ user_account.gender }}">
                                                 </div>
+                                                <div class="col">
+                                                    <label for="nationality">Nationality:</label>
+                                                    <input class="form-control"  type="text" id="nationality" name="nationality" value="{{ user_account.nationality }}">
+                                                </div>
+                                              
                                             </div>
                                         </div>
-                                        
-                                        <!-- Emergency Contact -->
+
+                                        <!-- Economic Data -->
                                         <div class="form-group">
-                                            <h3>Emergency Contact</h3>
+                                            <h3>Economic Data</h3>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <label>{{ form.emergency_contact_name.label }}</label>
-                                                    {{ form.emergency_contact_name(size=20, required=True, class="form-control", placeholder='Emergency Contact Name') }}
+                                                    <label for="parent_names">Parent Names:</label>
+                                                    <input class="form-control"  type="text" id="parent_names" name="parent_names" value="{{ user_account.parent_names }}">
                                                 </div>
                                                 <div class="col">
-                                                    <label>{{ form.emergency_contact_relationship.label }}</label>
-                                                    {{ form.emergency_contact_relationship(size=20, required=True, class="form-control", placeholder='Emergency Contact Relationship') }}
+                                                    <label for="parent_contact_info">Parent Contact Info:</label>
+                                                    <input class="form-control"  type="text" id="parent_contact_info" name="parent_contact_info" value="{{ user_account.parent_contact_info }}">
                                                 </div>
-                                                <div class="col">
-                                                    <label>{{ form.emergency_contact_no.label }}</label>
-                                                    {{ form.emergency_contact_no(size=20, required=True, class="form-control", placeholder='Emergency Contact No') }}
-                                                </div>
-                                                <div class="col">
-                                                    <label>{{ form.emergency_contact_address.label }}</label>
-                                                    {{ form.emergency_contact_address(size=20, required=True, class="form-control", placeholder='Emergency Contact Address') }}
-                                                </div>
+                                               
                                             </div>
                                         </div>
-                    
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </form>
+                                {% else %}
+                                    <form method="POST">
+                                        {{ form.hidden_tag() }}
+                                        <div class="form-group">
+                                            <div class="col">
+                                            <label for="user_id">User ID:</label>
+                                            <input type="text" id="user_id" name="user_id" value="" readonly>
+                                        </div>
+                                        <div>
+                                            <label for="lrn">LRN:</label>
+                                            <input type="text" id="lrn" name="lrn" value="" >
+                                        </div>
+                                        <div>
+                                            <label for="name">Name:</label>
+                                            <input type="text" id="name" name="name" value="" >
+                                        </div>
+                                        <div>
+                                            <label for="email">Email:</label>
+                                            <input type="email" id="email" name="email" value="" >
+                                        </div>
+                                        <div>
+                                            <label for="track_strand">Track/Strand:</label>
+                                            <input type="text" id="track_strand" name="track_strand" value="" >
+                                        </div>
+                                        <div>
+                                            <label for="address">Address:</label>
+                                            <input type="text" id="address" name="address" value="">
+                                        </div>
+                                        <div>
+                                            <label for="year">Year:</label>
+                                            <input type="text" id="year" name="year" value="" >
+                                        </div>
+                                        <div>
+                                            <label for="contact_number">Contact Number:</label>
+                                            <input type="text" id="contact_number" name="contact_number" value="">
+                                        </div>
+                                        <div>
+                                            <label for="date_of_birth">Date of Birth:</label>
+                                            <input type="date" id="date_of_birth" name="date_of_birth" value="">
+                                        </div>
+                                        <div>
+                                            <label for="place_of_birth">Place of Birth:</label>
+                                            <input type="text" id="place_of_birth" name="place_of_birth" value="">
+                                        </div>
+                                        <div>
+                                            <label for="gender">Gender:</label>
+                                            <input type="text" id="gender" name="gender" value="">
+                                        </div>
+                                        <div>
+                                            <label for="nationality">Nationality:</label>
+                                            <input type="text" id="nationality" name="nationality" value="">
+                                        </div>
+                                        <div>
+                                            <label for="parent_names">Parent Names:</label>
+                                            <input type="text" id="parent_names" name="parent_names" value="">
+                                        </div>
+                                        <div>
+                                            <label for="parent_contact_info">Parent Contact Info:</label>
+                                            <input type="text" id="parent_contact_info" name="parent_contact_info" value="">
+                                        </div>
+                                        <div>
+                                            <button type="submit">Save</button>
+                                        </div>
+                                    </div>
+                                    </form>
+                                {% endif %}
+                                
                                 </div>
                             </div>
                         </div>

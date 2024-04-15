@@ -17,12 +17,13 @@ from collections import defaultdict
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'somethingdan'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
-app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
-app.config['MAIL_PORT'] = 2525
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587  # Use port 587 for TLS
 app.config['MAIL_USERNAME'] = 'nicssanyo@gmail.com'
 app.config['MAIL_PASSWORD'] = 'sanaymagisa24'
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USE_TLS'] = True  # Use TLS
+app.config['MAIL_USE_SSL'] = False  # Not using SSL
+
 
 
 db.init_app(app)
@@ -113,14 +114,21 @@ def index():
         db.session.add(new_comment)
         db.session.commit()
 
-        # Send email directly to your email address
-        msg = Message(subject="New Comment",
-                      sender=email,
-                      recipients=["zdanlester@gmail.com"])  # Your email address
-        msg.body = f"New comment from {name} ({email}):\n\n{comment_text}"
-        mail.send(msg)
+        try:
+            # Send email directly to your email address
+            msg = Message(subject="New Comment",
+                          sender=email,
+                          recipients=["zdanlester@gmail.com"])  # Your email address
+            msg.body = f"New comment from {name} ({email}):\n\n{comment_text}"
+            mail.send(msg)
+        except Exception as e:
+            # Handle email sending errors
+            app.logger.error(f"Error sending email: {str(e)}")
+            flash('Error sending email. Please try again later.', 'error')
+        else:
+            flash('Comment submitted successfully!', 'success')
 
-        return 'Comment submitted successfully!'
+        return redirect(request.url)  # Redirect to the same page after form submission to prevent form resubmission
 
     return render_template('web/index.html', form=form)
 
@@ -144,48 +152,41 @@ def student_change_password():
     form = ChangePasswordForm()
 
     if form.validate_on_submit():
-      
         user = User.query.get(current_user.id)
 
-       
-        if not check_password_hash(user.password, form.old_password.data):
+        if user.password != form.old_password.data:
             flash('Incorrect current password. Please try again.', 'danger')
             return redirect(url_for('student_change_password'))
 
-        
-        hashed_password = generate_password_hash(form.new_password.data)
-
-       
-        user.password = hashed_password
+        # Assign the new password directly (without hashing)
+        user.password = form.new_password.data
         db.session.commit()
 
         flash('Password updated successfully!', 'success')
-        return redirect(url_for('dashboard')) 
+        return redirect(url_for('dashboard'))
+    
     return render_template('student/student_change_password.html', form=form)
 
-@app.route('/teacher/student_change_password', methods=['GET', 'POST'])
+
+@app.route('/teacher/teacher_change_password', methods=['GET', 'POST'])
 @login_required
 def teacher_change_password():
     form = ChangePasswordForm()
 
     if form.validate_on_submit():
-      
         user = User.query.get(current_user.id)
 
-       
-        if not check_password_hash(user.password, form.old_password.data):
+        if user.password != form.old_password.data:
             flash('Incorrect current password. Please try again.', 'danger')
             return redirect(url_for('teacher_change_password'))
 
-        
-        hashed_password = generate_password_hash(form.new_password.data)
-
-       
-        user.password = hashed_password
+        # Update the password directly
+        user.password = form.new_password.data
         db.session.commit()
 
         flash('Password updated successfully!', 'success')
-        return redirect(url_for('dashboard')) 
+        return redirect(url_for('teacher_change_password'))
+
     return render_template('teacher/teacher_change_password.html', form=form)
 
 @app.route('/web/senior_enrollies/add', methods=['GET', 'POST'])
@@ -376,6 +377,25 @@ def archive_enrollie_shs(enrollie_id):
             db.session.add(student)
             db.session.commit()
 
+            # Create a UserAccount entry
+            user_account = UserAccount(
+                user_id=user.id,
+                name=enrollie.name,
+                email=enrollie.email,
+                track_strand=enrollie.track_strand,
+                year=enrollie.year,
+                contact_number=enrollie.contact_number,
+                date_of_birth=enrollie.date_of_birth,
+                place_of_birth=enrollie.place_of_birth,
+                gender=enrollie.gender,
+                nationality=enrollie.nationality,
+                parent_names=enrollie.parent_names,
+                parent_contact_info=enrollie.parent_contact_info,
+                address=enrollie.address
+            )
+            db.session.add(user_account)
+            db.session.commit()
+
             enrollie.is_archived = True
             db.session.commit()
             flash('Archived successfully!', 'success')
@@ -412,6 +432,26 @@ def archive_enrollie_tesda(enrollie_id):
             db.session.add(student)
             db.session.commit()
 
+             # Create a UserAccount entry
+            user_account = UserAccount(
+                user_id=user.id,
+                name=enrollie.name,
+                email=enrollie.email,
+                track_strand=enrollie.track_strand,
+                year=enrollie.year,
+                contact_number=enrollie.contact_number,
+                date_of_birth=enrollie.date_of_birth,
+                place_of_birth=enrollie.place_of_birth,
+                gender=enrollie.gender,
+                nationality=enrollie.nationality,
+                parent_names=enrollie.parent_names,
+                parent_contact_info=enrollie.parent_contact_info,
+                address=enrollie.address
+            )
+            db.session.add(user_account)
+            db.session.commit()
+            
+
             enrollie.is_archived = True
             db.session.commit()
             flash('Archived successfully!', 'success')
@@ -435,17 +475,17 @@ def archive_enrollie(enrollie_id):
     enrollie = Enrollies.query.get(enrollie_id)
     if enrollie:
         try:
-           
-
+            # Create a User entry
             user = User(
                 name=enrollie.name,
-                password=enrollie.date_of_birth,
+                password=enrollie.date_of_birth,  # You might want to hash the password
                 email=enrollie.email,
                 role='student'
             )
             db.session.add(user)
             db.session.commit()
 
+            # Create a Student entry
             student = Student(
                 student_id=user.id,
                 name=enrollie.name
@@ -453,14 +493,36 @@ def archive_enrollie(enrollie_id):
             db.session.add(student)
             db.session.commit()
 
+            # Create a UserAccount entry
+            user_account = UserAccount(
+                user_id=user.id,
+                name=enrollie.name,
+                email=enrollie.email,
+                track_strand=enrollie.track_strand,
+                year=enrollie.year,
+                contact_number=enrollie.contact_number,
+                date_of_birth=enrollie.date_of_birth,
+                place_of_birth=enrollie.place_of_birth,
+                gender=enrollie.gender,
+                nationality=enrollie.nationality,
+                parent_names=enrollie.parent_names,
+                parent_contact_info=enrollie.parent_contact_info,
+                address=enrollie.address
+            )
+            db.session.add(user_account)
+            db.session.commit()
+
+            # Mark the enrollie as archived
             enrollie.is_archived = True
             db.session.commit()
+            
             flash('Archived successfully!', 'success')
         except Exception as e:
             db.session.rollback()
             app.logger.error(f"Error archiving enrollie: {str(e)}")
             flash('Error archiving enrollie.', 'error')
     return redirect(url_for('view_enrollies'))
+
 
 
 @app.route('/admin/enrollies')
@@ -665,30 +727,38 @@ def dashboard():
 @app.route('/admin/register', methods=['GET', 'POST'])
 @login_required
 def register():
-    user_name = current_user.name
     if current_user.role != 'admin':
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('dashboard'))
 
     form = RegistrationForm()
+
+
     if form.validate_on_submit():
         hashed_password = form.password.data  # In a real application, you should hash the password
 
-        # Create a new user with the provided information and set the user_id
+        # Create a new user with the provided information
         user = User(
             email=form.email.data,
             name=form.name.data,
             password=hashed_password,
             role=form.role.data,
         )
-
-        # Add the user to the database
         db.session.add(user)
         db.session.commit()
+
+        # Assign the current user as a teacher
+        teacher = Teacher(
+            teacher_id=user.id,
+            name=user.name
+        )
+        db.session.add(teacher)
+        db.session.commit()
+
         flash('Registered successfully!', 'success')
         return redirect(url_for('register'))
 
-    return render_template('admin/register.html', form=form,user_name=user_name)
+    return render_template('admin/register.html', form=form)
 
 
 @app.route('/update/<int:user_id>', methods=['GET', 'POST'])
@@ -713,12 +783,13 @@ def update_user(user_id):
 
     form = UpdateUserForm()
     if form.validate_on_submit():
+        if form.new_name.data:
+            user_to_update.name = form.new_name.data
         if form.new_email.data:
             user_to_update.email = form.new_email.data
         if form.new_password.data:
-            user_to_update.password = form.new_password.data  # In a real application, you should hash the password
-        if form.new_role.data:
-            user_to_update.role = form.new_role.data
+            user_to_update.password = form.new_password.data  
+
 
         db.session.commit()
         flash(f'User updated successfully!', 'success')
@@ -850,24 +921,98 @@ def download_certificate(certificate_id):
     return send_file(certificate_path, as_attachment=True)
 
 
-@app.route('/student/account', methods=['GET', 'POST'])
-@login_required
+
+@app.route('/student_account', methods=['GET', 'POST'])
 def student_account():
-    form = UserAccountForm(obj=current_user.user_account)
+    form = UserAccountForm()  # Initialize the form
+
+    # Retrieve the current user's user_id (You need to implement this part)
+    user_id = current_user.id  # Assuming you are using Flask-Login
+
+    # Retrieve the existing user account information if available
+    user_account = UserAccount.query.filter_by(user_id=user_id).first()
+
+    if user_account:
+        # Pre-fill the form fields with the existing user account data
+       
+        form.lrn.data = user_account.lrn
+        form.name.data = user_account.name
+        form.email.data = user_account.email
+        form.track_strand.data = user_account.track_strand
+        form.address.data = user_account.address
+        form.year.data = user_account.year
+        form.contact_number.data = user_account.contact_number
+        form.date_of_birth.data = user_account.date_of_birth
+        form.place_of_birth.data = user_account.place_of_birth
+        form.gender.data = user_account.gender
+        form.nationality.data = user_account.nationality
+        form.parent_names.data = user_account.parent_names
+        form.parent_contact_info.data = user_account.parent_contact_info
 
     if form.validate_on_submit():
-        if not current_user.user_account:
-            user_account_instance = UserAccount()
-            form.populate_obj(user_account_instance)
-            user_account_instance.user = current_user
-            db.session.add(user_account_instance)
-        else:
-            form.populate_obj(current_user.user_account)
+        # Process the form data
+ 
+        lrn = form.lrn.data
+        name = form.name.data
+        email = form.email.data
+        track_strand = form.track_strand.data
+        address = form.address.data
+        year = form.year.data
+        contact_number = form.contact_number.data
+        date_of_birth = form.date_of_birth.data
+        place_of_birth = form.place_of_birth.data
+        gender = form.gender.data
+        nationality = form.nationality.data
+        parent_names = form.parent_names.data
+        parent_contact_info = form.parent_contact_info.data
 
+        # Check if the user_id already exists
+        user_account = UserAccount.query.filter_by(user_id=user_id).first()
+
+        if user_account:
+            # If user_id exists, update the existing UserAccount entry
+            user_account.lrn = lrn
+            user_account.name = name
+            user_account.email = email
+            user_account.track_strand = track_strand
+            user_account.address = address
+            user_account.year = year
+            user_account.contact_number = contact_number
+            user_account.date_of_birth = date_of_birth
+            user_account.place_of_birth = place_of_birth
+            user_account.gender = gender
+            user_account.nationality = nationality
+            user_account.parent_names = parent_names
+            user_account.parent_contact_info = parent_contact_info
+            flash('UserAccount updated successfully!', 'success')
+        else:
+            # If user_id doesn't exist, create a new UserAccount entry
+            user_account = UserAccount(
+
+                lrn=lrn,
+                name=name,
+                email=email,
+                track_strand=track_strand,
+                address=address,
+                year=year,
+                contact_number=contact_number,
+                date_of_birth=date_of_birth,
+                place_of_birth=place_of_birth,
+                gender=gender,
+                nationality=nationality,
+                parent_names=parent_names,
+                parent_contact_info=parent_contact_info
+            )
+            flash('UserAccount created successfully!', 'success')
+
+        db.session.add(user_account)
         db.session.commit()
+
         return redirect(url_for('student_account'))
 
-    return render_template('student/student_account.html', form=form)
+    return render_template('student/student_account.html', form=form, user_account=user_account)
+
+
 
 @app.route('/teacher/account', methods=['GET', 'POST'])
 @login_required
@@ -1069,6 +1214,33 @@ def my_subjects():
             subjects_by_section[subject.section].append(subject)
         
         return render_template('teacher/my_subjects.html', subjects_by_section=subjects_by_section)
+    else:
+        flash('You are not assigned to teach any subjects.', 'warning')
+        return redirect(url_for('dashboard'))
+    
+@app.route('/my_schedule', methods=['GET'])
+@login_required
+def my_schedule():
+    if current_user.role != 'teacher':
+        flash('You are not authorized to view this page.', 'danger')
+        return redirect(url_for('dashboard'))
+
+    teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
+    if teacher:
+        subjects = teacher.subjects
+
+        # Group subjects by their sections
+        subjects_by_section = defaultdict(list)
+        for subject in subjects:
+            subjects_by_section[subject.section].append(subject)
+
+        # Retrieve schedules for the subjects
+        schedules_by_subject = {}
+        for subject in subjects:
+            schedules = Schedule.query.filter_by(subject_id=subject.id).all()
+            schedules_by_subject[subject] = schedules
+
+        return render_template('teacher/my_schedule.html', subjects_by_section=subjects_by_section, schedules_by_subject=schedules_by_subject)
     else:
         flash('You are not assigned to teach any subjects.', 'warning')
         return redirect(url_for('dashboard'))
@@ -1475,29 +1647,35 @@ def student_view_grades():
 def view_schedule():
     if current_user.is_authenticated and current_user.role == 'student':
         student = current_user.student
-        grades = Grades.query.filter_by(student_id=student.id).all()
         enrollments = Enrollment.query.filter_by(student_id=student.id).all()
-
-
-        if not enrollments:
-            flash('No enrollments found for this student.', 'info')
-
-        # Get all unique subjects
-        subjects = set(grade.subject for grade in grades)
 
         # Create a dictionary to store schedules for each subject
         subject_schedules = {}
 
-        # Iterate over each subject
-        for subject in subjects:
-            # Get the schedules for the subject
-            schedules = Schedule.query.filter_by(subject_id=subject.id).all()
-            # Store the schedules in the dictionary
-            subject_schedules[subject] = schedules
+        # If there are no enrollments, inform the user and render the template
+        if not enrollments:
+            flash('No enrollments found for this student.', 'info')
+            return render_template('student/view_schedule.html', subject_schedules={})
+
+        # Iterate over each enrollment
+        for enrollment in enrollments:
+            # Get the section for the enrollment
+            section = enrollment.section
+            # Get the subjects for the section
+            subjects = section.subjects
+            # Store the subjects and their schedules in the dictionary
+            for subject in subjects:
+                # Get the schedules for the subject
+                schedules = Schedule.query.filter_by(subject_id=subject.id).all()
+                # Store the schedules in the dictionary
+                subject_schedules[subject] = schedules
 
         return render_template('student/view_schedule.html', subject_schedules=subject_schedules)
     else:
         return redirect(url_for('dashboard'))
+    
+
+
 
 
 
