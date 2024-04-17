@@ -110,7 +110,7 @@ class UpdateStudentForm(FlaskForm):
 
 class ModuleForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    year = IntegerField('Year', validators=[DataRequired()])
+    year = StringField('Year', validators=[DataRequired()])
     course_id = SelectField('Course', coerce=int, validators=[DataRequired()])
     pdf_file = FileField('PDF File', validators=[DataRequired()])
 

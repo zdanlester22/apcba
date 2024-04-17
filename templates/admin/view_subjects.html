@@ -299,17 +299,18 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                      <!-- Modal for Add Schedule -->
-                               <!-- Button to add schedule for a specific subject -->
-                               <a href="{{ url_for('add_schedule', subject_id=subject.id) }}" class="btn btn-primary">Add Schedule</a>
-
-
-
+                                                        <!-- Link to add schedule for the subject -->
+                                                        <a href="{{ url_for('add_schedule', subject_id=subject.id) }}" class="btn btn-primary">Add Schedule</a>
+                                                        <!-- Loop over schedules for this subject and provide update links -->
+                                                        {% for schedule in subject.schedules %}
+                                                            <a href="{{ url_for('update_schedule', schedule_id=schedule.id) }}" class="btn btn-primary">Update Schedule</a>
+                                                        {% endfor %}
                                                     </td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
                                     </table>
+                                    
                                 </div>
                             {% else %}
                                 <p>No subjects available for the selected section and course.</p>
@@ -386,6 +387,7 @@
 
 </body>
 <script>
+    
      document.addEventListener("DOMContentLoaded", function () {
             // Your JavaScript code here
         });

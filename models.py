@@ -115,7 +115,7 @@ subject_teacher_association = db.Table('subject_teacher_association',
 class Module(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(255), nullable=False)
-    year = db.Column(db.Integer, nullable=False)
+    year = db.Column(db.String, nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     course = db.relationship('Course', backref='modules')
     pdf_filename = db.Column(db.String(255), nullable=False)

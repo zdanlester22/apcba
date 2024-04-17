@@ -1289,7 +1289,7 @@ def my_students(subject_id):
 @app.route('/add_schedule/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
 def add_schedule(subject_id):
-    subject = Subject.query.get_or_404(subject_id)
+    subject = Subject.query.get(subject_id)
     form = ScheduleForm(request.form)  # Instantiate the schedule form
 
     if form.validate_on_submit():
@@ -1324,11 +1324,42 @@ def add_schedule(subject_id):
     return render_template('admin/add_schedule.html', subject=subject, form=form)
 
 
+@app.route('/update_schedule/<int:schedule_id>', methods=['GET', 'POST'])
+@login_required
+def update_schedule(schedule_id):
+    # Retrieve the schedule from the database
+    schedule = Schedule.query.get_or_404(schedule_id)
+    
+    # Create a form and populate it with the existing schedule data
+    form = ScheduleForm(request.form, obj=schedule)
+
+    if form.validate_on_submit():
+        # Update schedule details with form data
+        form.populate_obj(schedule)
+        
+        try:
+            # Commit changes to the database
+            db.session.commit()
+            flash('Schedule updated successfully', 'success')
+            # Redirect to the subjects page after successful update
+            return redirect(url_for('view_subjects', section_id=schedule.subject.section_id))
+        except Exception as e:
+            db.session.rollback()
+            flash('An error occurred while updating the schedule. Please try again later.', 'error')
+            app.logger.error(f"Error updating schedule: {str(e)}")
+
+    # Pass schedule and subject information to the template
+    return render_template('admin/update_schedule.html', form=form, schedule=schedule)
+
+
+
+
 
   
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
+    schedule = Schedule.query.first()
     section_id = request.args.get('section_id', type=int)
     current_app.logger.info(f"section_id: {section_id}")
     
@@ -1342,7 +1373,7 @@ def view_subjects():
 
     form = ScheduleForm()
     
-    return render_template('admin/view_subjects.html', subjects=subjects, section=section, form=form)
+    return render_template('admin/view_subjects.html', subjects=subjects, section=section, form=form, schedule=schedule)
 
 
 

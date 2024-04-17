@@ -206,7 +206,12 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
+                    <div class="container-fluid">
+                        <div class="col-md-6 offset-md-6">
+                            <div class="input-group mb-3" style="position: relative;">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()" style="width: 200px; position: absolute; right: 0;">
+                            </div>
+                        </div>
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Teachers</h1>
@@ -217,7 +222,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 {% if teachers %}
-                                    <table class="table">
+                                    <table id="teacherTable"class="table">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th>Teacher ID</th>
@@ -314,6 +319,46 @@
 
 </body>
 <script>
+     function filterTable() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue, noResultsRow;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("teacherTable");
+    tr = table.getElementsByTagName("tr");
+    noResultsRow = document.getElementById("noResultsRow");
+
+    // Initially assume no results found
+    var noResults = true;
+
+    // Loop through all table rows, and hide/show based on search query
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var rowMatch = false;
+        for (var j = 0; j < td.length; j++) {
+            if (td[j]) {
+                txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    rowMatch = true;
+                    noResults = false; // At least one result found
+                    break; // Break the loop if any of the columns match
+                }
+            }
+        }
+        if (rowMatch) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+
+    // Show/hide the "No results found" row based on search results
+    if (noResults) {
+        noResultsRow.style.display = ""; // Show no results row
+    } else {
+        noResultsRow.style.display = "none"; // Hide no results row
+    }
+}
 
     </script>
 
