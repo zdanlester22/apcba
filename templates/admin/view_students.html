@@ -31,6 +31,9 @@
 
     <!-- Custom inline styles -->
     <style type="text/css">
+         img{
+            width: 50px;
+        }
         .bg-color{
             background-color:#374c60 ;
         }
@@ -49,7 +52,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
@@ -206,12 +209,16 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+                <div class="row">
                     <div class="col-md-6 offset-md-6">
-                        <div class="input-group mb-3" style="position: relative;">
-                            <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()" style="width: 200px; position: absolute; right: 0;">
+                        <div class="input-group mb-3" style="width: 300px; position: absolute; right: 20px;">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                            </div>
                         </div>
                     </div>
+                </div>
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -236,6 +243,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                             <tr id="noResultsRow" style="display: none;">
+                                                <td colspan="9" class="text-center">No results</td>
+                                            </tr>
                                             {% for enrollment in enrollments %}
                                             <tr>
                                                 <td>{{ enrollment.enrolled_student_rel.name }}</td>
@@ -339,7 +349,7 @@
     var noResults = true;
 
     // Loop through all table rows, and hide/show based on search query
-    for (i = 0; i < tr.length; i++) {
+    for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
         td = tr[i].getElementsByTagName("td");
         var rowMatch = false;
         for (var j = 0; j < td.length; j++) {
@@ -366,6 +376,7 @@
         noResultsRow.style.display = "none"; // Hide no results row
     }
 }
+
     </script>
 
 </html>

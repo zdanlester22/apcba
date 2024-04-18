@@ -253,7 +253,17 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Modules</h1>
                     </div>
-            
+                    <div class="row">
+                        <div class="col-md-6 offset-md-6">
+                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Content Row -->
                     <div class="row">
                         {% block content %}
@@ -312,36 +322,73 @@
                         </div>
                         </div>
                         <!-- Button to open modal -->
-                        <div class="action">
-                            <button id="openModalBtn" class="btn btn-primary create-module-btn" data-toggle="modal" data-target="#myModal">Create Module</button>
-                        </div>
+                        <button id="openModalBtn" class="btn btn-primary btn-sm create-module-btn" data-toggle="modal" data-target="#myModal">
+                            <i class="fas fa-plus-circle fa-sm mr-1"></i> Create Module
+                        </button>
+                        
                         
                     
                         <!-- Table -->
-                        <div class="mod">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Year</th>
-                                            <th>Course</th>
-                                            <th class="actions">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for module in modules %}
-                                        <tr>
-                                            <td>{{ module.title }}</td>
-                                            <td>{{ module.year }}</td>
-                                            <td>{{ module.course.title }}</td>
-                                            <td class="actions"><a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" download class="btn btn-primary">Download</a></td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        {% for i in range(0, modules|length, 10) %}
+                    <div class="table-responsive table-container" {% if i > 0 %} style="display: none;" {% endif %}>
+                        <table id="moduleTable" class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Year</th>
+                                    <th>Course</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="noResultsRow" style="display: none;">
+                                    <td colspan="9" class="text-center">No results</td>
+                                </tr>
+                                {% for module in modules[i:i+10] %}
+                                    <tr>
+                                        <td>{{ module.title }}</td>
+                                        <td>{{ module.year }}</td>
+                                        <td>{{ module.course.title }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#downloadModal{{ module.id }}">
+                                                <i class="fas fa-download fa-sm mr-1"></i> Download PDF
+                                            </button>
+                                            
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="downloadModal{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="downloadModalLabel{{ module.id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="downloadModalLabel{{ module.id }}">Download Module</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure you want to download the module "{{ module.title }}"?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" class="btn btn-primary" download>Yes, Download</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endfor %}
+                    <!-- Pagination -->
+                    <div class="pagination justify-content-end">
+                        <button class="btn btn-primary" id="nextBtn">
+                            <i class="fas fa-chevron-right"></i> Next
+                        </button>
+                    </div>
+                    
                         {% endblock %}
                     </div>
 
@@ -416,6 +463,47 @@
 
 </body>
 <script>
+    function filterTable() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue, noResultsRow;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("moduleTable");
+    tr = table.getElementsByTagName("tr");
+    noResultsRow = document.getElementById("noResultsRow");
+
+    // Initially assume no results found
+    var noResults = true;
+
+    // Loop through all table rows, and hide/show based on search query
+    for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
+        td = tr[i].getElementsByTagName("td");
+        var rowMatch = false;
+        for (var j = 0; j < td.length; j++) {
+            if (td[j]) {
+                txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    rowMatch = true;
+                    noResults = false; // At least one result found
+                    break; // Break the loop if any of the columns match
+                }
+            }
+        }
+        if (rowMatch) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+
+    // Show/hide the "No results found" row based on search results
+    if (noResults) {
+        noResultsRow.style.display = ""; // Show no results row
+    } else {
+        noResultsRow.style.display = "none"; // Hide no results row
+    }
+}
+
      document.getElementById("toggleActionsBtn").addEventListener("click", function() {
     var actionsCells = document.querySelectorAll(".actions");
 
@@ -490,6 +578,29 @@ document.addEventListener("DOMContentLoaded", function () {
             fadeInFlash();
             fadeOutFlash();
         });
+
+        document.addEventListener("DOMContentLoaded", function() {
+    const tables = document.querySelectorAll('.table-container');
+    let currentIndex = 0;
+
+    function showTable(index) {
+        tables.forEach((table, i) => {
+            if (i === index) {
+                table.style.display = 'block';
+            } else {
+                table.style.display = 'none';
+            }
+        });
+    }
+
+    function nextTable() {
+        currentIndex = (currentIndex + 1) % tables.length;
+        showTable(currentIndex);
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', nextTable);
+});
+
  
     </script>
 

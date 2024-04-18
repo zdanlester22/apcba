@@ -210,11 +210,22 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
+                    <div class="row">
+                        <div class="col-md-6 offset-md-6">
+                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Advisory</h1>
                     </div>
-
+                    
                     <!-- Content Row -->
                                     <!-- Module Tables -->
                                     <div class="container-fluid">
@@ -224,7 +235,7 @@
                                             <div class="con">
                                               {% if enrollments %}
                                               <div class="table-responsive">
-                                                <table class="table">
+                                                <table id="advisoryTable" class="table">
                                                   <thead class="thead-dark"> <!-- Apply Bootstrap class for dark header -->
                                                     <tr>
                                                       <th class="custom-th">Student Name</th> <!-- Add custom class for custom styling -->
@@ -236,6 +247,9 @@
                                                     </tr>
                                                   </thead>
                                                   <tbody>
+                                                    <tr id="noResultsRow" style="display: none;">
+                                                        <td colspan="9" class="text-center">No results</td>
+                                                    </tr>
                                                     {% for enrollment in enrollments %}
                                                     <tr>
                                                       <td style=" border: 1px solid #dee2e6;">{{ enrollment.enrolled_student_rel.name }}</td>
@@ -245,9 +259,12 @@
                                                       <td style=" border: 1px solid #dee2e6;">{{ 'Yes' if enrollment.is_approved else 'No' }}</td>
                                                       <td style=" border: 1px solid #dee2e6;">
                                                         <form action="{{ url_for('student_details', student_id=enrollment.student_id) }}" method="GET">
-                                                          <button type="submit" class="btn btn-primary">
-                                                            Grades
-                                                          </button>
+                                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                                <i class="far fa-eye"></i> Grades
+                                                            </button>
+                                                        </form>
+                                                        
+                                                        
                                                         </form>
                                                       </td>
                                                     </tr>
@@ -263,8 +280,11 @@
                                           </div>
                                         </div>
                                         <div class="pagination justify-content-end">
-                                            <button class="btn btn-primary" id="nextBtn">Next</button>
-                                            </div>
+                                            <button class="btn btn-primary" id="nextBtn">
+                                                <i class="fas fa-chevron-right"></i> Next
+                                            </button>
+                                        </div>
+                                        
                                       </div>
                                       
                                         
@@ -373,7 +393,46 @@
             fadeInFlash();
             fadeOutFlash();
         });
-        
+        function filterTable() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue, noResultsRow;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("advisoryTable");
+    tr = table.getElementsByTagName("tr");
+    noResultsRow = document.getElementById("noResultsRow");
+
+    // Initially assume no results found
+    var noResults = true;
+
+    // Loop through all table rows, and hide/show based on search query
+    for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
+        td = tr[i].getElementsByTagName("td");
+        var rowMatch = false;
+        for (var j = 0; j < td.length; j++) {
+            if (td[j]) {
+                txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    rowMatch = true;
+                    noResults = false; // At least one result found
+                    break; // Break the loop if any of the columns match
+                }
+            }
+        }
+        if (rowMatch) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+
+    // Show/hide the "No results found" row based on search results
+    if (noResults) {
+        noResultsRow.style.display = ""; // Show no results row
+    } else {
+        noResultsRow.style.display = "none"; // Hide no results row
+    }
+}
 
   </script>
     <!-- Bootstrap core JavaScript-->

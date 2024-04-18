@@ -31,6 +31,9 @@
 
     <!-- Custom inline styles -->
     <style type="text/css">
+         img{
+            width: 50px;
+        }
         .bg-color{
             background-color:#374c60 ;
         }
@@ -63,7 +66,7 @@ td{
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
@@ -220,8 +223,18 @@ td{
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-
+                
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6 offset-md-6">
+                                <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Enrollees Tesda</h1>
@@ -229,13 +242,26 @@ td{
 
                     <!-- Content Row -->
                     <div class="container">
-                        <a href="{{ url_for('view_enrollies') }}" class="btn btn-primary" style=" width: 120px;margin-bottom: 10px;">College</a>
-                        <a href="{{ url_for('view_senior_enrollies') }}" class="btn btn-primary" style="width: 120px;margin-bottom: 10px;">SHS</a>
-                        <a href="{{ url_for('view_tesda_enrollies') }}" class="btn btn-success" style=" margin-right: 200px; width: 120px; margin-bottom: 10px;">TESDA</a>
-                        <a href="{{ url_for('view_archived_tesda') }}" class="btn btn-primary" style="margin-right: 20px;margin-bottom: 10px;"> Accepted TESDA</a>
+                        <div class="row">
+                            <div class="dropdown" style="margin-bottom: 10px; margin-left: 20px;">
+                                <button class="btn btn-success dropdown-toggle" type="button" id="collegeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 120px;">
+                                    Tesda
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="collegeDropdown">
+                                    <a class="dropdown-item" href="{{ url_for('view_enrollies') }}">College</a>
+                                    <a class="dropdown-item" href="{{ url_for('view_senior_enrollies') }}">SHS</a>
+                                    <a class="dropdown-item" href="{{ url_for('view_tesda_enrollies') }}">TESDA</a>
+                                </div>
+                            </div>
+                            
+                            <a href="{{ url_for('view_archived_tesda') }}" class="btn btn-primary btn-sm" style="margin-left: 10px; margin-bottom: 10px;">
+                                <i class="fas fa-archive"></i> 
+                                Accepted
+                            </a>
+                        </div>
                         <div class="row">
                             <div class="col">
-                                <table class="table enrollies-table">
+                                <table id="tesdaTable"class="table enrollies-table">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>Name</th>
@@ -244,6 +270,9 @@ td{
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr id="noResultsRow" style="display: none;">
+                                            <td colspan="9" class="text-center">No results</td>
+                                        </tr>
                                         {% if enrollies_list %}
                                             {% for enrollies in enrollies_list %}
                                             <tr>
@@ -430,6 +459,41 @@ function toggleSidebar() {
 
     // Show modal
     $('#myModal').modal('show');
+}
+function filterTable() {
+    var input, filter, table, tr, nameColumn, emailColumn, i, noResultsRow;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tesdaTable");
+    tr = table.getElementsByTagName("tr");
+    noResultsRow = document.getElementById("noResultsRow");
+    var noResults = true;
+
+    for (i = 1; i < tr.length; i++) {
+        nameColumn = tr[i].getElementsByTagName("td")[0]; // Index 0 for name column
+        emailColumn = tr[i].getElementsByTagName("td")[1]; // Index 1 for email column
+        if (nameColumn && emailColumn) {
+            var nameValue = nameColumn.textContent || nameColumn.innerText;
+            var emailValue = emailColumn.textContent || emailColumn.innerText;
+            if (nameValue.toUpperCase().indexOf(filter) > -1 || emailValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+                noResults = false;
+            } else {
+                tr[i].style.display = "none";
+                // Hide the additional info row if it's available
+                var additionalInfo = document.getElementById("additional-info-" + tr[i].dataset.enrolleeId);
+                if (additionalInfo) {
+                    additionalInfo.style.display = "none";
+                }
+            }
+        }
+    }
+
+    if (noResults) {
+        noResultsRow.style.display = ""; 
+    } else {
+        noResultsRow.style.display = "none"; 
+    }
 }
 
     </script>

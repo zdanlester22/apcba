@@ -31,6 +31,9 @@
 
     <!-- Custom inline styles -->
     <style type="text/css">
+         img{
+            width: 50px;
+        }
         .bg-color{
             background-color:#374c60 ;
         }
@@ -101,7 +104,7 @@ h2 {
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
@@ -258,7 +261,16 @@ h2 {
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
+                    <div class="row">
+                        <div class="col-md-6 offset-md-6">
+                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Manage Sections</h1>
@@ -269,11 +281,14 @@ h2 {
                         <div class="row">
                             <div class="col-md-6">
                                 <form method="get" action="{{ url_for('manage_section') }}">
-                                    <button id="toggle-button" class="btn btn-primary toggle-button" style="margin-bottom: 10px;" type="button">Add Section</button>
+                                    <button id="toggle-button" class="btn btn-primary btn-sm toggle-button" style="margin-bottom: 10px;" type="button">
+                                        <i class="fas fa-plus"></i> Section
+                                    </button>
                                 </form>
                             </div>
                         </div>
                     </div>
+                    
                     
                     <div id="form-container" class="container-fluid form-container">
                         <button class="btn btn-danger close-button" onclick="closeForm()">X</button>
@@ -310,7 +325,7 @@ h2 {
                         </form>
                     </div>
 <div class="container-fluid table-container">
-    <table class="table">
+    <table id="sectionTable" class="table">
         <thead class="thead-dark">
             <tr>
                 <th>Section</th>
@@ -324,6 +339,9 @@ h2 {
             </tr>
         </thead>
         <tbody>
+            <tr id="noResultsRow" style="display: none;">
+                <td colspan="9" class="text-center">No results</td>
+            </tr>
             {% for section in sections %}
             <tr>
                 <td>{{ section.name }}</td>
@@ -334,19 +352,24 @@ h2 {
                 <td>{{ section.course.course_type }}</td>
                 <td>{{ section.teacher.name }}</td>
                 <td>
-                    <form method="GET" action="{{ url_for('view_subjects') }}">
-                        <input type="hidden" name="section_id" value="{{ section.id }}">
-                        <input type="hidden" name="course_id" value="{{ section.course.id }}">
-                        <button type="submit" style="background-color: #b4b150; border: none;  width:140px " class="btn btn-primary">Assign Schedule</button>
-                    </form>
-                    <br>
-                    <button type="button" style="padding: 7px; width:140px ;" class="btn btn-primary" data-toggle="modal" data-target="#addSubjectModal{{ section.id }}">
-                        Add Subject
-                    </button>
-                    <br><br>
-                    <form action="{{ url_for('archive_section', section_id=section.id) }}"  method="post" onsubmit="return confirm('Are you sure you want to archive this section?');">
-                        <button type="submit" class="btn btn-danger" style="width: 140px;">Archive Course</button>
-                    </form>
+                    <div style="display: flex;">
+                        <form method="GET" action="{{ url_for('view_subjects') }}">
+                            <input type="hidden" name="section_id" value="{{ section.id }}">
+                            <input type="hidden" name="course_id" value="{{ section.course.id }}">
+                            <button type="submit" class="btn btn-primary btn-sm" style="background-color: #b4b150; border: none; margin-right: 5px;">
+                                <i class="fas fa-calendar-alt"></i> Schedule
+                            </button>
+                        </form>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addSubjectModal{{ section.id }}"style="margin-right: 5px;">
+                            <i class="fas fa-plus"></i> Subject
+                        </button>
+                        <form action="{{ url_for('archive_section', section_id=section.id) }}" method="post" onsubmit="return confirm('Are you sure you want to archive this section?');">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-archive"></i> Archive
+                            </button>
+                        </form>
+                    </div>
+    
                     
                     <!-- Modal -->
                     <div class="modal fade" id="addSubjectModal{{ section.id }}" tabindex="-1" role="dialog" aria-labelledby="addSubjectModalLabel" aria-hidden="true">
@@ -482,6 +505,47 @@ document.getElementById('toggle-button').addEventListener('click', function () {
             formContainer.style.display = (formContainer.style.display === 'none' || formContainer.style.display === '') ? 'block' : 'none';
 
         });
+
+function filterTable() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue, noResultsRow;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("sectionTable");
+    tr = table.getElementsByTagName("tr");
+    noResultsRow = document.getElementById("noResultsRow");
+
+    // Initially assume no results found
+    var noResults = true;
+
+    // Loop through all table rows, and hide/show based on search query
+    for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
+        td = tr[i].getElementsByTagName("td");
+        var rowMatch = false;
+        for (var j = 0; j < td.length; j++) {
+            if (td[j]) {
+                txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    rowMatch = true;
+                    noResults = false; // At least one result found
+                    break; // Break the loop if any of the columns match
+                }
+            }
+        }
+        if (rowMatch) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+
+    // Show/hide the "No results found" row based on search results
+    if (noResults) {
+        noResultsRow.style.display = ""; // Show no results row
+    } else {
+        noResultsRow.style.display = "none"; // Hide no results row
+    }
+}
     </script>
 
 </html>

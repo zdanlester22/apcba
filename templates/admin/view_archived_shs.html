@@ -31,6 +31,9 @@
 
     <!-- Custom inline styles -->
     <style type="text/css">
+         img{
+            width: 50px;
+        }
         .bg-color{
             background-color:#374c60 ;
         }
@@ -63,11 +66,10 @@ td{
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
-
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
@@ -221,18 +223,29 @@ td{
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6 offset-md-6">
+                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Accepted Enrollee SHS</h1>
 
                     </div>
+                    
 
                     <!-- Content Row -->
                     <div class="container">
                         <div class="row">
                             <div class="col">
-                                <table class="table enrollies-table">
+                                <table id="shsTable" class="table enrollies-table">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>Name</th>
@@ -241,12 +254,17 @@ td{
                                         </tr>
                                         </thead>
                                         <tbody>
+                                            <tr id="noResultsRow" style="display: none;">
+                                                <td colspan="9" class="text-center">No results</td>
+                                            </tr>
                                             {% for enrollies in archived_shs_enrollies_list %}
                                             <tr>
                                                 <td>{{ enrollies.name }}</td>
                                                 <td>{{ enrollies.email }}</td>
                                                 <td>
-                                                    <button class="btn btn-info show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</button>
+                                                    <button class="btn btn-info btn-sm show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">
+                                                        <i class="fas fa-info-circle"></i> Show Info
+                                                    </button>
                                                 </td>
                                             </tr>
                                             <!-- Hidden additional info for each Tesda enrollie -->
@@ -421,6 +439,42 @@ function toggleSidebar() {
     // Show modal
     $('#myModal').modal('show');
 }
+function filterTable() {
+    var input, filter, table, tr, nameColumn, emailColumn, i, noResultsRow;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("collegeTable");
+    tr = table.getElementsByTagName("tr");
+    noResultsRow = document.getElementById("noResultsRow");
+    var noResults = true;
+
+    for (i = 1; i < tr.length; i++) {
+        nameColumn = tr[i].getElementsByTagName("td")[0]; // Index 0 for name column
+        emailColumn = tr[i].getElementsByTagName("td")[1]; // Index 1 for email column
+        if (nameColumn && emailColumn) {
+            var nameValue = nameColumn.textContent || nameColumn.innerText;
+            var emailValue = emailColumn.textContent || emailColumn.innerText;
+            if (nameValue.toUpperCase().indexOf(filter) > -1 || emailValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+                noResults = false;
+            } else {
+                tr[i].style.display = "none";
+                // Hide the additional info row if it's available
+                var additionalInfo = document.getElementById("additional-info-" + tr[i].dataset.enrolleeId);
+                if (additionalInfo) {
+                    additionalInfo.style.display = "none";
+                }
+            }
+        }
+    }
+
+    if (noResults) {
+        noResultsRow.style.display = ""; 
+    } else {
+        noResultsRow.style.display = "none"; 
+    }
+}
+
 
     </script>
 

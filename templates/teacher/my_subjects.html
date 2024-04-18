@@ -208,7 +208,16 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
+                    <div class="row">
+                        <div class="col-md-6 offset-md-6">
+                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Subject</h1>
@@ -223,7 +232,7 @@
                                             <div class="con">
                                 
                                               <div class="table-responsive">
-                                                <table class="table">
+                                                <table id="gradeTable" class="table">
                                                   <thead class="thead-dark"> <!-- Apply Bootstrap class for dark header -->
                                                     <tr>
                                                       <th class="custom-th">Subject</th>
@@ -235,6 +244,9 @@
                                                     </tr>
                                                   </thead>
                                                   <tbody>
+                                                    <tr id="noResultsRow" style="display: none;">
+                                                        <td colspan="9" class="text-center">No results</td>
+                                                    </tr>
                                                     {% for section, subjects in subjects_by_section.items() %}
                                                     {% for subject in subjects %}
                                                     <tr>
@@ -245,10 +257,12 @@
                                                         <td style="border: 1px solid #dee2e6;">{{ section.year }}</td> <!-- Section year -->
                                                         <td style="border: 1px solid #dee2e6;">
                                                             <form action="{{ url_for('my_students', subject_id=subject.id) }}">
-                                                                <button type="submit" class="btn btn-primary">
-                                                                    Grades
+                                                                <button type="submit" class="btn btn-primary btn-sm" style="width: 100px;">
+                                                                    <i class="fas fa-pen"></i> <span style="font-size: 12px;">Grades</span>
                                                                 </button>
                                                             </form>
+                                                            
+                                                            
                                                         </td>
                                                     </tr>
                                                     {% endfor %}
@@ -265,9 +279,11 @@
                                           </div>
                                         </div>
                                         <div class="pagination justify-content-end">
-                                            <button class="btn btn-primary" id="nextBtn">Next</button>
-                                            </div>
-                                      </div>
+                                            <button class="btn btn-primary" id="nextBtn">
+                                                <i class="fas fa-chevron-right"></i> Next
+                                            </button>
+                                        </div>
+                                    </div>
                                       
                                         
                         
@@ -332,6 +348,47 @@
         </div>
     </div>
   <script>
+function filterTable() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue, noResultsRow;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("gradeTable");
+    tr = table.getElementsByTagName("tr");
+    noResultsRow = document.getElementById("noResultsRow");
+
+    // Initially assume no results found
+    var noResults = true;
+
+    // Loop through all table rows, and hide/show based on search query
+    for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
+        td = tr[i].getElementsByTagName("td");
+        var rowMatch = false;
+        for (var j = 0; j < td.length; j++) {
+            if (td[j]) {
+                txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    rowMatch = true;
+                    noResults = false; // At least one result found
+                    break; // Break the loop if any of the columns match
+                }
+            }
+        }
+        if (rowMatch) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+
+    // Show/hide the "No results found" row based on search results
+    if (noResults) {
+        noResultsRow.style.display = ""; // Show no results row
+    } else {
+        noResultsRow.style.display = "none"; // Hide no results row
+    }
+}
+
          document.addEventListener("DOMContentLoaded", function() {
     const tables = document.querySelectorAll('.table-container');
     let currentIndex = 0;

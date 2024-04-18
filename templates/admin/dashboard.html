@@ -253,12 +253,16 @@
 
                      
                         <div class="container">
-                            <div class="row justify-content-end"> <!-- Use justify-content-end to align items to the right -->
-                                <div class="col-md-6"> <!-- No offset needed -->
-                                    <button id="butbut" class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#announcement-modal" style="width: 250px; margin-left: 18%;">Post an Announcement</button>
+                            <div class="row justify-content-end">
+                                <div class="col-md-6">
+                                    <button id="butbut" class="btn btn-primary btn-sm btn-block mb-2" data-toggle="modal" data-target="#announcement-modal" style="width: 250px; margin-left: 50%;">
+                                        <i class="fas fa-bullhorn mr-2" style="font-size: 16px;"></i> <!-- Icon with margin and smaller size -->
+                                        Post an Announcement
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                        
                         
                         <!-- Modal -->
                         <div class="modal fade" id="announcement-modal" tabindex="-1" role="dialog" aria-labelledby="announcement-modal-label" aria-hidden="true">
@@ -304,8 +308,11 @@
                                                     <p class="card-text">{{ announcement.content }}</p>
                                                     <p class="card-text"><small class="text-muted">Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small></p>
                                                     <div class="update-delete-buttons">
-                                                        <button type="button" class="btn btn-danger delete-button" data-toggle="modal" data-target="#deleteConfirmationModal{{ announcement.id }}">Delete</button> <!-- Trigger modal -->
+                                                        <button type="button" class="btn btn-danger btn-sm delete-button" data-toggle="modal" data-target="#deleteConfirmationModal{{ announcement.id }}">
+                                                            <i class="fas fa-trash-alt mr-1" style="font-size: 14px;"></i>Delete <!-- Icon with margin and smaller size -->
+                                                        </button>
                                                     </div>
+                                                    
                                                 </div>
                                             </div>
                                         </li>

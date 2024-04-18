@@ -1476,6 +1476,7 @@ def enroll():
             db.session.add(new_enrollment)
             db.session.commit()
             flash(f'Students enrolled successfully!', 'success')
+            return redirect(url_for('enroll'))
 
     return render_template('admin/enroll.html', form=form, student_form=student_form, existing_enrollments=existing_enrollments,user_name=user_name)
 

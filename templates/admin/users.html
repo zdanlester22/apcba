@@ -312,7 +312,9 @@
     tr:hover {
         background-color: #f1f1f1;
     }
-
+    img{
+            width: 50px;
+        }
 
   
     </style>
@@ -329,7 +331,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
@@ -488,20 +490,23 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
+                    <div class="row">
+                        <div class="col-md-6 offset-md-6">
+                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Accounts</h1>
                     </div>
 
                     <!-- Content Row -->
-                    <div class="row" >
-                        <div class="col-md-6 offset-md-6">
-                            <div class="input-group mb-3" style="position: relative;">
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()" style="width: 200px; position: absolute; right: 0;">
-                            </div>
-                        </div>
-                    </div>
+                  
                     
                     <div class="row" style="margin-top: 10px;">
                         <div class="col-md-12">
@@ -513,10 +518,13 @@
                                         <th>Email</th>
                                         <th>Name</th>
                                         <th>Role</th>
-                                        <th>Update</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                     <tr id="noResultsRow" style="display: none;">
+                                        <td colspan="9" class="text-center">No results</td>
+                                    </tr>
                                     {% for user in users %}
                                     <tr>
                                         <td>{{ user.id }}</td>
@@ -524,16 +532,18 @@
                                         <td>{{ user.name }}</td>
                                         <td>{{ user.role }}</td>
                                         {% if user.role != 'admin' %}
-                                        <td><a href="{{ url_for('update_user', user_id=user.id) }}" class="linku">Update</a></td>
-                                        {% else %}
-                                        <td></td>
+                                        <td>
+                                            <a href="{{ url_for('update_user', user_id=user.id) }}" class="linku">
+                                                <i class="fas fa-edit"></i> Update
+                                            </a>
+                                        </td>
+                                        
+                                        
                                         {% endif %}
                                     </tr>
                                     {% endfor %}
                                     
-                                    <tr id="noResultsRow" style="display: none;">
-                                        <td colspan="6">No results found</td>
-                                    </tr>
+            
                                 </tbody>
                             </table>
                         </div>
@@ -643,7 +653,7 @@
 
 </body>
 <script>
-  function filterTable() {
+ function filterTable() {
     // Declare variables
     var input, filter, table, tr, td, i, txtValue, noResultsRow;
     input = document.getElementById("searchInput");
@@ -656,7 +666,7 @@
     var noResults = true;
 
     // Loop through all table rows, and hide/show based on search query
-    for (i = 0; i < tr.length; i++) {
+    for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
         td = tr[i].getElementsByTagName("td");
         var rowMatch = false;
         for (var j = 0; j < td.length; j++) {
