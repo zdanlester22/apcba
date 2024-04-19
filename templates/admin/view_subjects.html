@@ -303,11 +303,10 @@
                                                     </td>
                                                     <td>
                                                         <div class="btn-group" role="group">
-                                                            <form action="{{ url_for('add_schedule', subject_id=subject.id) }}" method="get" style="margin: 0;">
-                                                                <button type="button" class="btn btn-primary btn-sm" style="padding: 5px 10px; font-size: 12px; width: 100px;">
-                                                                    <i class="fas fa-plus"></i> Schedule
-                                                                </button>
-                                                            </form>
+                                                            <a href="{{ url_for('add_schedule', subject_id=subject.id) }}" class="btn btn-primary btn-sm" style="padding: 5px 10px; font-size: 12px; width: 100px;">
+                                                                <i class="fas fa-plus"></i> Schedule
+                                                            </a>
+                                                            
                                                             {% for schedule in subject.schedules %}
                                                                 <form action="{{ url_for('update_schedule', schedule_id=schedule.id) }}" method="get" style="margin: 0;">
                                                                     <button type="submit" class="btn btn-primary btn-sm" style="padding: 5px 10px; font-size: 12px; width: 100px; margin-left: 5px;">

@@ -247,14 +247,19 @@
                             {{ form.csrf_token }}
                             <input type="hidden" name="schedule_id" value="{{ schedule.id }}">
                             <div class="form-group">
-                                <label for="day_of_week">Day of Week:</label>
-                                <select class="form-control" id="day_of_week" name="day_of_week">
-                                    <option value="Monday" {% if schedule.day_of_week == 'Monday' %} selected {% endif %}>Monday</option>
-                                    <option value="Tuesday" {% if schedule.day_of_week == 'Tuesday' %} selected {% endif %}>Tuesday</option>
-                                    <option value="Wednesday" {% if schedule.day_of_week == 'Wednesday' %} selected {% endif %}>Wednesday</option>
-                                    <option value="Thursday" {% if schedule.day_of_week == 'Thursday' %} selected {% endif %}>Thursday</option>
-                                    <option value="Friday" {% if schedule.day_of_week == 'Friday' %} selected {% endif %}>Friday</option>
+                                <label for="day_of_week">Day(s) of Week:</label>
+                                <select class="form-control" id="day_of_week_select" name="day_of_week" multiple>
+                                    <option value="M" {% if 'M' in schedule.day_of_week %} selected {% endif %}>Monday</option>
+                                    <option value="T" {% if 'T' in schedule.day_of_week %} selected {% endif %}>Tuesday</option>
+                                    <option value="W" {% if 'W' in schedule.day_of_week %} selected {% endif %}>Wednesday</option>
+                                    <option value="Th" {% if 'Th' in schedule.day_of_week %} selected {% endif %}>Thursday</option>
+                                    <option value="F" {% if 'F' in schedule.day_of_week %} selected {% endif %}>Friday</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="day_of_week_text">Selected Day(s):</label>
+                                <input type="text" class="form-control" id="day_of_week_text" name="day_of_week_text" placeholder="Selected day(s) of the week" readonly>
+                                <small class="form-text text-muted">Hold down Ctrl (Windows/Linux) or Command (Mac) to select multiple days, or click and drag to select a range.</small>
                             </div>
                         
                            <div class="form-group">
@@ -434,6 +439,18 @@ document.addEventListener("DOMContentLoaded", function () {
             fadeInFlash();
             fadeOutFlash();
         });
+
+        // Function to update the text field when the dropdown selection changes
+    document.getElementById('day_of_week_select').addEventListener('change', function() {
+        var selectedDays = Array.from(this.selectedOptions).map(option => option.value);
+        document.getElementById('day_of_week_text').value = selectedDays.join('/');
+    });
+
+    // Initialize the text field with the previously selected days
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectedDays = Array.from(document.getElementById('day_of_week_select').selectedOptions).map(option => option.value);
+        document.getElementById('day_of_week_text').value = selectedDays.join('/');
+    });
     </script>
 
 </html>

@@ -1286,6 +1286,8 @@ def my_students(subject_id):
     return render_template('teacher/my_students.html', subject=subject, enrolled_students=enrolled_students, grades=grades, final_grades_formatted=final_grades_formatted, form1=form1, form2=form2, form3=form3)
 
 
+from sqlalchemy import and_
+
 @app.route('/add_schedule/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
 def add_schedule(subject_id):
@@ -1294,16 +1296,16 @@ def add_schedule(subject_id):
 
     if form.validate_on_submit():
         # Extract schedule details from the form
-        day_of_week = form.day_of_week.data
+        day_of_week = '/'.join(request.form.getlist('day_of_week'))
         start_time = form.start_time.data
         end_time = form.end_time.data
         room = form.room.data
 
         try:
-            # Check for schedule conflicts
-            existing_schedule = Schedule.query.filter_by(day_of_week=day_of_week, subject_id=subject_id).first()
+            # Check for existing schedule for the same subject
+            existing_schedule = Schedule.query.filter(and_(Schedule.day_of_week == day_of_week, Schedule.subject_id == subject_id)).first()
             if existing_schedule:
-                flash(f'Schedule conflict detected for {subject.title}. Please choose a different time.', 'error')
+                flash(f'A schedule already exists for {subject.title}. Please choose a different time.', 'error')
             else:
                 # Create a new schedule object
                 new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, room=room, subject_id=subject_id)
@@ -1324,6 +1326,7 @@ def add_schedule(subject_id):
     return render_template('admin/add_schedule.html', subject=subject, form=form)
 
 
+
 @app.route('/update_schedule/<int:schedule_id>', methods=['GET', 'POST'])
 @login_required
 def update_schedule(schedule_id):
@@ -1335,7 +1338,10 @@ def update_schedule(schedule_id):
 
     if form.validate_on_submit():
         # Update schedule details with form data
-        form.populate_obj(schedule)
+        schedule.day_of_week = '/'.join(request.form.getlist('day_of_week'))
+        schedule.start_time = form.start_time.data
+        schedule.end_time = form.end_time.data
+        schedule.room = form.room.data
         
         try:
             # Commit changes to the database
@@ -1350,6 +1356,7 @@ def update_schedule(schedule_id):
 
     # Pass schedule and subject information to the template
     return render_template('admin/update_schedule.html', form=form, schedule=schedule)
+
 
 
 
