@@ -1477,7 +1477,7 @@ def enroll():
             year=form.year.data,
             course_id=form.course_id.data,
             section_id=form.section_id.data,
-            is_approved=form.is_approved.data
+            
 )
 
             db.session.add(new_enrollment)

@@ -120,7 +120,6 @@ class EnrollmentForm(FlaskForm):
     section_id = SelectField('Select Section', coerce=int)
     year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
     year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
-    is_approved = BooleanField('Is Approved')
     submit = SubmitField('Enroll')
 
 class EnrolliesForm(FlaskForm):

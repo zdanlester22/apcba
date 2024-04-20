@@ -127,11 +127,11 @@ class Enrollment(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
-    is_approved = db.Column(db.Boolean, default=False)
     year = db.Column(db.String(20), nullable=False)
     enrolled_student_rel = db.relationship('Student', back_populates='enrollments', single_parent=True)
     enrolled_course_rel = db.relationship('Course', backref='enrollments_course')
     enrolled_section_rel = db.relationship('Section', backref='enrollments_section')
+
     
 
 
