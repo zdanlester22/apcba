@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
     <style>
         body {
             font-family: Montserrat, sans-serif;
@@ -198,10 +201,24 @@
                 max-width: 80%;
             }
         }
+        #backButton{
+            width: 23px;
+            padding: 10px;
+            text-align: center;
+            background-color: white;
+            box-shadow: none;
+        }
+        
     </style>
 </head>
-
+<div class="linke">
+    <a href="{{ url_for('index') }}" id="backButton" style="position: absolute; top: 10px; left: 10px; text-decoration: none; color: #376c60;" class="hover-link">
+        <i class="material-icons" >home</i>
+</a>
+</div>
+     
 <body>
+ 
     <form>
         <img src="{{ url_for('static', filename='images/icon.png') }}" alt="APCBA Logo">
         <h1>ASIA PACIFIC COLLEGE OF BUSINESS AND ARTS</h1>
