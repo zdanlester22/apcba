@@ -55,7 +55,8 @@
         .flash li{
             list-style: none;
             text-align: center;
-            margin-right: 25px;
+            margin-left: 10px;
+
         }
         .fade-in {
             /* CSS class to fade in flash messages */
@@ -267,13 +268,11 @@
                                             {{ form.hidden_tag() }}
                                             <div class="form-group">
                                                 <label for="title">Announcement Title</label>
-                                                <input type="text" id="title" name="title" size="25" required oninput="countCharacters('title', 'title-char-count', 50)" class="form-control">
-                                                <span id="title-char-count">0/50</span>
+                                                <input type="text" id="title" name="title" size="25" maxlength="75" required class="form-control">
                                             </div>
                                             <div class="form-group">
                                                 <label for="content">Content</label>
-                                                <textarea type="text" id="content" name="content" required="" oninput="countCharacters('content', 'content-char-count', 1000)" style="height: 200px;" class="form-control"></textarea>
-                                                <span id="content-char-count">0/1000</span>
+                                                <textarea id="content" name="content" required style="height: 200px;" maxlength="1000" class="form-control"></textarea>
                                             </div>
                                             <button type="submit" class="btn btn-primary btn-block">Submit</button>
                                         </form>
@@ -405,7 +404,22 @@
 
 </body>
 <script>
-   
+     document.addEventListener("DOMContentLoaded", function() {
+        var titleInput = document.getElementById("title");
+        var contentTextarea = document.getElementById("content");
+
+        titleInput.addEventListener("input", function() {
+            if (this.value.length > 75) {
+                this.value = this.value.slice(0, 75);
+            }
+        });
+
+        contentTextarea.addEventListener("input", function() {
+            if (this.value.length > 1000) {
+                this.value = this.value.slice(0, 1000);
+            }
+        });
+    });
 
          window.history.replaceState({}, document.title, window.location.href.split('?')[0]);
         function toggleAnnouncementForm() {

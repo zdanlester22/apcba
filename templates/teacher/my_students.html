@@ -55,7 +55,8 @@
             list-style: none;
             text-align: center;
             margin-right: 25px;
-            padding: 10px;
+            padding-top: 10px;
+
         }
         .fade-in {
             /* CSS class to fade in flash messages */
@@ -246,7 +247,7 @@
                                         <td>{{ grades[student.id].period_2 }}</td>
                                         <td>{{ grades[student.id].period_3 }}</td>
                                         <td>{{ final_grades_formatted[student.id] }}</td>
-                                        <td>{{ "Pass" if grades[student.id].is_passed else "Fail" }}</td>
+                                        <td>{{ "Passed" if grades[student.id].is_passed else "Failed" }}</td>
                                         {% else %}
                                         <!-- Display placeholder if grades are not available -->
                                         <td colspan="5">Grades not available</td>

@@ -707,7 +707,7 @@ def dashboard():
         announcement = Announcement(title=form.title.data, content=form.content.data, author_id=current_user.id)
         db.session.add(announcement)
         db.session.commit()
-        flash('Announcement has been posted successfully!', 'success')
+        flash('Announcement has been posted successfully', 'success')
     announcements = Announcement.query.order_by(Announcement.timestamp.desc()).all()
 
     if current_user.is_authenticated:
@@ -813,7 +813,7 @@ def update_announcement(announcement_id):
         announcement.title = form.title.data
         announcement.content = form.content.data
         db.session.commit()
-        flash('Annoucnement has been updated successfully!', 'success')  # Moved flash above return
+        flash('Annoucnement has been updated successfully', 'success')  # Moved flash above return
         return redirect(url_for('dashboard'))
 
     return render_template('admin/update_announcement.html', form=form, announcement=announcement)
@@ -828,7 +828,7 @@ def delete_announcement(announcement_id):
 
     db.session.delete(announcement)
     db.session.commit()
-    flash('Announcement has been deleted successfully!', 'success')
+    flash('Announcement has been deleted successfully', 'success')
     return redirect(url_for('dashboard'))
 
 
