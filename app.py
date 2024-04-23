@@ -7,6 +7,7 @@ from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, Enrol
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
+from flask_paginate import Pagination, get_page_parameter
 import os
 import requests
 from flask_mail import Mail, Message
@@ -563,10 +564,17 @@ def users():
             )
         ).all()
 
+    # Pagination configuration
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 8  # Number of items per page
+    offset = (page - 1) * per_page
+    pagination_users = users_data[offset: offset + per_page]
+
+    pagination = Pagination(page=page, per_page=per_page, total=len(users_data), css_framework='bootstrap4')
+
     # Handle form submissions
     teacher_form = TeacherForm()
     student_form = StudentForm()
-
 
     if request.method == 'POST':
         if teacher_form.validate_on_submit() and current_user.role == 'admin':
@@ -597,9 +605,8 @@ def users():
                 flash(f'Error adding student: {str(e)}', 'danger')
 
         return redirect(url_for('users'))
-    
 
-    return render_template('admin/users.html', users=users_data, search_query=search_query, teacher_form=teacher_form, student_form=student_form, user_name=user_name, number_of_accounts=number_of_accounts)
+    return render_template('admin/users.html', users=pagination_users, search_query=search_query, teacher_form=teacher_form, student_form=student_form, user_name=user_name, number_of_accounts=number_of_accounts, pagination=pagination)
 
 
 @app.route('/admin/teachers')

@@ -498,10 +498,11 @@
                     <div class="row" style="margin-top: 10px;">
                         <div class="col-md-12">
                             
+                            {% block content %}
                             <table id="userTable" class="table">
                                 <thead>
                                     <tr>
-                                        <th>User ID</th>
+                                       
                                         <th>Email</th>
                                         <th>Name</th>
                                         <th>Role</th>
@@ -509,12 +510,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                     <tr id="noResultsRow" style="display: none;">
-                                        <td colspan="9" class="text-center">No results</td>
-                                    </tr>
                                     {% for user in users %}
                                     <tr>
-                                        <td>{{ user.id }}</td>
+                                        
                                         <td>{{ user.email }}</td>
                                         <td>{{ user.name }}</td>
                                         <td>{{ user.role }}</td>
@@ -524,15 +522,18 @@
                                                 <i class="fas fa-edit"></i> Update
                                             </a>
                                         </td>
-                                        
-                                        
                                         {% endif %}
                                     </tr>
                                     {% endfor %}
-                                    
-            
                                 </tbody>
                             </table>
+                            
+                            <div class="row justify-content-end">
+                                <div class="col-auto">
+                                    {{ pagination.links }}
+                                </div>
+                            </div>
+                            {% endblock %}
                         </div>
                     </div>
                     
@@ -640,46 +641,45 @@
 
 </body>
 <script>
- function filterTable() {
-    // Declare variables
-    var input, filter, table, tr, td, i, txtValue, noResultsRow;
-    input = document.getElementById("searchInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("userTable");
-    tr = table.getElementsByTagName("tr");
-    noResultsRow = document.getElementById("noResultsRow");
+function filterTable() {
+        var input, filter, table, tr, td, i, txtValue, noResultsRow;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("userTable");
+        tr = table.getElementsByTagName("tr");
+        noResultsRow = document.getElementById("noResultsRow");
 
-    // Initially assume no results found
-    var noResults = true;
+        // Initially assume no results found
+        var noResults = true;
 
-    // Loop through all table rows, and hide/show based on search query
-    for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
-        td = tr[i].getElementsByTagName("td");
-        var rowMatch = false;
-        for (var j = 0; j < td.length; j++) {
-            if (td[j]) {
-                txtValue = td[j].textContent || td[j].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    rowMatch = true;
-                    noResults = false; // At least one result found
-                    break; // Break the loop if any of the columns match
+        // Loop through all table rows, including those in hidden pages
+        for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
+            td = tr[i].getElementsByTagName("td");
+            var rowMatch = false;
+            for (var j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rowMatch = true;
+                        noResults = false; // At least one result found
+                        break; // Break the loop if any of the columns match
+                    }
                 }
             }
+            if (rowMatch) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
         }
-        if (rowMatch) {
-            tr[i].style.display = "";
-        } else {
-            tr[i].style.display = "none";
-        }
-    }
 
-    // Show/hide the "No results found" row based on search results
-    if (noResults) {
-        noResultsRow.style.display = ""; // Show no results row
-    } else {
-        noResultsRow.style.display = "none"; // Hide no results row
+        // Show/hide the "No results found" row based on search results
+        if (noResults) {
+            noResultsRow.style.display = ""; // Show no results row
+        } else {
+            noResultsRow.style.display = "none"; // Hide no results row
+        }
     }
-}
         // Function to toggle the visibility of Delete/Update columns
         function toggleColumns() {
         var deleteColumn = document.querySelectorAll('th:nth-child(6), td:nth-child(6)');
