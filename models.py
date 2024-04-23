@@ -16,7 +16,10 @@ class Comment(db.Model):
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    middle_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50), nullable=False)
+    suffix = db.Column(db.String(10))
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     role = db.Column(db.String(10), nullable=False)
@@ -30,7 +33,10 @@ class UserAccount(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
     lrn = db.Column(db.String(12))
-    name = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    middle_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50), nullable=False)
+    suffix = db.Column(db.String(10))
     email = db.Column(db.String(100), nullable=False, unique=True)
     track_strand = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(255))
@@ -96,7 +102,10 @@ class Teacher(db.Model):
     __tablename__ = 'teacher'
     id = db.Column(db.Integer, primary_key=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
-    name = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    middle_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50), nullable=False)
+    suffix = db.Column(db.String(10))
     section = db.relationship('Section', back_populates='teacher', uselist=False) 
     subjects = db.relationship('Subject', secondary='subject_teacher_association', back_populates='teachers')
 
@@ -138,7 +147,10 @@ class Enrollment(db.Model):
 class Enrollies(db.Model):
     __tablename__ = 'enrollies'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    middle_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50), nullable=False)
+    suffix = db.Column(db.String(10))
     email = db.Column(db.String(100), nullable=False, unique=True)
     track_strand = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(255))
@@ -161,7 +173,10 @@ class Enrollies(db.Model):
 class SeniorEnrollies(db.Model):
     __tablename__ = 'seniorenrollies'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    middle_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50), nullable=False)
+    suffix = db.Column(db.String(10))
     email = db.Column(db.String(100), nullable=False, unique=True)
     address = db.Column(db.String(255), nullable=False)  # Make address nullable=False
     year = db.Column(db.String(20), nullable=False)
@@ -185,7 +200,10 @@ class SeniorEnrollies(db.Model):
 class TesdaEnrollies(db.Model):
     __tablename__ = 'tesdaenrollies'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    middle_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50), nullable=False)
+    suffix = db.Column(db.String(10))
     email = db.Column(db.String(100), nullable=False, unique=True)
     track_strand = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(255))
@@ -210,7 +228,10 @@ class Student(db.Model):
     __tablename__ = 'student'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    middle_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50), nullable=False)
+    suffix = db.Column(db.String(10))
     grades = db.relationship('Grades', back_populates='student', lazy=True)
     enrollments = db.relationship('Enrollment', back_populates='enrolled_student_rel', lazy=True)
 

@@ -15,16 +15,24 @@ class LoginForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
-    name = StringField('Name', validators=[DataRequired()])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    middle_name = StringField('Middle Name')
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    suffix = StringField('Suffix')
     password = PasswordField('Password', validators=[DataRequired()])
     role = SelectField('Role', choices=[('student', 'Student'), ('teacher', 'Teacher'), ('admin', 'Admin')],
                        validators=[DataRequired()])
+
     
 class UpdateUserForm(FlaskForm):
-    new_email = StringField('email')
-    new_name = StringField('New Name', validators=[DataRequired()])
+    new_email = StringField('New Email')
+    new_first_name = StringField('New First Name', validators=[DataRequired()])
+    new_middle_name = StringField('New Middle Name')
+    new_last_name = StringField('New Last Name', validators=[DataRequired()])
+    new_suffix = StringField('New Suffix')
     new_password = PasswordField('New Password')
     submit = SubmitField('Update User')
+
 
     
 
@@ -90,7 +98,7 @@ class SectionForm(FlaskForm):
     teacher_id = SelectField('Teacher', coerce=int, validators=[DataRequired()])
 
     def set_teacher_choices(self, teachers):
-        self.teacher_id.choices = [(teacher.teacher_id, teacher.name) for teacher in teachers]
+        self.teacher_id.choices = [(teacher.teacher_id, teacher.first_name) for teacher in teachers]
 
 
 class TeacherForm(FlaskForm):
@@ -123,7 +131,10 @@ class EnrollmentForm(FlaskForm):
     submit = SubmitField('Enroll')
 
 class EnrolliesForm(FlaskForm):
-    name = StringField('Full Name', validators=[DataRequired()])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    middle_name = StringField('Middle Name')
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    suffix = StringField('Suffix')
     email = StringField('Email', validators=[DataRequired(), Email()])
     track_strand_choices = [
         ('GAs', 'General Academic Strand (GAs)'),
@@ -159,7 +170,10 @@ class EnrolliesForm(FlaskForm):
     special_needs = TextAreaField('Special Needs or Accommodations')
 
 class SeniorEnrolliesForm(FlaskForm):
-    name = StringField('Full Name', validators=[DataRequired()])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    middle_name = StringField('Middle Name')
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    suffix = StringField('Suffix')
     email = StringField('Email', validators=[DataRequired(), Email()])
     address = StringField('Home Address', validators=[DataRequired()])
     year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12')]
@@ -196,7 +210,10 @@ class SeniorEnrolliesForm(FlaskForm):
 
 
 class TesdaEnrolliesForm(FlaskForm):
-    name = StringField('Full Name', validators=[DataRequired()])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    middle_name = StringField('Middle Name')
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    suffix = StringField('Suffix')
     email = StringField('Email', validators=[DataRequired(), Email()])
     track_strand_choices = [
         ('GAs', 'General Academic Strand (GAs)'),
@@ -268,4 +285,4 @@ class AssignTeacherToSubjectForm(FlaskForm):
     submit = SubmitField('Assign Teacher')
     
     def set_teacher_choices(self, teachers):
-        self.teacher_id.choices = [(teacher.id, teacher.name) for teacher in teachers]
+        self.teacher_id.choices = [(teacher.id, teacher.first_name) for teacher in teachers]

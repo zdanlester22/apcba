@@ -236,7 +236,10 @@ td{
                                 <table id="collegeTable" class="table enrollies-table">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th>Name</th>
+                                            <th>First Name</th>
+                                            <th>Middle Name</th>
+                                            <th>Last Name</th>
+                                            <th>Suffix</th>
                                             <th>Email</th>
                                             <th>Action</th>
                                         </tr>
@@ -247,7 +250,10 @@ td{
                                         </tr>
                                         {% for enrollies in archived_enrollies_list %}
                                         <tr>
-                                            <td>{{ enrollies.name }}</td>
+                                            <td>{{ enrollies.first_name }}</td>
+                                                <td>{{ enrollies.middle_name }}</td>
+                                                <td>{{ enrollies.last_name }}</td>
+                                                <td>{{ enrollies.suffix }}</td>
                                             <td>{{ enrollies.email }}</td>
                                             <td>
                             

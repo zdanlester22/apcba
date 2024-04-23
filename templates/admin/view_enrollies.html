@@ -293,7 +293,10 @@ td{
                                 <table id="collegeTable" class="table enrollies-table">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th>Name</th>
+                                            <th>First Name</th>
+                                            <th>Middle Name</th>
+                                            <th>Last Name</th>
+                                            <th>Suffix</th>
                                             <th>Email</th>
                                             <th>Action</th>
                                         </tr>
@@ -305,7 +308,10 @@ td{
                                         {% if enrollies_list %}
                                             {% for enrollies in enrollies_list %}
                                             <tr>
-                                                <td>{{ enrollies.name }}</td>
+                                                <td>{{ enrollies.first_name }}</td>
+                                                <td>{{ enrollies.middle_name }}</td>
+                                                <td>{{ enrollies.last_name }}</td>
+                                                <td>{{ enrollies.suffix }}</td>
                                                 <td>{{ enrollies.email }}</td>
                                                 <td>
                                                     <a href="{{ url_for('archive_enrollie', enrollie_id=enrollies.id) }}" class="btn btn-primary">Accept</a>
@@ -338,7 +344,7 @@ td{
                                             {% endfor %}
                                             {% else %}
                                             <tr>
-                                                <td colspan="3">No Enrollies</td>
+                                                <td colspan="6">No Enrollies</td>
                                             </tr>
                                         {% endif %}
                                     </tbody>

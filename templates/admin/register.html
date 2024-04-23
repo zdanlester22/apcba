@@ -255,10 +255,24 @@
                                  <span class="error-message" id="email-error-message" style="color: red; font-size: 10px;"></span>
                              </div>
                              <div class="form-group">
-                                 {{ form.name.label }}
-                                 {{ form.name(placeholder="Enter your full name", style="width: 398px", class="form-control", maxlength="50", oninput="sanitizeNameInput(this); limitNameLength(this)") }}
+                                 {{ form.first_name.label }}
+                                 {{ form.first_name(placeholder="Enter your first name", style="width: 398px", class="form-control", maxlength="50", oninput="sanitizeNameInput(this); limitNameLength(this)") }}
                                  <span class="char-count" id="name-char-count">0/50</span>
                              </div>
+                             <div class="form-group">
+                                {{ form.middle_name.label }}
+                                {{ form.middle_name(placeholder="Enter your middle name", style="width: 398px", class="form-control", maxlength="50", oninput="sanitizeNameInput(this); limitNameLength(this)") }}
+                                <span class="char-count" id="name-char-count">0/50</span>
+                            </div>
+                            <div class="form-group">
+                                {{ form.last_name.label }}
+                                {{ form.last_name(placeholder="Enter your last name", style="width: 398px", class="form-control", maxlength="50", oninput="sanitizeNameInput(this); limitNameLength(this)") }}
+                                <span class="char-count" id="name-char-count">0/50</span>
+                            </div>
+                             <div class="form-group">
+                                {{ form.suffix.label }}
+                                {{ form.suffix(placeholder="Enter your suffix", style="width: 398px", class="form-control", maxlength="10") }}
+                            </div>
                              <div class="form-group">
                                 {{ form.password.label(style="margin-left: 8px;") }}
                                 <div class="input-group">
