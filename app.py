@@ -206,7 +206,10 @@ def senior_enrollies():
             password = date_of_birth.strftime("%Y-%m-%d")
 
             new_senior_enrollies = SeniorEnrollies(
-                name=form.name.data,
+                first_name=form.first_name.data,
+                middle_name=form.middle_name.data,
+                last_name=form.last_name.data,
+                suffix=form.suffix.data,
                 email=form.email.data,
                 address=form.address.data,
                 year=form.year.data,
@@ -263,7 +266,10 @@ def tesda_enrollies():
         try:
 
             new_tesda_enrollies = TesdaEnrollies(
-                name=form.name.data,
+                first_name=form.first_name.data,
+                middle_name=form.middle_name.data,
+                last_name=form.last_name.data,
+                suffix=form.suffix.data,
                 email=form.email.data,
                 track_strand=form.track_strand.data,
                 year=form.year.data,
@@ -303,9 +309,9 @@ def tesda_enrollies():
 
 @app.route('/admin/view_tesda_enrollies')
 def view_tesda_enrollies():
-    user_name = current_user.name
+    
     enrollies_list = TesdaEnrollies.query.filter_by(is_archived=False).all()
-    return render_template('admin/view_tesda_enrollies.html', enrollies_list=enrollies_list, user_name=user_name)
+    return render_template('admin/view_tesda_enrollies.html', enrollies_list=enrollies_list)
 
 
 @app.route('/web/enrollies', methods=['GET', 'POST'])
@@ -322,7 +328,10 @@ def enrollies():
         try:
     
             new_enrollies = Enrollies(
-                name=form.name.data,
+                first_name=form.first_name.data,
+                middle_name=form.middle_name.data,
+                last_name=form.last_name.data,
+                suffix=form.suffix.data,
                 email=form.email.data,
                 track_strand=form.track_strand.data,
                 year=form.year.data,
@@ -478,7 +487,10 @@ def archive_enrollie(enrollie_id):
         try:
             # Create a User entry
             user = User(
-                name=enrollie.name,
+                first_name=enrollie.first_name,
+                middle_name=enrollie.middle_name,
+                last_name=enrollie.last_name,
+                suffix=enrollie.suffix,
                 password=enrollie.date_of_birth,  # You might want to hash the password
                 email=enrollie.email,
                 role='student'
@@ -489,7 +501,10 @@ def archive_enrollie(enrollie_id):
             # Create a Student entry
             student = Student(
                 student_id=user.id,
-                name=enrollie.name
+                first_name=enrollie.first_name,
+                middle_name=enrollie.middle_name,
+                last_name=enrollie.last_name,
+                suffix=enrollie.suffix
             )
             db.session.add(student)
             db.session.commit()
@@ -497,7 +512,10 @@ def archive_enrollie(enrollie_id):
             # Create a UserAccount entry
             user_account = UserAccount(
                 user_id=user.id,
-                name=enrollie.name,
+                first_name=enrollie.first_name,
+                middle_name=enrollie.middle_name,
+                last_name=enrollie.last_name,
+                suffix=enrollie.suffix,
                 email=enrollie.email,
                 track_strand=enrollie.track_strand,
                 year=enrollie.year,
@@ -528,9 +546,9 @@ def archive_enrollie(enrollie_id):
 
 @app.route('/admin/enrollies')
 def view_enrollies():
-    user_name = current_user.name
+    
     enrollies_list = Enrollies.query.filter_by(is_archived=False).all()
-    return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list,user_name=user_name)
+    return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list)
 
 @app.route('/admin/view_archived_enrollies')
 def view_archived_enrollies():
@@ -542,18 +560,12 @@ def view_archived_enrollies():
 @app.route('/admin/users', methods=['GET', 'POST'])
 @login_required
 def users():
-    user_name = current_user.name
     if current_user.role != 'admin':
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('admin/dashboard'))
 
-    # Fetch user data from the database
     users_data = User.query.all()
-
-    # Calculate the total number of accounts
     number_of_accounts = User.query.count()
-
-    # Search functionality
     search_query = request.args.get('q', default='', type=str)
 
     if search_query:
@@ -564,15 +576,14 @@ def users():
             )
         ).all()
 
-    # Pagination configuration
+    
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 8  # Number of items per page
+    per_page = 8  
     offset = (page - 1) * per_page
     pagination_users = users_data[offset: offset + per_page]
 
     pagination = Pagination(page=page, per_page=per_page, total=len(users_data), css_framework='bootstrap4')
 
-    # Handle form submissions
     teacher_form = TeacherForm()
     student_form = StudentForm()
 
@@ -606,7 +617,7 @@ def users():
 
         return redirect(url_for('users'))
 
-    return render_template('admin/users.html', users=pagination_users, search_query=search_query, teacher_form=teacher_form, student_form=student_form, user_name=user_name, number_of_accounts=number_of_accounts, pagination=pagination)
+    return render_template('admin/users.html', users=pagination_users, search_query=search_query, teacher_form=teacher_form, student_form=student_form,  number_of_accounts=number_of_accounts, pagination=pagination)
 
 
 @app.route('/admin/teachers')
@@ -631,7 +642,7 @@ def view_students():
     if current_user.role == 'teacher':
         teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
         if teacher:
-            section = teacher.section  # Changed 'sections' to 'section'
+            section = teacher.section  
             if section:
                 enrollments = section.enrollments
                 return render_template('teacher/view_class.html', authenticated=True, enrollments=enrollments)
@@ -658,9 +669,6 @@ def student_subjects(student_id):
         enrolled_subjects[student_id] = Subject.query.filter_by(section_id=section_id).all()
 
     return render_template('teacher/student_subjects.html', enrolled_subjects=enrolled_subjects.get(student_id, []))
-
-
-
 
 
 
@@ -747,7 +755,10 @@ def register():
         # Create a new user with the provided information
         user = User(
             email=form.email.data,
-            name=form.name.data,
+            first_name=form.first_name.data,
+            middle_name=form.middle_name.data,
+            last_name=form.last_name.data,
+            suffix=form.suffix.data,
             password=hashed_password,
             role=form.role.data,
         )
@@ -757,7 +768,10 @@ def register():
         # Assign the current user as a teacher
         teacher = Teacher(
             teacher_id=user.id,
-            name=user.name
+            first_name=user.first_name,
+            middle_name=user.middle_name,
+            last_name=user.last_name,
+            suffix=user.suffix
         )
         db.session.add(teacher)
         db.session.commit()
@@ -790,8 +804,14 @@ def update_user(user_id):
 
     form = UpdateUserForm()
     if form.validate_on_submit():
-        if form.new_name.data:
-            user_to_update.name = form.new_name.data
+        if form.new_first_name.data:
+            user_to_update.first_name = form.new_first_name.data
+        if form.new_middle_name.data:
+            user_to_update.middle_name = form.new_middle_name.data
+        if form.new_last_name.data:
+            user_to_update.last_name = form.new_last_name.data
+        if form.new_suffix.data:
+            user_to_update.suffix = form.new_suffix.data
         if form.new_email.data:
             user_to_update.email = form.new_email.data
         if form.new_password.data:
@@ -1043,7 +1063,7 @@ def teacher_account():
 @app.route('/courses', methods=['GET', 'POST'])
 @login_required
 def course():
-    user_name = current_user.name
+    
     form_course = CourseForm()
     
     if form_course.validate_on_submit():
@@ -1064,7 +1084,7 @@ def course():
     
     courses = Course.query.all()
 
-    return render_template('admin/course.html', courses=courses, form_course=form_course, user_name=user_name)
+    return render_template('admin/course.html', courses=courses, form_course=form_course)
 
 
 @app.route('/update_course/<int:course_id>', methods=['GET', 'POST'])
@@ -1092,7 +1112,7 @@ def update_course(course_id):
 ##########################################################################################################################################################################################
 @app.route('/manage_section', methods=['GET', 'POST'])
 def manage_section():
-    user_name = current_user.name  # Assuming you're using Flask-Login for user authentication
+    # Assuming you're using Flask-Login for user authentication
     form_section = SectionForm()
     form_subject = SubjectForm()  # Creating an instance of the SubjectForm
 
@@ -1130,7 +1150,7 @@ def manage_section():
         return redirect(url_for('manage_section'))
 
     return render_template('admin/manage_section.html', sections=sections, courses=courses,
-                           form_section=form_section, form_subject=form_subject, user_name=user_name)
+                           form_section=form_section, form_subject=form_subject)
 
 @app.route('/archive_section/<int:section_id>', methods=['POST'])
 def archive_section(section_id):
@@ -1365,10 +1385,6 @@ def update_schedule(schedule_id):
     return render_template('admin/update_schedule.html', form=form, schedule=schedule)
 
 
-
-
-
-
   
 @app.route('/view_subjects', methods=['GET'])
 @login_required
@@ -1395,7 +1411,7 @@ def view_subjects():
 @app.route('/admin/modules', methods=['GET', 'POST'])
 @login_required
 def modules():
-    user_name = current_user.name
+    
     form_module = ModuleForm()
     courses = Course.query.all()
     form_module.course_id.choices = [(course.id, course.title) for course in courses]
@@ -1420,7 +1436,7 @@ def modules():
         return redirect(url_for('modules'))
 
     modules = Module.query.all()
-    return render_template('admin/modules.html', form_module=form_module, modules=modules, user_name=user_name)
+    return render_template('admin/modules.html', form_module=form_module, modules=modules)
 
 @app.route('/student/modules', methods=['GET'])
 @login_required
@@ -1452,7 +1468,6 @@ def download_module(pdf_filename):
 @app.route('/enroll', methods=['GET', 'POST'])
 @login_required
 def enroll():
-    user_name = current_user.name
     student_form = StudentForm()
     student_id = request.args.get('student_id', type=int)
     student_form.student_id.data = student_id
@@ -1464,11 +1479,11 @@ def enroll():
         form.course_id.choices = [(course.id, course.title) for course in courses]
 
     if sections:
-        form.section_id.choices = [(section.id, section.name) for section in sections]
+        form.section_id.choices = [(section.id, section.first_name) for section in sections]
 
 
     students = Student.query.all()
-    form.student_id.choices = [(student.id, student.name) for student in students]
+    form.student_id.choices = [(student.id, student.first_name) for student in students]
     existing_enrollments = Enrollment.query.all()
 
     if form.validate_on_submit():
@@ -1492,7 +1507,7 @@ def enroll():
             flash(f'Students enrolled successfully!', 'success')
             return redirect(url_for('enroll'))
 
-    return render_template('admin/enroll.html', form=form, student_form=student_form, existing_enrollments=existing_enrollments,user_name=user_name)
+    return render_template('admin/enroll.html', form=form, student_form=student_form, existing_enrollments=existing_enrollments)
 
 @app.route('/enrolled_subjects/<int:student_id>', methods=['GET'])
 @login_required
@@ -1720,11 +1735,6 @@ def view_schedule():
     else:
         return redirect(url_for('dashboard'))
     
-
-
-
-
-
 
 
 
