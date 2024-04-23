@@ -234,7 +234,9 @@
                                     <thead>
                                         <tr>
                                             <th>Email</th>
-                                            <th>Name</th>
+                                            <th>First Name</th>
+                                            <th>Middle Name</th>
+                                            <th>Last Name</th>
                                             <th>Role</th>
                                             <th>Action</th>
                                         </tr>
@@ -242,7 +244,9 @@
                                     <tfoot>
                                         <tr>
                                             <th>Email</th>
-                                            <th>Name</th>
+                                            <th>First Name</th>
+                                            <th>Middle Name</th>
+                                            <th>Last Name</th>
                                             <th>Role</th>
                                             <th>Action</th>
                                         </tr>
@@ -251,7 +255,9 @@
                                         {% for user in users %}
                                         <tr>
                                             <td>{{ user.email }}</td>
-                                            <td>{{ user.name }}</td>
+                                            <td>{{ user.first_name }}</td>
+                                            <td>{{ user.middle_name }}</td>
+                                            <td>{{ user.last_name }}</td>
                                             <td>{{ user.role }}</td>
                                             {% if user.role != 'admin' %}
                                             <td>
