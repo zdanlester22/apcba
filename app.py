@@ -86,6 +86,26 @@ def login():
 
     return render_template('web/login.html', form=form)
 
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    user = current_user 
+    if current_user.role == 'admin':
+        # Retrieve counts from the database
+        student_count = Student.query.count()
+        teacher_count = Teacher.query.count()
+        section_count = Section.query.count()
+        user_count = User.query.count()
+
+        return render_template('admin/dashboard.html', student_count=student_count, teacher_count=teacher_count, section_count=section_count, user_count=user_count, user=user)
+    elif current_user.role == 'teacher':
+        # Render teacher dashboard
+        return render_template('teacher/teacher_announcement.html', user=user)
+    elif current_user.role == 'student':
+        # Render student dashboard
+        return render_template('student/student_announcement.html', user=user)
+
+
     
 @app.route('/logout')
 @login_required
@@ -623,12 +643,12 @@ def users():
 @app.route('/admin/teachers')
 @login_required
 def view_teachers():
-    user_name = current_user.name
+    
     if current_user.role != 'admin':
         return redirect(url_for('dashboard'))
     teachers_data = Teacher.query.all()
 
-    return render_template('admin/view_teachers.html', teachers=teachers_data,user_name=user_name)
+    return render_template('admin/view_teachers.html', teachers=teachers_data)
 
 
 
@@ -713,9 +733,9 @@ def delete_student(student_id):
 
 
 
-@app.route('/dashboard', methods=['GET', 'POST'])
+@app.route('/announcement', methods=['GET', 'POST'])
 @login_required
-def dashboard():
+def announcement():
     form = AnnouncementForm()
 
     if form.validate_on_submit():
@@ -727,11 +747,11 @@ def dashboard():
 
     if current_user.is_authenticated:
         if current_user.role == 'student':
-            template = 'student/student_dashboard.html'
+            template = 'student/student_announcement.html'
         elif current_user.role == 'teacher':
-            template = 'teacher/teacher_dashboard.html'
+            template = 'teacher/teacher_announcement.html'
         elif current_user.role == 'admin':
-            template = 'admin/dashboard.html'
+            template = 'admin/announcement.html'
         else:
             return redirect(url_for('index'))
     else:
@@ -1411,7 +1431,6 @@ def view_subjects():
 @app.route('/admin/modules', methods=['GET', 'POST'])
 @login_required
 def modules():
-    
     form_module = ModuleForm()
     courses = Course.query.all()
     form_module.course_id.choices = [(course.id, course.title) for course in courses]
@@ -1435,26 +1454,37 @@ def modules():
         flash('Created successfully!', 'success')
         return redirect(url_for('modules'))
 
-    modules = Module.query.all()
-    return render_template('admin/modules.html', form_module=form_module, modules=modules)
+    # Pagination
+    page = request.args.get('page', 1, type=int)
+    per_page = 8
+    offset = (page - 1) * per_page
+    modules = Module.query.offset(offset).limit(per_page).all()  # Execute the query
+    
+    # Calculate total count for pagination
+    total_modules_count = Module.query.count()
+
+    pagination = Pagination(page=page, per_page=per_page, total=total_modules_count, css_framework='bootstrap4')
+    
+    return render_template('admin/modules.html', form_module=form_module, modules=modules, pagination=pagination)
+
 
 @app.route('/student/modules', methods=['GET'])
 @login_required
 def student_modules():
     if current_user.role != 'student':
         return redirect(url_for('dashboard'))  
-    user_name = current_user.name
+    
     modules = Module.query.all()  
-    return render_template('student/view_modules.html', modules=modules, user_name=user_name)
+    return render_template('student/view_modules.html', modules=modules)
 
 @app.route('/teacher/modules', methods=['GET'])
 @login_required
 def teacher_modules():
     if current_user.role != 'teacher':
         return redirect(url_for('dashboard')) 
-    user_name = current_user.name
+    
     modules = Module.query.all()  
-    return render_template('teacher/view_modules.html', modules=modules, user_name=user_name)
+    return render_template('teacher/view_modules.html', modules=modules)
 
 
 @app.route('/download_module/<pdf_filename>', methods=['GET'])

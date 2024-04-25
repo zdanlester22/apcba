@@ -77,7 +77,12 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
 
-
+            <li class="nav-item ">
+                <a class="nav-link collapsed" href="{{ url_for('announcement') }}">
+                    <i class="fas fa-fw fa-bullhorn"></i>
+                    <span>Announcement</span>
+                </a>
+            </li>
              <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('modules') }}">
@@ -196,53 +201,61 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+                   
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-6 offset-md-6">
-                                <div class="input-group mb-3" style="width: 300px; position: absolute; right: 20px;">
-                                    <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Teachers</h1>
-                    </div>
-
+                                               <div class="col-md-6 offset-md-6">
+                                                   <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                                       <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                                       <div class="input-group-append">
+                                                           <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                           <!-- Page Heading -->
+                                           <h1 class="h3 mb-2 text-gray-800">Teacher</h1>
+                                           
+                                           
+                                           <!-- DataTales Example -->
+                                           <div class="card shadow mb-4">
+                                               <div class="card-header py-3">
+                                                   <h6 class="m-0 font-weight-bold text-primary">List of Teacher</h6>
+                                                   
+                                               </div>
+                                               <div class="card-body">
+                                                   <div class="table-responsive">
+                                                    {% if teachers %}
+                                                       <table id="teacherTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Teacher ID</th>
+                                                                <th>Name</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tbody> <tr id="noResultsRow" style="display: none;">
+                                                                <td colspan="9" class="text-center">No results</td>
+                                                            </tr>
+                                                            {% for teacher in teachers %}
+                                                                <tr>
+                                                                    <td>{{ teacher.teacher_id }}</td>
+                                                                    <td>{{ teacher.last_name}} {{ teacher.first_name}} {{ teacher.middle_name}}, </td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                {% else %}
+                                                    <p>No teachers found.</p>
+                                                {% endif %}
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       
+                                      
                     <!-- Content Row -->
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                {% if teachers %}
-                                    <table id="teacherTable"class="table">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th>Teacher ID</th>
-                                                <th>Name</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tbody> <tr id="noResultsRow" style="display: none;">
-                                                <td colspan="9" class="text-center">No results</td>
-                                            </tr>
-                                            {% for teacher in teachers %}
-                                                <tr>
-                                                    <td>{{ teacher.teacher_id }}</td>
-                                                    <td>{{ teacher.name }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                {% else %}
-                                    <p>No teachers found.</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+                   
                     
                     
                        

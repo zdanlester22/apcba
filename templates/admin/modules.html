@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,36 +9,35 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-     <!-- Core plugin CSS -->
-     <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
- 
-     <!-- Custom styles for this template -->
-     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <!-- Core plugin CSS -->
+    <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
 
-     <title>APCBA-PORTAL</title>
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <title>APCBA-PORTAL</title>
 
     <!-- Custom fonts for this template-->
-    
     <!-- Font Awesome CSS -->
     <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
-
     <!-- Custom inline styles -->
     <style type="text/css">
-        .bg-color{
-            background-color:#374c60 ;
+        .bg-color {
+            background-color: #374c60;
         }
-        img{
+
+        img {
             width: 50px;
         }
-        #openModalBtn{
+
+        #openModalBtn {
             margin-bottom: 10px;
         }
+
         .flash {
             position: absolute;
             right: 0;
@@ -54,17 +52,18 @@
             opacity: 0;
             transition: opacity 1s ease-in-out;
         }
-        .flash li{
+
+        .flash li {
             list-style: none;
             text-align: center;
             margin-right: 25px;
             padding: 10px;
         }
+
         .fade-in {
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
-        
     </style>
 </head>
 
@@ -75,7 +74,6 @@
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
-
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
@@ -102,31 +100,31 @@
                 Class Management
             </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
+            <!-- Nav Items -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('announcement') }}">
+                    <i class="fas fa-fw fa-bullhorn"></i>
+                    <span>Announcement</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('modules') }}">
                     <i class="fas fa-fw fa-book"></i>
                     <span>Modules</span>
                 </a>
             </li>
-             <!-- Nav Item - Pages Collapse Menu -->
-
-
-             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('course') }}" >
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('course') }}">
                     <i class="fas fa-graduation-cap"></i>
                     <span>Courses</span>
                 </a>
             </li>
-
-             <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>Section</span>
                 </a>
             </li>
-
-            
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('users') }}">
                     <i class="fas fa-fw fa-key"></i>
@@ -159,13 +157,13 @@
                 </div>
             </li>
 
-            <!-- Nav Item - Charts -->
+            <!-- Nav Item - Teachers -->
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('view_teachers') }}" >
+                <a class="nav-link" href="{{ url_for('view_teachers') }}">
                     <i class="fas fa-user"></i>
-                    <span>Teachers</span></a>
+                    <span>Teachers</span>
+                </a>
             </li>
-
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -174,8 +172,6 @@
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-         
-
         </ul>
         <!-- End of Sidebar -->
 
@@ -187,16 +183,13 @@
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <div class="topbar-divider d-none d-sm-block"></div>
-
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -208,7 +201,6 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                              
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -216,29 +208,20 @@
                                 </a>
                             </div>
                         </li>
-
                     </ul>
-
                 </nav>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    
-                        <div class="flash">
-                            {% with messages = get_flashed_messages() %}
-                                {% if messages %}
-                                        {% for message in messages %}
-                                            <li>{{ message }}</li>
-                                        {% endfor %}
-                                {% endif %}
-                            {% endwith %}
-                        </div>
-                    
-
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Modules</h1>
+                    <div class="flash">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
                     </div>
                     <div class="row">
                         <div class="col-md-6 offset-md-6">
@@ -250,7 +233,10 @@
                             </div>
                         </div>
                     </div>
-                    
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Modules</h1>
+                    </div>
                     <!-- Content Row -->
                     <div class="row">
                         {% block content %}
@@ -264,13 +250,11 @@
                                     <form method="POST" enctype="multipart/form-data" class="module-form">
                                         <div class="modal-body">
                                             {{ form_module.hidden_tag() }}
-                        
                                             <div class="form-group">
                                                 <label for="title">Title</label>
                                                 {{ form_module.title(class="form-control", placeholder="Enter Module Title", required="required", maxlength="50", oninput="limitInputLength(this, 50, 'title-char-count')") }}
                                                 <span class="char-count" id="title-char-count">0/50</span>
                                             </div>
-                        
                                             <div class="form-group">
                                                 <label for="year">Year</label>
                                                 <select class="form-control" id="year" name="year" required>
@@ -285,15 +269,13 @@
                                                     <option value="Fourt Year">Fourt Year</option>
                                                     <option value="Grade 11">Grade 11</option>
                                                     <option value="Grade 12">Grade 12</option>
-                                                    <!-- Add other options as needed -->
+                                            
                                                 </select>
                                             </div>
-                        
                                             <div class="form-group">
                                                 <label for="course_id">Course</label>
                                                 {{ form_module.course_id(class="form-control", required="required") }}
                                             </div>
-                        
                                             <div class="form-group">
                                                 <label for="pdf_file">PDF File</label>
                                                 {{ form_module.pdf_file(class="form-control-file", required="required") }}
@@ -307,80 +289,76 @@
                                 </div>
                             </div>
                         </div>
-                        </div>
                         <!-- Button to open modal -->
-                        <button id="openModalBtn" class="btn btn-primary btn-sm create-module-btn" data-toggle="modal" data-target="#myModal">
-                            <i class="fas fa-plus-circle fa-sm mr-1"></i> Create Module
-                        </button>
-                        
-                        
-                    
-                        <!-- Table -->
-                        {% for i in range(0, modules|length, 10) %}
-                    <div class="table-responsive table-container" {% if i > 0 %} style="display: none;" {% endif %}>
-                        <table id="moduleTable" class="table table-bordered">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Year</th>
-                                    <th>Course</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr id="noResultsRow" style="display: none;">
-                                    <td colspan="9" class="text-center">No results</td>
-                                </tr>
-                                {% for module in modules[i:i+10] %}
-                                    <tr>
-                                        <td>{{ module.title }}</td>
-                                        <td>{{ module.year }}</td>
-                                        <td>{{ module.course.title }}</td>
-                                        <td>
-                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#downloadModal{{ module.id }}">
-                                                <i class="fas fa-download fa-sm mr-1"></i> Download PDF
+                        <div class="table-responsive">
+                            <!-- Table -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h6 class="m-0 font-weight-bold text-primary">List of Modules</h6>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <button id="openModalBtn" class="btn btn-primary btn-sm create-module-btn" data-toggle="modal" data-target="#myModal">
+                                                <i class="fas fa-plus-circle fa-sm mr-1"></i> Create Module
                                             </button>
-                                            
-
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="downloadModal{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="downloadModalLabel{{ module.id }}" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="downloadModalLabel{{ module.id }}">Download Module</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Are you sure you want to download the module "{{ module.title }}"?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                            <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" class="btn btn-primary" download>Yes, Download</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table id="moduleTable" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Year</th>
+                                            <th>Course</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="noResultsRow" style="display: none;">
+                                            <td colspan="4" class="text-center">No results</td>
+                                        </tr>
+                                        {% for module in modules %}
+                                            <tr>
+                                                <td>{{ module.title }}</td>
+                                                <td>{{ module.year }}</td>
+                                                <td>{{ module.course.title }}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#downloadModal{{ module.id }}">
+                                                        <i class="fas fa-download fa-sm mr-1"></i> Download PDF
+                                                    </button>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="downloadModal{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="downloadModalLabel{{ module.id }}" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="downloadModalLabel{{ module.id }}">Download Module</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Are you sure you want to download the module "{{ module.title }}"?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                    <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" class="btn btn-primary" download>Yes, Download</a>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% endfor %}
-                    <!-- Pagination -->
-                    <div class="pagination justify-content-end">
-                        <button class="btn btn-primary" id="nextBtn">
-                            <i class="fas fa-chevron-right"></i> Next
-                        </button>
-                    </div>
-                    
-                        {% endblock %}
-                    </div>
-
-                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <div class="row justify-content-end">
+                                    <div class="col-auto">
+                                        {{ pagination.links }}
+                                    </div>
+                            </div>
                         </div>
+                        {% endblock %}
                     </div>
                 </div>
                 <!-- /.container-fluid -->
@@ -391,7 +369,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto ">
-                        <span>Copyright &copy; Asia Pacific College of Bussines and Arts 2024</span>
+                        <span>Copyright &copy; Asia Pacific College of Business and Arts 2024</span>
                     </div>
                 </div>
             </footer>
@@ -401,16 +379,15 @@
         <!-- End of Content Wrapper -->
 
     </div>
+            <!-- End of Footer -->
+        <!-- End of Content Wrapper -->
     <!-- End of Page Wrapper -->
-
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -423,172 +400,79 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
-
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Bootstrap core JavaScript-->
-  <!-- Bootstrap core JavaScript-->
-  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-  <!-- Core plugin JavaScript-->
-  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-
-  <!-- Custom scripts for all pages-->
-  <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
-
-  <!-- Page level plugins -->
-  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
-
-  <!-- Page level custom scripts -->
-  <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
-
-
-</body>
-<script>
-    function filterTable() {
-    // Declare variables
-    var input, filter, table, tr, td, i, txtValue, noResultsRow;
-    input = document.getElementById("searchInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("moduleTable");
-    tr = table.getElementsByTagName("tr");
-    noResultsRow = document.getElementById("noResultsRow");
-
-    // Initially assume no results found
-    var noResults = true;
-
-    // Loop through all table rows, and hide/show based on search query
-    for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
-        td = tr[i].getElementsByTagName("td");
-        var rowMatch = false;
-        for (var j = 0; j < td.length; j++) {
-            if (td[j]) {
-                txtValue = td[j].textContent || td[j].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    rowMatch = true;
-                    noResults = false; // At least one result found
-                    break; // Break the loop if any of the columns match
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+    <!-- Page level plugins -->
+    <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+    <!-- Page level custom scripts -->
+    <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
+    <script>
+        function filterTable() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue, noResultsRow;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("moduleTable");
+            tr = table.getElementsByTagName("tr");
+            noResultsRow = document.getElementById("noResultsRow");
+            // Initially assume no results found
+            var noResults = true;
+            // Loop through all table rows, and hide/show based on search query
+            for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
+                td = tr[i].getElementsByTagName("td");
+                var rowMatch = false;
+                for (var j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowMatch = true;
+                            noResults = false; // At least one result found
+                            break; // Break the loop if any of the columns match
+                        }
+                    }
+                }
+                if (rowMatch) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
                 }
             }
-        }
-        if (rowMatch) {
-            tr[i].style.display = "";
-        } else {
-            tr[i].style.display = "none";
-        }
-    }
-
-    // Show/hide the "No results found" row based on search results
-    if (noResults) {
-        noResultsRow.style.display = ""; // Show no results row
-    } else {
-        noResultsRow.style.display = "none"; // Hide no results row
-    }
-}
-
-     document.getElementById("toggleActionsBtn").addEventListener("click", function() {
-    var actionsCells = document.querySelectorAll(".actions");
-
-    actionsCells.forEach(function(cell) {
-        cell.classList.toggle("hidden");
-    });
-});
-         document.getElementById("toggleActionsBtn").addEventListener("click", function() {
-        var table = document.getElementById("certificateTable");
-        var rows = table.getElementsByTagName("tr");
-
-        for (var i = 0; i < rows.length; i++) {
-            var cells = rows[i].getElementsByTagName("td");
-            if (cells.length > 0) { // Exclude header row
-                // Toggle the visibility of actions row
-                var actionsRow = rows[i].nextElementSibling;
-                if (actionsRow.classList.contains("actions-row")) {
-                    actionsRow.classList.toggle("hidden");
-                }
-            }
-        }
-    });
-        function limitInputLength(inputField, maxLength, charCountElementId) {
-    var charCountElement = document.getElementById(charCountElementId);
-    if (inputField.value.length > maxLength) {
-        inputField.value = inputField.value.slice(0, maxLength); // Trim input to max length
-    }
-    // Update character count display
-    charCountElement.textContent = inputField.value.length + "/" + maxLength;
-}
-           var modal = document.getElementById("myModal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("openModalBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-function openModal() {
-    modal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-function closeModal() {
-    modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-document.addEventListener("DOMContentLoaded", function () {
-            // Select the flash div
-            var flashDiv = document.querySelector(".flash");
-
-            // Function to add fade-in class
-            function fadeInFlash() {
-                flashDiv.classList.add("fade-in");
-            }
-
-            // Function to remove fade-in class after 3 seconds
-            function fadeOutFlash() {
-                setTimeout(function () {
-                    flashDiv.classList.remove("fade-in");
-                }, 3000); // 3 seconds delay
-            }
-
-            // Call the functions
-            fadeInFlash();
-            fadeOutFlash();
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-    const tables = document.querySelectorAll('.table-container');
-    let currentIndex = 0;
-
-    function showTable(index) {
-        tables.forEach((table, i) => {
-            if (i === index) {
-                table.style.display = 'block';
+            // Show/hide the "No results found" row based on search results
+            if (noResults) {
+                noResultsRow.style.display = ""; // Show no results row
             } else {
-                table.style.display = 'none';
+                noResultsRow.style.display = "none"; // Hide no results row
             }
-        });
-    }
-
-    function nextTable() {
-        currentIndex = (currentIndex + 1) % tables.length;
-        showTable(currentIndex);
-    }
-
-    document.getElementById('nextBtn').addEventListener('click', nextTable);
-});
-
- 
+        }
+        var modal = document.getElementById("myModal");
+        // Get the button that opens the modal
+        var btn = document.getElementById("openModalBtn");
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        // When the user clicks the button, open the modal 
+        function openModal() {
+            modal.style.display = "block";
+        }
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
-
+</body>
 </html>

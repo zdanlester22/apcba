@@ -106,7 +106,12 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
 
-
+            <li class="nav-item ">
+                <a class="nav-link collapsed" href="{{ url_for('announcement') }}">
+                    <i class="fas fa-fw fa-bullhorn"></i>
+                    <span>Announcement</span>
+                </a>
+            </li>
              <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('modules') }}">
@@ -249,7 +254,7 @@
                                 {% if subjects %}
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped">
-                                        <thead class="thead-dark">
+                                        <thead>
                                             <tr>
                                                 <th>Abbreviation</th>
                                                 <th>Title</th>
