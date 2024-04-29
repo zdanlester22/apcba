@@ -203,54 +203,59 @@
 
                 </nav>
                 <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
                 <div class="container-fluid">
-
+                    
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Schedule</h1>
                     </div>
-
                     <!-- Content Row -->
                     <div class="row">
-
+                    
+                        <!-- Button to open modal -->
                         <div class="table-responsive">
-                            <table class="table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Subject</th>
-                                        <th>Day of Week</th>
-                                        <th>Room</th>
-                                        <th>Start Time</th>
-                                        <th>End Time</th>
-                                        <!-- Add more headers if needed -->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for subject, schedules in subject_schedules.items() %}
-                                        {% for schedule in schedules %}
-                                            <tr>
-                                                {% if loop.index == 1 %}
-                                                    <td rowspan="{{ schedules|length }}">{{ subject.title }}</td>
-                                                {% endif %}
-                                                <td>{{ schedule.day_of_week }}</td>
-                                                <td>{{ schedule.room }}</td>
-                                                <td>{{ schedule.start_time }}</td>
-                                                <td>{{ schedule.end_time }}</td>
-                                                <!-- Add more cells if needed -->
-                                            </tr>
+                            <!-- Table -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h6 class="m-0 font-weight-bold text-primary">List of schedule</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Subject</th>
+                                            <th>Day of Week</th>
+                                            <th>Room</th>
+                                            <th>Start Time</th>
+                                            <th>End Time</th>
+                                            <!-- Add more headers if needed -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for subject, schedules in subject_schedules.items() %}
+                                            {% for schedule in schedules %}
+                                                <tr>
+                                                    {% if loop.index == 1 %}
+                                                        <td rowspan="{{ schedules|length }}">{{ subject.title }}</td>
+                                                    {% endif %}
+                                                    <td>{{ schedule.day_of_week }}</td>
+                                                    <td>{{ schedule.room }}</td>
+                                                    <td>{{ schedule.start_time }}</td>
+                                                    <td>{{ schedule.end_time }}</td>
+                                                    <!-- Add more cells if needed -->
+                                                </tr>
+                                            {% endfor %}
                                         {% endfor %}
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                            
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        
                     </div>
-
-                    </div>
-                    </div>
+                       
+            
                 </div>
                 <!-- /.container-fluid -->
             </div>

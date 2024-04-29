@@ -208,6 +208,15 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class="flash">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
                     <div class="row">
                         <div class="col-md-6 offset-md-6">
                             <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
@@ -222,81 +231,73 @@
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Modules</h1>
                     </div>
-                    
-
                     <!-- Content Row -->
-                                    <!-- Module Tables -->
-                                    {% for i in range(0, modules|length, 10) %}
-                                    <div class="table-responsive table-container" {% if i > 0 %} style="display: none;" {% endif %}>
-                                        <table id="moduleTable" class="table table-bordered">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th>Title</th>
-                                                    <th>Year</th>
-                                                    <th>Course</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr id="noResultsRow" style="display: none;">
-                                                    <td colspan="9" class="text-center">No results</td>
-                                                </tr>
-                                                {% for module in modules[i:i+10] %}
-                                                    <tr>
-                                                        <td>{{ module.title }}</td>
-                                                        <td>{{ module.year }}</td>
-                                                        <td>{{ module.course.title }}</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#downloadModal{{ module.id }}">
-                                                                <i class="fas fa-download fa-sm mr-1"></i> Download PDF
-                                                            </button>
-                                                            
-                
-                                                            <!-- Modal -->
-                                                            <div class="modal fade" id="downloadModal{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="downloadModalLabel{{ module.id }}" aria-hidden="true">
-                                                                <div class="modal-dialog" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="downloadModalLabel{{ module.id }}">Download Module</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            Are you sure you want to download the module "{{ module.title }}"?
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                            <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" class="btn btn-primary" download>Yes, Download</a>
-                                                                        </div>
-                                                                    </div>
+                    <div class="row">
+                    
+                        <!-- Button to open modal -->
+                        <div class="table-responsive">
+                            <!-- Table -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h6 class="m-0 font-weight-bold text-primary">List of Modules</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table id="moduleTable" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Year</th>
+                                            <th>Course</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="noResultsRow" style="display: none;">
+                                            <td colspan="4" class="text-center">No results</td>
+                                        </tr>
+                                        {% for module in modules %}
+                                            <tr>
+                                                <td>{{ module.title }}</td>
+                                                <td>{{ module.year }}</td>
+                                                <td>{{ module.course.title }}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#downloadModal{{ module.id }}">
+                                                        <i class="fas fa-download fa-sm mr-1"></i> Download PDF
+                                                    </button>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="downloadModal{{ module.id }}" tabindex="-1" role="dialog" aria-labelledby="downloadModalLabel{{ module.id }}" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="downloadModalLabel{{ module.id }}">Download Module</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Are you sure you want to download the module "{{ module.title }}"?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                    <a href="{{ url_for('download_module', pdf_filename=module.pdf_filename) }}" class="btn btn-primary" download>Yes, Download</a>
                                                                 </div>
                                                             </div>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    {% endfor %}
-                                    <!-- Pagination -->
-                                    <div class="pagination justify-content-end">
-                                        <button class="btn btn-primary" id="nextBtn">
-                                            <i class="fas fa-chevron-right"></i> Next
-                                        </button>
-                                    </div>
-                                    
-
-                                            
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                        </div>
                         
-                        
-                        
-                    
-                    
-
-
-
                     </div>
+                </div>
                     </div>
                 </div>
                 <!-- /.container-fluid -->
