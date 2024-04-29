@@ -91,10 +91,13 @@ class Subject(db.Model):
     title = db.Column(db.String(100), nullable=False)
     unit = db.Column(db.Integer)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))  # Added course_id column
     section = db.relationship('Section', back_populates='subjects')
+    course = db.relationship('Course', backref='subjects')  # Define the relationship with Course
     grades = db.relationship('Grades', back_populates='subject', lazy=True)
     schedules = db.relationship('Schedule', back_populates='subject', lazy=True)
     teachers = db.relationship('Teacher', secondary='subject_teacher_association', back_populates='subjects')
+
     
 
 

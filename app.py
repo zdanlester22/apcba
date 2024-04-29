@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app, session, make_response,  get_flashed_messages
+from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app, session, make_response,  get_flashed_messages, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User,TesdaEnrollies, Announcement,SeniorEnrollies, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
@@ -12,6 +12,8 @@ import os
 import requests
 from flask_mail import Mail, Message
 from collections import defaultdict
+from sqlalchemy.exc import SQLAlchemyError
+
 
 #'mysql+mysqlconnector://root:@localhost/apcba'
 #'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
@@ -1244,6 +1246,108 @@ def assign_teacher_to_subject(subject_id):
     # Render the template with the form
     return render_template('admin/assign_teacher_to_subject.html', form=form, subject=subject, teachers=teachers)
 
+
+@app.route('/admin/subject_bank', methods=['GET', 'POST'])
+@login_required
+def subject_bank():
+    if request.method == 'POST':
+        # Get form data
+        course_id = request.form.get('course_id')
+        abbreviation = request.form.get('abbreviation')
+        title = request.form.get('title')
+        unit = request.form.get('unit')
+        
+        # Create a new subject
+        subject = Subject(abbreviation=abbreviation, title=title, unit=unit, course_id=course_id)
+        
+        # Add the subject to the database
+        db.session.add(subject)
+        db.session.commit()
+        
+        flash('Subject added successfully', 'success')
+        return redirect(url_for('subject_bank'))
+
+    # Fetch all courses from the database
+    courses = Course.query.all()
+    
+    # Fetch subjects for each course
+    course_subjects = {}
+    for course in courses:
+        course_subjects[course.id] = course.subjects
+    
+    return render_template('admin/subject_bank.html', courses=courses, course_subjects=course_subjects)
+
+@app.route('/admin/subject_bank/edit/<int:subject_id>', methods=['GET', 'POST'])
+@login_required
+def edit_subject(subject_id):
+    if request.method == 'GET':
+        try:
+            # Fetch subject data from the database
+            subject = Subject.query.get_or_404(subject_id)
+            subject_data = {
+                'id': subject.id,
+                'abbreviation': subject.abbreviation,
+                'title': subject.title,
+                'unit': subject.unit
+            }
+            return jsonify(subject_data), 200
+        except SQLAlchemyError as e:
+            return jsonify({'error': str(e)}), 500
+    elif request.method == 'POST':
+        try:
+            # Fetch subject data from the database
+            subject = Subject.query.get_or_404(subject_id)
+
+            # Get JSON data from the request body
+            data = request.json
+            abbreviation = data.get('abbreviation')
+            title = data.get('title')
+            unit = data.get('unit')
+
+            # Check if abbreviation is not null
+            if not abbreviation:
+                return jsonify({'error': 'Abbreviation cannot be empty'}), 400
+            
+            # Update subject attributes
+            subject.abbreviation = abbreviation
+            subject.title = title
+            subject.unit = unit
+            
+            # Commit changes to the database
+            db.session.commit()
+            
+            flash('Subject updated successfully', 'success')
+            return jsonify({'message': 'Subject updated successfully'}), 200
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 500
+
+
+
+@app.route('/admin/subject_bank/delete/<int:subject_id>', methods=['POST'])
+@login_required
+def delete_subject(subject_id):
+    # Find the subject in the database by its ID
+    subject = Subject.query.get_or_404(subject_id)
+
+    try:
+        # Delete related schedules
+        Schedule.query.filter_by(subject_id=subject_id).delete()
+        
+        # Delete the subject from the database
+        db.session.delete(subject)
+        db.session.commit()
+        
+        flash('Subject deleted successfully', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Failed to delete subject: ' + str(e), 'error')
+
+    return redirect(url_for('subject_bank'))
+
+
+
+
 @app.route('/my_subjects', methods=['GET'])
 @login_required
 def my_subjects():
@@ -1409,7 +1513,7 @@ def update_schedule(schedule_id):
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
-    schedule = Schedule.query.first()
+    schedule = Schedule.query.first()   
     section_id = request.args.get('section_id', type=int)
     current_app.logger.info(f"section_id: {section_id}")
     

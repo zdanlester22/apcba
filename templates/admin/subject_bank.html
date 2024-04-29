@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+     <!-- Core plugin CSS -->
+     <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
+ 
+     <!-- Custom styles for this template -->
+     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+     <title>APCBA-PORTAL</title>
+
+    <!-- Custom fonts for this template-->
+    
+    <!-- Font Awesome CSS -->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <!-- Custom inline styles -->
+    <style type="text/css">
+        .bg-color{
+            background-color:#374c60 ;
+        } 
+        img{
+            width: 50px;
+        }
+        .flash {
+            position: fixed;
+            right: 0;
+            top: 0;
+            margin-top: 50px;
+            margin-right: 30px;
+            z-index: 10;
+            background-color: #374c60;
+            color: #fff;
+            border: 2px solid #374c60;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            padding: 10px;
+        }
+        .flash li{
+            list-style: none;
+            text-align: center;
+            margin-left: 10px;
+
+        }
+        .fade-in {
+            /* CSS class to fade in flash messages */
+            opacity: 1 !important; /* Override opacity to 1 */
+        }
+    
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            background-color: #374c60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-open-modal {
+            background-color: #374c60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+
+        }
+        .btn-close {
+            width: 10px;
+            cursor: pointer;
+            font-size: 25px;
+        }
+        button[type="submit"]:hover {
+            background-color: #374c63;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        /* Modal styles */
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 5px;
+        }
+        .update-btn {
+            background-color: #153448;
+            color: white;
+            border-radius: 3px;
+        }
+        .del-btn {
+            background-color: red;
+            color: white;
+            border-radius: 3px;
+        }
+
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
+                </div>
+                <div class="sidebar-brand-text mx-3">Admin</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Class Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item ">
+                <a class="nav-link collapsed" href="{{ url_for('announcement') }}">
+                    <i class="fas fa-fw fa-bullhorn"></i>
+                    <span>Announcement</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('modules') }}">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Modules</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('course') }}" >
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
+                    <i class="fas fa-folder"></i>
+                    <span>Section</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('users') }}">
+                    <i class="fas fa-fw fa-key"></i>
+                    <span>Portal Accounts</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ url_for('subject_bank') }}">
+                    <i class="fas fa-folder-open"></i>
+                    <span>Subject Bank</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Account Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Students</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{{ url_for('view_students') }}">Students Account</a>
+                        <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
+                        <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
+                        <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('view_teachers') }}" >
+                    <i class="fas fa-user"></i>
+                    <span>Teachers</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+         
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                                <img class="img-profile rounded-circle"
+                                    src="{{ url_for('static', filename='img/undraw_profile.svg') }}" alt="Profile Image">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                              
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <h1>Subject Management</h1>
+        <!-- Button to open modal -->
+        <button id="btn-open-modal" class="btn-open-modal">Add Subject
+            <i class="fa fa-plus"></i>
+        </button>
+
+        <!-- Modal -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="btn-close" id="btn-close-modal">&times;</span>
+                <h2>Add New Subject</h2>
+                <form id="add-subject-form" method="post">
+                    <label for="course_id">Select Course:</label>
+                    <select name="course_id" id="course_id">
+                        <option value="">All Courses</option>
+                        {% for course in courses %}
+                            <option value="{{ course.id }}">{{ course.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="abbreviation">Abbreviation:</label>
+                    <input type="text" id="abbreviation" name="abbreviation" required>
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" required>
+                    <label for="unit">Unit:</label>
+                    <input type="number" id="unit" name="unit" required>
+                    <button type="submit">Add Subject</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Display subjects for each course -->
+<table>
+    <thead>
+        <tr>
+            <th>Course</th>
+            <th>Abbreviation</th>
+            <th>Title</th>
+            <th>Unit</th>
+            <th>Action</th> <!-- New column for action buttons -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in courses %}
+            {% for subject in course_subjects[course.id] %}
+                <tr>
+                    <td>{{ course.title }}</td>
+                    <td>{{ subject.abbreviation }}</td>
+                    <td>{{ subject.title }}</td>
+                    <td>{{ subject.unit }}</td>
+                    <td>
+                        <button class='update-btn' onclick="editSubject({{ subject.id }})">Update</button>
+                        <button class='del-btn' onclick="deleteSubject({{ subject.id }})">Delete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal for editing subject -->
+<div class="modal" id="editSubjectModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Subject</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form id="editSubjectForm">
+                    <input type="hidden" id="editSubjectId">
+                    <label for="editAbbreviation">Abbreviation:</label>
+                    <input type="text" id="editAbbreviation" name="editAbbreviation" required>
+                    <br>
+                    <label for="editTitle">Title:</label>
+                    <input type="text" id="editTitle" name="editTitle" required>
+                    <br>
+                    <label for="editUnit">Unit:</label>
+                    <input type="number" id="editUnit" name="editUnit" required>
+                    <br>
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+        
+        
+
+                    
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto ">
+                        <span>Copyright &copy; Asia Pacific College of Business and Arts 2024</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+  <!-- Page level plugins -->
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+            // Select the flash div
+            var flashDiv = document.querySelector(".flash");
+
+            // Function to add fade-in class
+            function fadeInFlash() {
+                flashDiv.classList.add("fade-in");
+            }
+
+            // Function to remove fade-in class after 3 seconds
+            function fadeOutFlash() {
+                setTimeout(function () {
+                    flashDiv.classList.remove("fade-in");
+                }, 3000); // 3 seconds delay
+            }
+
+            // Call the functions
+            fadeInFlash();
+            fadeOutFlash();
+        });
+  </script>
+  <!-- JavaScript for modal functionality -->
+  <!-- JavaScript for modal functionality -->
+  <script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btnOpenModal = document.getElementById("btn-open-modal");
+
+    // Get the <span> element that closes the modal
+    var btnCloseModal = document.getElementById("btn-close-modal");
+
+    // When the user clicks the button, open the modal
+    btnOpenModal.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    btnCloseModal.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+<script>
+    function deleteSubject(subjectId) {
+    // Display a confirmation dialog
+    if (confirm('Are you sure you want to delete this subject?')) {
+        // Send a POST request to delete the subject
+        fetch(`/admin/subject_bank/delete/${subjectId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                // You can include additional data if needed
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                // Remove the table row corresponding to the deleted subject
+                const row = document.getElementById(`subjectRow_${subjectId}`);
+                if (row) {
+                    row.remove();
+                }
+                // Show a success message or perform any other action
+
+                // Reload the page after a very short delay
+                setTimeout(() => {
+                    location.reload();
+                }, ); // Adjust the delay as needed (100 milliseconds in this example)
+            } else {
+                // Handle error response
+                console.error('Error:', response.statusText);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
+</script>
+<script>
+    function editSubject(subjectId) {
+    // Send a GET request to fetch the subject data
+    fetch(`/admin/subject_bank/edit/${subjectId}`)
+        .then(response => response.json())
+        .then(data => {
+            // Populate the form fields with the subject data
+            document.getElementById('editSubjectId').value = data.id;
+            document.getElementById('editAbbreviation').value = data.abbreviation;
+            document.getElementById('editTitle').value = data.title;
+            document.getElementById('editUnit').value = data.unit;
+
+            // Show the edit subject modal
+            $('#editSubjectModal').modal('show');
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Submit the form to edit subject
+document.getElementById('editSubjectForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Get form data
+    const subjectId = document.getElementById('editSubjectId').value;
+    const abbreviation = document.getElementById('editAbbreviation').value;
+    const title = document.getElementById('editTitle').value;
+    const unit = document.getElementById('editUnit').value;
+
+    // Send a POST request to edit the subject
+    fetch(`/admin/subject_bank/edit/${subjectId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            abbreviation: abbreviation,
+            title: title,
+            unit: unit
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            // Hide the modal after successful update
+            $('#editSubjectModal').modal('hide');
+            // Reload the page after a very short delay
+            setTimeout(() => {
+                location.reload();
+            }, 100); // Adjust the delay as needed (100 milliseconds in this example)
+        } else {
+            // Handle error response
+            console.error('Error:', response.statusText);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+</script>
+</body>
+
+</html>
