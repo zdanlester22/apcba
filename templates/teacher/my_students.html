@@ -242,7 +242,7 @@
                                 <tbody>
                                     {% for student in enrolled_students %}
                                     <tr>
-                                        <td>{{ student.name }}</td>
+                                        <td>{{ student.last_name }}</td>
                                         {% if grades.get(student.id) %}
                                         <!-- Display grades if available -->
                                         <td>{{ grades[student.id].period_1 }}</td>

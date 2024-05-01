@@ -70,6 +70,13 @@ class Certificate(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
+section_subject_association = db.Table(
+    'section_subject_association',
+    db.Column('section_id', db.Integer, db.ForeignKey('sections.id')),
+    db.Column('subject_id', db.Integer, db.ForeignKey('subject.id'))
+)
+
+
 class Section(db.Model):
     __tablename__ = 'sections'
     id = db.Column(db.Integer, primary_key=True)
@@ -81,8 +88,8 @@ class Section(db.Model):
     is_archived = db.Column(db.Boolean, default=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.teacher_id'))
     teacher = db.relationship('Teacher', back_populates='section', uselist=False)
-    subjects = db.relationship('Subject', back_populates='section', lazy=True) 
     enrollments = db.relationship('Enrollment', backref='section', lazy=True)
+    subjects = db.relationship('Subject', secondary=section_subject_association, back_populates='sections', lazy='dynamic')  # Establish many-to-many relationship with Subject
 
 
 class Subject(db.Model):
@@ -90,13 +97,12 @@ class Subject(db.Model):
     abbreviation = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     unit = db.Column(db.Integer)
-    section_id = db.Column(db.Integer, db.ForeignKey('sections.id'))
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))  # Added course_id column
-    section = db.relationship('Section', back_populates='subjects')
-    course = db.relationship('Course', backref='subjects')  # Define the relationship with Course
-    grades = db.relationship('Grades', back_populates='subject', lazy=True)
-    schedules = db.relationship('Schedule', back_populates='subject', lazy=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))  # Foreign key to link Subject with Course
+    course = db.relationship('Course', backref='subjects')  # Relationship to access Course from Subject
+    grades = db.relationship('Grades', back_populates='subject', lazy=True)  # Relationship with Grades
+    schedules = db.relationship('Schedule', back_populates='subject', lazy=True)  # Relationship with Schedule
     teachers = db.relationship('Teacher', secondary='subject_teacher_association', back_populates='subjects')
+    sections = db.relationship('Section', secondary=section_subject_association, back_populates='subjects', lazy='dynamic')  # Establish many-to-many relationship with Section
 
     
 

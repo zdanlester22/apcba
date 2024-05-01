@@ -251,7 +251,7 @@
                                                     </tr>
                                                     {% for enrollment in enrollments %}
                                                     <tr>
-                                                      <td style=" border: 1px solid #dee2e6;">{{ enrollment.enrolled_student_rel.name }}</td>
+                                                      <td style=" border: 1px solid #dee2e6;">{{ enrollment.enrolled_student_rel.first_name }}</td>
                                                       <td style=" border: 1px solid #dee2e6;">{{ enrollment.enrolled_course_rel.title }}</td>
                                                       <td style=" border: 1px solid #dee2e6;">{{ enrollment.enrolled_section_rel.name }}</td>
                                                       <td style=" border: 1px solid #dee2e6;">{{ enrollment.year }}</td>

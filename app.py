@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash,  send_file,  send_from_directory, current_app, session, make_response,  get_flashed_messages, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
-from models import db, User,TesdaEnrollies, Announcement,SeniorEnrollies, Certificate, UserAccount, Course, Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
+from models import db, User,TesdaEnrollies, Announcement,SeniorEnrollies, Certificate, UserAccount, Course,section_subject_association ,Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
 from forms import LoginForm,  AnnouncementForm ,TesdaEnrolliesForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm, FilterForm, SeniorEnrolliesForm, SectionForm, ChangePasswordForm
 from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, AssignTeacherToSubjectForm,  Period1Form, Period2Form, Period3Form, ScheduleForm, RegistrationForm, CommentForm
 from datetime import datetime
@@ -1149,6 +1149,7 @@ def manage_section():
 
     sections = sections_query.all()
     courses = Course.query.all()
+    serialized_courses = [{'id': course.id, 'title': course.title, 'semesters': course.semesters} for course in courses]
     form_section.course_id.choices = [(course.id, course.title) for course in courses]
     teachers = Teacher.query.all()
     form_section.set_teacher_choices(teachers)
@@ -1164,6 +1165,13 @@ def manage_section():
             teacher_id=selected_teacher_id
         )
 
+        # Fetch all subjects related to the chosen course
+        selected_course = Course.query.get(form_section.course_id.data)
+        subjects = selected_course.subjects
+
+        # Associate all fetched subjects with the new section
+        new_section.subjects.extend(subjects)
+
         db.session.add(new_section)
         db.session.commit()
         flash('Section created successfully!', 'success')
@@ -1171,7 +1179,7 @@ def manage_section():
         # Redirect to the same page to clear the form fields
         return redirect(url_for('manage_section'))
 
-    return render_template('admin/manage_section.html', sections=sections, courses=courses,
+    return render_template('admin/manage_section.html', sections=sections, courses=serialized_courses,
                            form_section=form_section, form_subject=form_subject)
 
 @app.route('/archive_section/<int:section_id>', methods=['POST'])
@@ -1241,7 +1249,8 @@ def assign_teacher_to_subject(subject_id):
             flash('Teacher not found!', 'error')
 
         # Redirect to the view_subjects route with both section_id and course_id parameters
-        return redirect(url_for('view_subjects', section_id=subject.section_id))
+        return redirect(url_for('view_subjects', section_id=subject.sections[0].id, course_id=subject.course_id))
+
 
     # Render the template with the form
     return render_template('admin/assign_teacher_to_subject.html', form=form, subject=subject, teachers=teachers)
@@ -1347,7 +1356,6 @@ def delete_subject(subject_id):
 
 
 
-
 @app.route('/my_subjects', methods=['GET'])
 @login_required
 def my_subjects():
@@ -1358,17 +1366,18 @@ def my_subjects():
     teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
     if teacher:
         subjects = teacher.subjects
-        
+
         # Group subjects by their sections
         subjects_by_section = defaultdict(list)
         for subject in subjects:
-            subjects_by_section[subject.section].append(subject)
-        
+            for section in subject.sections:
+                subjects_by_section[section].append(subject)
+
         return render_template('teacher/my_subjects.html', subjects_by_section=subjects_by_section)
     else:
         flash('You are not assigned to teach any subjects.', 'warning')
         return redirect(url_for('dashboard'))
-    
+
 @app.route('/my_schedule', methods=['GET'])
 @login_required
 def my_schedule():
@@ -1383,18 +1392,21 @@ def my_schedule():
         # Group subjects by their sections
         subjects_by_section = defaultdict(list)
         for subject in subjects:
-            subjects_by_section[subject.section].append(subject)
+            for section in subject.sections:
+                subjects_by_section[section].append(subject)
 
         # Retrieve schedules for the subjects
         schedules_by_subject = {}
         for subject in subjects:
-            schedules = Schedule.query.filter_by(subject_id=subject.id).all()
-            schedules_by_subject[subject] = schedules
+            for section in subject.sections:
+                schedules = Schedule.query.filter_by(subject_id=subject.id).all()
+                schedules_by_subject[subject] = schedules
 
         return render_template('teacher/my_schedule.html', subjects_by_section=subjects_by_section, schedules_by_subject=schedules_by_subject)
     else:
         flash('You are not assigned to teach any subjects.', 'warning')
         return redirect(url_for('dashboard'))
+
     
 @app.route('/subject/<int:subject_id>/my_students', methods=['GET'])
 @login_required
@@ -1411,7 +1423,11 @@ def my_students(subject_id):
 
     # Retrieve the enrolled students for the subject's section
     enrolled_students = Student.query.join(Enrollment).filter(
-        Enrollment.section_id == subject.section_id
+        Enrollment.section_id.in_(
+            db.session.query(section_subject_association.c.section_id).filter(
+                section_subject_association.c.subject_id == subject_id
+            )
+        )
     ).all()
 
     # Fetch grades for the enrolled students in the specified subject
@@ -1435,7 +1451,6 @@ def my_students(subject_id):
     form3 = Period3Form()  # Instantiate Period3Form
 
     return render_template('teacher/my_students.html', subject=subject, enrolled_students=enrolled_students, grades=grades, final_grades_formatted=final_grades_formatted, form1=form1, form2=form2, form3=form3)
-
 
 from sqlalchemy import and_
 
@@ -1472,7 +1487,8 @@ def add_schedule(subject_id):
             flash('An error occurred while adding the schedule. Please try again later.', 'error')
 
         # Redirect to the subjects page after adding the schedule
-        return redirect(url_for('view_subjects', section_id=subject.section_id))
+        return redirect(url_for('view_subjects', section_id=subject.sections[0].id, course_id=subject.course_id))
+
 
     return render_template('admin/add_schedule.html', subject=subject, form=form)
 
@@ -1518,8 +1534,13 @@ def view_subjects():
     current_app.logger.info(f"section_id: {section_id}")
     
     section = Section.query.get(section_id)
-    subjects = Subject.query.filter_by(section_id=section_id).all()
+    
+    # Fetch subjects associated with the section using the many-to-many relationship
+    subjects = Subject.query.join(section_subject_association).filter(
+        section_subject_association.c.section_id == section_id
+    ).all()
 
+    # Fetch schedules for each subject
     for subject in subjects:
         subject.schedules = Schedule.query.filter_by(subject_id=subject.id).all()
 
@@ -1528,6 +1549,7 @@ def view_subjects():
     form = ScheduleForm()
     
     return render_template('admin/view_subjects.html', subjects=subjects, section=section, form=form, schedule=schedule)
+
 
 
 
@@ -1613,7 +1635,7 @@ def enroll():
         form.course_id.choices = [(course.id, course.title) for course in courses]
 
     if sections:
-        form.section_id.choices = [(section.id, section.first_name) for section in sections]
+        form.section_id.choices = [(section.id, section.name) for section in sections]
 
 
     students = Student.query.all()

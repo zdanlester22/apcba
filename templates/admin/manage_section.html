@@ -301,10 +301,25 @@ h2 {
                                 {{ form_section.capacity(class="form-control", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
                                 <span class="char-count" id="capacity-char-count">0/2</span>
                             </div>
+
+                            <div class="form-group">
+                                <label for="semester" class="form-control-label">Semester</label>
+                                <select name="semester" id="semester" class="form-control" onchange="updateCourses()">
+                                    <option value="">All Semesters</option>
+                                    <option value="1st Semester">1st Semester</option>
+                                    <option value="2nd Semester">2nd Semester</option>
+                                </select>
+                            </div>
                     
                             <div class="form-group">
                                 <label for="course_id" class="form-control-label">Course</label>
-                                {{ form_section.course_id(class="form-control") }}
+                                <select name="course_id" id="course_id" class="form-control">
+                                    {% for course in courses %}
+                                        {% if course.semester == selected_semester %}
+                                            <option value="{{ course.id }}">{{ course.title }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="teacher_id" class="form-control-label">Teacher</label>
@@ -349,9 +364,6 @@ h2 {
                                 <i class="fas fa-calendar-alt"></i> Schedule
                             </button>
                         </form>
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addSubjectModal{{ section.id }}"style="margin-right: 5px;">
-                            <i class="fas fa-plus"></i> Subject
-                        </button>
                         <form action="{{ url_for('archive_section', section_id=section.id) }}" method="post" onsubmit="return confirm('Are you sure you want to archive this section?');">
                             <button type="submit" class="btn btn-danger btn-sm">
                                 <i class="fas fa-archive"></i> Archive
@@ -360,39 +372,7 @@ h2 {
                     </div>
     
                     
-                    <!-- Modal -->
-                    <div class="modal fade" id="addSubjectModal{{ section.id }}" tabindex="-1" role="dialog" aria-labelledby="addSubjectModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="addSubjectModalLabel">Add Subject to {{ section.name }}</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Form for adding subjects -->
-                                    <form method="POST" action="{{ url_for('add_subject') }}">
-                                        {{ form_subject.hidden_tag() }}
-                                        <input type="hidden" name="section_id" value="{{ section.id }}">
-                                        <div class="form-group">
-                                            <label for="abbreviation">Abbreviation:</label>
-                                            <input type="text" class="form-control" id="abbreviation" name="abbreviation" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="title">Title:</label>
-                                            <input type="text" class="form-control" id="title" name="title" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="unit">Unit:</label>
-                                            <input type="number" class="form-control" id="unit" name="unit" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Add Subject</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        
                 </td>
             </tr>
             {% endfor %}
@@ -535,6 +515,21 @@ function filterTable() {
         noResultsRow.style.display = "none"; // Hide no results row
     }
 }
+
+function updateCourses() {
+        var semester = document.getElementById("semester").value;
+        var courseDropdown = document.getElementById("course_id");
+        var courses = {{ courses | tojson }};
+        courseDropdown.innerHTML = "";
+        courses.forEach(function(course) {
+            if (course.semester == semester || semester === "") {
+                var option = document.createElement("option");
+                option.value = course.id;
+                option.text = course.title;
+                courseDropdown.add(option);
+            }
+        });
+    }
     </script>
 
 </html>

@@ -81,7 +81,7 @@ class SubjectForm(FlaskForm):
     abbreviation = StringField('Abbreviation', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
     unit = IntegerField('Unit', validators=[DataRequired()])
-    section_id = IntegerField('Section ID', validators=[DataRequired()])
+    course_id = SelectField('Course', coerce=int, validators=[DataRequired()])
 
     
 class FilterForm(FlaskForm):
