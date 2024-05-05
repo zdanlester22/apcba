@@ -8,11 +8,16 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
 from flask_paginate import Pagination, get_page_parameter
+from datetime import datetime, timedelta
 import os
 import requests
 from flask_mail import Mail, Message
 from collections import defaultdict
 from sqlalchemy.exc import SQLAlchemyError
+from models import User
+import pytz
+import secrets
+
 
 
 #'mysql+mysqlconnector://root:@localhost/apcba'
@@ -22,12 +27,10 @@ app.config['SECRET_KEY'] = 'somethingdan'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587  # Use port 587 for TLS
-app.config['MAIL_USERNAME'] = 'nicssanyo@gmail.com'
-app.config['MAIL_PASSWORD'] = 'sanaymagisa24'
+app.config['MAIL_USERNAME'] = 'aega.salipsip.au@phinmaed.com'
+app.config['MAIL_PASSWORD'] = 'pjzaibiickmobfoe'
 app.config['MAIL_USE_TLS'] = True  # Use TLS
 app.config['MAIL_USE_SSL'] = False  # Not using SSL
-
-
 
 db.init_app(app)
 mail = Mail(app)
@@ -88,6 +91,124 @@ def login():
 
     return render_template('web/login.html', form=form)
 
+#/////////////////////FORGOT PASSWORD ROUTE/////////////////////
+def generate_verification_code():
+    # Generate a random 6-digit verification code
+    return str(secrets.randbelow(10**6)).zfill(6)
+
+# Function to generate and send verification code via email
+def send_verification_code(email, code):
+    msg = Message('Verification Code', sender='aega.salipsip.au@phinmaed.com', recipients=[email])
+    msg.body = f'Your verification code is: {code}'
+    mail.send(msg)
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    email_registered = True  # Assume email is registered by default
+
+    if request.method == 'POST':
+        email = request.form['email']
+        # Check if the email exists in the database
+        user = User.query.filter_by(email=email).first()
+        if user:
+            # Email exists in the database
+            # Generate verification code
+            verification_code = generate_verification_code()
+            # Store the verification code in the session
+            session['verification_code'] = verification_code
+            session['email'] = email  # Store the email in session for verification
+            # Send verification code via email
+            send_verification_code(email, verification_code)
+            return redirect(url_for('enter_code'))
+        else:
+            # Email is not registered, set email_registered to False
+            email_registered = False
+
+    return render_template('web/forgot_password.html', email_registered=email_registered)
+#//////GENERATING CODE FUNC//////////
+def generate_code():
+    # Code to generate and send code via email
+    pass
+#//////////RESENDING CODE///////////
+@app.route('/resend_code', methods=['POST'])
+def resend_code():
+    # Code to resend the code
+    generate_code()  # Call the function to generate and send the code
+    session['code_sent_time'] = datetime.now(pytz.utc)  # Update the code sent time with timezone information
+    return redirect(url_for('enter_code'))
+
+expiration_time = 5  # in minutes
+
+@app.route('/enter_code', methods=['GET', 'POST'])
+def enter_code():
+    expiration_time = 5  # in minutes, adjust as needed
+
+    if request.method == 'POST':
+        # Process the form submission and verify the entered code
+        entered_code = request.form['code']
+        # Code to verify the entered code
+        if entered_code == session.get('verification_code'):
+            # Redirect user to their specific role page
+            return redirect(url_for('change_password'))
+        else:
+            # Handle incorrect code entry
+            return render_template('web/enter_code.html', error='Incorrect code')
+
+    # Check if the code has expired
+    if 'code_sent_time' in session:
+        code_sent_time = session['code_sent_time']
+        expiration_datetime = code_sent_time + timedelta(minutes=expiration_time)
+        if datetime.now(pytz.utc) > expiration_datetime:
+            # Code has expired, generate and send a new one
+            generate_verification_code()
+            session['code_sent_time'] = datetime.now(pytz.utc)
+            # Redirect to the enter_code route to render the updated form
+            return redirect(url_for('enter_code'))
+
+    else:
+        # No code has been sent yet, generate and send one  
+        generate_verification_code()
+        session['code_sent_time'] = datetime.now(pytz.utc)
+
+    return render_template('web/enter_code.html')
+
+# Route to change password
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    form = ChangePasswordForm()  # Assuming you have a form defined for changing password
+    error_message = None  # Initialize error message variable
+
+    if request.method == 'POST' and form.validate_on_submit():
+        # Process the form submission and change the password  
+        new_password = form.new_password.data
+        confirm_password = form.confirm_password.data
+        if new_password != confirm_password:
+            error_message = 'Passwords do not match'
+        else:
+            try:
+                # Update password in the database
+                email = session.get('email')
+                if email:
+                    user = User.query.filter_by(email=email).first()  
+                    if user:
+                        user.password = new_password
+                        db.session.commit()
+                        flash('Password updated successfully!', 'success')
+                        return redirect(url_for('login'))  # Redirect to the login page after successful password change
+                    else:
+                        error_message = "User not found."
+                else:
+                    error_message = "Email not found in session."
+            except Exception as e:
+                # Handle any exceptions that occur during the commit process
+                error_message = f"An error occurred while updating the password: {str(e)}"
+
+    # If the form was not submitted or validation failed, include the form and any error message in the template
+    return render_template('web/change_password.html', form=form, error=error_message)
+
+#//////////END CODE VERIFICATION////////////////////////
+
+#//////////DASHBOARD ROUTE////////////
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -106,6 +227,8 @@ def dashboard():
     elif current_user.role == 'student':
         # Render student dashboard
         return render_template('student/student_announcement.html', user=user)
+
+#/////////////////////////////END/////////////////////////
 
 
     
@@ -189,7 +312,6 @@ def student_change_password():
         return redirect(url_for('dashboard'))
     
     return render_template('student/student_change_password.html', form=form)
-
 
 @app.route('/teacher/teacher_change_password', methods=['GET', 'POST'])
 @login_required

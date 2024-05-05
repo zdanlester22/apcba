@@ -21,7 +21,7 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     suffix = db.Column(db.String(10))
     email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     role = db.Column(db.String(10), nullable=False)
 
     # Establishing a one-to-one relationship with user_account
