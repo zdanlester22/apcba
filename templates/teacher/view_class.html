@@ -241,8 +241,6 @@
                                                       <th class="custom-th">Course Title</th>
                                                       <th class="custom-th">Section Name</th>
                                                       <th class="custom-th">Year</th>
-                                        
-                                                      <th class="custom-th">Action</th>
                                                     </tr>
                                                   </thead>
                                                   <tbody>
@@ -256,16 +254,6 @@
                                                       <td style=" border: 1px solid #dee2e6;">{{ enrollment.enrolled_section_rel.name }}</td>
                                                       <td style=" border: 1px solid #dee2e6;">{{ enrollment.year }}</td>
                                               
-                                                      <td style=" border: 1px solid #dee2e6;">
-                                                        <form action="{{ url_for('student_details', student_id=enrollment.student_id) }}" method="GET">
-                                                            <button type="submit" class="btn btn-primary btn-sm">
-                                                                <i class="far fa-eye"></i> Grades
-                                                            </button>
-                                                        </form>
-                                                        
-                                                        
-                                                        </form>
-                                                      </td>
                                                     </tr>
                                                     {% endfor %}
                                                   </tbody>

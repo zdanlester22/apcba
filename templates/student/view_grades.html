@@ -234,14 +234,13 @@
                                     <div class="col-md-12">
                                         {% for enrollment in enrollments %}
                                             <div class="info-section">
-                                                <h4>Student: {{ student.name }}</h4>
+                                                <h4>Student: {{ student.last_name }}</h4>
                                                 <table class="table table-bordered">
                                                     <thead class="thead-dark">
                                                         <tr>
                                                             <th>Course</th>
                                                             <th>Section</th>
                                                             <th>Semester</th>
-                                                            <th>School Year</th>
                                                             <th>Year</th>
                                                             <th>Class</th>
                                                             <th>Adviser</th>
@@ -252,7 +251,6 @@
                                                             <td>{{ enrollment.enrolled_course_rel.title }}</td>
                                                             <td>{{ enrollment.enrolled_section_rel.name }}</td>
                                                             <td>{{ enrollment.enrolled_course_rel.semesters }}</td>
-                                                            <td>{{ enrollment.enrolled_course_rel.school_year }}</td>
                                                             <td>{{ enrollment.enrolled_course_rel.year }}</td>
                                                             <td>{{ enrollment.enrolled_course_rel.Class }}</td>
                                                             <td>{{ enrollment.enrolled_section_rel.teacher.first_name }}</td>
@@ -289,7 +287,11 @@
                                                                         <td>{{ grade.period_2 }}</td>
                                                                         <td>{{ grade.period_3 }}</td>
                                                                         <td>{{ "%0.2f"|format(grade.final_grade|float) }}</td>
-                                                                        <td>{{ "Passed" if grade.is_passed is defined and grade.is_passed else "Failed" if grade.is_passed is defined and not grade.is_passed else "N/A" }}</td>
+                                                                        {% if grade.period_1 and grade.period_2 and grade.period_3 %}
+                                                                            <td>{{ "Passed" if grade.is_passed else "Failed" }}</td>
+                                                                        {% else %}
+                                                                            <td>N/A</td>
+                                                                        {% endif %}
                                                                     {% endfor %}
                                                                 {% else %}
                                                                     <td>N/A</td>
@@ -302,6 +304,7 @@
                                                         {% endfor %}
                                                     {% endfor %}
                                                 </tbody>
+                                                
                                             </table>
                                         {% endfor %}
                                     </div>

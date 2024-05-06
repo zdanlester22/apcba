@@ -221,90 +221,93 @@ td{
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
+                <div class="container">
+                
                     <div class="row">
-                        <div class="col-md-6 offset-md-6">
-                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Archived Enrollees</h1>
-
-                    </div>
-                    
-
-                    <!-- Content Row -->
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <table id="collegeTable" class="table enrollies-table">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Middle Name</th>
-                                            <th>Last Name</th>
-                                            <th>Suffix</th>
-                                            <th>Email</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr id="noResultsRow" style="display: none;">
-                                            <td colspan="9" class="text-center">No results</td>
-                                        </tr>
-                                        {% for enrollies in archived_enrollies_list %}
-                                        <tr>
-                                            <td>{{ enrollies.first_name }}</td>
-                                                <td>{{ enrollies.middle_name }}</td>
-                                                <td>{{ enrollies.last_name }}</td>
-                                                <td>{{ enrollies.suffix }}</td>
-                                            <td>{{ enrollies.email }}</td>
-                                            <td>
-                            
-                                                <button class="btn btn-info btn-sm show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">
-                                                    <i class="fas fa-info-circle"></i> Show Info
-                                                </button>
+                                           <div class="col-md-6 offset-md-6">
+                                               <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                                   <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                                   <div class="input-group-append">
+                                                       <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       </div>
+                                       <!-- Page Heading -->
+                                       <h1 class="h3 mb-2 text-gray-800">Enrollment COLLEGE</h1>
+                                       
+                                       
+                                       
+                                       <!-- DataTales Example -->
+                                       <div class="card shadow mb-4">
+                                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                            <h6 class="m-0 font-weight-bold text-primary">Accepted Enrollment List</h6>
+                                        </div>
+                                            
+                                        
+                                           <div class="card-body">
+                                               <div class="table-responsive">
+                                                   <table id="courseTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>First Name</th>
+                                                            <th>Middle Name</th>
+                                                            <th>Last Name</th>
+                                                            <th>Suffix</th>
+                                                            <th>Email</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr id="noResultsRow" style="display: none;">
+                                                            <td colspan="9" class="text-center">No results</td>
+                                                        </tr>
+                                                        {% for enrollies in archived_enrollies_list %}
+                                                        <tr>
+                                                            <td>{{ enrollies.first_name }}</td>
+                                                                <td>{{ enrollies.middle_name }}</td>
+                                                                <td>{{ enrollies.last_name }}</td>
+                                                                <td>{{ enrollies.suffix }}</td>
+                                                            <td>{{ enrollies.email }}</td>
+                                                            <td>
+                                            
+                                                                <button class="btn btn-info btn-sm show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">
+                                                                    <i class="fas fa-info-circle"></i> Show Info
+                                                                </button>
+                                                                
+                                                            </td>
+                                                        </tr>
+                                                        <!-- Hidden additional info for each enrollie -->
+                                                        <tr id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
+                                                            <td colspan="3">
+                                                                <strong>Name:</strong> {{ enrollies.name }}<br>
+                                                                <strong>Year:</strong> {{ enrollies.year }}<br>
+                                                                <strong>Course:</strong> {{ enrollies.track_strand }}<br>
+                                                                <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
+                                                                <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
+                                                                <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
+                                                                <strong>Gender:</strong> {{ enrollies.gender }}<br>
+                                                                <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
+                                                                <strong>Religion:</strong> {{ enrollies.religion }}<br>
+                                                                <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
+                                                                <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
+                                                                <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
+                                                                <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
+                                                                <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
+                                                                <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
+                                                                <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
                                                 
-                                            </td>
-                                        </tr>
-                                        <!-- Hidden additional info for each enrollie -->
-                                        <tr id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
-                                            <td colspan="3">
-                                                <strong>Name:</strong> {{ enrollies.name }}<br>
-                                                <strong>Year:</strong> {{ enrollies.year }}<br>
-                                                <strong>Course:</strong> {{ enrollies.track_strand }}<br>
-                                                <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
-                                                <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
-                                                <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
-                                                <strong>Gender:</strong> {{ enrollies.gender }}<br>
-                                                <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
-                                                <strong>Religion:</strong> {{ enrollies.religion }}<br>
-                                                <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
-                                                <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
-                                                <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
-                                                <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
-                                                <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
-                                                <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
-                                                <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                                                </div>
+                                                
+                                                   </div>
+                                               </div>
                     
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div id="myModal" class="modal fade" role="dialog">
                         <div class="modal-dialog">
                             <!-- Modal content -->
@@ -326,19 +329,17 @@ td{
             </div>
             <!-- End of Main Content -->
 
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto ">
-                        <span>Copyright &copy; Asia Pacific College of Bussines and Arts 2024</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+          
 
         </div>
         <!-- End of Content Wrapper -->
-
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto ">
+                    <span>Copyright &copy; Asia Pacific College of Bussines and Arts 2024</span>
+                </div>
+            </div>
+        </footer>
     </div>
     <!-- End of Page Wrapper -->
 
@@ -367,7 +368,6 @@ td{
             </div>
         </div>
     </div>
-
     <!-- Bootstrap core JavaScript-->
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>

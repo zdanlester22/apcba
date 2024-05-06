@@ -246,7 +246,7 @@
                                             </tr>
                                             {% for enrollment in enrollments %}
                                             <tr>
-                                                <td>{{ enrollment.enrolled_student_rel.name }}</td>
+                                                <td>{{ enrollment.enrolled_student_rel.last_name }} {{ enrollment.enrolled_student_rel.first_name }} {{ enrollment.enrolled_student_rel.middle_name }},{{ enrollment.enrolled_student_rel.suffix }}</td>
                                                 <td>{{ enrollment.enrolled_course_rel.title }}</td>
                                                 <td>{{ enrollment.enrolled_section_rel.name }}</td>
                                                 <td>{{ enrollment.year }}</td>

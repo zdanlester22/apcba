@@ -390,9 +390,8 @@ def senior_enrollies():
 
 @app.route('/admin/view_senior_enrollies')
 def view_senior_enrollies():
-    user_name = current_user.name
     enrollies_list = SeniorEnrollies.query.filter_by(is_archived=False).all()
-    return render_template('admin/view_senior_enrollies.html', enrollies_list=enrollies_list, user_name=user_name)
+    return render_template('admin/view_senior_enrollies.html', enrollies_list=enrollies_list)
 
 
 
@@ -1930,49 +1929,6 @@ def compute_grade(grade):
         grade.is_passed = False
 
 
-@app.route('/student_details/<int:student_id>', methods=['GET', 'POST'])
-@login_required
-def student_details(student_id):
-    student = Student.query.get_or_404(student_id)
-    enrolled_subjects = {}
-    subjects = []
-    grades = {}
-
-    # Fetch enrolled subjects for the specified student
-    existing_enrollments = Enrollment.query.filter_by(student_id=student_id).all()
-    for enrollment in existing_enrollments:
-        section_id = enrollment.section_id
-        enrolled_subjects[student_id] = Subject.query.filter_by(section_id=section_id).all()
-        subjects += enrolled_subjects[student_id]
-
-    # Fetch grades for the specified student
-    student_grades = Grades.query.filter_by(student_id=student_id).all()
-    for grade in student_grades:
-        grades[grade.subject_id] = {
-            'period_1': grade.period_1,
-            'period_2': grade.period_2,
-            'period_3': grade.period_3,
-            'final_grade': grade.final_grade,
-            'is_passed': grade.is_passed
-        }
-
-    # Format final grades
-    final_grades_formatted = {}
-    for subject_id, grade_info in grades.items():
-        final_grade = grade_info['final_grade']
-        if final_grade is not None:
-            final_grades_formatted[subject_id] = "{:.2f}".format(float(final_grade))
-        else:
-            final_grades_formatted[subject_id] = ""
-
-    form1 = Period1Form()  # Instantiate Period1Form
-    form2 = Period2Form()  # Instantiate Period2Form
-    form3 = Period3Form()  # Instantiate Period3Form
-
-    return render_template('teacher/student_details.html', student=student, enrolled_subjects=enrolled_subjects.get(student_id, []), grades=grades, subjects=subjects, student_id=student_id, form1=form1, form2=form2, form3=form3, final_grades_formatted=final_grades_formatted)
-
-
-
 
 @app.route('/grades/student_view', methods=['GET'])
 @login_required
@@ -1997,7 +1953,7 @@ def student_view_grades():
         # Loop through each teacher
         for teacher in teachers:
             # Get the teacher's name
-            teacher_name = teacher.name
+            teacher_name = f"{teacher.last_name} {teacher.middle_name} {teacher.first_name} {teacher.suffix}".strip()
 
             # Get the subjects taught by the teacher
             subjects_taught = [subject.title for subject in teacher.subjects]
@@ -2008,6 +1964,7 @@ def student_view_grades():
         return render_template('student/view_grades.html', student=student, grades=grades, enrollments=enrollments, teacher_subjects=teacher_subjects)
     else:
         return redirect(url_for('dashboard'))
+
 
 ###############################################################################################################################################################
 @app.route('/student/view_schedule', methods=['GET'])
