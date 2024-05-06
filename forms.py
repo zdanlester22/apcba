@@ -68,7 +68,6 @@ class UserAccountForm(FlaskForm):
 class CourseForm(FlaskForm):
     abbreviation = StringField('Abbreviation', validators=[DataRequired()])
     title = StringField('Title Name', validators=[DataRequired()])
-    school_year = StringField('School Year', validators=[DataRequired()])
     year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
     year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
     Class = StringField('Class', validators=[DataRequired()])

@@ -229,8 +229,24 @@
                 <form id="enrollmentForm" method="post" action="{{ url_for('tesda_enrollies') }}" enctype="multipart/form-data">
                         {{ form.hidden_tag() }}
                         <div>
-                            <label for="name">Your Name <span class="required" autocomplete="off">*</span></label>
-                            {{ form.name(placeholder='Enter your full name', required=True) }}
+                            <label for="first_name">First Name <span class="required" autocomplete="off">*</span></label>
+                            {{ form.first_name(placeholder='Enter your first name', required=True) }}
+                        </div>
+    
+                        <div>
+                            <label for="middle_name">Middle Name</label>
+                            {{ form.middle_name(placeholder='Enter your middle name') }}
+                        </div>
+                        
+                        <div>
+                            <label for="last_name">Last Name <span class="required" autocomplete="off">*</span></label>
+                            {{ form.last_name(placeholder='Enter your last name', required=True) }}
+                        </div>
+                        
+                        
+                        <div>
+                            <label for="suffix">Suffix</label>
+                            {{ form.suffix(placeholder='Enter your suffix') }}
                         </div>
                         <div>
                             <label for="email">Email Address <span class="required">*</span></label>

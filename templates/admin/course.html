@@ -35,6 +35,9 @@
 
     <!-- Custom inline styles -->
     <style type="text/css">
+         .sortable {
+        color: #6c757d; /* Gray color */
+    }
         .bg-color{
             background-color:#374c60 ;
         }
@@ -255,9 +258,7 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Course</h1>
-                    </div>
+        
                     <div class="row">
                         <div class="flash">
                             {% with messages = get_flashed_messages() %}
@@ -269,69 +270,127 @@
                             {% endwith %}
                         </div>
                     </div>
-                    <!-- Content Row -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <button type="button" class="btn btn-primary btn-sm add-course-btn" data-toggle="modal" data-target="#add-course-modal">
-                                    <i class="fas fa-plus"></i> Add Course
-                                </button>
-                                
-                                <div class="input-group mb-3" style="width: 300px; margin-left: 70%; margin-top: -38px;">
-                                    <input type="text"  id="courseSearch" class="form-control" placeholder="Search...">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Course Title</th>
-                                            <th>Abbreviation</th>
-                                            <th>School Year</th>
-                                            <th>Year</th>
-                                            <th>Class</th>
-                                            <th>Semesters</th>
-                                            <th>Course Type</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr id="noResultsRow" style="display: none;">
-                                            <td colspan="9" class="text-center">No results</td>
-                                        </tr>
-                                        {% for course in courses %}
-                                        <tr>
-                                            <td>{{ course.title }}</td>
-                                            <td>{{ course.abbreviation }}</td>
-                                            <td>{{ course.school_year }}</td>
-                                            <td>{{ course.year }}</td>
-                                            <td>{{ course.Class }}</td>
-                                            <td>{{ course.semesters }}</td>
-                                            <td>{{ course.course_type }}</td>
-                                            <td>{{ 'Active' if course.is_active else 'Inactive' }}</td>
-                                            <td>
-                                                <!-- Buttons for actions -->
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn btn-primary btn-sm center-text" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">
-                                                        <i class="fas fa-edit"></i> Update
-                                                    </a>
+                    <div class="container-fluid">
+                        <div class="row">
+                                               <div class="col-md-6 offset-md-6">
+                                                   <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                                       <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                                       <div class="input-group-append">
+                                                           <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                           <!-- Page Heading -->
+                                           <h1 class="h3 mb-2 text-gray-800">Courses</h1>
+                                           
+                                           
+                                           <!-- DataTales Example -->
+                                           <div class="card shadow mb-4">
+                                            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                                <h6 class="m-0 font-weight-bold text-primary">Course List</h6>
+                                                <div class="form-group mb-0">
+                                                    <button type="button" class="btn btn-primary btn-sm add-course-btn" data-toggle="modal" data-target="#add-course-modal">
+                                                        <i class="fas fa-plus"></i> Add Course
+                                                    </button>
                                                 </div>
-
-                                                
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
+                                            </div>
+                                            
+                                               <div class="card-body">
+                                                   <div class="table-responsive">
+                                                       <table id="courseTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="sortable" data-sort="title">
+                                                                    <div>
+                                                                        Course Title
+                                                                        <i class="fas fa-sort sort-icon"></i>
+                                                                    </div>
+                                                                </th>
+                                                                <th class="sortable" data-sort="abbreviation">
+                                                                    <div>
+                                                                        Abbreviation
+                                                                        <i class="fas fa-sort sort-icon"></i>
+                                                                    </div>
+                                                                </th>
+                                                                <th class="sortable" data-sort="year">
+                                                                    <div>
+                                                                        Year
+                                                                        <i class="fas fa-sort sort-icon"></i>
+                                                                    </div>
+                                                                </th>
+                                                                <th class="sortable" data-sort="Class">
+                                                                    <div>
+                                                                        Class
+                                                                        <i class="fas fa-sort sort-icon"></i>
+                                                                    </div>
+                                                                </th>
+                                                                <th class="sortable" data-sort="semesters">
+                                                                    <div>
+                                                                        Semesters
+                                                                        <i class="fas fa-sort sort-icon"></i>
+                                                                    </div>
+                                                                </th>
+                                                                <th class="sortable" data-sort="course_type">
+                                                                    <div>
+                                                                        Type
+                                                                        <i class="fas fa-sort sort-icon"></i>
+                                                                    </div>
+                                                                </th>
+                                                                <th class="sortable" data-sort="is_active">
+                                                                    <div>
+                                                                        Status
+                                                                        <i class="fas fa-sort sort-icon"></i>
+                                                                    </div>
+                                                                </th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                            
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr id="noResultsRow" style="display: none;">
+                                                                <td colspan="9" class="text-center">No results</td>
+                                                            </tr>
+                                                            {% for course in courses %}
+                                                            <tr>
+                                                                <td>{{ course.title }}</td>
+                                                                <td>{{ course.abbreviation }}</td>
+                                                                <td>{{ course.year }}</td>
+                                                                <td>{{ course.Class }}</td>
+                                                                <td>{{ course.semesters }}</td>
+                                                                <td>{{ course.course_type }}</td>
+                                                                <td>{{ 'Active' if course.is_active else 'Inactive' }}</td>
+                                                                <td>
+                                                                    <!-- Buttons for actions -->
+                                                                    <div class="btn-group" role="group">
+                                                                        <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn btn-primary btn-sm center-text" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">
+                                                                            <i class="fas fa-edit"></i> Update
+                                                                        </a>
+                                                                    </div>
+                    
+                                                                    
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                    <p>Showing {{ courses|length }} out of {{ pagination.total }} courses</p>
+                                                    <div class="row justify-content-end">
+                                                        <div class="col-auto">
+                                                            {% if pagination %}
+                                                                {{ pagination.links }}
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       
+                                       </div>
+                    <!-- Content Row -->
+                    
                 <!-- /.container-fluid -->
             </div>
             <div class="modal fade" id="deleteCourseModal" tabindex="-1" role="dialog" aria-labelledby="deleteCourseModalLabel" aria-hidden="true">
@@ -389,9 +448,6 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                {{ form_course.school_year.label }} {{ form_course.school_year(class="form-control") }}
-                            </div>
                             <div class="form-group">
                                 {{ form_course.semesters.label }} {{ form_course.semesters(class="form-control") }}
                             </div>
@@ -465,27 +521,65 @@
         </div>
     </div>
 
-    <!-- Bootstrap core JavaScript-->
-  <!-- Bootstrap core JavaScript-->
-  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+ <!-- Bootstrap core JavaScript-->
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-  <!-- Core plugin JavaScript-->
-  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<!-- Core plugin JavaScript-->
+<script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
-  <!-- Custom scripts for all pages-->
-  <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+<!-- Chart.js -->
+<script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
 
-  <!-- Page level plugins -->
-  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+<!-- Custom scripts for all pages-->
+<script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
 
-  <!-- Page level custom scripts -->
-  <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
+<!-- Page level custom scripts -->
+<script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+<script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
 
 
 </body>
 <script>
+    function filterTable() {
+        var input, filter, table, tr, td, i, txtValue, noResultsRow;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("courseTable");
+        tr = table.getElementsByTagName("tr");
+        noResultsRow = document.getElementById("noResultsRow");
+
+        // Initially assume no results found
+        var noResults = true;
+
+        // Loop through all table rows, including those in hidden pages
+        for (i = 1; i < tr.length; i++) { // Start from index 1 to skip the header row
+            td = tr[i].getElementsByTagName("td");
+            var rowMatch = false;
+            for (var j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rowMatch = true;
+                        noResults = false; // At least one result found
+                        break; // Break the loop if any of the columns match
+                    }
+                }
+            }
+            if (rowMatch) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+
+        // Show/hide the "No results found" row based on search results
+        if (noResults) {
+            noResultsRow.style.display = ""; // Show no results row
+        } else {
+            noResultsRow.style.display = "none"; // Hide no results row
+        }
+    }
         $(document).ready(function() {
         $('#courseSearch').on('keyup', function() {
             var query = $(this).val().toLowerCase();
@@ -616,6 +710,63 @@
         var modal = document.getElementById('subject-modal');
         modal.style.display = 'block';
     }
+
+    $(document).ready(function() {
+        $('.sortable').click(function() {
+            var column = $(this).index();
+            var order = $(this).hasClass('asc') ? 'desc' : 'asc';
+
+            // Remove asc/desc class from all headers except the clicked one
+            $('.sortable').removeClass('asc desc');
+            $(this).addClass(order);
+
+            // Sort table rows based on the selected column
+            var $table = $(this).closest('table');
+            var rows = $table.find('tbody > tr').get();
+            rows.sort(function(a, b) {
+                var keyA = $(a).find('td:eq(' + column + ')').text().toUpperCase();
+                var keyB = $(b).find('td:eq(' + column + ')').text().toUpperCase();
+                if (order == 'asc') {
+                    return (keyA < keyB) ? -1 : (keyA > keyB) ? 1 : 0;
+                } else {
+                    return (keyA > keyB) ? -1 : (keyA < keyB) ? 1 : 0;
+                }
+            });
+
+            // Reorder the table rows
+            $.each(rows, function(index, row) {
+                $table.children('tbody').append(row);
+            });
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        const headers = document.querySelectorAll(".sortable");
+
+        headers.forEach(header => {
+            header.addEventListener("click", function() {
+                const sortIcon = this.querySelector(".sort-icon");
+                resetSortIcons();
+                if (sortIcon.classList.contains("fa-sort") || sortIcon.classList.contains("fa-sort-down")) {
+                    sortIcon.classList.remove("fa-sort");
+                    sortIcon.classList.remove("fa-sort-down");
+                    sortIcon.classList.add("fa-sort-up");
+                } else {
+                    sortIcon.classList.remove("fa-sort-up");
+                    sortIcon.classList.add("fa-sort-down");
+                }
+                // Your sorting logic goes here
+            });
+        });
+
+        function resetSortIcons() {
+            const allIcons = document.querySelectorAll(".sort-icon");
+            allIcons.forEach(icon => {
+                icon.classList.remove("fa-sort-up");
+                icon.classList.remove("fa-sort-down");
+                icon.classList.add("fa-sort");
+            });
+        }
+    });
     </script>
 
 </html>

@@ -462,22 +462,25 @@ def view_tesda_enrollies():
 def enrollies():
     form = EnrolliesForm()
     
+    # Get courses filtered by course_type and semester
+    course = request.args.get('course_title')
+    courses_college_semester = Course.query.filter_by(course_type='college', semesters='1st semester').all()
+    
     if form.validate_on_submit():
         existing_application = Enrollies.query.filter_by(email=form.email.data).first()
         
         if existing_application:
             flash('This email is already used.', 'error')
-            return render_template('web/enrollies.html', form=form)
+            return render_template('web/enrollies.html', form=form, courses_college_semester=courses_college_semester)
             
         try:
-    
             new_enrollies = Enrollies(
                 first_name=form.first_name.data,
                 middle_name=form.middle_name.data,
                 last_name=form.last_name.data,
                 suffix=form.suffix.data,
                 email=form.email.data,
-                track_strand=form.track_strand.data,
+                track_strand=course,  # Set track and strand to course title
                 year=form.year.data,
                 address=form.address.data,
                 contact_number=form.contact_number.data,
@@ -506,7 +509,7 @@ def enrollies():
             app.logger.error(f"Error during enrollment: {str(e)}")
 
     enrollies_list = Enrollies.query.all()
-    return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list)
+    return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list, courses_college_semester=courses_college_semester)
 
 #########
 @app.route('/admin/accepeted_enrollie_SHS/<int:enrollie_id>')
@@ -516,7 +519,10 @@ def archive_enrollie_shs(enrollie_id):
     if enrollie:
         try:
             user = User(
-                name=enrollie.name,
+                first_name=enrollie.first_name,
+                middle_name=enrollie.middle_name,
+                last_name=enrollie.last_name,
+                suffix=enrollie.suffix,
                 password=enrollie.date_of_birth,
                 email=enrollie.email,
                 role='student'
@@ -526,7 +532,10 @@ def archive_enrollie_shs(enrollie_id):
 
             student = Student(
                 student_id=user.id,
-                name=enrollie.name
+                first_name=enrollie.first_name,
+                middle_name=enrollie.middle_name,
+                last_name=enrollie.last_name,
+                suffix=enrollie.suffix,
             )
             db.session.add(student)
             db.session.commit()
@@ -534,7 +543,10 @@ def archive_enrollie_shs(enrollie_id):
             # Create a UserAccount entry
             user_account = UserAccount(
                 user_id=user.id,
-                name=enrollie.name,
+                first_name=enrollie.first_name,
+                middle_name=enrollie.middle_name,
+                last_name=enrollie.last_name,
+                suffix=enrollie.suffix,
                 email=enrollie.email,
                 track_strand=enrollie.track_strand,
                 year=enrollie.year,
@@ -571,7 +583,10 @@ def archive_enrollie_tesda(enrollie_id):
     if enrollie:
         try:
             user = User(
-                name=enrollie.name,
+                first_name=enrollie.first_name,
+                middle_name=enrollie.middle_name,
+                last_name=enrollie.last_name,
+                suffix=enrollie.suffix,
                 password=enrollie.date_of_birth,
                 email=enrollie.email,
                 role='student'
@@ -581,7 +596,10 @@ def archive_enrollie_tesda(enrollie_id):
 
             student = Student(
                 student_id=user.id,
-                name=enrollie.name
+                first_name=enrollie.first_name,
+                middle_name=enrollie.middle_name,
+                last_name=enrollie.last_name,
+                suffix=enrollie.suffix,
             )
             db.session.add(student)
             db.session.commit()
@@ -589,7 +607,10 @@ def archive_enrollie_tesda(enrollie_id):
              # Create a UserAccount entry
             user_account = UserAccount(
                 user_id=user.id,
-                name=enrollie.name,
+                first_name=enrollie.first_name,
+                middle_name=enrollie.middle_name,
+                last_name=enrollie.last_name,
+                suffix=enrollie.suffix,
                 email=enrollie.email,
                 track_strand=enrollie.track_strand,
                 year=enrollie.year,
@@ -1207,15 +1228,13 @@ def teacher_account():
 @app.route('/courses', methods=['GET', 'POST'])
 @login_required
 def course():
-    
     form_course = CourseForm()
-    
+
     if form_course.validate_on_submit():
         new_course = Course(
             course_type=form_course.course_type.data,
             abbreviation=form_course.abbreviation.data,
             title=form_course.title.data,
-            school_year=form_course.school_year.data,
             year=form_course.year.data,
             Class=form_course.Class.data,
             semesters=form_course.semesters.data,
@@ -1225,10 +1244,18 @@ def course():
         db.session.commit()
         flash('Course created successfully!', 'success')
         return redirect(url_for('course'))
-    
-    courses = Course.query.all()
 
-    return render_template('admin/course.html', courses=courses, form_course=form_course)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 8
+    offset = (page - 1) * per_page
+
+    # Assuming Course is your SQLAlchemy model
+    total_courses = Course.query.count()
+    courses = Course.query.offset(offset).limit(per_page).all()
+
+    pagination = Pagination(page=page, per_page=per_page, total=total_courses, css_framework='bootstrap4')
+
+    return render_template('admin/course.html', courses=courses, form_course=form_course, pagination=pagination)
 
 
 @app.route('/update_course/<int:course_id>', methods=['GET', 'POST'])
@@ -1241,7 +1268,6 @@ def update_course(course_id):
         course.course_type = form.course_type.data
         course.abbreviation = form.abbreviation.data
         course.title = form.title.data
-        course.school_year = form.school_year.data
         course.year = form.year.data
         course.Class = form.Class.data
         course.semesters = form.semesters.data

@@ -253,7 +253,6 @@ class Course(db.Model):
     title = db.Column(db.String(100), nullable=False)
     Class = db.Column(db.String(100))
     year = db.Column(db.String(20), nullable=False)
-    school_year = db.Column(db.String(20), nullable=False)
     semesters = db.Column(db.String(20), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     sections = db.relationship('Section', back_populates='course', lazy=True)
