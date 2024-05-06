@@ -90,11 +90,12 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+
         }
         .btn-open-modal {
             background-color: #374c60;
             color: white;
-            padding: 10px 20px;
+            padding: 5px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -132,14 +133,19 @@
             border-radius: 5px;
         }
         .update-btn {
-            background-color: #153448;
+            background-color: #a29c24;
             color: white;
             border-radius: 3px;
+            border: none;
         }
         .del-btn {
-            background-color: red;
+            background-color: rgb(190, 32, 32);
             color: white;
             border-radius: 3px;
+            border: none;
+        }
+        .sj{
+            margin-right: 600px;
         }
 
     </style>
@@ -309,13 +315,12 @@
 
                 </nav>
                 <!-- End of Topbar -->
-
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <h1>Subject Management</h1>
+                    <h3 class="sj">Subject Management</h3>
         <!-- Button to open modal -->
-        <button id="btn-open-modal" class="btn-open-modal">Add Subject
-            <i class="fa fa-plus"></i>
+        <button id="btn-open-modal" class="btn-open-modal">
+            <i class="fa fa-plus"></i>Add Subject
         </button>
 
         <!-- Modal -->
@@ -363,8 +368,13 @@
                     <td>{{ subject.title }}</td>
                     <td>{{ subject.unit }}</td>
                     <td>
-                        <button class='update-btn' onclick="editSubject({{ subject.id }})">Update</button>
-                        <button class='del-btn' onclick="deleteSubject({{ subject.id }})">Delete</button>
+                        <button class='update-btn' onclick="editSubject({{ subject.id }})">
+                            <i class="fas fa-edit"></i> Update
+                        </button>
+                        
+                        <button class='del-btn' onclick="deleteSubject({{ subject.id }})">
+                            <i class="fas fa-trash-alt"></i> Archive
+                        </button>
                     </td>
                 </tr>
             {% endfor %}
@@ -408,6 +418,8 @@
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
+            </div>
+            
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">

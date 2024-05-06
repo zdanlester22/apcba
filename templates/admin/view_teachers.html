@@ -235,8 +235,10 @@
                                                        <table id="teacherTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                                         <thead>
                                                             <tr>
-                                                                <th>Teacher ID</th>
-                                                                <th>Name</th>
+                                                                <th hidden>Teacher ID</th>
+                                                                <th>LAST NAME</th>
+                                                                <th>FIRST NAME</th>
+                                                                <th>MIDDLE NAME</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -245,8 +247,10 @@
                                                             </tr>
                                                             {% for teacher in teachers %}
                                                                 <tr>
-                                                                    <td>{{ teacher.teacher_id }}</td>
-                                                                    <td>{{ teacher.last_name}} {{ teacher.first_name}} {{ teacher.middle_name}}, </td>
+                                                                    <td hidden>{{ teacher.teacher_id }}</td>
+                                                                    <td style="text-transform: uppercase;">{{ teacher.last_name}}</td>
+                                                                    <td style="text-transform: uppercase;">{{ teacher.first_name}}</td>
+                                                                    <td style="text-transform: uppercase;"> {{ teacher.middle_name}}</td>
                                                                 </tr>
                                                             {% endfor %}
                                                         </tbody>

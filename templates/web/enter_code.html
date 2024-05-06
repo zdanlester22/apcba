@@ -39,7 +39,7 @@
             width: 100%; /* Occupy 100% of the screen */
             text-align: center;
             margin-top: 10px;
-            max-width: 400px; /* Maximum width for larger screens */
+            max-width: 445px; /* Maximum width for larger screens */
             font-family: Montserrat, sans-serif;
         }
         .flash {
@@ -190,21 +190,23 @@
                 color: red;
             }
             #timer {
-            font-size: 18px;
+            font-size: 25px;
             color: gray;
             margin-top: 7px;
         }
         #resendButton {
-            background-color: #374c60;
-            color: #fff;
+            
+            color: #333     ;
             border: none;
             border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 10px;
+            font-size: 13px;
             cursor: pointer;
+            font-family: Montserrat, sans-serif;
+            margin-top: 10px;
         }
         #resendButton:disabled {
-            background-color: #ccc;
+            background-color: #fff;
             color: #666;
             cursor: not-allowed;
         }
@@ -224,7 +226,7 @@
             <input type="text" id="code" name="code" placeholder="Enter Code" required>
             <input type="submit" value="Submit">
             <div id="timer">5:00</div>
-            <button id="resendButton" onclick="resendCode()" {% if disableResend %} disabled {% endif %}>Resend Code</button>
+            <button id="resendButton" onclick="resendCode()" {% if disableResend %} disabled {% endif %}>Didn't receive the code? Send again</button>
         </form>
     </div>
     <script>

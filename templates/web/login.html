@@ -213,18 +213,18 @@
         <div class="input-container">
             <label for="username">{{ form.email.label }}</label>
             <img src="{{ url_for('static', filename='images/uname.png') }}" alt="Username Icon">
-            {{ form.email(required=True, placeholder='Enter your username', autocomplete="off") }}
+            {{ form.email(required=True, placeholder='Enter your email', autocomplete="off") }}
         </div>
         <div class="input-container">
             <label for="password">{{ form.password.label }}</label>
             <img src="{{ url_for('static', filename='images/pass.png') }}" alt="Password Icon">
-            {{ form.password(required=True, placeholder='Enter your password') }}
+            {{ form.password(required=True, placeholder='Enter your birthday, ex. "xxxx-xx-xx"') }}
             <div class="show-password" onclick="togglePasswordVisibility(this)">
                 <img src="{{ url_for('static', filename='images/eye.jpg') }}">
             </div>
         </div>
         <div style="text-align: left; margin-left: 34px;">
-            <a href="{{ url_for('forgot_password') }}" style="color: #376c60; font-size: 14px; text-decoration: none;">Forgot Password?</a>
+            <a href="{{ url_for('forgot_password') }}" style="color: #376c60; font-size: 10px; text-decoration: none; display: flex; justify-content: center; margin-right: 40px; margin-top: 10px; color: rgb(199, 35, 35);">Forgot Password? Click here</a>
         </div>        
         <div class="g-recaptcha" style="margin-top: 15px; margin-left: 49px; border-radius: 10px;" data-sitekey="6Lf1m5opAAAAACuFrI-andY3rMJNXKa9koczy2Oa"></div>
         <!-- "Forgot Password" link -->

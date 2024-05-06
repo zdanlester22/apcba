@@ -279,7 +279,7 @@ td{
                                                         <!-- Hidden additional info for each enrollie -->
                                                         <tr id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
                                                             <td colspan="3">
-                                                                <strong>Name:</strong> {{ enrollies.name }}<br>
+                                                                <strong>Name:</strong> {{ enrollies.first_name }}&nbsp;{{ enrollies.middle_name }}&nbsp;{{ enrollies.last_name }}&nbsp;{{ enrollies.suffix }}<br>
                                                                 <strong>Year:</strong> {{ enrollies.year }}<br>
                                                                 <strong>Course:</strong> {{ enrollies.track_strand }}<br>
                                                                 <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
