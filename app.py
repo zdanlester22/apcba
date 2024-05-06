@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash,  se
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User,TesdaEnrollies, Announcement,SeniorEnrollies, Certificate, UserAccount, Course,section_subject_association ,Subject, Section,Teacher,Student, Module, Comment, Enrollment, Enrollies, Grades, Schedule
-from forms import LoginForm,  AnnouncementForm ,TesdaEnrolliesForm, CertificateForm, UpdateUserForm, UserAccountForm, CourseForm, SubjectForm, FilterForm, SeniorEnrolliesForm, SectionForm, ChangePasswordForm
+from forms import LoginForm,  AnnouncementForm ,TesdaEnrolliesForm, CertificateForm, UpdateUserForm, ForgetpasswordForm, UserAccountForm, CourseForm, SubjectForm, FilterForm, SeniorEnrolliesForm, SectionForm, ChangePasswordForm
 from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, EnrollmentForm, EnrolliesForm, AssignTeacherToSubjectForm,  Period1Form, Period2Form, Period3Form, ScheduleForm, RegistrationForm, CommentForm
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -175,7 +175,7 @@ def enter_code():
 # Route to change password
 @app.route('/change_password', methods=['GET', 'POST'])
 def change_password():
-    form = ChangePasswordForm()  # Assuming you have a form defined for changing password
+    form = ForgetpasswordForm()  # Assuming you have a form defined for changing password
     error_message = None  # Initialize error message variable
 
     if request.method == 'POST' and form.validate_on_submit():

@@ -226,9 +226,9 @@
         <div style="text-align: left; margin-left: 34px;">
             <a href="{{ url_for('forgot_password') }}" style="color: #376c60; font-size: 14px; text-decoration: none;">Forgot Password?</a>
         </div>        
-        {{ form.submit() }}
         <div class="g-recaptcha" style="margin-top: 15px; margin-left: 49px; border-radius: 10px;" data-sitekey="6Lf1m5opAAAAACuFrI-andY3rMJNXKa9koczy2Oa"></div>
         <!-- "Forgot Password" link -->
+        {{ form.submit() }}
     </form>
     <script>
          document.addEventListener("DOMContentLoaded", function () {

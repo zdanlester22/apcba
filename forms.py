@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, SelectField, Boolea
 from wtforms.validators import DataRequired,Optional,Email
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.fields import StringField, SubmitField, IntegerField, DateField, TextAreaField
-from wtforms.validators import DataRequired, NumberRange, Length, InputRequired
+from wtforms.validators import DataRequired, NumberRange, Length, InputRequired, EqualTo
 from wtforms.fields import FloatField, TimeField
 
 
@@ -286,3 +286,8 @@ class AssignTeacherToSubjectForm(FlaskForm):
     
     def set_teacher_choices(self, teachers):
         self.teacher_id.choices = [(teacher.id, teacher.first_name) for teacher in teachers]
+
+class ForgetpasswordForm(FlaskForm):
+    new_password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password', message='Passwords must match')])
+    submit = SubmitField('Change Password')
