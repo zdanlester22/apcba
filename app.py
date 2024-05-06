@@ -1711,9 +1711,12 @@ def modules():
     # Calculate total count for pagination
     total_modules_count = Module.query.count()
 
+    # Extract distinct years from the modules
+    years = list(set([module.year for module in modules]))
+
     pagination = Pagination(page=page, per_page=per_page, total=total_modules_count, css_framework='bootstrap4')
     
-    return render_template('admin/modules.html', form_module=form_module, modules=modules, pagination=pagination)
+    return render_template('admin/modules.html', form_module=form_module, modules=modules, pagination=pagination, courses=courses, years=years)
 
 
 @app.route('/student/modules', methods=['GET'])

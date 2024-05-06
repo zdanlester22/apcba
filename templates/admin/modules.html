@@ -64,6 +64,12 @@
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
+        .filter-course {
+            margin-bottom: 10px;
+        }
+        .input-group{
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -230,15 +236,39 @@
                         {% endwith %}
                     </div>
                     <div class="row">
-                        <div class="col-md-6 offset-md-6">
-                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="col-md-6 mt-2">
+        <div class="input-group mt-4">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+            <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 filter-course">
+        <div class="form-group">
+            <label for="courseFilter">Filter by Course:</label>
+            <select class="form-control" id="courseFilter" onchange="filterTable()">
+                <option value="">All Courses</option>
+                <!-- Populate options dynamically with courses -->
+                {% for course in courses %}
+                    <option value="{{ course.title }}">{{ course.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="yearFilter">Filter by Year:</label>
+            <select class="form-control" id="yearFilter" onchange="filterTable()">
+                <option value="">All Year</option>
+                <!-- Populate options dynamically with years -->
+                {% for year in years %}
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>         
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Modules</h1>
@@ -313,6 +343,7 @@
                                 </div>
                                 <table id="moduleTable" class="table table-bordered">
                                     <thead>
+                                        
                                         <tr>
                                             <th>Title</th>
                                             <th>Year</th>
@@ -480,5 +511,63 @@
             }
         }
     </script>
+    <!-- Add the JavaScript code at the end of your HTML body -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listener for course filter
+        document.getElementById("courseFilter").addEventListener("change", filterTable);
+        
+        // Add event listener for year filter
+        document.getElementById("yearFilter").addEventListener("change", filterTable);
+
+        // Add event listener for search input
+        document.getElementById("searchInput").addEventListener("input", filterTable);
+    });
+
+    function filterTable() {
+        var input, filter, table, tr, td, i, txtValue, noResultsRow;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("moduleTable");
+        tr = table.getElementsByTagName("tr");
+        noResultsRow = document.getElementById("noResultsRow");
+
+        // Get selected course title and year
+        var courseFilter = document.getElementById("courseFilter").value.toUpperCase();
+        var yearFilter = document.getElementById("yearFilter").value.toUpperCase();
+
+        var noResults = true;
+
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            var rowMatch = false;
+            for (var j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (
+                        (txtValue.toUpperCase().indexOf(filter) > -1) &&
+                        (courseFilter === "" || td[2].textContent.toUpperCase().indexOf(courseFilter) > -1) &&
+                        (yearFilter === "" || td[1].textContent.toUpperCase().indexOf(yearFilter) > -1)
+                    ) {
+                        rowMatch = true;
+                        noResults = false;
+                        break;
+                    }
+                }
+            }
+            if (rowMatch) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+
+        if (noResults) {
+            noResultsRow.style.display = "";
+        } else {
+            noResultsRow.style.display = "none";
+        }
+    }
+</script>
 </body>
 </html>
