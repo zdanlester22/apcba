@@ -62,6 +62,10 @@
             /* CSS class to fade in flash messages */
             opacity: 1 !important; /* Override opacity to 1 */
         }
+        .col-xl-7 {
+            margin-left: 25px;
+        }
+     
     </style>
 </head>
 
@@ -195,6 +199,7 @@
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Portal V1.0</h5>
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -235,7 +240,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <h1 class="h4 mb-0 text-gray-800">Dashboard</h1>
                     </div>
                     <div class="row">
                         <div class="flash">
@@ -304,22 +309,26 @@
                         </div>
                         
                         <!-- Section Card -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2"> <!-- Changed the border-left color to purple -->
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1"> <!-- Changed the text color to purple -->
-                                                Section</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ section_count }}</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        
+                        {# 
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-info shadow h-100 py-2"> <!-- Changed the border-left color to purple -->
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1"> <!-- Changed the text color to purple -->
+                                                    Section</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ section_count }}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </div> 
+                        #}
+                        
                         
                             <div class="col-xl-3 col-md-6 mb-4">
                                 <div class="card border-left-primary shadow h-100 py-2">
@@ -337,6 +346,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {# 
                             <div class="col-xl-3 col-md-6 mb-4">
                                 <div class="card border-left-success shadow h-100 py-2">
                                     <div class="card-body">
@@ -353,6 +364,8 @@
                                     </div>
                                 </div>
                             </div>
+                        #}
+                        
                             
                         
                         
@@ -361,24 +374,11 @@
                 </div>
                 <!-- Pie Chart -->
                 <div class="row">
-                    <div class="col-xl-4 col-lg-5">
-                        <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Active Students</h6>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <div class="mt-4 text-center small">
-                                    <canvas id="studentPieChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div class="col-xl-7">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Enrollment by Year</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Yearly Student Portal Admission</h6>
                             </div>
                             <div class="card-body">
                                 <h4 class="small font-weight-bold">Grade 11<span class="float-right">{{ grade_11_count }}</span></h4>
@@ -410,6 +410,22 @@
                                 <div class="progress mb-4">
                                     <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ (fourth_year_count / student_count) * 1 }}%; max-width: 400px;"
                                         aria-valuenow="{{ (fourth_year_count / student_count) * 1 }}" aria-valuemin="0" aria-valuemax="1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-4 col-lg-5">
+                        <div class="card shadow mb-4" style="width: 407px; height: 420px;">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Active Students</h6>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body" style="padding: 20px;">
+                                <div class="mt-4 text-center small">
+                                    <canvas id="studentPieChart"></canvas>
                                 </div>
                             </div>
                         </div>

@@ -209,7 +209,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Students Enrolled in {{ subject.title }}</h1>
+                        <h2 class="h4 mb-0 text-gray-700">Students Enrolled in {{ subject.title }}</h2>
 
                     </div>
 
@@ -242,7 +242,7 @@
                                 <tbody>
                                     {% for student in enrolled_students %}
                                     <tr>
-                                        <td>{{ student.last_name }}</td>
+                                        <td>{{ student.first_name}} {{ student.last_name }}</td>
                                         {% if grades.get(student.id) %}
                                             <!-- Display grades if available -->
                                             <td>{{ grades[student.id].period_1 }}</td>
@@ -255,39 +255,48 @@
                                                 <td>{{ "Passed" if grades[student.id].is_passed else "Failed" }}</td>
                                             {% else %}
                                                 <!-- Display "N/A" if any of the period grades are missing -->
+                                                
                                                 <td>N/A</td>
+                                                
                                             {% endif %}
                                         {% else %}
+                                       
                                             <!-- Display placeholder if grades are not available -->
                                             <td colspan="6">Grades not available</td>
                                         {% endif %}
-                                    </tr>
-                                   <!-- Button trigger modal -->
+
+                                        <td>
                                             <button type="button" class="btn btn-primary" data-toggle="modal"
                                                 data-target="#gradeModal{{ student.id }}">
                                                 Grade
                                             </button>
+                                            </td>
+                                    </tr>
+                                   <!-- Button trigger modal -->
+                             
                     
                                             <!-- Modal -->
                                             <div class="modal fade" id="gradeModal{{ student.id }}" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel{{ student.id }}" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="gradeModalLabel{{ student.id }}">Grades for {{ student.name }}</h5>
+                                                            <h5 class="modal-title" id="gradeModalLabel{{ student.id }}">Grades for {{ student.first_name}} {{ student.last_name }}</h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
-                                                        <div class="modal-body d-flex justify-content-between">
+                                                        <div class="modal-body d-flex-grid justify-content-between" >
                                                             <!-- Form for Period 1 -->
-                                                            <form method="POST" action="{{ url_for('add_grades_period1', student_id=student.id) }}" class="flex-fill mr-3">
+                                                            <form method="POST" action="{{ url_for('add_grades_period1', student_id=student.id) }}" class="grid-fill mr-3">
                                                                 {{ form1.hidden_tag() }}
                                                                 <input type="hidden" name="subject_id" value="{{ subject.id }}">
                                                      
                                                                 <div class="form-group">
-                                                                    {{ form1.period_1.label }}: {{ form1.period_1(size=10, class="form-control") }}
-                                                                </div>
-                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                                    {{ form1.period_1.label }}: {{ form1.period_1(size=10, class="form-control", placeholder="Enter the 1st period grade") }}
+
+                                                                </div>   
+                                                    
+                                                                <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;">Submit</button>
                                                             </form>
                                                             <!-- Form for Period 2 -->
                                                             <form method="POST" action="{{ url_for('add_grades_period2', student_id=student.id) }}" class="flex-fill mx-3">
@@ -295,9 +304,9 @@
                                                                 <input type="hidden" name="subject_id" value="{{ subject.id }}">
                                                     
                                                                 <div class="form-group">
-                                                                    {{ form2.period_2.label }}: {{ form2.period_2(size=10, class="form-control") }}
+                                                                    {{ form2.period_2.label }}: {{ form2.period_2(size=10, class="form-control", placeholder="Enter the 2nd period grade") }}
                                                                 </div>
-                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                                <button type="submit" class="btn btn-primary"style="margin-bottom: 10px;">Submit</button>
                                                             </form>
                                                             <!-- Form for Period 3 -->
                                                             <form method="POST" action="{{ url_for('add_grades_period3', student_id=student.id) }}" class="flex-fill ml-3">
@@ -305,9 +314,9 @@
                                                                 <input type="hidden" name="subject_id" value="{{ subject.id }}">
                                       
                                                                 <div class="form-group">
-                                                                    {{ form3.period_3.label }}: {{ form3.period_3(size=10, class="form-control") }}
+                                                                    {{ form3.period_3.label }}: {{ form3.period_3(size=10, class="form-control", placeholder="Enter the 3rd period grade") }}
                                                                 </div>
-                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                                <button type="submit" class="btn btn-primary" style="margin-bottom: 10px;">Submit</button>
                                                             </form>
                                                         </div>
                                                     </div>

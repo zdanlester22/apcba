@@ -241,7 +241,7 @@
 
                     <!-- Page Heading -->
                     <div class="container">
-                        <h1>Add Schedule for {{ subject.title }}</h1>
+                        <h4>Add Schedule for {{ subject.title }}</h4>
                         <form method="POST" action="{{ url_for('add_schedule', subject_id=subject.id) }}">
                             {{ form.csrf_token }}
                             <!-- Your form fields -->

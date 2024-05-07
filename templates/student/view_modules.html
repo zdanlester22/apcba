@@ -163,6 +163,7 @@
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Student Portal V1.0</h5>
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -217,44 +218,45 @@
                             {% endif %}
                         {% endwith %}
                     </div>
-                    <div class="row">
-    <div class="col-md-6 mt-2">
-        <div class="input-group mt-4">
-            <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
-            <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 filter-course">
-        <div class="form-group">
-            <label for="courseFilter">Filter by Course:</label>
-            <select class="form-control" id="courseFilter" onchange="filterTable()">
-                <option value="">All Courses</option>
-                <!-- Populate options dynamically with courses -->
-                {% for course in courses %}
-                    <option value="{{ course.title }}">{{ course.title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="yearFilter">Filter by Year:</label>
-            <select class="form-control" id="yearFilter" onchange="filterTable()">
-                <option value="">All Year</option>
-                <!-- Populate options dynamically with years -->
-                {% for year in years %}
-                    <option value="{{ year }}">{{ year }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-</div>         
+
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Modules</h1>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6 mt-2">
+                            <div class="input-group mt-4">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 filter-course">
+                            <div class="form-group">
+                                <label for="courseFilter">Filter by Course:</label>
+                                <select class="form-control" id="courseFilter" onchange="filterTable()">
+                                    <option value="">All Courses</option>
+                                    <!-- Populate options dynamically with courses -->
+                                    {% for course in courses %}
+                                        <option value="{{ course.title }}">{{ course.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="yearFilter">Filter by Year:</label>
+                                <select class="form-control" id="yearFilter" onchange="filterTable()">
+                                    <option value="">All Year</option>
+                                    <!-- Populate options dynamically with years -->
+                                    {% for year in years %}
+                                        <option value="{{ year }}">{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>         
                     <!-- Content Row -->
                     <div class="row">
                         {% block content %}
@@ -268,11 +270,7 @@
                                         <div class="col-6">
                                             <h6 class="m-0 font-weight-bold text-primary">List of Modules</h6>
                                         </div>
-                                        <div class="col-6 text-right">
-                                            <button id="openModalBtn" class="btn btn-primary btn-sm create-module-btn" data-toggle="modal" data-target="#myModal">
-                                                <i class="fas fa-plus-circle fa-sm mr-1"></i> Create Module
-                                            </button>
-                                        </div>
+                                       
                                     </div>
                                 </div>
                                 <table id="moduleTable" class="table table-bordered">

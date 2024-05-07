@@ -242,9 +242,10 @@
 
             <!-- Main Content -->
             <div id="content">
-
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Student Portal V1.0</h5>
+
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -309,31 +310,31 @@
                             </div>
                         </div>
                     
-                       <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="announcements">
-                {% if announcements %}
-                    {% for announcement in announcements %}
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ announcement.title }}</h5>
-                                <p class="card-text">{{ announcement.content }}</p>
-                                <p class="card-text">
-                                    <small class="text-muted">Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-                                </p>
+          
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="announcements">
+                                        {% if announcements %}
+                                            {% for announcement in announcements %}
+                                                <div class="card mb-3">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">{{ announcement.title }}</h5>
+                                                        <p class="card-text">{{ announcement.content }}</p>
+                                                        <p class="card-text">
+                                                            <small class="text-muted">Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="alert alert-info" role="alert">
+                                                No announcements posted.
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="alert alert-info" role="alert">
-                        No announcements posted.
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
+           
 
 
 

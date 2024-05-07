@@ -317,11 +317,7 @@
                 <!-- End of Topbar -->
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <h3 class="sj">Subject Management</h3>
-        <!-- Button to open modal -->
-        <button id="btn-open-modal" class="btn-open-modal">
-            <i class="fa fa-plus"></i>Add Subject
-        </button>
+            
 
         <!-- Modal -->
         <div id="myModal" class="modal">
@@ -348,39 +344,80 @@
             </div>
         </div>
 
-        <!-- Display subjects for each course -->
-<table>
-    <thead>
-        <tr>
-            <th>Course</th>
-            <th>Abbreviation</th>
-            <th>Title</th>
-            <th>Unit</th>
-            <th>Action</th> <!-- New column for action buttons -->
-        </tr>
-    </thead>
-    <tbody>
-        {% for course in courses %}
-            {% for subject in course_subjects[course.id] %}
-                <tr>
-                    <td>{{ course.title }}</td>
-                    <td>{{ subject.abbreviation }}</td>
-                    <td>{{ subject.title }}</td>
-                    <td>{{ subject.unit }}</td>
-                    <td>
-                        <button class='update-btn' onclick="editSubject({{ subject.id }})">
-                            <i class="fas fa-edit"></i> Update
-                        </button>
+
+
+
+            <div class="table-responsive">
+                <!-- Table -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <h6 class="m-0 font-weight-bold text-primary">Subject Management</h6>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button id="btn-open-modal" class="btn-open-modal">
+                                    <i class="fa fa-plus"></i>Add Subject
+                                </button>
                         
-                        <button class='del-btn' onclick="deleteSubject({{ subject.id }})">
-                            <i class="fas fa-trash-alt"></i> Archive
-                        </button>
-                    </td>
-                </tr>
-            {% endfor %}
-        {% endfor %}
-    </tbody>
-</table>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            
+                            <tr>
+                                <th>Course</th>
+                                <th>Abbreviation</th>
+                                <th>Title</th>
+                                <th>Unit</th>
+                                <th>Action</th> <!-- New column for action buttons -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="noResultsRow" style="display: none;">
+                                <td colspan="4" class="text-center">No results</td>
+                            </tr>
+                            {% for course in courses %}
+                            {% for subject in course_subjects[course.id] %}
+                                <tr>
+                                    <td>{{ course.title }}</td>
+                                    <td>{{ subject.abbreviation }}</td>
+                                    <td>{{ subject.title }}</td>
+                                    <td>{{ subject.unit }}</td>
+                                    <td>
+                                        <button class='update-btn' onclick="editSubject({{ subject.id }})">
+                                            <i class="fas fa-edit"></i> Update
+                                        </button>
+                                        
+                                        <button class='del-btn' onclick="deleteSubject({{ subject.id }})">
+                                            <i class="fas fa-trash-alt"></i> Archive
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- Modal for editing subject -->
 <div class="modal" id="editSubjectModal">

@@ -212,18 +212,13 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Enrolled</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Add student to their sections</h1>
                     </div>
 
                   <!-- Content Row -->
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            {% block content %}
-            <button class="btn btn-primary btn-sm show-button" data-toggle="modal" style="margin-bottom: 10px;" data-target="#enrollmentModal">
-                <i class="fas fa-user-plus"></i> Enroll 
-            </button>
-            
 
             <div class="modal fade" id="enrollmentModal" tabindex="-1" role="dialog" aria-labelledby="enrollmentModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -279,29 +274,53 @@
                 </div>
             </div>
 
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Student Name</th>
-                        <th>Course</th>
-                        <th>Year</th>
-                        <th>Section Name</th>
-                    
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for enrollment in existing_enrollments %}
-                    <tr>
-                        <td>{{ enrollment.enrolled_student_rel.last_name }} {{ enrollment.enrolled_student_rel.first_name }} {{ enrollment.enrolled_student_rel.middle_name }},{{ enrollment.enrolled_student_rel.suffix }}</td>
-                        <td>{{ enrollment.enrolled_course_rel.title }}</td>
-                        <td>{{ enrollment.year }}</td>
-                        <td>{{ enrollment.enrolled_section_rel.name }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% endblock %}
+
+
+
+           
+            
+
+
         </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <!-- Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="row">
+                <div class="col-6">
+                    <h6 class="m-0 font-weight-bold text-primary">Enrolled</h6>
+                </div>
+                <div class="col-6 text-right">
+                    {% block content %}
+                    <button class="btn btn-primary btn-sm show-button" data-toggle="modal" style="margin-bottom: 10px;" data-target="#enrollmentModal">
+                        <i class="fas fa-user-plus"></i> Enroll 
+                    </button>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Course</th>
+                    <th>Year</th>
+                    <th>Section Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enrollment in existing_enrollments %}
+                <tr>
+                    <td>{{ enrollment.enrolled_student_rel.last_name }} {{ enrollment.enrolled_student_rel.first_name }} {{ enrollment.enrolled_student_rel.middle_name }},{{ enrollment.enrolled_student_rel.suffix }}</td>
+                    <td>{{ enrollment.enrolled_course_rel.title }}</td>
+                    <td>{{ enrollment.year }}</td>
+                    <td>{{ enrollment.enrolled_section_rel.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 

@@ -255,83 +255,92 @@
                         </div>
                     </div>
                     <!-- Content Row -->
-                    <div class="container">
-                        <div class="row">
-                            <div class="container mt-5">
-                                {% if subjects %}
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Abbreviation</th>
-                                                <th>Title</th>
-                                                <th>Unit</th>
-                                                <th>Schedule</th>
-                                                <th>Teacher</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for subject in subjects %}
-                                                <tr>
-                                                    <td>{{ subject.abbreviation }}</td>
-                                                    <td>{{ subject.title }}</td>
-                                                    <td>{{ subject.unit }}</td>
-                                                    <td>
-                                                        <ul class="list-unstyled">
-                                                            {% if subject.schedules %}
-                                                                {% for schedule in subject.schedules %}
-                                                                    <li>{{ schedule.day_of_week }} -{{ schedule.room }}- {{ schedule.start_time }} to {{ schedule.end_time }}</li>
-                                                                {% endfor %}
-                                                            {% else %}
-                                                                <li>No schedule available for this subject.</li>
-                                                            {% endif %}
-                                                        </ul>
-                                                    </td>
-                                                    <td>
-                                                        {% if subject.teachers %}
-                                                            {% for teacher in subject.teachers %}
-                                                                {{ teacher.last_name }}<br>
-                                                            {% endfor %}
-                                                        {% else %}
-                                                            
-                                                        <a href="{{ url_for('assign_teacher_to_subject', subject_id=subject.id) }}" class="btn btn-primary btn-sm">
-                                                            <i class="fas fa-user-plus"></i> Assign Teacher
-                                                        </a>
-                                                        
-                                                        {% endif %}
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group" role="group">
-                                                            <a href="{{ url_for('add_schedule', subject_id=subject.id) }}" class="btn btn-primary btn-sm" style="padding: 5px 10px; font-size: 12px; width: 100px;">
-                                                                <i class="fas fa-plus"></i> Schedule
-                                                            </a>
-                                                            
-                                                            {% for schedule in subject.schedules %}
-                                                                <form action="{{ url_for('update_schedule', schedule_id=schedule.id) }}" method="get" style="margin: 0;">
-                                                                    <button type="submit" class="btn btn-primary btn-sm" style="padding: 5px 10px; font-size: 12px; width: 100px; margin-left: 5px;">
-                                                                        <i class="fas fa-pencil-alt"></i> Update
-                                                                    </button>
-                                                                </form>
-                                                            {% endfor %}
-                                                        </div>
-                                                    </td>
-                                                    
-                                                    
-                                                    
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                    
+
+
+
+
+
+
+                    
+                    <div class="table-responsive">
+                        <!-- Table -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h6 class="m-0 font-weight-bold text-primary">Add schedule</h6>
+                                    </div>
                                 </div>
-                            {% else %}
-                                <p>No subjects available for the selected section and course.</p>
-                            {% endif %}
-                            
                             </div>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        {% if subjects %}
+                                        <th>Abbreviation</th>
+                                        <th>Title</th>
+                                        <th>Unit</th>
+                                        <th>Schedule</th>
+                                        <th>Teacher</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for subject in subjects %}
+                                    <tr>
+                                        <td>{{ subject.abbreviation }}</td>
+                                        <td>{{ subject.title }}</td>
+                                        <td>{{ subject.unit }}</td>
+                                        <td>
+                                            <ul class="list-unstyled">
+                                                {% if subject.schedules %}
+                                                {% for schedule in subject.schedules %}
+                                                <li>{{ schedule.day_of_week }} -{{ schedule.room }}- {{ schedule.start_time }} to {{ schedule.end_time }}</li>
+                                                {% endfor %}
+                                                {% else %}
+                                                <li>No schedule available for this subject.</li>
+                                                {% endif %}
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            {% if subject.teachers %}
+                                            {% for teacher in subject.teachers %}
+                                            {{ teacher.last_name }}<br>
+                                            {% endfor %}
+                                            {% else %}
+                                            <a href="{{ url_for('assign_teacher_to_subject', subject_id=subject.id) }}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-user-plus"></i> Assign Teacher
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ url_for('add_schedule', subject_id=subject.id) }}" class="btn btn-primary btn-sm" style="padding: 5px 10px; font-size: 12px; width: 100px;">
+                                                    <i class="fas fa-plus"></i> Schedule
+                                                </a>
+                                                {% for schedule in subject.schedules %}
+                                                <form action="{{ url_for('update_schedule', schedule_id=schedule.id) }}" method="get" style="margin: 0;">
+                                                    <button type="submit" class="btn btn-primary btn-sm" style="padding: 5px 10px; font-size: 12px; width: 100px; margin-left: 5px;">
+                                                        <i class="fas fa-pencil-alt"></i> Update
+                                                    </button>
+                                                </form>
+                                                {% endfor %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">No subjects available for the selected section and course.</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                    
+
+
+
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->

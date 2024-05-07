@@ -64,6 +64,12 @@
         img{
             height: 50px;
         }   
+        .no-horizontal-margin {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+
 
     </style>
 </head>
@@ -163,6 +169,7 @@
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Student Portal V1.0</h5>
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -209,11 +216,8 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Grades</h1>
-                    </div>
 
+                    
                     <!-- Content Row -->
                     <div class="row">
                             <div class="flash">
@@ -225,97 +229,109 @@
                                     {% endif %}
                                 {% endwith %}
                             </div>
-                        </div>
+                    </div>
+                    <div class="row">
 
-                        <div class="container mt-5">
+                        <div class="container mt-7 no-horizontal-margin">
+
                             {% block content %}
                             <div class="container">
-                                <div class="row mt-3">
-                                    <div class="col-md-12">
+                                <div class="row mt-4">
+                                    <div class="col-md-12" style="width: 1100px;">
                                         {% for enrollment in enrollments %}
-                                            <div class="info-section">
-                                                <h4>Student: {{ student.last_name }}</h4>
-                                                <table class="table table-bordered">
-                                                    <thead class="thead-dark">
-                                                        <tr>
-                                                            <th>Course</th>
-                                                            <th>Section</th>
-                                                            <th>Semester</th>
-                                                            <th>Year</th>
-                                                            <th>Class</th>
-                                                            <th>Adviser</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>{{ enrollment.enrolled_course_rel.title }}</td>
-                                                            <td>{{ enrollment.enrolled_section_rel.name }}</td>
-                                                            <td>{{ enrollment.enrolled_course_rel.semesters }}</td>
-                                                            <td>{{ enrollment.enrolled_course_rel.year }}</td>
-                                                            <td>{{ enrollment.enrolled_course_rel.Class }}</td>
-                                                            <td>{{ enrollment.enrolled_section_rel.teacher.first_name }}</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Subject</th>
-                                                        <th>Teacher</th>
-                                                        <th>Period 1</th>
-                                                        <th>Period 2</th>
-                                                        <th>Period 3</th>
-                                                        <th>Final Grade</th>
-                                                        <th>Remarks</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for section in enrollment.enrolled_course_rel.sections %}
-                                                        {% for subject in section.subjects %}
-                                                            {% set subject_grades = grades|selectattr('subject', '==', subject)|list %}
+                                            <div class="card mb-4">
+                                                <div class="card-header bg-primary text-white">
+                                                    <h5 class="mb-0">Grades for {{ student.first_name }} {{ student.last_name }}</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table">
+                                                        <thead>
                                                             <tr>
-                                                                <td>{{ subject.title }}</td>
-                                                                <td>
-                                                                    {% for teacher in subject.teachers %}
-                                                                        {{ teacher.name }}{% if not loop.last %}, {% endif %}
-                                                                    {% endfor %}
-                                                                </td>
-                                                                {% if subject_grades %}
-                                                                    {% for grade in subject_grades %}
-                                                                        <td>{{ grade.period_1 }}</td>
-                                                                        <td>{{ grade.period_2 }}</td>
-                                                                        <td>{{ grade.period_3 }}</td>
-                                                                        <td>{{ "%0.2f"|format(grade.final_grade|float) }}</td>
-                                                                        {% if grade.period_1 and grade.period_2 and grade.period_3 %}
-                                                                            <td>{{ "Passed" if grade.is_passed else "Failed" }}</td>
+                                                                <th>Course</th>
+                                                                <th>Section</th>
+                                                                <th>Semester</th>
+                                                                <th>Year</th>
+                                                                <th>Class</th>
+                                                                <th>Adviser</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{{ enrollment.enrolled_course_rel.title }}</td>
+                                                                <td>{{ enrollment.enrolled_section_rel.name }}</td>
+                                                                <td>{{ enrollment.enrolled_course_rel.semesters }}</td>
+                                                                <td>{{ enrollment.enrolled_course_rel.year }}</td>
+                                                                <td>{{ enrollment.enrolled_course_rel.Class }}</td>
+                                                                <td>{{ enrollment.enrolled_section_rel.teacher.first_name }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Subject</th>
+                                                                <th>Teacher</th>
+                                                                <th>Period 1</th>
+                                                                <th>Period 2</th>
+                                                                <th>Period 3</th>
+                                                                <th>Final Grade</th>
+                                                                <th>Remarks</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for section in enrollment.enrolled_course_rel.sections %}
+                                                                {% for subject in section.subjects %}
+                                                                    {% set subject_grades = grades|selectattr('subject', '==', subject)|list %}
+                                                                    <tr>
+                                                                        <td>{{ subject.title }}</td>
+                                                                        <td>
+                                                                            {% for teacher in subject.teachers %}
+                                                                                {{ teacher.name }}{% if not loop.last %}, {% endif %}
+                                                                            {% endfor %}
+                                                                        </td>
+                                                                        {% if subject_grades %}
+                                                                            {% for grade in subject_grades %}
+                                                                                <td>{{ grade.period_1 }}</td>
+                                                                                <td>{{ grade.period_2 }}</td>
+                                                                                <td>{{ grade.period_3 }}</td>
+                                                                                <td>{{ "%0.2f"|format(grade.final_grade|float) }}</td>
+                                                                                {% if grade.period_1 and grade.period_2 and grade.period_3 %}
+                                                                                    <td>{{ "Passed" if grade.is_passed else "Failed" }}</td>
+                                                                                {% else %}
+                                                                                    <td>N/A</td>
+                                                                                {% endif %}
+                                                                            {% endfor %}
                                                                         {% else %}
                                                                             <td>N/A</td>
+                                                                            <td>N/A</td>
+                                                                            <td>N/A</td>
+                                                                            <td>N/A</td>
+                                                                            <td>N/A</td>
                                                                         {% endif %}
-                                                                    {% endfor %}
-                                                                {% else %}
-                                                                    <td>N/A</td>
-                                                                    <td>N/A</td>
-                                                                    <td>N/A</td>
-                                                                    <td>N/A</td>
-                                                                    <td>N/A</td>
-                                                                {% endif %}
-                                                            </tr>
-                                                        {% endfor %}
-                                                    {% endfor %}
-                                                </tbody>
-                                                
-                                            </table>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         {% endfor %}
                                     </div>
                                 </div>
                             </div>
-                        {% endblock %}
+                            {% endblock %}
                         </div>
+                    </div>
+
+                       
                 </div>
+            </div>
+                
                         
                 <!-- /.container-fluid -->
-            </div>
+            
             <!-- End of Main Content -->
 
             <!-- Footer -->
