@@ -272,11 +272,10 @@ h2 {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Sections</h1>
                     </div>
-
+                
                     <!-- Content Row -->
                 
-                    
-                    <div id="form-container" class="container-fluid form-container">
+                    <div id="form-container" class="container-fluid form-container" style="z-index: 9999;"> <!-- Updated z-index -->
                         <button class="btn btn-danger close-button" onclick="closeForm()">X</button>
                         <h4 style="font-size: 20px; margin-top: -5px;">Add Section</h4>
                         <form method="POST" action="{{ url_for('manage_section') }}" class="form">
@@ -288,22 +287,21 @@ h2 {
                                 <span class="char-count" id="name-char-count">0/30</span>
                             </div>
                             <div class="form-group">
-                                <label for="name" class="form-control-label">School Year</label>
+                                <label for="school_year" class="form-control-label">School Year</label>
                                 {{ form_section.school_year(class="form-control") }}
-                                <span class="char-count" id="name-char-count">0/30</span>
                             </div>
-                    
+                
                             <div class="form-group">
                                 <label for="year" class="form-control-label">Year</label>
                                 {{ form_section.year(class="form-control") }}
                             </div>
-                    
+                
                             <div class="form-group">
                                 <label for="capacity" class="form-control-label">Capacity</label>
                                 {{ form_section.capacity(class="form-control", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
                                 <span class="char-count" id="capacity-char-count">0/2</span>
                             </div>
-
+                
                             <div class="form-group">
                                 <label for="semester" class="form-control-label">Semester</label>
                                 <select name="semester" id="semester" class="form-control" onchange="updateCourses()">
@@ -312,7 +310,7 @@ h2 {
                                     <option value="2nd Semester">2nd Semester</option>
                                 </select>
                             </div>
-                    
+                
                             <div class="form-group">
                                 <label for="course_id" class="form-control-label">Course</label>
                                 <select name="course_id" id="course_id" class="form-control">
@@ -330,83 +328,75 @@ h2 {
                             <button type="submit" class="btn btn-primary">Create Section</button>
                         </form>
                     </div>
-                    <div class="table-responsive"></div>
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <h6 class="m-0 font-weight-bold text-primary">List of Section</h6>
-                                </div>
-                                <div class="col-auto">
-                                    <form method="get" action="{{ url_for('manage_section') }}">
-                                        <button id="toggle-button" class="btn btn-primary btn-sm toggle-button" style="margin-bottom: 10px;" type="button">
-                                            <i class="fas fa-plus"></i> Section
-                                        </button>
-                                    </form>
+                    <div class="table-responsive">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h6 class="m-0 font-weight-bold text-primary">List of Section</h6>
+                                    </div>
+                                    <div class="col-auto">
+                                        <form method="get" action="{{ url_for('manage_section') }}">
+                                            <button id="toggle-button" class="btn btn-primary btn-sm toggle-button" style="margin-bottom: 10px;" type="button">
+                                                <i class="fas fa-plus"></i> Section
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="card-body">
+                                <table id="sectionTable" class="table table-bordered" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Section</th>
+                                            <th>Capacity</th>
+                                            <th>Course</th>
+                                            <th>School_Year</th>
+                                            <th>Year</th>
+                                            <th>Class</th>
+                                            <th>Type</th>
+                                            <th>Teacher</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="noResultsRow" style="display: none;">
+                                            <td colspan="9" class="text-center">No results</td>
+                                        </tr>
+                                        {% for section in sections %}
+                                            <tr>
+                                                <td>{{ section.name }}</td>
+                                                <td>{{ section.capacity }}</td>
+                                                <td>{{ section.course.title }}</td>
+                                                <td>{{ section.school_year }}</td>
+                                                <td>{{ section.year }}</td>
+                                                <td>{{ section.course.Class }}</td>
+                                                <td>{{ section.course.course_type }}</td>
+                                                <td>{{ section.teacher.last_name}} {{ section.teacher.first_name}} {{ section.teacher.middle_name}}, </td>
+                                                <td>
+                                                    <div style="display: flex;">
+                                                        <form method="GET" action="{{ url_for('view_subjects') }}">
+                                                            <input type="hidden" name="section_id" value="{{ section.id }}">
+                                                            <input type="hidden" name="course_id" value="{{ section.course.id }}">
+                                                            <button type="submit" class="btn btn-primary btn-sm" style="background-color: #b4b150; border: none; margin-right: 5px;">
+                                                                <i class="fas fa-calendar-alt"></i> Schedule
+                                                            </button>
+                                                        </form>
+                                                        <form action="{{ url_for('archive_section', section_id=section.id) }}" method="post" onsubmit="return confirm('Are you sure you want to archive this section?');">
+                                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                                <i class="fas fa-archive"></i> Archive
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        
-                    
-<div class="card-body">
-    <table id="sectionTable"  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-        
-        <thead>
-            <tr>
-                <th>Section</th>
-                <th>Capacity</th>
-                <th>Course</th>
-                <th>School_Year</th>
-                <th>Year</th>
-                <th>Class</th>
-                <th>Type</th>
-                <th>Teacher</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr id="noResultsRow" style="display: none;">
-                <td colspan="9" class="text-center">No results</td>
-            </tr>
-            {% for section in sections %}
-            <tr>
-                <td>{{ section.name }}</td>
-                <td>{{ section.capacity }}</td>
-                <td>{{ section.course.title }}</td>
-                <td>{{ section.school_year }}</td>
-                <td>{{ section.year }}</td>
-                <td>{{ section.course.Class }}</td>
-                <td>{{ section.course.course_type }}</td>
-                <td>{{ section.teacher.last_name}} {{ section.teacher.first_name}} {{ section.teacher.middle_name}}, </td>
-                <td>
-                    <div style="display: flex;">
-                        <form method="GET" action="{{ url_for('view_subjects') }}">
-                            <input type="hidden" name="section_id" value="{{ section.id }}">
-                            <input type="hidden" name="course_id" value="{{ section.course.id }}">
-                            <button type="submit" class="btn btn-primary btn-sm" style="background-color: #b4b150; border: none; margin-right: 5px;">
-                                <i class="fas fa-calendar-alt"></i> Schedule
-                            </button>
-                        </form>
-                        <form action="{{ url_for('archive_section', section_id=section.id) }}" method="post" onsubmit="return confirm('Are you sure you want to archive this section?');">
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="fas fa-archive"></i> Archive
-                            </button>
-                        </form>
                     </div>
-    
-                    
-        
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-</div>
-
-                    </div>
-                    
-
+                </div>
                     </div>
                         </div>
                     </div>

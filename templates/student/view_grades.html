@@ -262,7 +262,7 @@
                                                                 <td>{{ enrollment.enrolled_course_rel.semesters }}</td>
                                                                 <td>{{ enrollment.enrolled_course_rel.year }}</td>
                                                                 <td>{{ enrollment.enrolled_course_rel.Class }}</td>
-                                                                <td>{{ enrollment.enrolled_section_rel.teacher.first_name }}</td>
+                                                                <td>{{ enrollment.enrolled_section_rel.teacher.last_name }} {{ enrollment.enrolled_section_rel.teacher.first_name }} {{ enrollment.enrolled_section_rel.teacher.middle_name }}, {{ enrollment.enrolled_section_rel.teacher.suffix}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -288,7 +288,7 @@
                                                                         <td>{{ subject.title }}</td>
                                                                         <td>
                                                                             {% for teacher in subject.teachers %}
-                                                                                {{ teacher.name }}{% if not loop.last %}, {% endif %}
+                                                                                {{ teacher.last_name }}{% if not loop.last %}, {% endif %}
                                                                             {% endfor %}
                                                                         </td>
                                                                         {% if subject_grades %}
