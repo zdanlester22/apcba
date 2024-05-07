@@ -321,8 +321,107 @@
                             </div>
                         </div>
                         
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                    Courses</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ course_count }}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-book fa-2x text-gray-300"></i> <!-- Changed the icon to a book icon for courses -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-success shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                    Subjects</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ subject_count }}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-flask fa-2x text-gray-300"></i> <!-- Changed the icon to a flask icon for subjects -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        
+                        
+                    </div>
+                   
+                </div>
+                <!-- Pie Chart -->
+                <div class="row">
+                    <div class="col-xl-4 col-lg-5">
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Active Students</h6>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <div class="mt-4 text-center small">
+                                    <canvas id="studentPieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-7">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Enrollment by Year</h6>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="small font-weight-bold">Grade 11<span class="float-right">{{ grade_11_count }}</span></h4>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ (grade_11_count / student_count) * 1 }}%; max-width: 400px;"
+                                        aria-valuenow="{{ (grade_11_count / student_count) * 1 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <h4 class="small font-weight-bold">Grade 12<span class="float-right">{{ grade_12_count }}</span></h4>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ (grade_12_count / student_count) * 1}}%; max-width: 400px;"
+                                        aria-valuenow="{{ (grade_12_count / student_count) * 1 }}" aria-valuemin="0" aria-valuemax="1"></div>
+                                </div>
+                                <h4 class="small font-weight-bold">First Year<span class="float-right">{{ first_year_count }}</span></h4>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ (first_year_count / student_count) * 1 }}%; max-width: 400px;"
+                                        aria-valuenow="{{ (first_year_count / student_count) * 1 }}" aria-valuemin="0" aria-valuemax="1"></div>
+                                </div>
+                                <h4 class="small font-weight-bold">Second Year<span class="float-right">{{ second_year_count }}</span></h4>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: {{ (second_year_count / student_count) * 1 }}%; max-width: 400px;"
+                                        aria-valuenow="{{ (second_year_count / student_count) * 1 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <h4 class="small font-weight-bold">Third Year<span class="float-right">{{ third_year_count }}</span></h4>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: {{ (third_year_count / student_count) * 1 }}%; max-width: 400px;"
+                                        aria-valuenow="{{ (third_year_count / student_count) * 1 }}" aria-valuemin="0" aria-valuemax="1"></div>
+                                </div>
+                                <h4 class="small font-weight-bold">Fourth Year<span class="float-right">{{ fourth_year_count }}</span></h4>
+                                <div class="progress mb-4">
+                                    <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ (fourth_year_count / student_count) * 1 }}%; max-width: 400px;"
+                                        aria-valuenow="{{ (fourth_year_count / student_count) * 1 }}" aria-valuemin="0" aria-valuemax="1"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
+                   
+                    
+                    
+                    
+                
+            
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
@@ -368,7 +467,8 @@
             </div>
         </div>
     </div>
-
+ <!-- Chart.js library -->
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Bootstrap core JavaScript-->
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
@@ -408,6 +508,31 @@
             fadeInFlash();
             fadeOutFlash();
         });
+
+         // Get the student counts
+    var activeStudentCount = {{ active_student_count }};
+    var inactiveStudentCount = {{ inactive_student_count }};
+
+    // Get the canvas element
+    var ctx = document.getElementById('studentPieChart').getContext('2d');
+
+    // Create the pie chart
+    var studentPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Active Students', 'Inactive Students'],
+            datasets: [{
+                data: [activeStudentCount, inactiveStudentCount],
+                backgroundColor: ['#36b9cc', '#e74a3b']
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Student Distribution'
+            }
+        }
+    });
   </script>
  
 

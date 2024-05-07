@@ -93,6 +93,7 @@ class SectionForm(FlaskForm):
     capacity = IntegerField('Capacity', validators=[DataRequired()])
     year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
     year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
+    school_year = StringField('School year', validators=[DataRequired()])
     course_id = SelectField('Course', coerce=int, validators=[DataRequired()])
     teacher_id = SelectField('Teacher', coerce=int, validators=[DataRequired()])
 

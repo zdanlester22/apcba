@@ -219,14 +219,41 @@ def dashboard():
         teacher_count = Teacher.query.count()
         section_count = Section.query.count()
         user_count = User.query.count()
+        course_count = Course.query.count()
+        subject_count = Subject.query.count()
 
-        return render_template('admin/dashboard.html', student_count=student_count, teacher_count=teacher_count, section_count=section_count, user_count=user_count, user=user)
+        # Calculate counts of active and inactive students
+        active_student_count = Student.query.filter_by(active=True).count()
+        inactive_student_count = student_count - active_student_count
+
+        # Calculate counts of students enrolled in each year
+        grade_11_count = Enrollment.query.filter_by(year='Grade 11').count()
+        grade_12_count = Enrollment.query.filter_by(year='Grade 12').count()
+        first_year_count = Enrollment.query.filter_by(year='First Year').count()
+        second_year_count = Enrollment.query.filter_by(year='Second Year').count()
+        third_year_count = Enrollment.query.filter_by(year='Third Year').count()
+        fourth_year_count = Enrollment.query.filter_by(year='Fourth Year').count()
+
+        # Render the admin dashboard template
+        return render_template('admin/dashboard.html', student_count=student_count, teacher_count=teacher_count, 
+                               section_count=section_count, user_count=user_count, 
+                               active_student_count=active_student_count, inactive_student_count=inactive_student_count, 
+                               course_count=course_count, subject_count=subject_count, 
+                               grade_11_count=grade_11_count, grade_12_count=grade_12_count, 
+                               first_year_count=first_year_count, second_year_count=second_year_count, 
+                               third_year_count=third_year_count, fourth_year_count=fourth_year_count,
+                               user=user)
     elif current_user.role == 'teacher':
-        # Render teacher dashboard
-        return render_template('teacher/teacher_announcement.html', user=user)
+        # Retrieve announcements for teachers
+        announcements = Announcement.query.order_by(Announcement.timestamp.desc()).all()
+        return render_template('teacher/teacher_announcement.html', user=user, announcements=announcements)
+
     elif current_user.role == 'student':
-        # Render student dashboard
-        return render_template('student/student_announcement.html', user=user)
+        # Retrieve announcements for students
+        announcements = Announcement.query.order_by(Announcement.timestamp.desc()).all()
+        return render_template('student/student_announcement.html', user=user, announcements=announcements)
+
+
 
 #/////////////////////////////END/////////////////////////
 
@@ -818,8 +845,17 @@ def view_students():
             return redirect(url_for('dashboard'))
 
     elif current_user.role == 'admin':
-        enrollments = Enrollment.query.all()  
-        return render_template('admin/view_students.html', authenticated=True, enrollments=enrollments)
+        students = Student.query.all()
+        return render_template('admin/view_students.html', authenticated=True, students=students)
+    
+@app.route('/student/<int:student_id>/toggle_active', methods=['POST'])
+def toggle_active_student(student_id):
+    student = Student.query.get_or_404(student_id)
+    # Toggle the active status
+    student.active = not student.active
+    db.session.commit()
+    flash(f'Student {student.first_name} {student.last_name} is now {"active" if student.active else "inactive"}', 'success')
+    return redirect(url_for('view_students', student_id=student_id))
     
 @app.route('/student_subjects/<int:student_id>', methods=['GET'])
 @login_required
@@ -1307,6 +1343,7 @@ def manage_section():
         new_section = Section(
             name=form_section.name.data,
             capacity=form_section.capacity.data,
+            school_year=form_section.school_year.data,
             year=form_section.year.data,
             course_id=form_section.course_id.data,
             teacher_id=selected_teacher_id
@@ -1750,8 +1787,17 @@ def student_modules():
     if current_user.role != 'student':
         return redirect(url_for('dashboard'))  
     
-    modules = Module.query.all()  
-    return render_template('student/view_modules.html', modules=modules)
+    page = request.args.get('page', 1, type=int)
+    per_page = 8
+    offset = (page - 1) * per_page
+    modules = Module.query.offset(offset).limit(per_page).all()  # Execute the query
+    
+    # Calculate total count for pagination
+    total_modules_count = Module.query.count()
+
+    pagination = Pagination(page=page, per_page=per_page, total=total_modules_count, css_framework='bootstrap4')
+    
+    return render_template('student/view_modules.html', modules=modules, pagination=pagination)
 
 @app.route('/teacher/modules', methods=['GET'])
 @login_required
@@ -1759,8 +1805,16 @@ def teacher_modules():
     if current_user.role != 'teacher':
         return redirect(url_for('dashboard')) 
     
-    modules = Module.query.all()  
-    return render_template('teacher/view_modules.html', modules=modules)
+    page = request.args.get('page', 1, type=int)
+    per_page = 8
+    offset = (page - 1) * per_page
+    modules = Module.query.offset(offset).limit(per_page).all()  # Execute the query
+    
+    # Calculate total count for pagination
+    total_modules_count = Module.query.count()
+
+    pagination = Pagination(page=page, per_page=per_page, total=total_modules_count, css_framework='bootstrap4')
+    return render_template('teacher/view_modules.html', modules=modules, pagination=pagination)
 
 
 @app.route('/download_module/<pdf_filename>', methods=['GET'])

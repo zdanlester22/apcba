@@ -269,21 +269,11 @@ h2 {
                     </div>
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Manage Sections</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Sections</h1>
                     </div>
 
                     <!-- Content Row -->
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <form method="get" action="{{ url_for('manage_section') }}">
-                                    <button id="toggle-button" class="btn btn-primary btn-sm toggle-button" style="margin-bottom: 10px;" type="button">
-                                        <i class="fas fa-plus"></i> Section
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                
                     
                     <div id="form-container" class="container-fluid form-container">
                         <button class="btn btn-danger close-button" onclick="closeForm()">X</button>
@@ -294,6 +284,11 @@ h2 {
                             <div class="form-group">
                                 <label for="name" class="form-control-label">Section Name</label>
                                 {{ form_section.name(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'name-char-count')") }}
+                                <span class="char-count" id="name-char-count">0/30</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="name" class="form-control-label">School Year</label>
+                                {{ form_section.school_year(class="form-control") }}
                                 <span class="char-count" id="name-char-count">0/30</span>
                             </div>
                     
@@ -334,13 +329,33 @@ h2 {
                             <button type="submit" class="btn btn-primary">Create Section</button>
                         </form>
                     </div>
-<div class="container-fluid table-container">
-    <table id="sectionTable" class="table">
-        <thead class="thead-dark">
+                    <div class="table-responsive"></div>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="m-0 font-weight-bold text-primary">List of Section</h6>
+                                </div>
+                                <div class="col-auto">
+                                    <form method="get" action="{{ url_for('manage_section') }}">
+                                        <button id="toggle-button" class="btn btn-primary btn-sm toggle-button" style="margin-bottom: 10px;" type="button">
+                                            <i class="fas fa-plus"></i> Section
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    
+<div class="card-body">
+    <table id="sectionTable"  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        
+        <thead>
             <tr>
                 <th>Section</th>
                 <th>Capacity</th>
                 <th>Course</th>
+                <th>School_Year</th>
                 <th>Year</th>
                 <th>Class</th>
                 <th>Type</th>
@@ -357,6 +372,7 @@ h2 {
                 <td>{{ section.name }}</td>
                 <td>{{ section.capacity }}</td>
                 <td>{{ section.course.title }}</td>
+                <td>{{ section.school_year }}</td>
                 <td>{{ section.year }}</td>
                 <td>{{ section.course.Class }}</td>
                 <td>{{ section.course.course_type }}</td>
@@ -384,6 +400,7 @@ h2 {
             {% endfor %}
         </tbody>
     </table>
+</div>
 </div>
 
                     </div>

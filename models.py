@@ -84,6 +84,7 @@ class Section(db.Model):
     capacity = db.Column(db.Integer, nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     year = db.Column(db.String(20), nullable=False)
+    school_year = db.Column(db.String(20), nullable=False)
     course = db.relationship('Course', back_populates='sections', lazy=True)
     is_archived = db.Column(db.Boolean, default=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.teacher_id'))
@@ -115,6 +116,7 @@ class Teacher(db.Model):
     middle_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50), nullable=False)
     suffix = db.Column(db.String(10))
+    active = db.Column(db.Boolean, default=True, nullable=False)
     section = db.relationship('Section', back_populates='teacher', uselist=False) 
     subjects = db.relationship('Subject', secondary='subject_teacher_association', back_populates='teachers')
 
@@ -241,6 +243,7 @@ class Student(db.Model):
     middle_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50), nullable=False)
     suffix = db.Column(db.String(10))
+    active = db.Column(db.Boolean, default=True, nullable=False)
     grades = db.relationship('Grades', back_populates='student', lazy=True)
     enrollments = db.relationship('Enrollment', back_populates='enrolled_student_rel', lazy=True)
 
