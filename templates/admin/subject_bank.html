@@ -67,86 +67,34 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        form {
-            margin-bottom: 20px;
-        }
+
         label {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
         }
-        select, input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button[type="submit"] {
-            background-color: #374c60;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+   
+     
+  
 
-        }
-        .btn-open-modal {
-            background-color: #374c60;
-            color: white;
-            padding: 5px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 15px;
-
-        }
-        .btn-close {
-            width: 10px;
-            cursor: pointer;
-            font-size: 25px;
-        }
-        button[type="submit"]:hover {
-            background-color: #374c63;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        /* Modal styles */
-        
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            border-radius: 5px;
-        }
         .update-btn {
             background-color: #a29c24;
             color: white;
             border-radius: 3px;
             border: none;
+            font-size: 15px;
         }
         .del-btn {
             background-color: rgb(190, 32, 32);
             color: white;
             border-radius: 3px;
             border: none;
+            font-size: 15px;
         }
         .sj{
             margin-right: 600px;
         }
+     
 
     </style>
 </head>
@@ -281,6 +229,7 @@
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Portal V1.0</h5>
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -318,31 +267,40 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
             
-
-        <!-- Modal -->
-        <div id="myModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <span class="btn-close" id="btn-close-modal">&times;</span>
-                <h2>Add New Subject</h2>
-                <form id="add-subject-form" method="post">
-                    <label for="course_id">Select Course:</label>
-                    <select name="course_id" id="course_id">
-                        <option value="">All Courses</option>
-                        {% for course in courses %}
-                            <option value="{{ course.id }}">{{ course.title }}</option>
-                        {% endfor %}
-                    </select>
-                    <label for="abbreviation">Abbreviation:</label>
-                    <input type="text" id="abbreviation" name="abbreviation" required>
-                    <label for="title">Title:</label>
-                    <input type="text" id="title" name="title" required>
-                    <label for="unit">Unit:</label>
-                    <input type="number" id="unit" name="unit" required>
-                    <button type="submit">Add Subject</button>
-                </form>
-            </div>
-        </div>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Subject</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                            <!-- Your form goes here -->
+                            <form id="add-subject-form" method="post">
+                                <label for="course_id">Select Course:</label>
+                                <select name="course_id" id="course_id" class="form-control">
+                                <option value="">All Courses</option>
+                                {% for course in courses %}
+                                <option value="{{ course.id }}">{{ course.title }}</option>
+                                {% endfor %}
+                                </select>
+                                <label for="abbreviation">Abbreviation:</label>
+                                <input type="text" id="abbreviation" name="abbreviation" class="form-control" required>
+                                <label for="title">Title:</label>
+                                <input type="text" id="title" name="title" class="form-control" required>
+                                <label for="unit">Unit:</label>
+                                <input type="number" id="unit" name="unit" class="form-control" required>
+                                <button type="submit" class="btn btn-primary">Add Subject</button>
+                            </form>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+  
 
 
 
@@ -356,9 +314,10 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Subject Management</h6>
                             </div>
                             <div class="col-6 text-right">
-                                <button id="btn-open-modal" class="btn-open-modal">
-                                    <i class="fa fa-plus"></i>Add Subject
-                                </button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="font-size: 15px;">
+                                    <i class="fa fa-plus"></i> Create a new subject
+                                  </button>
+                                  
                         
                             </div>
                         </div>
@@ -387,7 +346,7 @@
                                     <td>{{ subject.unit }}</td>
                                     <td>
                                         <button class='update-btn' onclick="editSubject({{ subject.id }})">
-                                            <i class="fas fa-edit"></i> Update
+                                            <i class="fas fa-edit"></i> Edit
                                         </button>
                                         
                                         <button class='del-btn' onclick="deleteSubject({{ subject.id }})">
@@ -405,50 +364,39 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- Modal for editing subject -->
-<div class="modal" id="editSubjectModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Subject</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <form id="editSubjectForm">
-                    <input type="hidden" id="editSubjectId">
-                    <label for="editAbbreviation">Abbreviation:</label>
-                    <input type="text" id="editAbbreviation" name="editAbbreviation" required>
-                    <br>
-                    <label for="editTitle">Title:</label>
-                    <input type="text" id="editTitle" name="editTitle" required>
-                    <br>
-                    <label for="editUnit">Unit:</label>
-                    <input type="number" id="editUnit" name="editUnit" required>
-                    <br>
-                    <button type="submit">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-        
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="editSubjectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title">Edit Subject</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <form id="editSubjectForm">
+                                        <input type="hidden" id="editSubjectId">
+                                        <div class="form-group">
+                                        <label for="editAbbreviation">Abbreviation:</label>
+                                        <input type="text" id="editAbbreviation" name="editAbbreviation" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                        <label for="editTitle">Title:</label>
+                                        <input type="text" id="editTitle" name="editTitle" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                        <label for="editUnit">Unit:</label>
+                                        <input type="number" id="editUnit" name="editUnit" class="form-control" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </form>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+  
         
 
                     
