@@ -1060,7 +1060,7 @@ def delete_announcement(announcement_id):
     db.session.delete(announcement)
     db.session.commit()
     flash('Announcement has been deleted successfully', 'success')
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('announcement'))
 
 
 
