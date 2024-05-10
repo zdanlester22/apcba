@@ -15,6 +15,10 @@ from flask_mail import Mail, Message
 from collections import defaultdict
 from sqlalchemy.exc import SQLAlchemyError
 from models import User
+from models import Subject, Course
+from models import Teacher
+from models import Schedule
+from models import Section
 import pytz
 import secrets
 
@@ -1449,9 +1453,18 @@ def subject_bank():
         abbreviation = request.form.get('abbreviation')
         title = request.form.get('title')
         unit = request.form.get('unit')
+        semester = request.form.get('semester')
+        year = request.form.get('year')
         
         # Create a new subject
-        subject = Subject(abbreviation=abbreviation, title=title, unit=unit, course_id=course_id)
+        subject = Subject(
+            abbreviation=abbreviation,
+            title=title,
+            unit=unit,
+            course_id=course_id,
+            semester=semester,
+            year=year
+        )
         
         # Add the subject to the database
         db.session.add(subject)
@@ -1463,12 +1476,15 @@ def subject_bank():
     # Fetch all courses from the database
     courses = Course.query.all()
     
+    # Fetch distinct years from the Course table
+    years = set(course.year for course in courses)
+    
     # Fetch subjects for each course
     course_subjects = {}
     for course in courses:
         course_subjects[course.id] = course.subjects
     
-    return render_template('admin/subject_bank.html', courses=courses, course_subjects=course_subjects)
+    return render_template('admin/subject_bank.html', courses=courses, course_subjects=course_subjects, years=years)
 
 @app.route('/admin/subject_bank/edit/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
@@ -1713,26 +1729,70 @@ def update_schedule(schedule_id):
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
-    schedule = Schedule.query.first()   
     section_id = request.args.get('section_id', type=int)
-    current_app.logger.info(f"section_id: {section_id}")
-    
-    section = Section.query.get(section_id)
-    
-    # Fetch subjects associated with the section using the many-to-many relationship
-    subjects = Subject.query.join(section_subject_association).filter(
-        section_subject_association.c.section_id == section_id
-    ).all()
+    course_id = request.args.get('course_id', type=int)
+    current_app.logger.info(f"section_id: {section_id}, course_id: {course_id}")
 
-    # Fetch schedules for each subject
-    for subject in subjects:
-        subject.schedules = Schedule.query.filter_by(subject_id=subject.id).all()
+    section = Section.query.get(section_id)
+
+    # Fetch subjects associated with the course and section using the many-to-many relationship
+    subjects_query = Subject.query.join(Section.subjects).filter(
+        Section.id == section_id,
+        Subject.course_id == course_id
+    )
+    subjects = subjects_query.all()
+
+    teachers = Teacher.query.all()
+
+    # Fetch schedules related to the specific section
+    schedules = Schedule.query.filter_by(section_id=section_id).all()
 
     current_app.logger.info(f"Number of subjects found: {len(subjects)}")
 
+    for subject in subjects:
+        current_app.logger.info(f"Subject: {subject.title}, ID: {subject.id}")
+
     form = ScheduleForm()
+
+    return render_template('admin/view_subjects.html', subjects=subjects, section=section, form=form, teachers=teachers, schedules=schedules)
+
+
+
+
+@app.route('/add_semester', methods=['POST'])
+@login_required
+def add_semester():
+    # Fetch section_id, course_id, subject_id, selected_days, start_time, end_time, room, and teacher_id from the request
+    section_id = request.form.get('section_id')
+    course_id = request.form.get('course_id')
+    subject_id = request.form.get('subject_id')
+    selected_days = request.form.getlist('dayOfWeek')
+    formatted_days = '/'.join(selected_days)
+    start_time_str = request.form['startTime']
+    end_time_str = request.form['endTime']
+    start_time = datetime.strptime(start_time_str, '%H:%M').strftime('%I:%M %p')
+    end_time = datetime.strptime(end_time_str, '%H:%M').strftime('%I:%M %p')
+    room = request.form['room']
+    teacher_id = request.form.get('teacher_id')
     
-    return render_template('admin/view_subjects.html', subjects=subjects, section=section, form=form, schedule=schedule)
+    # Fetch subject from the database based on subject_id
+    subject = Subject.query.get(subject_id)
+
+    # Assuming you have fetched or created the schedule object
+    schedule = Schedule(day_of_week=formatted_days,
+                        start_time=start_time,
+                        end_time=end_time,
+                        room=room,
+                        subject_id=subject_id,
+                        teacher_id=teacher_id,
+                        section_id=section_id ) # Assigning section_id here
+    db.session.add(schedule)
+    db.session.commit()
+
+    return redirect(url_for('view_subjects', section_id=section_id, course_id=course_id))
+
+
+
 
 
 

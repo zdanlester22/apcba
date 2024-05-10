@@ -98,12 +98,14 @@ class Subject(db.Model):
     abbreviation = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     unit = db.Column(db.Integer)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))  # Foreign key to link Subject with Course
-    course = db.relationship('Course', backref='subjects')  # Relationship to access Course from Subject
-    grades = db.relationship('Grades', back_populates='subject', lazy=True)  # Relationship with Grades
-    schedules = db.relationship('Schedule', back_populates='subject', lazy=True)  # Relationship with Schedule
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    semester = db.Column(db.String(50))
+    year = db.Column(db.String(50))
+    course = db.relationship('Course', backref='subjects')
+    grades = db.relationship('Grades', back_populates='subject', lazy=True)
+    schedules = db.relationship('Schedule', back_populates='subject', lazy=True)
     teachers = db.relationship('Teacher', secondary='subject_teacher_association', back_populates='subjects')
-    sections = db.relationship('Section', secondary=section_subject_association, back_populates='subjects', lazy='dynamic')  # Establish many-to-many relationship with Section
+    sections = db.relationship('Section', secondary=section_subject_association, back_populates='subjects', lazy='dynamic')
 
     
 
@@ -281,12 +283,22 @@ class Grades(db.Model):
 class Schedule(db.Model):
     __tablename__ = 'schedule'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    day_of_week = db.Column(db.String(20), nullable=False)
+    day_of_week = db.Column(db.String(50), nullable=False)
     start_time = db.Column(db.String(8), nullable=False)  
     end_time = db.Column(db.String(8), nullable=False)    
     room = db.Column(db.String(50))  
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
     subject = db.relationship('Subject', back_populates='schedules', lazy=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
+    teacher = db.relationship('Teacher', backref='schedules', lazy=True)
+    section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
+    section = db.relationship('Section', backref='schedules', lazy=True)
+
+
+
+
+
+    
 
 
 

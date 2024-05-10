@@ -322,26 +322,42 @@
         <!-- Modal -->
         <div id="myModal" class="modal">
             <!-- Modal content -->
-            <div class="modal-content">
-                <span class="btn-close" id="btn-close-modal">&times;</span>
-                <h2>Add New Subject</h2>
-                <form id="add-subject-form" method="post">
-                    <label for="course_id">Select Course:</label>
-                    <select name="course_id" id="course_id">
-                        <option value="">All Courses</option>
-                        {% for course in courses %}
-                            <option value="{{ course.id }}">{{ course.title }}</option>
-                        {% endfor %}
-                    </select>
-                    <label for="abbreviation">Abbreviation:</label>
-                    <input type="text" id="abbreviation" name="abbreviation" required>
-                    <label for="title">Title:</label>
-                    <input type="text" id="title" name="title" required>
-                    <label for="unit">Unit:</label>
-                    <input type="number" id="unit" name="unit" required>
-                    <button type="submit">Add Subject</button>
-                </form>
-            </div>
+<div class="modal-content">
+    <span class="btn-close" id="btn-close-modal">&times;</span>
+    <h2>Add New Subject</h2>
+    <form id="add-subject-form" method="post">
+        <label for="course_id">Select Course:</label>
+        <select name="course_id" id="course_id">
+            <option value="">All Courses</option>
+            {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.title }}</option>
+            {% endfor %}
+        </select>
+        <label for="abbreviation">Abbreviation:</label>
+        <input type="text" id="abbreviation" name="abbreviation" required>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <label for="unit">Unit:</label>
+        <input type="number" id="unit" name="unit" required>
+        <label for="year">Year:</label>
+            <select name="year" id="year" required>
+                <option value="">Select Year</option>
+                {% for year in years %}
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+            </select>
+        <label for="semester">Semester:</label>
+        <select name="semester" id="semester" required>
+            <option value="">Select Semester</option>
+            <option value="1st Semester">Semester 1</option>
+            <option value="2nd Semester">Semester 2</option>
+            <option value="Summer">Summer</option>
+            <!-- Add more options if needed -->
+        </select>
+        <button type="submit">Add Subject</button>
+    </form>
+</div>
+
         </div>
 
 
@@ -365,40 +381,43 @@
                     </div>
                     <table class="table table-bordered">
                         <thead>
-                            
                             <tr>
                                 <th>Course</th>
                                 <th>Abbreviation</th>
                                 <th>Title</th>
                                 <th>Unit</th>
-                                <th>Action</th> <!-- New column for action buttons -->
+                                <th>Year</th>
+                                <th>Semester</th> <!-- New column for Semester -->
+                                <th>Action</th> <!-- Action buttons column -->
                             </tr>
                         </thead>
                         <tbody>
                             <tr id="noResultsRow" style="display: none;">
-                                <td colspan="4" class="text-center">No results</td>
+                                <td colspan="5" class="text-center">No results</td>
                             </tr>
                             {% for course in courses %}
-                            {% for subject in course_subjects[course.id] %}
-                                <tr>
-                                    <td>{{ course.title }}</td>
-                                    <td>{{ subject.abbreviation }}</td>
-                                    <td>{{ subject.title }}</td>
-                                    <td>{{ subject.unit }}</td>
-                                    <td>
-                                        <button class='update-btn' onclick="editSubject({{ subject.id }})">
-                                            <i class="fas fa-edit"></i> Update
-                                        </button>
-                                        
-                                        <button class='del-btn' onclick="deleteSubject({{ subject.id }})">
-                                            <i class="fas fa-trash-alt"></i> Archive
-                                        </button>
-                                    </td>
-                                </tr>
+                                {% for subject in course_subjects[course.id] %}
+                                    <tr>
+                                        <td>{{ course.title }}</td>
+                                        <td>{{ subject.abbreviation }}</td>
+                                        <td>{{ subject.title }}</td>
+                                        <td>{{ subject.unit }}</td>
+                                        <td>{{ subject.year }}</td>
+                                        <td>{{ subject.semester }}</td>
+                                        <td>
+                                            <button class='update-btn' onclick="editSubject({{ subject.id }})">
+                                                <i class="fas fa-edit"></i> Update
+                                            </button>
+                                            <button class='del-btn' onclick="deleteSubject({{ subject.id }})">
+                                                <i class="fas fa-trash-alt"></i> Archive
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
                         </tbody>
                     </table>
+                    
                 </div>
             </div>
 
