@@ -11,6 +11,8 @@
     <meta name="author" content="">
 
      <!-- Core plugin CSS -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
      <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
  
      <!-- Custom styles for this template -->
@@ -52,6 +54,10 @@
             border-radius: 5px;
             padding: 5px;
         }
+ 
+        .small {
+    font-size: 15px; /* Adjust as needed */
+}
 
   
     </style>
@@ -226,18 +232,57 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
- <div class="row">
-                        <div class="col-md-6 offset-md-6">
-                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h1 class="h3 mb-2 text-gray-800">Accounts</h1>
+                        
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <!-- Filter Form -->
+                                        <form action="{{ url_for('users') }}" method="GET" class="form-inline mb-2">
+                                            <div class="form-group mr-2">
+                                                <label for="roleFilter" class="sr-only">Filter by Role</label>
+                                                <select class="form-control" id="roleFilter" name="role">
+                                                    <option value="">All Roles</option>
+                                                    <option value="student" {% if role == 'student' %}selected{% endif %}>Student</option>
+                                                    <option value="teacher" {% if role == 'teacher' %}selected{% endif %}>Teacher</option>
+                                                    <option value="admin" {% if role == 'admin' %}selected{% endif %}>Admin</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <form action="{{ url_for('users') }}" method="GET" class="form-inline mb-2">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="searchQuery" name="q" placeholder="Search...." value="{{ search_query }}">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        
+                </div>
+                
+                    
+                    <script>
+            
+                        document.getElementById('roleFilter').addEventListener('change', function() {
+                            this.form.submit();
+                        });
+                    </script>
+                    
+    
                     </div>
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Accounts</h1>
                     
                     
                     <!-- DataTales Example -->
@@ -251,11 +296,35 @@
                                 <table id="userTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Email</th>
-                                            <th>Name</th>
+                                            <th>
+                                                Email 
+                                                <a href="{{ url_for('users', sort_by='email', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('users', sort_by='email', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                Name 
+                                                <a href="{{ url_for('users', sort_by='name', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('users', sort_by='name', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            
+                                            
+                                            
+                                            
                                             <th>Role</th>
-                                            <th>Action</th>
+                                            <th>Update</th>
                                         </tr>
+                                        
+                                        
+                                        
+                                        
                                     </thead>
                                     <tfoot>
                                         <tr>
@@ -268,13 +337,13 @@
                                     <tbody>
                                         {% for user in users %}
                                         <tr>
-                                            <td>{{ user.email }}</td>
-                                            <td>{{ user.last_name }} {{ user.first_name }} {{ user.middle_name }}, </td>
-                                            <td>{{ user.role }}</td>
+                                            <td class="small">{{ user.email }}</td>
+                                            <td class="small">{{ user.last_name }} {{ user.first_name }} {{ user.middle_name }}, </td>
+                                            <td class="small">{{ user.role }}</td>
                                             {% if user.role != 'admin' %}
-                                            <td>
-                                                <a href="{{ url_for('update_user', user_id=user.id) }}" class="linku">
-                                                    <i class="fas fa-edit"></i> Update
+                                            <td class="text-center">
+                                                <a href="{{ url_for('update_user', user_id=user.id) }}">
+                                                    <i class="fas fa-edit"></i>
                                                 </a>
                                             </td>
                                             {% endif %}
@@ -282,6 +351,7 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                <p>Showing {{ users|length }} out of {{ pagination.total }} users</p>
                                 <div class="row justify-content-end">
                                     <div class="col-auto">
                                         {{ pagination.links }}
@@ -289,6 +359,8 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        
                     </div>
                 
                 </div>
@@ -485,7 +557,9 @@ function filterTable() {
             fadeInFlash();
             fadeOutFlash();
         });
-
+        document.getElementById('entitiesPerPage').addEventListener('change', function() {
+        this.form.submit();
+    });
     </script>
 
 </html>

@@ -366,6 +366,14 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    <p>Showing {{ subjects|length }} out of {{ pagination.total }} sections</p>
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            {% if pagination %}
+                                {{ pagination.links }}
+                            {% endif %}
+                        </div>
+                    </div>
                     
                 </div>
             </div>

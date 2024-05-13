@@ -46,7 +46,9 @@ h2 {
     margin-top: -50px;
     font-size: 26px;
 }
-
+.small {
+    font-size: 15px; /* Adjust as needed */
+}
 
     </style>
 </head>
@@ -312,14 +314,67 @@ h2 {
                                 <table id="sectionTable" class="table table-bordered" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Section</th>
-                                            <th>Capacity</th>
-                                            <th>Course</th>
-                                            <th>School_Year</th>
-                                            <th>Year</th>
-                                            <th>Class</th>
-                                            <th>Type</th>
-                                            <th>Teacher</th>
+                                            <th>
+                                                Title
+                                                <a href="{{ url_for('manage_section', sort_by='name', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                
+                                                
+                                                <a href="{{ url_for('manage_section', sort_by='name', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                               Capacity
+                                                <a href="{{ url_for('manage_section', sort_by='capacity', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='capacity', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                Course
+                                                <a href="{{ url_for('manage_section', sort_by='course', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='course', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>School_Year
+                                                <a href="{{ url_for('manage_section', sort_by='school_year', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='school_year', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>Year
+                                                <a href="{{ url_for('manage_section', sort_by='year', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='year', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>Type
+                                                <a href="{{ url_for('manage_section', sort_by='type', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='type', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>Teacher
+                                                <a href="{{ url_for('manage_section', sort_by='teacher', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='teacher', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -329,14 +384,13 @@ h2 {
                                         </tr>
                                         {% for section in sections %}
                                             <tr>
-                                                <td>{{ section.name }}</td>
-                                                <td>{{ section.capacity }}</td>
-                                                <td>{{ section.course.title }}</td>
-                                                <td>{{ section.school_year }}</td>
-                                                <td>{{ section.year }}</td>
-                                                <td>{{ section.course.Class }}</td>
-                                                <td>{{ section.course.course_type }}</td>
-                                                <td>{{ section.teacher.last_name}} {{ section.teacher.first_name}} {{ section.teacher.middle_name}}, </td>
+                                                <td class="small">{{ section.name }}</td>
+                                                <td class="small">{{ section.capacity }}</td>
+                                                <td class="small">{{ section.course.title }}</td>
+                                                <td class="small">{{ section.school_year }}</td>
+                                                <td class="small">{{ section.year }}</td>
+                                                <td class="small">{{ section.course.course_type }}</td>
+                                                <td class="small">{{ section.teacher.last_name}} {{ section.teacher.first_name}} {{ section.teacher.middle_name}}, </td>
                                                 <td>
                                                     <div style="display: flex;">
                                                         <form method="GET" action="{{ url_for('view_subjects') }}">
@@ -357,6 +411,15 @@ h2 {
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                <p>Showing {{ sections|length }} out of {{ pagination.total }} sections</p>
+<div class="row justify-content-end">
+    <div class="col-auto">
+        {% if pagination %}
+            {{ pagination.links }}
+        {% endif %}
+    </div>
+</div>
+
                             </div>
                         </div>
                     </div>

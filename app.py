@@ -7,6 +7,7 @@ from forms import TeacherForm, StudentForm, ModuleForm, UpdateStudentForm, Enrol
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
+from sqlalchemy import func
 from flask_paginate import Pagination, get_page_parameter
 from datetime import datetime, timedelta
 import os
@@ -21,6 +22,7 @@ from models import Schedule
 from models import Section
 import pytz
 import secrets
+from sqlalchemy import desc, asc
 
 
 
@@ -751,6 +753,7 @@ def view_archived_enrollies():
     return render_template('admin/view_archived_enrollies.html', archived_enrollies_list=archived_enrollies_list)
 
 
+from sqlalchemy import desc  # Import the desc function for descending sorting
 
 @app.route('/admin/users', methods=['GET', 'POST'])
 @login_required
@@ -759,61 +762,45 @@ def users():
         flash('You do not have permission to access this page.', 'danger')
         return redirect(url_for('admin/dashboard'))
 
-    users_data = User.query.all()
-    number_of_accounts = User.query.count()
+    users_query = User.query
     search_query = request.args.get('q', default='', type=str)
+    role_filter = request.args.get('role', default='', type=str)
 
     if search_query:
-        users_data = User.query.filter(
+        users_query = users_query.filter(
             or_(
                 User.email.ilike(f"%{search_query}%"),
-                User.name.ilike(f"%{search_query}%"),
+                User.first_name.ilike(f"%{search_query}%"),
+                User.last_name.ilike(f"%{search_query}%"),
+                User.middle_name.ilike(f"%{search_query}%"),
             )
-        ).all()
+        )
 
-    
+    if role_filter:
+        users_query = users_query.filter(User.role == role_filter)
+
+    sort_by = request.args.get('sort_by', default='email', type=str)
+    sort_order = request.args.get('sort_order', default='asc', type=str)
+
+    if sort_by == 'name':
+        users_query = users_query.order_by(func.concat(User.last_name, ' ', User.first_name, ' ', User.middle_name))
+        if sort_order == 'desc':
+            users_query = users_query.order_by(desc(func.concat(User.last_name, ' ', User.first_name, ' ', User.middle_name)))
+    elif sort_by == 'email':
+        if sort_order == 'asc':
+            users_query = users_query.order_by(User.email.asc())
+        else:
+            users_query = users_query.order_by(User.email.desc())
+
+    total_users = users_query.count()  # Total number of users
+
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 8  
+    per_page = request.args.get('per_page', type=int, default=10)
     offset = (page - 1) * per_page
-    pagination_users = users_data[offset: offset + per_page]
+    pagination_users = users_query.offset(offset).limit(per_page).all()
+    pagination = Pagination(page=page, per_page=per_page, total=total_users, css_framework='bootstrap4')
 
-    pagination = Pagination(page=page, per_page=per_page, total=len(users_data), css_framework='bootstrap4')
-
-    teacher_form = TeacherForm()
-    student_form = StudentForm()
-
-    if request.method == 'POST':
-        if teacher_form.validate_on_submit() and current_user.role == 'admin':
-            new_teacher = Teacher(
-                teacher_id=teacher_form.teacher_id.data,
-                name=teacher_form.name.data,
-            )
-            db.session.add(new_teacher)
-            try:
-                db.session.commit()
-                flash('Teacher added successfully!', 'success')
-            except Exception as e:
-                db.session.rollback()
-                flash(f'Error adding teacher: {str(e)}', 'danger')
-
-        elif student_form.validate_on_submit() and current_user.role == 'admin':
-            new_student = Student(
-                student_id=student_form.student_id.data,
-                name=student_form.name.data,
-            
-            )
-            db.session.add(new_student)
-            try:
-                db.session.commit()
-                flash('Student added successfully!', 'success')
-            except Exception as e:
-                db.session.rollback()
-                flash(f'Error adding student: {str(e)}', 'danger')
-
-        return redirect(url_for('users'))
-
-    return render_template('admin/users.html', users=pagination_users, search_query=search_query, teacher_form=teacher_form, student_form=student_form,  number_of_accounts=number_of_accounts, pagination=pagination)
-
+    return render_template('admin/users.html', users=pagination_users, search_query=search_query, role=role_filter, total_users=total_users, pagination=pagination)
 
 @app.route('/admin/teachers')
 @login_required
@@ -1285,12 +1272,32 @@ def course():
         return redirect(url_for('course'))
 
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 8
+    per_page = 10
     offset = (page - 1) * per_page
 
     # Assuming Course is your SQLAlchemy model
     total_courses = Course.query.count()
-    courses = Course.query.offset(offset).limit(per_page).all()
+
+    # Sorting
+    sort_by = request.args.get('sort_by', default='title', type=str)
+    sort_order = request.args.get('sort_order', default='asc', type=str)
+
+    if sort_by == 'title':
+        if sort_order == 'asc':
+            courses = Course.query.order_by(Course.title.asc()).offset(offset).limit(per_page).all()
+        else:
+            courses = Course.query.order_by(Course.title.desc()).offset(offset).limit(per_page).all()
+    elif sort_by == 'abbreviation':
+        if sort_order == 'asc':
+            courses = Course.query.order_by(Course.abbreviation.asc()).offset(offset).limit(per_page).all()
+        else:
+            courses = Course.query.order_by(Course.abbreviation.desc()).offset(offset).limit(per_page).all()
+    elif sort_by == 'year':
+        if sort_order == 'asc':
+            courses = Course.query.order_by(Course.year.asc()).offset(offset).limit(per_page).all()
+        else:
+            courses = Course.query.order_by(Course.year.desc()).offset(offset).limit(per_page).all()
+    
 
     pagination = Pagination(page=page, per_page=per_page, total=total_courses, css_framework='bootstrap4')
 
@@ -1321,12 +1328,15 @@ def update_course(course_id):
 ##########################################################################################################################################################################################
 @app.route('/manage_section', methods=['GET', 'POST'])
 def manage_section():
-    # Assuming you're using Flask-Login for user authentication
     form_section = SectionForm()
-    form_subject = SubjectForm()  # Creating an instance of the SubjectForm
+    form_subject = SubjectForm()
 
     course_id_filter = request.args.get('course_id', type=int)
     section_name_filter = request.args.get('section_name', type=str)
+    sort_by = request.args.get('sort_by', 'name')
+    sort_order = request.args.get('sort_order', 'asc')
+    page = request.args.get('page', 1, type=int)  # Get page number from query string
+
     sections_query = Section.query
 
     if course_id_filter:
@@ -1334,7 +1344,22 @@ def manage_section():
     if section_name_filter:
         sections_query = sections_query.filter(Section.name.ilike(f'%{section_name_filter}%'))
 
-    sections = sections_query.all()
+    if sort_by == 'name':
+        sorting_criteria = Section.name
+    elif sort_by == 'capacity':
+        sorting_criteria = Section.capacity
+    else:
+        sorting_criteria = Section.name
+
+    if sort_order == 'asc':
+        sections_query = sections_query.order_by(asc(sorting_criteria))
+    else:
+        sections_query = sections_query.order_by(desc(sorting_criteria))
+
+    per_page = 10
+    offset = (page - 1) * per_page
+    sections = sections_query.offset(offset).limit(per_page).all()
+
     courses = Course.query.all()
     serialized_courses = [{'id': course.id, 'title': course.title, 'semesters': course.semesters} for course in courses]
     form_section.course_id.choices = [(course.id, course.title) for course in courses]
@@ -1353,22 +1378,23 @@ def manage_section():
             teacher_id=selected_teacher_id
         )
 
-        # Fetch all subjects related to the chosen course
         selected_course = Course.query.get(form_section.course_id.data)
         subjects = selected_course.subjects
-
-        # Associate all fetched subjects with the new section
         new_section.subjects.extend(subjects)
 
         db.session.add(new_section)
         db.session.commit()
         flash('Section created successfully!', 'success')
 
-        # Redirect to the same page to clear the form fields
         return redirect(url_for('manage_section'))
 
+    total_sections_count = sections_query.count()
+
+    pagination = Pagination(page=page, per_page=per_page, total=total_sections_count, css_framework='bootstrap4')
+
     return render_template('admin/manage_section.html', sections=sections, courses=serialized_courses,
-                           form_section=form_section, form_subject=form_subject)
+                       form_section=form_section, form_subject=form_subject, pagination=pagination)
+
 
 @app.route('/archive_section/<int:section_id>', methods=['POST'])
 def archive_section(section_id):
@@ -1447,6 +1473,19 @@ def assign_teacher_to_subject(subject_id):
 @app.route('/admin/subject_bank', methods=['GET', 'POST'])
 @login_required
 def subject_bank():
+    # Pagination setup
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    offset = (page - 1) * per_page
+
+    # Fetch all subjects from the database
+    subjects = Subject.query.offset(offset).limit(per_page).all()
+
+    # Calculate total count for pagination
+    total_subject_count = Subject.query.count()
+
+    pagination = Pagination(page=page, per_page=per_page, total=total_subject_count, css_framework='bootstrap4')
+
     if request.method == 'POST':
         # Get form data
         course_id = request.form.get('course_id')
@@ -1484,7 +1523,9 @@ def subject_bank():
     for course in courses:
         course_subjects[course.id] = course.subjects
     
-    return render_template('admin/subject_bank.html', courses=courses, course_subjects=course_subjects, years=years)
+    return render_template('admin/subject_bank.html', courses=courses, course_subjects=course_subjects, years=years, subjects=subjects, pagination=pagination)
+
+
 
 @app.route('/admin/subject_bank/edit/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
@@ -1804,15 +1845,20 @@ def modules():
     form_module = ModuleForm()
     courses = Course.query.all()
     form_module.course_id.choices = [(course.id, course.title) for course in courses]
-
+    
     if form_module.validate_on_submit():
+        # Extract form data
         title = form_module.title.data
         year = form_module.year.data
         course_id = form_module.course_id.data
         pdf_file = form_module.pdf_file.data
         pdf_filename = f"{title.replace(' ', '_')}.pdf"
+
+        # Save PDF file to uploads directory
         os.makedirs(os.path.join('uploads', 'documents'), exist_ok=True)
         pdf_file.save(os.path.join('uploads', 'documents', pdf_filename))
+
+        # Create a new Module instance and add it to the database
         new_module = Module(
             title=title,
             year=year,
@@ -1821,15 +1867,33 @@ def modules():
         )
         db.session.add(new_module)
         db.session.commit()
+
+        # Flash message for successful creation
         flash('Created successfully!', 'success')
+
+        # Redirect the user to the modules page to display the updated list
         return redirect(url_for('modules'))
 
     # Pagination
     page = request.args.get('page', 1, type=int)
-    per_page = 8
+    per_page = 10
     offset = (page - 1) * per_page
-    modules = Module.query.offset(offset).limit(per_page).all()  # Execute the query
     
+    # Sorting parameters
+    sort_by = request.args.get('sort_by', 'title')  # Default sorting by title
+    sort_order = request.args.get('sort_order', 'asc')  # Default sorting order is ascending
+
+    # Construct the sorting criteria dynamically
+    if sort_by == 'course':
+        sorting_criteria = Course.id
+    else:
+        sorting_criteria = getattr(Module, sort_by)
+
+    if sort_order == 'asc':
+        modules = Module.query.join(Course).order_by(asc(sorting_criteria)).offset(offset).limit(per_page).all()
+    else:
+        modules = Module.query.join(Course).order_by(desc(sorting_criteria)).offset(offset).limit(per_page).all()
+
     # Calculate total count for pagination
     total_modules_count = Module.query.count()
 
