@@ -37,59 +37,19 @@
         .bg-color{
             background-color:#374c60 ;
         }
-  .form-container {
-        display: none;
-        position: fixed; /* Position it fixed for centering */
-        top: 50%; /* Move it down by half of its height */
-        left: 50%; /* Move it horizontally by half of its width */
-        transform: translate(-50%, -50%); /* Center it precisely */
-        max-width: 400px;
-        padding: 20px;
-        border-radius: 5px;
-        background-color: #fff;
-        box-shadow: 0px 0px 10px rgba(0.0, 0.0, 0.0, 0.2);
-    }
-
     
-    .close-button {
-    position: absolute;
-    top: 5px;
-    right: 3px;
-    background-color: transparent;
-    border: none;
-    font-size: 15px;
-    cursor: pointer;
-    color: #ccc; /* Change color as needed */
-    z-index: 999; /* Ensure the button appears on top */
-}
-.form-group button {
-    width: 160px;
-    font-family: Montserrat, sans-serif;
-    margin-left: 970px;
-}
-.form-group input[type="text"], .form-group select {
 
-    font-family: Montserrat, sans-serif;
-}
+
 h2 {
     color: #374c60;
     margin-left: 30px;
     margin-top: -50px;
     font-size: 26px;
 }
-.char-count {
-            font-size: 12px;
-            display: flex;
-            justify-content: end;
-            margin-right: 25px;
-        }
-    #capacity-char-count{
-        margin-right: 0;
-    }
-    table td{
-        background-color: #f6f6fa;
-    }
-        
+.small {
+    font-size: 15px; /* Adjust as needed */
+}
+
     </style>
 </head>
 
@@ -275,51 +235,64 @@ h2 {
                 
                     <!-- Content Row -->
                 
-                    <div id="form-container" class="container-fluid form-container" style="z-index: 9999;"> <!-- Updated z-index -->
-                        <button class="btn btn-danger close-button" onclick="closeForm()">X</button>
-                        <h4 style="font-size: 20px; margin-top: -5px;">Add Section</h4>
-                        <form method="POST" action="{{ url_for('manage_section') }}" class="form">
-                            {{ form_section.csrf_token }}
-                            {{ form_section.hidden_tag() }}
-                            <div class="form-group">
-                                <label for="name" class="form-control-label">Section Name</label>
-                                {{ form_section.name(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'name-char-count')") }}
-                                <span class="char-count" id="name-char-count">0/30</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="school_year" class="form-control-label">School Year</label>
-                                {{ form_section.school_year(class="form-control") }}
-                            </div>
-                
-                            <div class="form-group">
-                                <label for="year" class="form-control-label">Year</label>
-                                {{ form_section.year(class="form-control") }}
-                            </div>
-                
-                            <div class="form-group">
-                                <label for="capacity" class="form-control-label">Capacity</label>
-                                {{ form_section.capacity(class="form-control", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
-                                <span class="char-count" id="capacity-char-count">0/2</span>
-                            </div>
-                
-                
-                            <div class="form-group">
-                                <label for="course_id" class="form-control-label">Course</label>
-                                <select name="course_id" id="course_id" class="form-control">
-                                    {% for course in courses %}
-                                        {% if course.semester == selected_semester %}
-                                            <option value="{{ course.id }}">{{ course.title }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="teacher_id" class="form-control-label">Teacher</label>
-                                {{ form_section.teacher_id(class="form-control") }}
-                            </div>
-                            <button type="submit" class="btn btn-primary">Create Section</button>
-                        </form>
-                    </div>
+                   <!-- Button trigger modal -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="addSectionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Section</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{{ url_for('manage_section') }}" class="form">
+            {{ form_section.csrf_token }}
+            {{ form_section.hidden_tag() }}
+            <div class="form-group">
+              <label for="name" class="form-control-label">Section Name</label>
+              {{ form_section.name(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'name-char-count')") }}
+              <span class="char-count" id="name-char-count">0/30</span>
+            </div>
+            <div class="form-group">
+              <label for="school_year" class="form-control-label">School Year</label>
+              {{ form_section.school_year(class="form-control") }}
+            </div>
+            <div class="form-group">
+              <label for="year" class="form-control-label">Year</label>
+              {{ form_section.year(class="form-control") }}
+            </div>
+            <div class="form-group">
+              <label for="capacity" class="form-control-label">Capacity</label>
+              {{ form_section.capacity(class="form-control", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
+              <span class="char-count" id="capacity-char-count">0/2</span>
+            </div>
+            <div class="form-group">
+              <label for="course_id" class="form-control-label">Course</label>
+              <select name="course_id" id="course_id" class="form-control">
+                {% for course in courses %}
+                {% if course.semester == selected_semester %}
+                <option value="{{ course.id }}">{{ course.title }}</option>
+                {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="teacher_id" class="form-control-label">Teacher</label>
+              {{ form_section.teacher_id(class="form-control") }}
+            </div>
+            <button type="submit" class="btn btn-primary">Create Section</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
                     <div class="table-responsive">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
@@ -329,9 +302,10 @@ h2 {
                                     </div>
                                     <div class="col-auto">
                                         <form method="get" action="{{ url_for('manage_section') }}">
-                                            <button id="toggle-button" class="btn btn-primary btn-sm toggle-button" style="margin-bottom: 10px;" type="button">
+
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSectionModal">
                                                 <i class="fas fa-plus"></i> Section
-                                            </button>
+                                              </button>
                                         </form>
                                     </div>
                                 </div>
@@ -340,14 +314,67 @@ h2 {
                                 <table id="sectionTable" class="table table-bordered" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Section</th>
-                                            <th>Capacity</th>
-                                            <th>Course</th>
-                                            <th>School_Year</th>
-                                            <th>Year</th>
-                                            <th>Class</th>
-                                            <th>Type</th>
-                                            <th>Teacher</th>
+                                            <th>
+                                                Title
+                                                <a href="{{ url_for('manage_section', sort_by='name', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                
+                                                
+                                                <a href="{{ url_for('manage_section', sort_by='name', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                               Capacity
+                                                <a href="{{ url_for('manage_section', sort_by='capacity', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='capacity', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                Course
+                                                <a href="{{ url_for('manage_section', sort_by='course', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='course', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>School_Year
+                                                <a href="{{ url_for('manage_section', sort_by='school_year', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='school_year', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>Year
+                                                <a href="{{ url_for('manage_section', sort_by='year', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='year', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>Type
+                                                <a href="{{ url_for('manage_section', sort_by='type', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='type', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>Teacher
+                                                <a href="{{ url_for('manage_section', sort_by='teacher', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('manage_section', sort_by='teacher', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -357,14 +384,13 @@ h2 {
                                         </tr>
                                         {% for section in sections %}
                                             <tr>
-                                                <td>{{ section.name }}</td>
-                                                <td>{{ section.capacity }}</td>
-                                                <td>{{ section.course.title }}</td>
-                                                <td>{{ section.school_year }}</td>
-                                                <td>{{ section.year }}</td>
-                                                <td>{{ section.course.Class }}</td>
-                                                <td>{{ section.course.course_type }}</td>
-                                                <td>{{ section.teacher.last_name}} {{ section.teacher.first_name}} {{ section.teacher.middle_name}}, </td>
+                                                <td class="small">{{ section.name }}</td>
+                                                <td class="small">{{ section.capacity }}</td>
+                                                <td class="small">{{ section.course.title }}</td>
+                                                <td class="small">{{ section.school_year }}</td>
+                                                <td class="small">{{ section.year }}</td>
+                                                <td class="small">{{ section.course.course_type }}</td>
+                                                <td class="small">{{ section.teacher.last_name}} {{ section.teacher.first_name}} {{ section.teacher.middle_name}}, </td>
                                                 <td>
                                                     <div style="display: flex;">
                                                         <form method="GET" action="{{ url_for('view_subjects') }}">
@@ -385,6 +411,15 @@ h2 {
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                <p>Showing {{ sections|length }} out of {{ pagination.total }} sections</p>
+<div class="row justify-content-end">
+    <div class="col-auto">
+        {% if pagination %}
+            {{ pagination.links }}
+        {% endif %}
+    </div>
+</div>
+
                             </div>
                         </div>
                     </div>

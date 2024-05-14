@@ -85,6 +85,10 @@
 .table {
     margin-top: 10px; /* Adjust as needed */
 }
+.small {
+    font-size: 15px; /* Adjust as needed */
+}
+
     </style>
 </head>
 
@@ -302,50 +306,39 @@
                                                        <table id="courseTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                                         <thead>
                                                             <tr>
-                                                                <th class="sortable" data-sort="title">
-                                                                    <div>
-                                                                        Course Title
-                                                                        <i class="fas fa-sort sort-icon"></i>
-                                                                    </div>
+                                                                <th>
+                                                                    Course Title
+                                                                    <a href="{{ url_for('course', sort_by='title', sort_order='asc') }}" style="text-decoration: none;">
+                                                                        <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                                    </a>
+                                                                    <a href="{{ url_for('course', sort_by='title', sort_order='desc') }}" style="text-decoration: none;">
+                                                                        <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                                    </a>
                                                                 </th>
-                                                                <th class="sortable" data-sort="abbreviation">
-                                                                    <div>
-                                                                        Abbreviation
-                                                                        <i class="fas fa-sort sort-icon"></i>
-                                                                    </div>
+                                                                <th>
+                                                                    Abbreviation
+                                                                    <a href="{{ url_for('course', sort_by='abbreviation', sort_order='asc') }}" style="text-decoration: none;">
+                                                                        <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                                    </a>
+                                                                    <a href="{{ url_for('course', sort_by='abbreviation', sort_order='desc') }}" style="text-decoration: none;">
+                                                                        <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                                    </a>
                                                                 </th>
-                                                                <th class="sortable" data-sort="year">
-                                                                    <div>
-                                                                        Year
-                                                                        <i class="fas fa-sort sort-icon"></i>
-                                                                    </div>
+                                                                <th>
+                                                                    Year
+                                                                    <a href="{{ url_for('course', sort_by='year', sort_order='asc') }}" style="text-decoration: none;">
+                                                                        <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                                    </a>
+                                                                    <a href="{{ url_for('course', sort_by='year', sort_order='desc') }}" style="text-decoration: none;">
+                                                                        <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                                    </a>
                                                                 </th>
-                                                                <th class="sortable" data-sort="Class">
-                                                                    <div>
-                                                                        Class
-                                                                        <i class="fas fa-sort sort-icon"></i>
-                                                                    </div>
-                                                                </th>
-                                                                <th class="sortable" data-sort="semesters">
-                                                                    <div>
-                                                                        Semesters
-                                                                        <i class="fas fa-sort sort-icon"></i>
-                                                                    </div>
-                                                                </th>
-                                                                <th class="sortable" data-sort="course_type">
-                                                                    <div>
-                                                                        Type
-                                                                        <i class="fas fa-sort sort-icon"></i>
-                                                                    </div>
-                                                                </th>
-                                                                <th class="sortable" data-sort="is_active">
-                                                                    <div>
-                                                                        Status
-                                                                        <i class="fas fa-sort sort-icon"></i>
-                                                                    </div>
-                                                                </th>
-                                                                <th>Actions</th>
+                                                                <th>Semesters</th>
+                                                                <th>Type</th>
+                                                                <th>Status</th>
+                                                                <th>Update</th>
                                                             </tr>
+                                                            
                                                             
                                                         </thead>
                                                         <tbody>
@@ -354,23 +347,18 @@
                                                             </tr>
                                                             {% for course in courses %}
                                                             <tr>
-                                                                <td>{{ course.title }}</td>
-                                                                <td>{{ course.abbreviation }}</td>
-                                                                <td>{{ course.year }}</td>
-                                                                <td>{{ course.Class }}</td>
-                                                                <td>{{ course.semesters }}</td>
-                                                                <td>{{ course.course_type }}</td>
-                                                                <td>{{ 'Active' if course.is_active else 'Inactive' }}</td>
-                                                                <td>
-                                                                    <!-- Buttons for actions -->
-                                                                    <div class="btn-group" role="group">
-                                                                        <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn btn-primary btn-sm center-text" style="border: 1px solid #e3e6f0; background-color: rgb(181, 181, 78);">
-                                                                            <i class="fas fa-edit"></i> Update
-                                                                        </a>
-                                                                    </div>
-                    
-                                                                    
+                                                                <td class="small">{{ course.title }}</td>
+                                                                <td class="small">{{ course.abbreviation }}</td>
+                                                                <td class="small">{{ course.year }}</td>
+                                                                <td class="small">{{ course.semesters }}</td>
+                                                                <td class="small">{{ course.course_type }}</td>
+                                                                <td class="small">{{ 'Active' if course.is_active else 'Inactive' }}</td>
+                                                                <td class="text-center">
+                                                                    <a href="{{ url_for('update_course', course_id=course.id) }}">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
                                                                 </td>
+                                                                
                                                             </tr>
                                                             {% endfor %}
                                                         </tbody>
@@ -692,82 +680,8 @@
         fadeOutFlash();
     });
 
-    // Function to toggle subjects and display in modal
-    function toggleSubjects(courseId) {
-        var subjectRows = document.querySelectorAll('.subject-row.subject-course-' + courseId);
-        var modalContent = document.getElementById('subject-modal-content');
-
-        // Clear previous content
-        modalContent.innerHTML = '';
-
-        // Populate subjects into the modal
-        subjectRows.forEach(function (row) {
-            var cloneRow = row.cloneNode(true); // Clone the subject row
-            cloneRow.style.display = 'table-row'; // Ensure the cloned row is visible
-            modalContent.appendChild(cloneRow); // Append the cloned row to the modal content
-        });
-
-        // Show the modal
-        var modal = document.getElementById('subject-modal');
-        modal.style.display = 'block';
-    }
-
-    $(document).ready(function() {
-        $('.sortable').click(function() {
-            var column = $(this).index();
-            var order = $(this).hasClass('asc') ? 'desc' : 'asc';
-
-            // Remove asc/desc class from all headers except the clicked one
-            $('.sortable').removeClass('asc desc');
-            $(this).addClass(order);
-
-            // Sort table rows based on the selected column
-            var $table = $(this).closest('table');
-            var rows = $table.find('tbody > tr').get();
-            rows.sort(function(a, b) {
-                var keyA = $(a).find('td:eq(' + column + ')').text().toUpperCase();
-                var keyB = $(b).find('td:eq(' + column + ')').text().toUpperCase();
-                if (order == 'asc') {
-                    return (keyA < keyB) ? -1 : (keyA > keyB) ? 1 : 0;
-                } else {
-                    return (keyA > keyB) ? -1 : (keyA < keyB) ? 1 : 0;
-                }
-            });
-
-            // Reorder the table rows
-            $.each(rows, function(index, row) {
-                $table.children('tbody').append(row);
-            });
-        });
-    });
-    document.addEventListener("DOMContentLoaded", function() {
-        const headers = document.querySelectorAll(".sortable");
-
-        headers.forEach(header => {
-            header.addEventListener("click", function() {
-                const sortIcon = this.querySelector(".sort-icon");
-                resetSortIcons();
-                if (sortIcon.classList.contains("fa-sort") || sortIcon.classList.contains("fa-sort-down")) {
-                    sortIcon.classList.remove("fa-sort");
-                    sortIcon.classList.remove("fa-sort-down");
-                    sortIcon.classList.add("fa-sort-up");
-                } else {
-                    sortIcon.classList.remove("fa-sort-up");
-                    sortIcon.classList.add("fa-sort-down");
-                }
-                // Your sorting logic goes here
-            });
-        });
-
-        function resetSortIcons() {
-            const allIcons = document.querySelectorAll(".sort-icon");
-            allIcons.forEach(icon => {
-                icon.classList.remove("fa-sort-up");
-                icon.classList.remove("fa-sort-down");
-                icon.classList.add("fa-sort");
-            });
-        }
-    });
+   
+   
     </script>
 
 </html>

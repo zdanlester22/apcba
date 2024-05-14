@@ -201,6 +201,7 @@
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Portal V1.0</h5>
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -259,7 +260,7 @@
                         <input type="hidden" id="subject_id" name="subject_id">
                         <label for="subjectSelect">Subject</label>
                         <select class="form-control" id="subject-select" name="subject_id"> <!-- Change name to subject_id -->
-                            <option value="">Select Subject</option>
+                            <option value="">Choose a subject you want to add a schedule</option>
                             {% for subject in subjects %}
                             <option value="{{ subject.id }}" data-abbreviation="{{ subject.abbreviation }}" data-title="{{ subject.title }}" data-unit="{{ subject.unit }}">{{ subject.title }}</option>
                             {% endfor %}
@@ -331,13 +332,11 @@
     </div>
 </div>
 </div>
-<div>
-    <h4>{{section.name}}</h4>
-</div>
+
 <!-- Display the list of schedules in a table -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Schedule Table</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Schedule Table for {{section.name}}</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">

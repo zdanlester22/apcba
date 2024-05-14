@@ -131,6 +131,32 @@
     #uploadModal .modal-dialog {
             max-width: 600px;
         }
+        .diary-entry {
+    background-color: #d6dc84; /* Pastel purple background */
+    border: 2px solid #e1e399; /* Light purple border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Slight shadow */
+    padding: 20px; /* Padding inside the entry */
+    margin-bottom: 30px; /* Spacing between entries */
+}
+
+.announcement-title {
+    font-size: 22px; /* Larger font size for title */
+    color: gray; /* Darker purple color for title */
+    margin-bottom: 10px; /* Increase space below title */
+}
+
+.announcement-content {
+    font-size: 18px; /* Larger font size for content */
+    color: gray; /* Darker purple color for content */
+    margin-bottom: 15px; /* Increase space below content */
+}
+
+.announcement-meta {
+    font-size: 13px; /* Font size for meta info */
+    color: gray; /* Lighter purple color for meta info */
+}
+
 
     </style>
 </head>
@@ -294,7 +320,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <h1 class="h4 mb-0 text-gray-800">APCBA Announcements</h1>
                     </div>
 
                     <!-- Content Row -->
@@ -310,30 +336,30 @@
                             </div>
                         </div>
                     
-          
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="announcements">
-                                        {% if announcements %}
-                                            {% for announcement in announcements %}
-                                                <div class="card mb-3">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">{{ announcement.title }}</h5>
-                                                        <p class="card-text">{{ announcement.content }}</p>
-                                                        <p class="card-text">
-                                                            <small class="text-muted">Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
-                                        {% else %}
-                                            <div class="alert alert-info" role="alert">
-                                                No announcements posted.
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="announcements">
+                                    {% if announcements %}
+                                        {% for announcement in announcements %}
+                                            <div class="diary-entry">
+                                                <h5 class="announcement-title">{{ announcement.title }}</h5>
+                                                <hr class="announcement-divider">
+                                                <p class="announcement-content">{{ announcement.content }}</p>
+                                                <hr class="announcement-divider">
+                                                <p class="announcement-meta">Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
                                             </div>
-                                        {% endif %}
-                                    </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="alert alert-info" role="alert">
+                                            No announcements posted.
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
+                        </div>
+                        
+
+                        
            
 
 

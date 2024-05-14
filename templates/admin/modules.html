@@ -70,6 +70,9 @@
         .input-group{
             width: 100%;
         }
+        .small {
+    font-size: 15px; /* Adjust as needed */
+}
     </style>
 </head>
 
@@ -345,12 +348,39 @@
                                 <table id="moduleTable" class="table table-bordered">
                                     <thead>
                                         
+                                       
                                         <tr>
-                                            <th>Title</th>
-                                            <th>Year</th>
-                                            <th>Course</th>
-                                            <th>Action</th>
-                                        </tr>
+                                            <th>
+                                                Title
+                                                <a href="{{ url_for('modules', sort_by='title', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('modules', sort_by='title', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                               Year
+                                                <a href="{{ url_for('modules', sort_by='year', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('modules', sort_by='year', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                Course
+                                                <a href="{{ url_for('modules', sort_by='course', sort_order='asc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                                <a href="{{ url_for('modules', sort_by='course', sort_order='desc') }}" style="text-decoration: none;">
+                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                                </a>
+                                            </th>
+                             
+                            
+                                        <th>Download</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                         <tr id="noResultsRow" style="display: none;">
@@ -358,10 +388,10 @@
                                         </tr>
                                         {% for module in modules %}
                                             <tr>
-                                                <td>{{ module.title }}</td>
-                                                <td>{{ module.year }}</td>
-                                                <td>{{ module.course.title }}</td>
-                                                <td>
+                                                <td class="small">{{ module.title }}</td>
+                                                <td class="small">{{ module.year }}</td>
+                                                <td class="small">{{ module.course.title }}</td>
+                                                <td class="small">
                                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#downloadModal{{ module.id }}">
                                                         <i class="fas fa-download fa-sm mr-1"></i> Download PDF
                                                     </button>
@@ -390,7 +420,7 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                                <p>Showing {{ courses|length }} out of {{ pagination.total }} courses</p>
+                                <p>Showing {{modules|length }} out of {{ pagination.total }} Modules</p>
                                 <div class="row justify-content-end">
                                     <div class="col-auto">
                                         {{ pagination.links }}
