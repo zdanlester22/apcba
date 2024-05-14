@@ -9,6 +9,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
 from flask_paginate import Pagination, get_page_parameter
 from datetime import datetime, timedelta
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired, Email
 import os
 import requests
 from flask_mail import Mail, Message
@@ -487,30 +490,27 @@ def view_tesda_enrollies():
     enrollies_list = TesdaEnrollies.query.filter_by(is_archived=False).all()
     return render_template('admin/view_tesda_enrollies.html', enrollies_list=enrollies_list)
 
-
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
     form = EnrolliesForm()
     
     # Get courses filtered by course_type and semester
-    course = request.args.get('course_title')
-    courses_college_semester = Course.query.filter_by(course_type='college', semesters='1st semester').all()
+    courses_college_semester = Course.query.filter_by(course_type='College').all()
     
     if form.validate_on_submit():
-        existing_application = Enrollies.query.filter_by(email=form.email.data).first()
-        
-        if existing_application:
-            flash('This email is already used.', 'error')
-            return render_template('web/enrollies.html', form=form, courses_college_semester=courses_college_semester)
-            
         try:
+            existing_application = Enrollies.query.filter_by(email=form.email.data).first()
+        
+            if existing_application:
+                flash('This email is already used.', 'error')
+                return render_template('web/enrollies.html', form=form, courses_college_semester=courses_college_semester)
+                
             new_enrollies = Enrollies(
                 first_name=form.first_name.data,
                 middle_name=form.middle_name.data,
                 last_name=form.last_name.data,
                 suffix=form.suffix.data,
                 email=form.email.data,
-                track_strand=course,  # Set track and strand to course title
                 year=form.year.data,
                 address=form.address.data,
                 contact_number=form.contact_number.data,
@@ -532,14 +532,25 @@ def enrollies():
             db.session.commit()
 
             flash('Enrollment successful!', 'success')
+
+
             return redirect(url_for('enrollies'))
 
         except Exception as e:
             db.session.rollback()
+            print("Error during enrollment:", str(e))  
             app.logger.error(f"Error during enrollment: {str(e)}")
 
     enrollies_list = Enrollies.query.all()
+
+    # Debug statement
+    print("Enrollies list:", enrollies_list)  
+
     return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list, courses_college_semester=courses_college_semester)
+
+
+
+
 
 #########
 @app.route('/admin/accepeted_enrollie_SHS/<int:enrollie_id>')

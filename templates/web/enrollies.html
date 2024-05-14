@@ -253,13 +253,14 @@
                         {{ form.email(placeholder='Enter your email address', required=True, autocomplete='off') }}
                     </div>
                     <div class="form-group">
-                        <label for="course">Course</label>
-                        <select class="form-control" id="course" name="course">
-                            {% for course in courses %}
-                                <option value="{{ course.id }}">{{ course.title }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+    <label for="course">Course</label>
+    <select class="form-control" id="course" name="course">
+        {% for course in courses_college_semester %}
+            <option value="{{ course.id }}">{{ course.title }}</option>
+        {% endfor %}
+    </select>
+</div>
+
                     <div>
                         <label for="year">Year <span class="required">*</span></label>
                         {{ form.year(placeholder='Enter your academic year', required=True) }}
@@ -311,7 +312,7 @@
         
                     <h2>Parent/Guardian Information</h2>
                     <div>
-                        <label for="parent_names">Names of Parents/Guardians<span class="required">*</span></label>
+                        <label for="parent_names">Names of Parents/Guardians<span class="required"> *</span></label>
                         {{ form.parent_names(placeholder='Enter guardian name', required=True, autocomplete="off") }}
                     </div>
                     <div>
