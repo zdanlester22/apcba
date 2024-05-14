@@ -607,11 +607,11 @@ def archive_enrollie_shs(enrollie_id):
 
             enrollie.is_archived = True
             db.session.commit()
-            flash('Archived successfully!', 'success')
+            flash('Accept successfully!', 'success')
         except Exception as e:
             db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
+            app.logger.error(f"Error Accepting enrollie: {str(e)}")
+            flash('Error Accepting enrollie.', 'error')
     return redirect(url_for('view_senior_enrollies'))
 
 @app.route('/admin/view_archived_shs')
@@ -672,11 +672,11 @@ def archive_enrollie_tesda(enrollie_id):
 
             enrollie.is_archived = True
             db.session.commit()
-            flash('Archived successfully!', 'success')
+            flash('Accept successfully!', 'success')
         except Exception as e:
             db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
+            app.logger.error(f"Error Accepting enrollie: {str(e)}")
+            flash('Error Accepting enrollie.', 'error')
     return redirect(url_for('view_tesda_enrollies'))
 
 @app.route('/admin/view_archived_tesda')
@@ -743,11 +743,11 @@ def archive_enrollie(enrollie_id):
             enrollie.is_archived = True
             db.session.commit()
             
-            flash('Archived successfully!', 'success')
+            flash('Accept successfully!', 'success')
         except Exception as e:
             db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
+            app.logger.error(f"Error Accepting enrollie: {str(e)}")
+            flash('Error Accepting enrollie.', 'error')
     return redirect(url_for('view_enrollies'))
 
 

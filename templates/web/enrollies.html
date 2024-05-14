@@ -252,14 +252,10 @@
                         <label for="email">Email Address <span class="required">*</span></label>
                         {{ form.email(placeholder='Enter your email address', required=True, autocomplete='off') }}
                     </div>
-                    <div class="form-group">
-    <label for="course">Course</label>
-    <select class="form-control" id="course" name="course">
-        {% for course in courses_college_semester %}
-            <option value="{{ course.id }}">{{ course.title }}</option>
-        {% endfor %}
-    </select>
-</div>
+                    <div>
+                        <label for="track_strand">Track & Strand<span class="required">*</span></label>
+                        {{ form.track_strand(class="form-control", required=true) }}
+                    </div>
 
                     <div>
                         <label for="year">Year <span class="required">*</span></label>

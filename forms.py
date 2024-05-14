@@ -137,18 +137,9 @@ class EnrolliesForm(FlaskForm):
     suffix = StringField('Suffix')
     email = StringField('Email', validators=[DataRequired(), Email()])
     track_strand_choices = [
-        ('GAs', 'General Academic Strand (GAs)'),
-        ('STEM', 'STEM (Science, Technology, Engineering, Mathematics)'),
-        ('ABM', 'ABM (Accountancy, Business, Management)'),
-        ('TVL-Home Economics-Tourism', 'TVL-Home Economics (Tourism Promotion Services NC II)'),
-        ('TVL-Home Economics-Events', 'TVL-Home Economics (Events Management NC III)'),
-        ('TVL-Home Economics-Housekeeping', 'TVL-Home Economics (Housekeeping NC II)'),
-        ('TVL-Industrial Arts', 'TVL-Industrial Arts (Shielded Metal Arc Welding NC II & Pipefitting NC II)'),
-        ('TVL-ICT', 'TVL-ICT (Computer System Services NC II)'),
-        ('TVL-Home Economics-Food', 'TVL-Home Economics (Food and Beverages NC II)'),
-        ('TVL-Home Economics-Ship', 'TVL-Home Economics (Ship Caterings Services NC II)'),
-        ('HUMMS', 'HUMMS (Humanities and Social Sciences)'),
-        ('TVL-Agri-Fishery Arts', 'TVL-Agri-Fishery Arts (Agri-Crops Production NC II)')
+        ('BTVTED','Bachelor of Technical Vocational Teachers Education (BTVTED)'),
+        ('Hospitality and tourism Technology', '3 Years Diploma Hospitality and tourism Technology'),
+        ('Hotel and Restaurant Services', '1 Year Hotel and Restaurant Services')
     ]
     track_strand = SelectField('Track & Strand', choices=track_strand_choices, validators=[DataRequired()])
 
@@ -196,15 +187,9 @@ class SeniorEnrolliesForm(FlaskForm):
         ('GAs', 'General Academic Strand (GAs)'),
         ('STEM', 'STEM (Science, Technology, Engineering, Mathematics)'),
         ('ABM', 'ABM (Accountancy, Business, Management)'),
-        ('TVL-Home Economics-Tourism', 'TVL-Home Economics (Tourism Promotion Services NC II)'),
-        ('TVL-Home Economics-Events', 'TVL-Home Economics (Events Management NC III)'),
-        ('TVL-Home Economics-Housekeeping', 'TVL-Home Economics (Housekeeping NC II)'),
-        ('TVL-Industrial Arts', 'TVL-Industrial Arts (Shielded Metal Arc Welding NC II & Pipefitting NC II)'),
+        ('TVL-Home Economics-Housekeeping', 'TVL-Home Economics'),
         ('TVL-ICT', 'TVL-ICT (Computer System Services NC II)'),
-        ('TVL-Home Economics-Food', 'TVL-Home Economics (Food and Beverages NC II)'),
-        ('TVL-Home Economics-Ship', 'TVL-Home Economics (Ship Caterings Services NC II)'),
         ('HUMMS', 'HUMMS (Humanities and Social Sciences)'),
-        ('TVL-Agri-Fishery Arts', 'TVL-Agri-Fishery Arts (Agri-Crops Production NC II)')
     ]
     track_strand = SelectField('Track & Strand', choices=track_strand_choices, validators=[DataRequired()])
 
@@ -216,18 +201,11 @@ class TesdaEnrolliesForm(FlaskForm):
     suffix = StringField('Suffix')
     email = StringField('Email', validators=[DataRequired(), Email()])
     track_strand_choices = [
-        ('GAs', 'General Academic Strand (GAs)'),
-        ('STEM', 'STEM (Science, Technology, Engineering, Mathematics)'),
-        ('ABM', 'ABM (Accountancy, Business, Management)'),
-        ('TVL-Home Economics-Tourism', 'TVL-Home Economics (Tourism Promotion Services NC II)'),
-        ('TVL-Home Economics-Events', 'TVL-Home Economics (Events Management NC III)'),
-        ('TVL-Home Economics-Housekeeping', 'TVL-Home Economics (Housekeeping NC II)'),
-        ('TVL-Industrial Arts', 'TVL-Industrial Arts (Shielded Metal Arc Welding NC II & Pipefitting NC II)'),
-        ('TVL-ICT', 'TVL-ICT (Computer System Services NC II)'),
-        ('TVL-Home Economics-Food', 'TVL-Home Economics (Food and Beverages NC II)'),
-        ('TVL-Home Economics-Ship', 'TVL-Home Economics (Ship Caterings Services NC II)'),
-        ('HUMMS', 'HUMMS (Humanities and Social Sciences)'),
-        ('TVL-Agri-Fishery Arts', 'TVL-Agri-Fishery Arts (Agri-Crops Production NC II)')
+        ('Contact Center Services'),
+        ('Events Management NC III'),
+        ('TVL-Home Economics-Housekeeping'),
+        ('Shielded Metal Arc Welding NC II & Pipefitting NC II')
+       
     ]
     track_strand = SelectField('Track & Strand', choices=track_strand_choices, validators=[DataRequired()])
 
