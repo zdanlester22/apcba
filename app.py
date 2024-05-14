@@ -814,16 +814,46 @@ def users():
     return render_template('admin/users.html', users=pagination_users, search_query=search_query, role=role_filter, total_users=total_users, pagination=pagination)
 
 @app.route('/admin/teachers')
-@login_required
 def view_teachers():
-    
     if current_user.role != 'admin':
         return redirect(url_for('dashboard'))
-    teachers_data = Teacher.query.all()
 
-    return render_template('admin/view_teachers.html', teachers=teachers_data)
+    page = request.args.get('page', 1, type=int)
+    per_page = 8  # Number of items per page
+    search_query = request.args.get('search', '', type=str)
 
+    if search_query:
+        teachers_query = Teacher.query.filter(
+            Teacher.last_name.ilike(f'%{search_query}%') |
+            Teacher.first_name.ilike(f'%{search_query}%') |
+            Teacher.middle_name.ilike(f'%{search_query}%')
+        )
+    else:
+        teachers_query = Teacher.query
 
+    teachers_pagination = teachers_query.paginate(page=page, per_page=per_page, error_out=False)
+
+    # Check for AJAX request
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        teachers = [{
+            'teacher_id': teacher.id,
+            'last_name': teacher.last_name,
+            'first_name': teacher.first_name,
+            'middle_name': teacher.middle_name
+        } for teacher in teachers_pagination.items]
+
+        return jsonify({
+            'teachers': teachers,
+            'total_teachers': teachers_query.count(),
+            'current_page': teachers_pagination.page,
+            'pages': teachers_pagination.pages
+        })
+
+    return render_template('admin/view_teachers.html', 
+                           teachers=teachers_pagination.items, 
+                           pagination=teachers_pagination,
+                           total_teachers=teachers_query.count(),
+                           search_query=search_query)
 
 @app.route('/students', methods=['GET'])
 @login_required
@@ -832,10 +862,13 @@ def view_students():
         flash('You are not authorized to view students.', 'danger')
         return redirect(url_for('dashboard'))
 
+    page = request.args.get('page', 1, type=int)
+    search_query = request.args.get('search', '', type=str)
+    
     if current_user.role == 'teacher':
         teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
         if teacher:
-            section = teacher.section  
+            section = teacher.section
             if section:
                 enrollments = section.enrollments
                 return render_template('teacher/view_class.html', authenticated=True, enrollments=enrollments)
@@ -847,8 +880,21 @@ def view_students():
             return redirect(url_for('dashboard'))
 
     elif current_user.role == 'admin':
-        students = Student.query.all()
-        return render_template('admin/view_students.html', authenticated=True, students=students)
+        query = Student.query
+        if search_query:
+            query = query.filter(
+                Student.first_name.ilike(f'%{search_query}%') |
+                Student.last_name.ilike(f'%{search_query}%') |
+                Student.middle_name.ilike(f'%{search_query}%') |
+                Student.suffix.ilike(f'%{search_query}%')
+            )
+        
+        total_students = query.count()
+        students_pagination = query.paginate(page=page, per_page=8)
+        return render_template('admin/view_students.html', authenticated=True, students_pagination=students_pagination, search_query=search_query, total_students=total_students)
+
+
+
     
 @app.route('/student/<int:student_id>/toggle_active', methods=['POST'])
 def toggle_active_student(student_id):
@@ -1976,33 +2022,41 @@ def enroll():
     if sections:
         form.section_id.choices = [(section.id, section.name) for section in sections]
 
-
     students = Student.query.all()
     form.student_id.choices = [(student.id, student.first_name) for student in students]
-    existing_enrollments = Enrollment.query.all()
+
+    # Get the current page number from the request
+    page = request.args.get('page', 1, type=int)
+    per_page = 8  # Number of items per page
+
+    # Paginate the existing enrollments
+    existing_enrollments_pagination = Enrollment.query.paginate(page=page, per_page=per_page, error_out=False)
+    existing_enrollments = existing_enrollments_pagination.items
 
     if form.validate_on_submit():
-
-
         existing_enrollment = Enrollment.query.filter_by(student_id=student_id, section_id=form.section_id.data).first()
-
         if existing_enrollment:
             flash('Student is already enrolled in this section.', 'danger')
         else:
             new_enrollment = Enrollment(
-            student_id=form.student_id.data,
-            year=form.year.data,
-            course_id=form.course_id.data,
-            section_id=form.section_id.data,
-            
-)
-
+                student_id=form.student_id.data,
+                year=form.year.data,
+                course_id=form.course_id.data,
+                section_id=form.section_id.data,
+            )
             db.session.add(new_enrollment)
             db.session.commit()
-            flash(f'Students enrolled successfully!', 'success')
+            flash(f'Student enrolled successfully!', 'success')
             return redirect(url_for('enroll'))
 
-    return render_template('admin/enroll.html', form=form, student_form=student_form, existing_enrollments=existing_enrollments)
+    return render_template(
+        'admin/enroll.html', 
+        form=form, 
+        student_form=student_form, 
+        existing_enrollments=existing_enrollments, 
+        pagination=existing_enrollments_pagination
+    )
+
 
 @app.route('/enrolled_subjects/<int:student_id>', methods=['GET'])
 @login_required

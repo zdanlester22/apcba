@@ -208,75 +208,79 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                   
-                    <div class="container-fluid">
-                        <div class="row">
-                                               <div class="col-md-6 offset-md-6">
-                                                   <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
-                                                       <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
-                                                       <div class="input-group-append">
-                                                           <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-                                                       </div>
-                                                   </div>
-                                               </div>
-                                           </div>
-                                           <!-- Page Heading -->
-                                           <h1 class="h3 mb-2 text-gray-800">Teacher</h1>
-                                           
-                                           
-                                           <!-- DataTales Example -->
-                                           <div class="card shadow mb-4">
-                                               <div class="card-header py-3">
-                                                   <h6 class="m-0 font-weight-bold text-primary">List of Teacher</h6>
-                                                   
-                                               </div>
-                                               <div class="card-body">
-                                                   <div class="table-responsive">
-                                                    {% if teachers %}
-                                                       <table id="teacherTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                        <thead>
-                                                            <tr>
-                                                                <th hidden>Teacher ID</th>
-                                                                <th>LAST NAME</th>
-                                                                <th>FIRST NAME</th>
-                                                                <th>MIDDLE NAME</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tbody> <tr id="noResultsRow" style="display: none;">
-                                                                <td colspan="9" class="text-center">No results</td>
-                                                            </tr>
-                                                            {% for teacher in teachers %}
-                                                                <tr>
-                                                                    <td hidden>{{ teacher.teacher_id }}</td>
-                                                                    <td style="text-transform: uppercase;">{{ teacher.last_name}}</td>
-                                                                    <td style="text-transform: uppercase;">{{ teacher.first_name}}</td>
-                                                                    <td style="text-transform: uppercase;"> {{ teacher.middle_name}}</td>
-                                                                </tr>
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                {% else %}
-                                                    <p>No teachers found.</p>
-                                                {% endif %}
-                                                       </div>
-                                                   </div>
-                                               </div>
-                                           </div>
-                                       
-                                      
-                    <!-- Content Row -->
-                   
-                    
-                    
-                       
-
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6 offset-md-6">
+                            <form class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                                <input type="text" name="search" class="form-control" id="searchInput" placeholder="Search...">
+                                <div class="input-group-append">
+                                    <button class="input-group-text" type="submit" id="basic-addon2"><i class="fas fa-search"></i></button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+                    <h1 class="h3 mb-2 text-gray-800">Teacher</h1>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">List of Teachers</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="teacherTable" class="table table-bordered" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th hidden>Teacher ID</th>
+                                            <th>LAST NAME</th>
+                                            <th>FIRST NAME</th>
+                                            <th>MIDDLE NAME</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="noResultsRow" style="display: none;">
+                                            <td colspan="4" class="text-center">No results</td>
+                                        </tr>
+                                        {% for teacher in teachers %}
+                                        <tr>
+                                            <td hidden>{{ teacher.teacher_id }}</td>
+                                            <td style="text-transform: uppercase;">{{ teacher.last_name }}</td>
+                                            <td style="text-transform: uppercase;">{{ teacher.first_name }}</td>
+                                            <td style="text-transform: uppercase;">{{ teacher.middle_name }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <p>Showing {{ teachers|length }} out of {{ total_teachers }} teachers</p>
+                                <div class="d-flex justify-content-end">
+                                    <ul class="pagination">
+                                        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                                            <a class="page-link" href="{{ url_for('view_teachers', page=pagination.prev_num, search=search_query) }}">&laquo;</a>
+                                        </li>
+                                        {% for page_num in pagination.iter_pages() %}
+                                        {% if page_num %}
+                                        {% if page_num == pagination.page %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page_num }}</span>
+                                        </li>
+                                        {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('view_teachers', page=page_num, search=search_query) }}">{{ page_num }}</a>
+                                        </li>
+                                        {% endif %}
+                                        {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                                            <a class="page-link" href="{{ url_for('view_teachers', page=pagination.next_num, search=search_query) }}"> &raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- /.container-fluid -->
-            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
@@ -385,5 +389,78 @@
 
 
     </script>
+    <script>
+        function filterTable() {
+            let input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("teacherTable");
+            tr = table.getElementsByTagName("tr");
+    
+            for (i = 1; i < tr.length; i++) { // Start at 1 to skip table header
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script>
+       $(document).ready(function() {
+           $('#searchInput').on('input', function() {
+               var searchQuery = $(this).val().trim();
+               fetchTeachers(searchQuery, 1);
+           });
+
+           function fetchTeachers(searchQuery, page) {
+               $.ajax({
+                   url: '/admin/teachers',
+                   method: 'GET',
+                   data: {
+                       search: searchQuery,
+                       page: page
+                   },
+                   success: function(response) {
+                       updateTeacherList(response);
+                   },
+                   error: function(xhr, status, error) {
+                       console.error(error);
+                   }
+               });
+           }
+
+           function updateTeacherList(data) {
+               $('#teacherTable tbody').empty();
+               if (data.teachers.length > 0) {
+                   $.each(data.teachers, function(index, teacher) {
+                       $('#teacherTable tbody').append(`
+                           <tr>
+                               <td hidden>${teacher.teacher_id}</td>
+                               <td style="text-transform: uppercase;">${teacher.last_name}</td>
+                               <td style="text-transform: uppercase;">${teacher.first_name}</td>
+                               <td style="text-transform: uppercase;">${teacher.middle_name}</td>
+                           </tr>
+                       `);
+                   });
+                   $('#noResultsRow').hide();
+               } else {
+                   $('#noResultsRow').show();
+               }
+               $('.pagination').empty();
+               for (var i = 1; i <= data.pages; i++) {
+                   $('.pagination').append(`<li class="page-item ${i == data.current_page ? 'active' : ''}"><a class="page-link" href="#" onclick="fetchTeachers('${data.search}', ${i})">${i}</a></li>`);
+               }
+           }
+       });
+   </script>
+    
 
 </html>

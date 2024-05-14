@@ -210,126 +210,135 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
                     <!-- Page Heading -->
-            
-
-                  <!-- Content Row -->
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-
-            <div class="modal fade" id="enrollmentModal" tabindex="-1" role="dialog" aria-labelledby="enrollmentModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="enrollmentModalLabel">Enroll Students</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                
+                    <!-- Content Row -->
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="modal fade" id="enrollmentModal" tabindex="-1" role="dialog" aria-labelledby="enrollmentModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="enrollmentModalLabel">Enroll Students</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" action="{{ url_for('enroll') }}">
+                                                    {{ form.hidden_tag() }}
+                
+                                                    <!-- Select2 for student_id -->
+                                                    <div class="form-group">
+                                                        <label for="{{ form.student_id.id }}">{{ form.student_id.label }}</label>
+                                                        <div class="select-wrapper">
+                                                            {{ form.student_id(class="form-control select2") }}
+                                                        </div>
+                                                    </div>
+                
+                                                    <!-- Select2 for course_id -->
+                                                    <div class="form-group">
+                                                        <label for="{{ form.course_id.id }}">{{ form.course_id.label }}</label>
+                                                        <div class="select-wrapper">
+                                                            {{ form.course_id(class="form-control select2") }}
+                                                        </div>
+                                                    </div>
+                
+                                                    <div class="form-group">
+                                                        <label for="{{ form.year.id }}">{{ form.year.label }}</label>
+                                                        <div class="select-wrapper">
+                                                            {{ form.year(class="form-control select2") }}
+                                                        </div>
+                                                    </div>
+                
+                                                    <!-- Select2 for section_id -->
+                                                    <div class="form-group">
+                                                        <label for="{{ form.section_id.id }}">{{ form.section_id.label }}</label>
+                                                        <div class="select-wrapper">
+                                                            {{ form.section_id(class="form-control select2") }}
+                                                        </div>
+                                                    </div>
+                
+                                                    <div class="form-group">
+                                                        <button type="submit" class="btn btn-primary">Enroll</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <form method="post" action="{{ url_for('enroll') }}">
-                                {{ form.hidden_tag() }}
-
-                                <!-- Select2 for student_id -->
-                                <div class="form-group">
-                                    <label for="{{ form.student_id.id }}">{{ form.student_id.label }}</label>
-                                    <div class="select-wrapper">
-                                        {{ form.student_id(class="form-control select2") }}
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <!-- Table -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h6 class="m-0 font-weight-bold text-primary">Add student to their sections</h6>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <button class="btn btn-primary btn-sm show-button" data-toggle="modal" style="margin-bottom: 10px;" data-target="#enrollmentModal">
+                                            <i class="fas fa-user-plus"></i> Enroll 
+                                        </button>
                                     </div>
                                 </div>
-
-                                <!-- Select2 for course_id -->
-                                <div class="form-group">
-                                    <label for="{{ form.course_id.id }}">{{ form.course_id.label }}</label>
-                                    <div class="select-wrapper">
-                                        {{ form.course_id(class="form-control select2") }}
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="{{ form.year.id }}">{{ form.year.label }}</label>
-                                    <div class="select-wrapper">
-                                        {{ form.year(class="form-control select2") }}
-                                    </div>
-                                </div>
-
-                                <!-- Select2 for section_id -->
-                                <div class="form-group">
-                                    <label for="{{ form.section_id.id }}">{{ form.section_id.label }}</label>
-                                    <div class="select-wrapper">
-                                        {{ form.section_id(class="form-control select2") }}
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Enroll</button>
-                                </div>
-                            </form>
+                            </div>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Course</th>
+                                        <th>Year</th>
+                                        <th>Section Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for enrollment in existing_enrollments %}
+                                    <tr>
+                                        <td>{{ enrollment.enrolled_student_rel.last_name }} {{ enrollment.enrolled_student_rel.first_name }} {{ enrollment.enrolled_student_rel.middle_name }},{{ enrollment.enrolled_student_rel.suffix }}</td>
+                                        <td>{{ enrollment.enrolled_course_rel.title }}</td>
+                                        <td>{{ enrollment.year }}</td>
+                                        <td>{{ enrollment.enrolled_section_rel.name }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <p>Showing {{ existing_enrollments|length }} out of {{ pagination.total }} enrollments</p>
+                            <div class="d-flex justify-content-end">
+                                <ul class="pagination">
+                                    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                                        <a class="page-link" href="{{ url_for('enroll', page=pagination.prev_num) }}">&laquo;</a>
+                                    </li>
+                                    {% for page_num in pagination.iter_pages() %}
+                                        {% if page_num %}
+                                            {% if page_num == pagination.page %}
+                                                <li class="page-item active">
+                                                    <span class="page-link">{{ page_num }}</span>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="{{ url_for('enroll', page=page_num) }}">{{ page_num }}</a>
+                                                </li>
+                                            {% endif %}
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <li class="page-item mr-3 {% if not pagination.has_next %}disabled{% endif %}">
+                                        <a class="page-link" href="{{ url_for('enroll', page=pagination.next_num) }}">&raquo;</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-
-
-
-           
-            
-
-
-        </div>
-    </div>
-</div>
-<div class="table-responsive">
-    <!-- Table -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <div class="row">
-                <div class="col-6">
-                    <h6 class="m-0 font-weight-bold text-primary">Add student to their sections</h6>
-                </div>
-                <div class="col-6 text-right">
-                    {% block content %}
-                    <button class="btn btn-primary btn-sm show-button" data-toggle="modal" style="margin-bottom: 10px;" data-target="#enrollmentModal">
-                        <i class="fas fa-user-plus"></i> Enroll 
-                    </button>
-                    {% endblock %}
-                </div>
-            </div>
-        </div>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Student Name</th>
-                    <th>Course</th>
-                    <th>Year</th>
-                    <th>Section Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for enrollment in existing_enrollments %}
-                <tr>
-                    <td>{{ enrollment.enrolled_student_rel.last_name }} {{ enrollment.enrolled_student_rel.first_name }} {{ enrollment.enrolled_student_rel.middle_name }},{{ enrollment.enrolled_student_rel.suffix }}</td>
-                    <td>{{ enrollment.enrolled_course_rel.title }}</td>
-                    <td>{{ enrollment.year }}</td>
-                    <td>{{ enrollment.enrolled_section_rel.name }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-
-            <!-- End of Footer -->
-
-        </div>
+                
         <!-- End of Content Wrapper -->
 
     </div>
@@ -401,6 +410,29 @@
       function hideForm() {
         $("#enrollment-box").removeClass("show-box");
       }
+    </script>
+    <script>
+        function filterTable() {
+            let input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("teacherTable");
+            tr = table.getElementsByTagName("tr");
+    
+            for (i = 1; i < tr.length; i++) { // Start at 1 to skip table header
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     </script>
  
 

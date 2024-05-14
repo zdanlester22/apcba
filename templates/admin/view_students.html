@@ -211,84 +211,101 @@
              <!-- /.container-fluid -->
              <div class="container-fluid">
                 <div class="row">
-                                       <div class="col-md-6 offset-md-6">
-                                           <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
-                                               <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
-                                               <div class="input-group-append">
-                                                   <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <!-- Page Heading -->
-                                   <h1 class="h3 mb-2 text-gray-800">Student</h1>
-                                   
-                                   
-                                   <!-- DataTales Example -->
-                                   <div class="card shadow mb-4">
-                                       <div class="card-header py-3">
-                                           <h6 class="m-0 font-weight-bold text-primary">List of Student</h6>
-                                           
-                                       </div>
-                                       <div class="card-body">
-                                        {% block content %}
-                                           <div class="table-responsive">
-                                            
-                           
-                                {% if students %}
-                                               <table id="studentTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Last Name</th>
-                                                        <th>First Name</th>
-                                                        <th>Middle Name</th>
-                                                        <th>Suffix</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr id="noResultsRow" style="display: none;">
-                                                        <td colspan="2" class="text-center">No results</td>
-                                                    </tr>
-                                                    {% for student in students %}
-                                                    <tr>
-                                                        <td>{{ student.last_name }} </td>
-                                                    <td> {{ student.first_name }}</td> 
-                                                <td>{{ student.middle_name }}</td>
-                                                        <td>{{ student.suffix }}</td>
-                                                        <td>{{ "Active" if student.active else "Inactive" }}</td>
-                                                        <td><form action="{{ url_for('toggle_active_student', student_id=student.id) }}" method="post">
-                                                            {% if student.active %}
-                                                                <button type="submit" class="btn btn-sm btn-danger">
-                                                                    <i class="fas fa-user-slash"></i> Deactivate
-                                                                </button>
-                                                            {% else %}
-                                                                <button type="submit" class="btn btn-sm btn-success">
-                                                                    <i class="fas fa-user-check"></i> Activate
-                                                                </button>
-                                                            {% endif %}
-                                                        </form>
-                                                        
-                                                        </td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                            {% else %}
-                                            <p>No students found.</p>
-                                            {% endif %}
-                                               </div>
-                                               {% endblock %}
-                                           </div>
-                                       </div>
-                                   </div>
-                    
+                    <div class="col-md-6 offset-md-6">
+                        <form method="GET" action="{{ url_for('view_students') }}" class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                            <input type="text" name="search" class="form-control" id="searchInput" placeholder="Search..." value="{{ search_query }}" onkeyup="submitSearchForm()">
+                            <div class="input-group-append">
+                                <button class="input-group-text" type="submit" id="basic-addon2"><i class="fas fa-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">Student</h1>
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">List of Students</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            {% if students_pagination.items %}
+                            <table id="studentTable" class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Last Name</th>
+                                        <th>First Name</th>
+                                        <th>Middle Name</th>
+                                        <th>Suffix</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for student in students_pagination.items %}
+                                    <tr>
+                                        <td>{{ student.last_name }}</td>
+                                        <td>{{ student.first_name }}</td>
+                                        <td>{{ student.middle_name }}</td>
+                                        <td>{{ student.suffix }}</td>
+                                        <td>{{ "Active" if student.active else "Inactive" }}</td>
+                                        <td>
+                                            <form action="{{ url_for('toggle_active_student', student_id=student.id) }}" method="post">
+                                                {% if student.active %}
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-user-slash"></i> Deactivate
+                                                </button>
+                                                {% else %}
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-user-check"></i> Activate
+                                                </button>
+                                                {% endif %}
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                            <p>No students found.</p>
+                            {% endif %}
+                            
+                            <!-- Pagination and Summary at the Bottom -->
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                    Showing {{ students_pagination.total }} out of {{ total_students }} enrollments
+                                </div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end">
+                                        <li class="page-item{% if not students_pagination.has_prev %} disabled{% endif %}">
+                                            <a class="page-link" href="{% if students_pagination.has_prev %}{{ url_for('view_students', page=students_pagination.prev_num, search=search_query) }}{% else %}#{% endif %}" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        {% for page_num in students_pagination.iter_pages() %}
+                                        {% if page_num %}
+                                        {% if page_num == students_pagination.page %}
+                                        <li class="page-item active"><a class="page-link" href="#">{{ page_num }}</a></li>
+                                        {% else %}
+                                        <li class="page-item"><a class="page-link" href="{{ url_for('view_students', page=page_num, search=search_query) }}">{{ page_num }}</a></li>
+                                        {% endif %}
+                                        {% else %}
+                                        <li class="page-item"><span class="page-link">…</span></li>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <li class="page-item{% if not students_pagination.has_next %} disabled{% endif %}">
+                                            <a class="page-link" href="{% if students_pagination.has_next %}{{ url_for('view_students', page=students_pagination.next_num, search=search_query) }}{% else %}#{% endif %}" aria-label="Next">
+                                                <span aria-hidden="true"> &raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>
-               
             </div>
+            
             <!-- End of Main Content -->
 
             <!-- Footer -->
@@ -396,5 +413,51 @@
 }
 
     </script>
+    <script>
+        function filterTable() {
+            // Declare variables
+            let input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("studentTable");
+            tr = table.getElementsByTagName("tr");
+    
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td");
+                let found = false;
+                for (let j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if (found) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+    
+            // Show 'No results' row if no match is found
+            let noResultsRow = document.getElementById("noResultsRow");
+            let visibleRows = table.querySelectorAll("tr:not(#noResultsRow):not([style*='display: none'])");
+            if (visibleRows.length === 1) { // Only the header row is visible
+                noResultsRow.style.display = "";
+            } else {
+                noResultsRow.style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        function submitSearchForm() {
+            const form = document.querySelector('form');
+            form.submit();
+        }
+    </script>
+    
 
 </html>
