@@ -2013,17 +2013,16 @@ def enroll():
     student_id = request.args.get('student_id', type=int)
     student_form.student_id.data = student_id
     form = EnrollmentForm()
+
     courses = Course.query.all()
     sections = Section.query.all()
+    students = Student.query.all()
 
     if courses:
         form.course_id.choices = [(course.id, course.title) for course in courses]
-
     if sections:
         form.section_id.choices = [(section.id, section.name) for section in sections]
-
-    students = Student.query.all()
-    form.student_id.choices = [(student.id, student.first_name) for student in students]
+    form.set_student_choices(students)
 
     # Get the current page number from the request
     page = request.args.get('page', 1, type=int)
@@ -2034,7 +2033,7 @@ def enroll():
     existing_enrollments = existing_enrollments_pagination.items
 
     if form.validate_on_submit():
-        existing_enrollment = Enrollment.query.filter_by(student_id=student_id, section_id=form.section_id.data).first()
+        existing_enrollment = Enrollment.query.filter_by(student_id=form.student_id.data, section_id=form.section_id.data).first()
         if existing_enrollment:
             flash('Student is already enrolled in this section.', 'danger')
         else:
@@ -2056,6 +2055,7 @@ def enroll():
         existing_enrollments=existing_enrollments, 
         pagination=existing_enrollments_pagination
     )
+
 
 
 @app.route('/enrolled_subjects/<int:student_id>', methods=['GET'])

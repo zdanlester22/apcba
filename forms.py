@@ -98,7 +98,10 @@ class SectionForm(FlaskForm):
     teacher_id = SelectField('Teacher', coerce=int, validators=[DataRequired()])
 
     def set_teacher_choices(self, teachers):
-        self.teacher_id.choices = [(teacher.teacher_id, teacher.first_name) for teacher in teachers]
+        self.teacher_id.choices = [
+            (teacher.id, f"{teacher.first_name} {teacher.middle_name} {teacher.last_name} {teacher.suffix}".strip())
+            for teacher in teachers
+        ]
 
 
 class TeacherForm(FlaskForm):
@@ -123,12 +126,17 @@ class ModuleForm(FlaskForm):
     pdf_file = FileField('PDF File', validators=[DataRequired()])
 
 class EnrollmentForm(FlaskForm):
-    student_id = SelectField('Student ID', validators=[DataRequired()])
-    course_id = SelectField('Select Course', coerce=int)
-    section_id = SelectField('Select Section', coerce=int)
-    year_choices = [('Grade 11', 'Grade 11'), ('Grade 12', 'Grade 12'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
-    year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
-    submit = SubmitField('Enroll')
+    student_id = SelectField('Student', choices=[], coerce=int)
+    course_id = SelectField('Course', choices=[], coerce=int)
+    section_id = SelectField('Section', choices=[], coerce=int)
+    year = IntegerField('Year', validators=[DataRequired()])
+    
+    def set_student_choices(self, students):
+        self.student_id.choices = [
+            (student.id, f"{student.first_name} {student.middle_name} {student.last_name}".strip())
+            for student in students
+        ]
+
 
 class EnrolliesForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
