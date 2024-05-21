@@ -200,7 +200,6 @@
       
     </style>
 </head>
-
 <body>
     <div class="row">
         <div class="flash">
@@ -225,7 +224,6 @@
         <h1>College</h1>
         <h1>Enrollment Form</h1>
         <p class="note">(Note: Fill up the form from the top to bottom.)</p>
-        
         <form id="enrollmentForm" method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div>
@@ -316,6 +314,73 @@
             </div>
             <button type="submit">Enroll</button>
         </form>
+=======
+                <form id="enrollmentForm" method="post" action="{{ url_for('enrollies') }}" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div>
+                        <label for="first_name">First Name <span class="required" autocomplete="off">*</span></label>
+                        {{ form.first_name(placeholder='Enter your first name', required=True) }}
+                    </div>
+
+                    <div>
+                        <label for="middle_name">Middle Name</label>
+                        {{ form.middle_name(placeholder='Enter your middle name') }}
+                    </div>
+                    
+                    <div>
+                        <label for="last_name">Last Name <span class="required" autocomplete="off">*</span></label>
+                        {{ form.last_name(placeholder='Enter your last name', required=True) }}
+                    </div>
+                    
+                    
+                    <div>
+                        <label for="suffix">Suffix</label>
+                        {{ form.suffix(placeholder='Enter your suffix') }}
+                    </div>
+                    <div>
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        {{ form.email(placeholder='Enter your email address', required=True, autocomplete='off') }}
+                    </div>
+                    <div>
+                        <label for="track_strand">Track & Strand<span class="required">*</span></label>
+                        {{ form.track_strand(class="form-control", required=true) }}
+                    </div>
+
+                    <div>
+                        <label for="year">Year <span class="required">*</span></label>
+                        {{ form.year(placeholder='Enter your academic year', required=True) }}
+                    </div>
+                    <div>
+                        <label for="address">Address <span class="required">*</span></label>
+                        {{ form.address(placeholder='Enter your address', required=True, autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="contact_number">Contact Number <span class="required">*</span></label>
+                        {{ form.contact_number(placeholder='Enter your contact number', required=True,autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="date_of_birth">Date of Birth <span class="required">*</span></label>
+                        <input type="text" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" required autocomplete="off">
+                    </div>
+                    
+                    <div>
+                        <label for="place_of_birth">Place of Birth <span class="required">*</span></label>
+                        {{ form.place_of_birth(placeholder='Enter your place of birth', required=True, autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="gender">Gender <span class="required">*</span></label>
+                        {{ form.gender(placeholder='Enter your gender', required=True) }}
+                    </div>
+                    <div>
+                        <label for="nationality">Nationality <span class="required">*</span></label>
+                        {{ form.nationality(placeholder='Enter your nationality', required=True, autocomplete="off") }}
+                    </div>
+                    <div>
+                        <label for="religion">Religion <span class="required">*</span></label>
+                        {{ form.religion(placeholder='Enter your religion', required=True, autocomplete="off") }}
+                    </div>
+                    
+>>>>>>> 5ef51d86ac0aa45be7f166fbc3ada7e3f4bc63c1
         
     </div>
     <div id="myModal" class="modal">

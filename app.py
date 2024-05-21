@@ -648,33 +648,11 @@ def archive_enrollie_shs(enrollie_id):
             # Archiving enrollie
             enrollie.is_archived = True
             db.session.commit()
-
-            try:
-                # Sending email
-                msg = Message(
-                    'Enrollment Accepted',
-                    sender=app.config['MAIL_USERNAME'],
-                    recipients=[enrollie.email]
-                )
-                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
-                mail.send(msg)
-
-                flash('Archived and email sent successfully!', 'success')
-            except Exception as email_error:
-                app.logger.error(f"Error sending email to enrollie {enrollie_id}: {str(email_error)}")
-                flash('Enrollie archived but failed to send email.', 'warning')
-
-        except IntegrityError as db_error:
+            flash('Archived successfully!', 'success')
+        except Exception as e:
             db.session.rollback()
-            app.logger.error(f"Integrity error archiving enrollie {enrollie_id}: {str(db_error)}")
-            flash('Integrity error archiving enrollie. Possibly a duplicate entry.', 'error')
-        except Exception as db_error:
-            db.session.rollback()
-            app.logger.error(f"Error archiving enrollie {enrollie_id}: {str(db_error)}")
-            flash(f'Error archiving enrollie: {str(db_error)}', 'error')
-    else:
-        flash('Enrollie not found.', 'error')
-
+            app.logger.error(f"Error archiving enrollie: {str(e)}")
+            flash('Error archiving enrollie.', 'error')
     return redirect(url_for('view_senior_enrollies'))
 
 
@@ -745,32 +723,11 @@ def archive_enrollie_tesda(enrollie_id):
             # Mark the enrollie as archived
             enrollie.is_archived = True
             db.session.commit()
-
-            # Send email
-            try:
-                msg = Message(
-                    'Enrollment Accepted',
-                    sender=app.config['MAIL_USERNAME'],
-                    recipients=[enrollie.email]
-                )
-                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
-                mail.send(msg)
-                flash('Archived and email sent successfully!', 'success')
-            except Exception as email_error:
-                app.logger.error(f"Error sending email to enrollie {enrollie_id}: {str(email_error)}")
-                flash('Enrollie archived but failed to send email.', 'warning')
-
-        except IntegrityError as db_error:
+            flash('Archived successfully!', 'success')
+        except Exception as e:
             db.session.rollback()
-            app.logger.error(f"Integrity error archiving enrollie {enrollie_id}: {str(db_error)}")
-            flash('Integrity error archiving enrollie. Possibly a duplicate entry.', 'error')
-        except Exception as db_error:
-            db.session.rollback()
-            app.logger.error(f"Error archiving enrollie {enrollie_id}: {str(db_error)}")
-            flash(f'Error archiving enrollie: {str(db_error)}', 'error')
-    else:
-        flash('Enrollie not found.', 'error')
-
+            app.logger.error(f"Error archiving enrollie: {str(e)}")
+            flash('Error archiving enrollie.', 'error')
     return redirect(url_for('view_tesda_enrollies'))
 
 @app.route('/admin/view_archived_tesda')
@@ -840,31 +797,12 @@ def archive_enrollie(enrollie_id):
             # Mark the enrollie as archived
             enrollie.is_archived = True
             db.session.commit()
-
-            # Send email
-            try:
-                msg = Message(
-                    'Enrollment Accepted',
-                    sender=app.config['MAIL_USERNAME'],
-                    recipients=[enrollie.email]
-                )
-                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
-                mail.send(msg)
-                flash('Archived and email sent successfully!', 'success')
-            except Exception as email_error:
-                app.logger.error(f"Error sending email to enrollie {enrollie_id}: {str(email_error)}")
-                flash('Enrollie archived but failed to send email.', 'warning')
-        except IntegrityError as db_error:
+            
+            flash('Archived successfully!', 'success')
+        except Exception as e:
             db.session.rollback()
-            app.logger.error(f"Integrity error archiving enrollie {enrollie_id}: {str(db_error)}")
-            flash('Integrity error archiving enrollie. Possibly a duplicate entry.', 'error')
-        except Exception as db_error:
-            db.session.rollback()
-            app.logger.error(f"Error archiving enrollie {enrollie_id}: {str(db_error)}")
-            flash(f'Error archiving enrollie: {str(db_error)}', 'error')
-    else:
-        flash('Enrollie not found.', 'error')
-
+            app.logger.error(f"Error archiving enrollie: {str(e)}")
+            flash('Error archiving enrollie.', 'error')
     return redirect(url_for('view_enrollies'))
 
 ########
@@ -2132,17 +2070,16 @@ def enroll():
     student_id = request.args.get('student_id', type=int)
     student_form.student_id.data = student_id
     form = EnrollmentForm()
+
     courses = Course.query.all()
     sections = Section.query.all()
+    students = Student.query.all()
 
     if courses:
         form.course_id.choices = [(course.id, course.title) for course in courses]
-
     if sections:
         form.section_id.choices = [(section.id, section.name) for section in sections]
-
-    students = Student.query.all()
-    form.student_id.choices = [(student.id, student.first_name) for student in students]
+    form.set_student_choices(students)
 
     # Get the current page number from the request
     page = request.args.get('page', 1, type=int)
@@ -2153,7 +2090,7 @@ def enroll():
     existing_enrollments = existing_enrollments_pagination.items
 
     if form.validate_on_submit():
-        existing_enrollment = Enrollment.query.filter_by(student_id=student_id, section_id=form.section_id.data).first()
+        existing_enrollment = Enrollment.query.filter_by(student_id=form.student_id.data, section_id=form.section_id.data).first()
         if existing_enrollment:
             flash('Student is already enrolled in this section.', 'danger')
         else:
@@ -2175,6 +2112,7 @@ def enroll():
         existing_enrollments=existing_enrollments, 
         pagination=existing_enrollments_pagination
     )
+
 
 
 @app.route('/enrolled_subjects/<int:student_id>', methods=['GET'])
