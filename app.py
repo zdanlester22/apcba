@@ -8,10 +8,11 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import or_
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from flask_paginate import Pagination, get_page_parameter
 from datetime import datetime, timedelta
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email
 import os
 import requests
@@ -425,9 +426,11 @@ def senior_enrollies():
     return render_template('web/senior_enrollies.html', form=form)
 
 @app.route('/admin/view_senior_enrollies')
+@login_required
 def view_senior_enrollies():
     enrollies_list = SeniorEnrollies.query.filter_by(is_archived=False).all()
     return render_template('admin/view_senior_enrollies.html', enrollies_list=enrollies_list)
+
 
 
 
@@ -491,7 +494,35 @@ def view_tesda_enrollies():
     
     enrollies_list = TesdaEnrollies.query.filter_by(is_archived=False).all()
     return render_template('admin/view_tesda_enrollies.html', enrollies_list=enrollies_list)
+#########################################
+class EnrolliesForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    middle_name = StringField('Middle Name')
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    suffix = StringField('Suffix')
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    year = StringField('Year', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    contact_number = StringField('Contact Number', validators=[DataRequired()])
+    date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
+    place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
+    gender = SelectField('Gender', choices=[('Male', 'Male'), ('Female', 'Female')], validators=[DataRequired()])
+    nationality = StringField('Nationality', validators=[DataRequired()])
+    religion = StringField('Religion', validators=[DataRequired()])
+    previous_school_info = StringField('Previous School Info', validators=[DataRequired()])
+    grade_last_completed = StringField('Grade Last Completed', validators=[DataRequired()])
+    academic_achievements = StringField('Academic Achievements', validators=[DataRequired()])
+    parent_names = StringField('Parent Names', validators=[DataRequired()])
+    parent_contact_info = StringField('Parent Contact Info', validators=[DataRequired()])
+    parent_occupation = StringField('Parent Occupation', validators=[DataRequired()])
+    special_needs = StringField('Special Needs', validators=[DataRequired()])
 
+    # Dynamically populate track_strand choices
+    track_strand = SelectField('Course', choices=[], validators=[DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        super(EnrolliesForm, self).__init__(*args, **kwargs)
+        self.track_strand.choices = [(course.id, course.title) for course in Course.query.filter_by(course_type='College').all()]
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
     form = EnrolliesForm()
@@ -527,30 +558,31 @@ def enrollies():
                 parent_names=form.parent_names.data,
                 parent_contact_info=form.parent_contact_info.data,
                 parent_occupation=form.parent_occupation.data,
-                special_needs=form.special_needs.data
+                special_needs=form.special_needs.data,
+                track_strand=form.track_strand.data
             )
 
             db.session.add(new_enrollies)
             db.session.commit()
 
             flash('Enrollment successful!', 'success')
-
-
             return redirect(url_for('enrollies'))
 
         except Exception as e:
             db.session.rollback()
-            print("Error during enrollment:", str(e))  
             app.logger.error(f"Error during enrollment: {str(e)}")
+            flash('An error occurred during enrollment. Please try again.', 'error')
+    else:
+        # Print form errors if validation fails
+        print(form.errors)
+        flash('Form validation failed. Please check your input.', 'error')
 
     enrollies_list = Enrollies.query.all()
-
-    # Debug statement
-    print("Enrollies list:", enrollies_list)  
 
     return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list, courses_college_semester=courses_college_semester)
 
 
+############################################3
 
 
 
@@ -561,59 +593,92 @@ def archive_enrollie_shs(enrollie_id):
     enrollie = SeniorEnrollies.query.get(enrollie_id)
     if enrollie:
         try:
-            user = User(
-                first_name=enrollie.first_name,
-                middle_name=enrollie.middle_name,
-                last_name=enrollie.last_name,
-                suffix=enrollie.suffix,
-                password=enrollie.date_of_birth,
-                email=enrollie.email,
-                role='student'
-            )
-            db.session.add(user)
-            db.session.commit()
+            # Check if the user already exists
+            user = User.query.filter_by(email=enrollie.email).first()
+            if not user:
+                user = User(
+                    first_name=enrollie.first_name,
+                    middle_name=enrollie.middle_name,
+                    last_name=enrollie.last_name,
+                    suffix=enrollie.suffix,
+                    password=enrollie.date_of_birth,  # Ensure password is hashed in real scenarios
+                    email=enrollie.email,
+                    role='student'
+                )
+                db.session.add(user)
+                db.session.commit()
 
-            student = Student(
-                student_id=user.id,
-                first_name=enrollie.first_name,
-                middle_name=enrollie.middle_name,
-                last_name=enrollie.last_name,
-                suffix=enrollie.suffix,
-            )
-            db.session.add(student)
-            db.session.commit()
+            # Check if the student record already exists
+            student = Student.query.filter_by(student_id=user.id).first()
+            if not student:
+                student = Student(
+                    student_id=user.id,
+                    first_name=enrollie.first_name,
+                    middle_name=enrollie.middle_name,
+                    last_name=enrollie.last_name,
+                    suffix=enrollie.suffix,
+                )
+                db.session.add(student)
+                db.session.commit()
 
-            # Create a UserAccount entry
-            user_account = UserAccount(
-                user_id=user.id,
-                first_name=enrollie.first_name,
-                middle_name=enrollie.middle_name,
-                last_name=enrollie.last_name,
-                suffix=enrollie.suffix,
-                email=enrollie.email,
-                track_strand=enrollie.track_strand,
-                year=enrollie.year,
-                contact_number=enrollie.contact_number,
-                date_of_birth=enrollie.date_of_birth,
-                place_of_birth=enrollie.place_of_birth,
-                gender=enrollie.gender,
-                nationality=enrollie.nationality,
-                parent_names=enrollie.parent_names,
-                parent_contact_info=enrollie.parent_contact_info,
-                address=enrollie.address
-            )
-            db.session.add(user_account)
-            db.session.commit()
+            # Check if the user account record already exists
+            user_account = UserAccount.query.filter_by(user_id=user.id).first()
+            if not user_account:
+                user_account = UserAccount(
+                    user_id=user.id,
+                    first_name=enrollie.first_name,
+                    middle_name=enrollie.middle_name,
+                    last_name=enrollie.last_name,
+                    suffix=enrollie.suffix,
+                    email=enrollie.email,
+                    track_strand=enrollie.track_strand,
+                    year=enrollie.year,
+                    contact_number=enrollie.contact_number,
+                    date_of_birth=enrollie.date_of_birth,
+                    place_of_birth=enrollie.place_of_birth,
+                    gender=enrollie.gender,
+                    nationality=enrollie.nationality,
+                    parent_names=enrollie.parent_names,
+                    parent_contact_info=enrollie.parent_contact_info,
+                    address=enrollie.address
+                )
+                db.session.add(user_account)
+                db.session.commit()
 
+            # Archiving enrollie
             enrollie.is_archived = True
             db.session.commit()
-            flash('Archived successfully!', 'success')
-        except Exception as e:
+
+            try:
+                # Sending email
+                msg = Message(
+                    'Enrollment Accepted',
+                    sender=app.config['MAIL_USERNAME'],
+                    recipients=[enrollie.email]
+                )
+                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
+                mail.send(msg)
+
+                flash('Archived and email sent successfully!', 'success')
+            except Exception as email_error:
+                app.logger.error(f"Error sending email to enrollie {enrollie_id}: {str(email_error)}")
+                flash('Enrollie archived but failed to send email.', 'warning')
+
+        except IntegrityError as db_error:
             db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
+            app.logger.error(f"Integrity error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash('Integrity error archiving enrollie. Possibly a duplicate entry.', 'error')
+        except Exception as db_error:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash(f'Error archiving enrollie: {str(db_error)}', 'error')
+    else:
+        flash('Enrollie not found.', 'error')
+
     return redirect(url_for('view_senior_enrollies'))
 
+
+#################
 @app.route('/admin/view_archived_shs')
 def view_archived_shs():
     archived_shs_enrollies_list = SeniorEnrollies.query.filter_by(is_archived=True).all()
@@ -625,58 +690,87 @@ def archive_enrollie_tesda(enrollie_id):
     enrollie = TesdaEnrollies.query.get(enrollie_id)
     if enrollie:
         try:
-            user = User(
-                first_name=enrollie.first_name,
-                middle_name=enrollie.middle_name,
-                last_name=enrollie.last_name,
-                suffix=enrollie.suffix,
-                password=enrollie.date_of_birth,
-                email=enrollie.email,
-                role='student'
-            )
-            db.session.add(user)
-            db.session.commit()
+            # Check if a user with the same email already exists
+            user = User.query.filter_by(email=enrollie.email).first()
+            if not user:
+                user = User(
+                    first_name=enrollie.first_name,
+                    middle_name=enrollie.middle_name,
+                    last_name=enrollie.last_name,
+                    suffix=enrollie.suffix,
+                    password=enrollie.date_of_birth,  # You might want to hash the password
+                    email=enrollie.email,
+                    role='student'
+                )
+                db.session.add(user)
+                db.session.commit()
 
-            student = Student(
-                student_id=user.id,
-                first_name=enrollie.first_name,
-                middle_name=enrollie.middle_name,
-                last_name=enrollie.last_name,
-                suffix=enrollie.suffix,
-            )
-            db.session.add(student)
-            db.session.commit()
+            # Check if a student with the same user id already exists
+            student = Student.query.filter_by(student_id=user.id).first()
+            if not student:
+                student = Student(
+                    student_id=user.id,
+                    first_name=enrollie.first_name,
+                    middle_name=enrollie.middle_name,
+                    last_name=enrollie.last_name,
+                    suffix=enrollie.suffix,
+                )
+                db.session.add(student)
+                db.session.commit()
 
-             # Create a UserAccount entry
-            user_account = UserAccount(
-                user_id=user.id,
-                first_name=enrollie.first_name,
-                middle_name=enrollie.middle_name,
-                last_name=enrollie.last_name,
-                suffix=enrollie.suffix,
-                email=enrollie.email,
-                track_strand=enrollie.track_strand,
-                year=enrollie.year,
-                contact_number=enrollie.contact_number,
-                date_of_birth=enrollie.date_of_birth,
-                place_of_birth=enrollie.place_of_birth,
-                gender=enrollie.gender,
-                nationality=enrollie.nationality,
-                parent_names=enrollie.parent_names,
-                parent_contact_info=enrollie.parent_contact_info,
-                address=enrollie.address
-            )
-            db.session.add(user_account)
-            db.session.commit()
-            
+            # Check if a user account with the same user id already exists
+            user_account = UserAccount.query.filter_by(user_id=user.id).first()
+            if not user_account:
+                user_account = UserAccount(
+                    user_id=user.id,
+                    first_name=enrollie.first_name,
+                    middle_name=enrollie.middle_name,
+                    last_name=enrollie.last_name,
+                    suffix=enrollie.suffix,
+                    email=enrollie.email,
+                    track_strand=enrollie.track_strand,
+                    year=enrollie.year,
+                    contact_number=enrollie.contact_number,
+                    date_of_birth=enrollie.date_of_birth,
+                    place_of_birth=enrollie.place_of_birth,
+                    gender=enrollie.gender,
+                    nationality=enrollie.nationality,
+                    parent_names=enrollie.parent_names,
+                    parent_contact_info=enrollie.parent_contact_info,
+                    address=enrollie.address
+                )
+                db.session.add(user_account)
+                db.session.commit()
 
+            # Mark the enrollie as archived
             enrollie.is_archived = True
             db.session.commit()
-            flash('Archived successfully!', 'success')
-        except Exception as e:
+
+            # Send email
+            try:
+                msg = Message(
+                    'Enrollment Accepted',
+                    sender=app.config['MAIL_USERNAME'],
+                    recipients=[enrollie.email]
+                )
+                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
+                mail.send(msg)
+                flash('Archived and email sent successfully!', 'success')
+            except Exception as email_error:
+                app.logger.error(f"Error sending email to enrollie {enrollie_id}: {str(email_error)}")
+                flash('Enrollie archived but failed to send email.', 'warning')
+
+        except IntegrityError as db_error:
             db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
+            app.logger.error(f"Integrity error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash('Integrity error archiving enrollie. Possibly a duplicate entry.', 'error')
+        except Exception as db_error:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash(f'Error archiving enrollie: {str(db_error)}', 'error')
+    else:
+        flash('Enrollie not found.', 'error')
+
     return redirect(url_for('view_tesda_enrollies'))
 
 @app.route('/admin/view_archived_tesda')
@@ -685,8 +779,6 @@ def view_archived_tesda():
     return render_template('admin/view_archived_tesda.html', archived_tesda_enrollies_list=archived_tesda_enrollies_list)
 
 #########
-
-
 @app.route('/admin/accepeted_enrollie_College/<int:enrollie_id>')
 @login_required
 def archive_enrollie(enrollie_id):
@@ -694,61 +786,88 @@ def archive_enrollie(enrollie_id):
     if enrollie:
         try:
             # Create a User entry
-            user = User(
-                first_name=enrollie.first_name,
-                middle_name=enrollie.middle_name,
-                last_name=enrollie.last_name,
-                suffix=enrollie.suffix,
-                password=enrollie.date_of_birth,  # You might want to hash the password
-                email=enrollie.email,
-                role='student'
-            )
-            db.session.add(user)
-            db.session.commit()
+            user = User.query.filter_by(email=enrollie.email).first()
+            if not user:
+                user = User(
+                    first_name=enrollie.first_name,
+                    middle_name=enrollie.middle_name,
+                    last_name=enrollie.last_name,
+                    suffix=enrollie.suffix,
+                    password=enrollie.date_of_birth,  # You might want to hash the password
+                    email=enrollie.email,
+                    role='student'
+                )
+                db.session.add(user)
+                db.session.commit()
 
             # Create a Student entry
-            student = Student(
-                student_id=user.id,
-                first_name=enrollie.first_name,
-                middle_name=enrollie.middle_name,
-                last_name=enrollie.last_name,
-                suffix=enrollie.suffix
-            )
-            db.session.add(student)
-            db.session.commit()
+            student = Student.query.filter_by(student_id=user.id).first()
+            if not student:
+                student = Student(
+                    student_id=user.id,
+                    first_name=enrollie.first_name,
+                    middle_name=enrollie.middle_name,
+                    last_name=enrollie.last_name,
+                    suffix=enrollie.suffix
+                )
+                db.session.add(student)
+                db.session.commit()
 
             # Create a UserAccount entry
-            user_account = UserAccount(
-                user_id=user.id,
-                first_name=enrollie.first_name,
-                middle_name=enrollie.middle_name,
-                last_name=enrollie.last_name,
-                suffix=enrollie.suffix,
-                email=enrollie.email,
-                track_strand=enrollie.track_strand,
-                year=enrollie.year,
-                contact_number=enrollie.contact_number,
-                date_of_birth=enrollie.date_of_birth,
-                place_of_birth=enrollie.place_of_birth,
-                gender=enrollie.gender,
-                nationality=enrollie.nationality,
-                parent_names=enrollie.parent_names,
-                parent_contact_info=enrollie.parent_contact_info,
-                address=enrollie.address
-            )
-            db.session.add(user_account)
-            db.session.commit()
+            user_account = UserAccount.query.filter_by(user_id=user.id).first()
+            if not user_account:
+                user_account = UserAccount(
+                    user_id=user.id,
+                    first_name=enrollie.first_name,
+                    middle_name=enrollie.middle_name,
+                    last_name=enrollie.last_name,
+                    suffix=enrollie.suffix,
+                    email=enrollie.email,
+                    track_strand=enrollie.track_strand,
+                    year=enrollie.year,
+                    contact_number=enrollie.contact_number,
+                    date_of_birth=enrollie.date_of_birth,
+                    place_of_birth=enrollie.place_of_birth,
+                    gender=enrollie.gender,
+                    nationality=enrollie.nationality,
+                    parent_names=enrollie.parent_names,
+                    parent_contact_info=enrollie.parent_contact_info,
+                    address=enrollie.address
+                )
+                db.session.add(user_account)
+                db.session.commit()
 
             # Mark the enrollie as archived
             enrollie.is_archived = True
             db.session.commit()
-            
-            flash('Archived successfully!', 'success')
-        except Exception as e:
+
+            # Send email
+            try:
+                msg = Message(
+                    'Enrollment Accepted',
+                    sender=app.config['MAIL_USERNAME'],
+                    recipients=[enrollie.email]
+                )
+                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
+                mail.send(msg)
+                flash('Archived and email sent successfully!', 'success')
+            except Exception as email_error:
+                app.logger.error(f"Error sending email to enrollie {enrollie_id}: {str(email_error)}")
+                flash('Enrollie archived but failed to send email.', 'warning')
+        except IntegrityError as db_error:
             db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
+            app.logger.error(f"Integrity error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash('Integrity error archiving enrollie. Possibly a duplicate entry.', 'error')
+        except Exception as db_error:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash(f'Error archiving enrollie: {str(db_error)}', 'error')
+    else:
+        flash('Enrollie not found.', 'error')
+
     return redirect(url_for('view_enrollies'))
+
+########
 
 
 
@@ -2214,7 +2333,12 @@ def student_view_grades():
 @login_required
 def view_schedule():
     if current_user.is_authenticated and current_user.role == 'student':
-        student = current_user.student
+        student = getattr(current_user, 'student', None)
+        
+        if not student:
+            flash('You are not linked to any student record.', 'danger')
+            return redirect(url_for('dashboard'))
+
         enrollments = Enrollment.query.filter_by(student_id=student.id).all()
 
         # Create a dictionary to store schedules for each subject
@@ -2240,7 +2364,9 @@ def view_schedule():
 
         return render_template('student/view_schedule.html', subject_schedules=subject_schedules)
     else:
+        flash('You are not authorized to view this page.', 'danger')
         return redirect(url_for('dashboard'))
+
     
 
 
