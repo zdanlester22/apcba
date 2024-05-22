@@ -166,49 +166,38 @@ class Enrollies(db.Model):
     suffix = db.Column(db.String(10))
     email = db.Column(db.String(100), nullable=False, unique=True)
     track_strand = db.Column(db.String(100), nullable=False)
-    address = db.Column(db.String(255))
+    address = db.Column(db.String(255), nullable=False)
     year = db.Column(db.String(20), nullable=False)
-    contact_number = db.Column(db.String(15))
-    date_of_birth = db.Column(db.Date)
-    place_of_birth = db.Column(db.String(100))
-    gender = db.Column(db.String(10))
-    nationality = db.Column(db.String(50))
-    religion = db.Column(db.String(50))
+    contact_number = db.Column(db.String(15), nullable=False)
+    date_of_birth = db.Column(db.Date, nullable=False)
+    gender = db.Column(db.String(10), nullable=False)
     previous_school_info = db.Column(db.String(100))
-    grade_last_completed = db.Column(db.String(10))
-    academic_achievements = db.Column(db.String(255))
-    parent_names = db.Column(db.String(200))
-    parent_contact_info = db.Column(db.String(30))
-    parent_occupation = db.Column(db.String(100))
-    special_needs = db.Column(db.String(255))
+    parent_names = db.Column(db.String(200), nullable=False)
+    parent_contact_info = db.Column(db.String(30), nullable=False)
     is_archived = db.Column(db.Boolean, default=False)
+    is_rejected = db.Column(db.Boolean, default=False)
+
 
 class SeniorEnrollies(db.Model):
     __tablename__ = 'seniorenrollies'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(50), nullable=False)
     middle_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50), nullable=False)
     suffix = db.Column(db.String(10))
     email = db.Column(db.String(100), nullable=False, unique=True)
-    address = db.Column(db.String(255), nullable=False)  # Make address nullable=False
-    year = db.Column(db.String(20), nullable=False)
-    lrn = db.Column(db.String(12), nullable=False, unique=True)
-    contact_number = db.Column(db.String(15), nullable=False)  # Make contact_number nullable=False
-    date_of_birth = db.Column(db.String(10), nullable=False)  # Change to String as we are storing date as string
-    place_of_birth = db.Column(db.String(100), nullable=False)  # Make place_of_birth nullable=False
-    gender = db.Column(db.String(10), nullable=False)
-    nationality = db.Column(db.String(50), nullable=False)
-    religion = db.Column(db.String(50), nullable=False)
-    previous_school_info = db.Column(db.String(255), nullable=True)  # Make previous_school_info nullable=True
-    grade_last_completed = db.Column(db.String(10), nullable=True)  # Make grade_last_completed nullable=True
-    academic_achievements = db.Column(db.Text, nullable=True)  # Make academic_achievements nullable=True
-    parent_names = db.Column(db.String(200), nullable=False)
-    parent_contact_info = db.Column(db.String(30), nullable=False)
-    parent_occupation = db.Column(db.String(100), nullable=False)
-    special_needs = db.Column(db.Text, nullable=True)  # Make special_needs nullable=True
-    is_archived = db.Column(db.Boolean, default=False)
+    lrn = db.Column(db.String(15))
     track_strand = db.Column(db.String(100), nullable=False)
+    address = db.Column(db.String(255))
+    year = db.Column(db.String(20), nullable=False)
+    contact_number = db.Column(db.String(15))
+    date_of_birth = db.Column(db.Date)
+    gender = db.Column(db.String(10))
+    previous_school_info = db.Column(db.String(100))
+    parent_names = db.Column(db.String(200))
+    parent_contact_info = db.Column(db.String(30))
+    is_archived = db.Column(db.Boolean, default=False)
+    is_rejected = db.Column(db.Boolean, default=False)
     
 class TesdaEnrollies(db.Model):
     __tablename__ = 'tesdaenrollies'
@@ -223,18 +212,12 @@ class TesdaEnrollies(db.Model):
     year = db.Column(db.String(20), nullable=False)
     contact_number = db.Column(db.String(15))
     date_of_birth = db.Column(db.Date)
-    place_of_birth = db.Column(db.String(100))
     gender = db.Column(db.String(10))
-    nationality = db.Column(db.String(50))
-    religion = db.Column(db.String(50))
     previous_school_info = db.Column(db.String(100))
-    grade_last_completed = db.Column(db.String(10))
-    academic_achievements = db.Column(db.String(255))
     parent_names = db.Column(db.String(200))
     parent_contact_info = db.Column(db.String(30))
-    parent_occupation = db.Column(db.String(100))
-    special_needs = db.Column(db.String(255))
     is_archived = db.Column(db.Boolean, default=False)
+    is_rejected = db.Column(db.Boolean, default=False)
 
 
 class Student(db.Model):

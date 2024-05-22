@@ -214,7 +214,22 @@
 
             <!-- Main Content -->
             <div id="content">
-
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  <div class="mt-4">
+                    <ul class="flashes list-unstyled">
+                    {% for category, message in messages %}
+                      <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+              {% endwith %}
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                     <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Portal V1.0</h5>
@@ -249,12 +264,28 @@
                         </li>
 
                     </ul>
-
+                   
                 </nav>
                 <!-- End of Topbar -->
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-            
+                    <div class="row">
+                        <h1 class="h3 mb-2 text-gray-800">Subject</h1>
+                        <div class="col-md-6 offset-md-6">
+                            <form action="{{ url_for('subject_bank') }}" method="GET" class="mb-3">
+                                <div class="form-row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" name="search_query" placeholder="Search...">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Page Heading -->
+                  
 
         <!-- Modal -->
       <!-- Button trigger modal -->
@@ -320,49 +351,64 @@
                                 <h6 class="m-0 font-weight-bold text-primary">Subject Management</h6>
                             </div>
                             <div class="col-6 text-right">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSubjectModal">
-                                    <i class="fa fa-plus"></i>Add New Subject
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addSubjectModal">
+                                    <i class="fa fa-plus"></i>Subject
                                   </button>
                         
                             </div>
+                           
                         </div>
                     </div>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>Course</th>
-                                <th>Abbreviation</th>
-                                <th>Title</th>
+                                <th>Abbrev
+                                    <a href="{{ url_for('subject_bank', sort_by='abbreviation', sort_order='asc') }}" style="text-decoration: none;">
+                                        <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                    </a>
+                                    <a href="{{ url_for('subject_bank', sort_by='abbreviation', sort_order='desc') }}" style="text-decoration: none;">
+                                        <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                    </a>
+                                </th>
+                                <th>Title
+                                    <a href="{{ url_for('subject_bank', sort_by='title', sort_order='asc') }}" style="text-decoration: none;">
+                                        <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                    </a>
+                                    <a href="{{ url_for('subject_bank', sort_by='title', sort_order='desc') }}" style="text-decoration: none;">
+                                        <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
+                                    </a>
+                                </th>
                                 <th>Unit</th>
                                 <th>Year</th>
-                                <th>Semester</th> <!-- New column for Semester -->
-                                <th>Action</th> <!-- Action buttons column -->
+                                <th>Semester</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
                             <tr id="noResultsRow" style="display: none;">
                                 <td colspan="5" class="text-center">No results</td>
                             </tr>
-                            {% for course in courses %}
-                                {% for subject in course_subjects[course.id] %}
-                                    <tr>
-                                        <td>{{ course.title }}</td>
-                                        <td>{{ subject.abbreviation }}</td>
-                                        <td>{{ subject.title }}</td>
-                                        <td>{{ subject.unit }}</td>
-                                        <td>{{ subject.year }}</td>
-                                        <td>{{ subject.semester }}</td>
-                                        <td>
-                                            <button class='update-btn' onclick="editSubject({{ subject.id }})">
-                                                <i class="fas fa-edit"></i> Update
-                                            </button>
-                                            
-                                            <button class='del-btn' onclick="deleteSubject({{ subject.id }})">
-                                                <i class="fas fa-trash-alt"></i> Archive
-                                            </button>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
+                            {% for subject in subjects %}
+                            <tr>
+                                <td>{{ subject.course.title }}</td>
+                                <td>{{ subject.abbreviation }}</td>
+                                <td>{{ subject.title }}</td>
+                                <td>{{ subject.unit }}</td>
+                                <td>{{ subject.year }}</td>
+                                <td>{{ subject.semester }}</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Subject Actions">
+                                        <button class="btn btn-primary update-btn btn-sm" onclick="editSubject({{ subject.id }})">
+                                            <i class="fas fa-edit"></i> Update
+                                        </button>
+                                        <button class="btn btn-danger del-btn btn-sm" onclick="deleteSubject({{ subject.id }})">
+                                            <i class="fas fa-trash-alt"></i> Archive
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>

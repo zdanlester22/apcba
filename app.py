@@ -383,9 +383,6 @@ def senior_enrollies():
             return render_template('web/senior_enrollies.html', form=form)
 
         try:
-            date_of_birth = datetime.strptime(form.date_of_birth.data, "%Y-%m-%d")
-            password = date_of_birth.strftime("%Y-%m-%d")
-
             new_senior_enrollies = SeniorEnrollies(
                 first_name=form.first_name.data,
                 middle_name=form.middle_name.data,
@@ -397,17 +394,10 @@ def senior_enrollies():
                 lrn=form.lrn.data,
                 contact_number=form.contact_number.data,
                 date_of_birth=form.date_of_birth.data,
-                place_of_birth=form.place_of_birth.data,
                 gender=form.gender.data,
-                nationality=form.nationality.data,
-                religion=form.religion.data,
                 previous_school_info=form.previous_school_info.data,
-                grade_last_completed=form.grade_last_completed.data,
-                academic_achievements=form.academic_achievements.data,
                 parent_names=form.parent_names.data,
                 parent_contact_info=form.parent_contact_info.data,
-                parent_occupation=form.parent_occupation.data,
-                special_needs=form.special_needs.data,
                 track_strand=form.track_strand.data
             )
 
@@ -428,7 +418,7 @@ def senior_enrollies():
 @app.route('/admin/view_senior_enrollies')
 @login_required
 def view_senior_enrollies():
-    enrollies_list = SeniorEnrollies.query.filter_by(is_archived=False).all()
+    enrollies_list = SeniorEnrollies.query.filter_by(is_archived=False, is_rejected=False).all()
     return render_template('admin/view_senior_enrollies.html', enrollies_list=enrollies_list)
 
 
@@ -453,22 +443,15 @@ def tesda_enrollies():
                 last_name=form.last_name.data,
                 suffix=form.suffix.data,
                 email=form.email.data,
-                track_strand=form.track_strand.data,
-                year=form.year.data,
                 address=form.address.data,
+                year=form.year.data,
                 contact_number=form.contact_number.data,
                 date_of_birth=form.date_of_birth.data,
-                place_of_birth=form.place_of_birth.data,
                 gender=form.gender.data,
-                nationality=form.nationality.data,
-                religion=form.religion.data,
                 previous_school_info=form.previous_school_info.data,
-                grade_last_completed=form.grade_last_completed.data,
-                academic_achievements=form.academic_achievements.data,
                 parent_names=form.parent_names.data,
                 parent_contact_info=form.parent_contact_info.data,
-                parent_occupation=form.parent_occupation.data,
-                special_needs=form.special_needs.data
+                track_strand=form.track_strand.data
                 
             )
 
@@ -492,37 +475,9 @@ def tesda_enrollies():
 @app.route('/admin/view_tesda_enrollies')
 def view_tesda_enrollies():
     
-    enrollies_list = TesdaEnrollies.query.filter_by(is_archived=False).all()
+    enrollies_list = TesdaEnrollies.query.filter_by(is_archived=False, is_rejected=False).all()
     return render_template('admin/view_tesda_enrollies.html', enrollies_list=enrollies_list)
 #########################################
-class EnrolliesForm(FlaskForm):
-    first_name = StringField('First Name', validators=[DataRequired()])
-    middle_name = StringField('Middle Name')
-    last_name = StringField('Last Name', validators=[DataRequired()])
-    suffix = StringField('Suffix')
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    year = StringField('Year', validators=[DataRequired()])
-    address = StringField('Address', validators=[DataRequired()])
-    contact_number = StringField('Contact Number', validators=[DataRequired()])
-    date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
-    place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
-    gender = SelectField('Gender', choices=[('Male', 'Male'), ('Female', 'Female')], validators=[DataRequired()])
-    nationality = StringField('Nationality', validators=[DataRequired()])
-    religion = StringField('Religion', validators=[DataRequired()])
-    previous_school_info = StringField('Previous School Info', validators=[DataRequired()])
-    grade_last_completed = StringField('Grade Last Completed', validators=[DataRequired()])
-    academic_achievements = StringField('Academic Achievements', validators=[DataRequired()])
-    parent_names = StringField('Parent Names', validators=[DataRequired()])
-    parent_contact_info = StringField('Parent Contact Info', validators=[DataRequired()])
-    parent_occupation = StringField('Parent Occupation', validators=[DataRequired()])
-    special_needs = StringField('Special Needs', validators=[DataRequired()])
-
-    # Dynamically populate track_strand choices
-    track_strand = SelectField('Course', choices=[], validators=[DataRequired()])
-
-    def __init__(self, *args, **kwargs):
-        super(EnrolliesForm, self).__init__(*args, **kwargs)
-        self.track_strand.choices = [(course.id, course.title) for course in Course.query.filter_by(course_type='College').all()]
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
     form = EnrolliesForm()
@@ -538,27 +493,21 @@ def enrollies():
                 flash('This email is already used.', 'error')
                 return render_template('web/enrollies.html', form=form, courses_college_semester=courses_college_semester)
                 
+
             new_enrollies = Enrollies(
                 first_name=form.first_name.data,
                 middle_name=form.middle_name.data,
                 last_name=form.last_name.data,
                 suffix=form.suffix.data,
                 email=form.email.data,
-                year=form.year.data,
                 address=form.address.data,
+                year=form.year.data,
                 contact_number=form.contact_number.data,
                 date_of_birth=form.date_of_birth.data,
-                place_of_birth=form.place_of_birth.data,
                 gender=form.gender.data,
-                nationality=form.nationality.data,
-                religion=form.religion.data,
                 previous_school_info=form.previous_school_info.data,
-                grade_last_completed=form.grade_last_completed.data,
-                academic_achievements=form.academic_achievements.data,
                 parent_names=form.parent_names.data,
                 parent_contact_info=form.parent_contact_info.data,
-                parent_occupation=form.parent_occupation.data,
-                special_needs=form.special_needs.data,
                 track_strand=form.track_strand.data
             )
 
@@ -572,21 +521,15 @@ def enrollies():
             db.session.rollback()
             app.logger.error(f"Error during enrollment: {str(e)}")
             flash('An error occurred during enrollment. Please try again.', 'error')
-    else:
-        # Print form errors if validation fails
-        print(form.errors)
-        flash('Form validation failed. Please check your input.', 'error')
+    
 
     enrollies_list = Enrollies.query.all()
 
     return render_template('web/enrollies.html', form=form, enrollies_list=enrollies_list, courses_college_semester=courses_college_semester)
 
 
-############################################3
 
-
-
-#########
+############################################
 @app.route('/admin/accepeted_enrollie_SHS/<int:enrollie_id>')
 @login_required
 def archive_enrollie_shs(enrollie_id):
@@ -607,7 +550,6 @@ def archive_enrollie_shs(enrollie_id):
                 )
                 db.session.add(user)
                 db.session.commit()
-
             # Check if the student record already exists
             student = Student.query.filter_by(student_id=user.id).first()
             if not student:
@@ -620,7 +562,6 @@ def archive_enrollie_shs(enrollie_id):
                 )
                 db.session.add(student)
                 db.session.commit()
-
             # Check if the user account record already exists
             user_account = UserAccount.query.filter_by(user_id=user.id).first()
             if not user_account:
@@ -635,24 +576,43 @@ def archive_enrollie_shs(enrollie_id):
                     year=enrollie.year,
                     contact_number=enrollie.contact_number,
                     date_of_birth=enrollie.date_of_birth,
-                    place_of_birth=enrollie.place_of_birth,
                     gender=enrollie.gender,
-                    nationality=enrollie.nationality,
                     parent_names=enrollie.parent_names,
                     parent_contact_info=enrollie.parent_contact_info,
                     address=enrollie.address
                 )
                 db.session.add(user_account)
                 db.session.commit()
-
             # Archiving enrollie
             enrollie.is_archived = True
             db.session.commit()
-            flash('Archived successfully!', 'success')
-        except Exception as e:
+
+            try:
+                # Sending email
+                msg = Message(
+                    'Enrollment Accepted',
+                    sender=app.config['MAIL_USERNAME'],
+                    recipients=[enrollie.email]
+                )
+                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
+                mail.send(msg)
+
+                flash('Archived and email sent successfully!', 'success')
+            except Exception as email_error:
+                app.logger.error(f"Error sending email to enrollie {enrollie_id}: {str(email_error)}")
+                flash('Enrollie archived but failed to send email.', 'warning')
+
+        except IntegrityError as db_error:
             db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
+            app.logger.error(f"Integrity error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash('Integrity error archiving enrollie. Possibly a duplicate entry.', 'error')
+        except Exception as db_error:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash(f'Error archiving enrollie: {str(db_error)}', 'error')
+    else:
+        flash('Enrollie not found.', 'error')
+
     return redirect(url_for('view_senior_enrollies'))
 
 
@@ -682,7 +642,6 @@ def archive_enrollie_tesda(enrollie_id):
                 )
                 db.session.add(user)
                 db.session.commit()
-
             # Check if a student with the same user id already exists
             student = Student.query.filter_by(student_id=user.id).first()
             if not student:
@@ -695,7 +654,6 @@ def archive_enrollie_tesda(enrollie_id):
                 )
                 db.session.add(student)
                 db.session.commit()
-
             # Check if a user account with the same user id already exists
             user_account = UserAccount.query.filter_by(user_id=user.id).first()
             if not user_account:
@@ -710,24 +668,42 @@ def archive_enrollie_tesda(enrollie_id):
                     year=enrollie.year,
                     contact_number=enrollie.contact_number,
                     date_of_birth=enrollie.date_of_birth,
-                    place_of_birth=enrollie.place_of_birth,
                     gender=enrollie.gender,
-                    nationality=enrollie.nationality,
                     parent_names=enrollie.parent_names,
                     parent_contact_info=enrollie.parent_contact_info,
                     address=enrollie.address
                 )
                 db.session.add(user_account)
                 db.session.commit()
-
             # Mark the enrollie as archived
             enrollie.is_archived = True
             db.session.commit()
-            flash('Archived successfully!', 'success')
-        except Exception as e:
+
+            # Send email
+            try:
+                msg = Message(
+                    'Enrollment Accepted',
+                    sender=app.config['MAIL_USERNAME'],
+                    recipients=[enrollie.email]
+                )
+                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
+                mail.send(msg)
+                flash('Archived and email sent successfully!', 'success')
+            except Exception as email_error:
+                app.logger.error(f"Error sending email to enrollie {enrollie_id}: {str(email_error)}")
+                flash('Enrollie archived but failed to send email.', 'warning')
+
+        except IntegrityError as db_error:
             db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
+            app.logger.error(f"Integrity error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash('Integrity error archiving enrollie. Possibly a duplicate entry.', 'error')
+        except Exception as db_error:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash(f'Error archiving enrollie: {str(db_error)}', 'error')
+    else:
+        flash('Enrollie not found.', 'error')
+
     return redirect(url_for('view_tesda_enrollies'))
 
 @app.route('/admin/view_archived_tesda')
@@ -756,7 +732,6 @@ def archive_enrollie(enrollie_id):
                 )
                 db.session.add(user)
                 db.session.commit()
-
             # Create a Student entry
             student = Student.query.filter_by(student_id=user.id).first()
             if not student:
@@ -769,7 +744,6 @@ def archive_enrollie(enrollie_id):
                 )
                 db.session.add(student)
                 db.session.commit()
-
             # Create a UserAccount entry
             user_account = UserAccount.query.filter_by(user_id=user.id).first()
             if not user_account:
@@ -784,35 +758,91 @@ def archive_enrollie(enrollie_id):
                     year=enrollie.year,
                     contact_number=enrollie.contact_number,
                     date_of_birth=enrollie.date_of_birth,
-                    place_of_birth=enrollie.place_of_birth,
                     gender=enrollie.gender,
-                    nationality=enrollie.nationality,
                     parent_names=enrollie.parent_names,
                     parent_contact_info=enrollie.parent_contact_info,
                     address=enrollie.address
                 )
                 db.session.add(user_account)
                 db.session.commit()
-
             # Mark the enrollie as archived
             enrollie.is_archived = True
             db.session.commit()
-            
-            flash('Archived successfully!', 'success')
-        except Exception as e:
+
+            # Send email
+            try:
+                msg = Message(
+                    'Enrollment Accepted',
+                    sender=app.config['MAIL_USERNAME'],
+                    recipients=[enrollie.email]
+                )
+                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
+                mail.send(msg)
+                flash('Archived and email sent successfully!', 'success')
+            except Exception as email_error:
+                app.logger.error(f"Error sending email to enrollie {enrollie_id}: {str(email_error)}")
+                flash('Enrollie archived but failed to send email.', 'warning')
+        except IntegrityError as db_error:
             db.session.rollback()
-            app.logger.error(f"Error archiving enrollie: {str(e)}")
-            flash('Error archiving enrollie.', 'error')
+            app.logger.error(f"Integrity error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash('Integrity error archiving enrollie. Possibly a duplicate entry.', 'error')
+        except Exception as db_error:
+            db.session.rollback()
+            app.logger.error(f"Error archiving enrollie {enrollie_id}: {str(db_error)}")
+            flash(f'Error archiving enrollie: {str(db_error)}', 'error')
+    else:
+        flash('Enrollie not found.', 'error')
+
     return redirect(url_for('view_enrollies'))
 
 ########
+
+@app.route('/admin/enrollies/reject/<int:enrollie_id>', methods=['POST'])
+def reject_enrollies(enrollie_id):
+    enrollie = Enrollies.query.get_or_404(enrollie_id)
+    enrollie.is_rejected = True
+    db.session.commit()
+    flash('Enrollment has been rejected successfully!', 'success')
+    return redirect(url_for('view_enrollies'))
+
+@app.route('/admin/rejected_enrollies')
+def view_rejected_enrollies():
+    rejected_enrollies_list = Enrollies.query.filter_by(is_rejected=True).all()
+    return render_template('admin/view_rejected_enrollies.html', rejected_enrollies_list=rejected_enrollies_list)
+
+@app.route('/admin/senior_enrollies/reject/<int:enrollie_id>', methods=['POST'])
+def reject_senior_enrollies(enrollie_id):
+    enrollie = SeniorEnrollies.query.get_or_404(enrollie_id)
+    enrollie.is_rejected = True
+    db.session.commit()
+    flash('Senior enrollment has been rejected successfully!', 'success')
+    return redirect(url_for('view_senior_enrollies'))
+
+@app.route('/admin/rejected_senior_enrollies')
+def view_rejected_senior_enrollies():
+    rejected_senior_enrollies_list = SeniorEnrollies.query.filter_by(is_rejected=True).all()
+    return render_template('admin/view_rejected_senior_enrollies.html', rejected_senior_enrollies_list=rejected_senior_enrollies_list)
+
+@app.route('/admin/tesda_enrollies/reject/<int:enrollie_id>', methods=['POST'])
+def reject_tesda_enrollies(enrollie_id):
+    enrollie = TesdaEnrollies.query.get_or_404(enrollie_id)
+    enrollie.is_rejected = True
+    db.session.commit()
+    flash('TESDA enrollment has been rejected successfully!', 'success')
+    return redirect(url_for('view_tesda_enrollies'))
+
+@app.route('/admin/rejected_tesda_enrollies')
+def view_rejected_tesda_enrollies():
+    rejected_tesda_enrollies_list = TesdaEnrollies.query.filter_by(is_rejected=True).all()
+    return render_template('admin/view_rejected_tesda_enrollies.html', rejected_tesda_enrollies_list=rejected_tesda_enrollies_list)
+
 
 
 
 @app.route('/admin/enrollies')
 def view_enrollies():
     
-    enrollies_list = Enrollies.query.filter_by(is_archived=False).all()
+    enrollies_list = Enrollies.query.filter_by(is_archived=False, is_rejected=False).all()
     return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list)
 
 @app.route('/admin/view_archived_enrollies')
@@ -1584,6 +1614,8 @@ def assign_teacher_to_subject(subject_id):
     return render_template('admin/assign_teacher_to_subject.html', form=form, subject=subject, teachers=teachers)
 
 
+from sqlalchemy import or_
+
 @app.route('/admin/subject_bank', methods=['GET', 'POST'])
 @login_required
 def subject_bank():
@@ -1592,11 +1624,33 @@ def subject_bank():
     per_page = 10
     offset = (page - 1) * per_page
 
-    # Fetch all subjects from the database
-    subjects = Subject.query.offset(offset).limit(per_page).all()
+    # Sorting
+    sort_by = request.args.get('sort_by', 'title')  # Default sorting by title
+    sort_order = request.args.get('sort_order', 'asc')  # Default sorting order is ascending
+
+    # Construct the sorting criteria dynamically
+    if sort_by == 'course':
+        sorting_criteria = Course.id
+    else:
+        sorting_criteria = getattr(Subject, sort_by)
+
+    subjects_query = Subject.query  # Initialize subjects_query with the base query
+
+    if sort_order == 'asc':
+        subjects_query = subjects_query.order_by(asc(sorting_criteria))
+    else:
+        subjects_query = subjects_query.order_by(desc(sorting_criteria))
+
+    # Handle search query
+    search_query = request.args.get('search_query', '')
+    if search_query:
+        subjects_query = subjects_query.filter(or_(Subject.abbreviation.ilike(f"%{search_query}%"), Subject.title.ilike(f"%{search_query}%")))
+
+    # Apply pagination to the final query
+    subjects = subjects_query.offset(offset).limit(per_page).all()
 
     # Calculate total count for pagination
-    total_subject_count = Subject.query.count()
+    total_subject_count = subjects_query.count()
 
     pagination = Pagination(page=page, per_page=per_page, total=total_subject_count, css_framework='bootstrap4')
 
@@ -1638,7 +1692,6 @@ def subject_bank():
         course_subjects[course.id] = course.subjects
     
     return render_template('admin/subject_bank.html', courses=courses, course_subjects=course_subjects, years=years, subjects=subjects, pagination=pagination)
-
 
 
 @app.route('/admin/subject_bank/edit/<int:subject_id>', methods=['GET', 'POST'])

@@ -92,7 +92,7 @@ td{
         <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
@@ -118,14 +118,14 @@ td{
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-
             <li class="nav-item ">
                 <a class="nav-link collapsed" href="{{ url_for('announcement') }}">
                     <i class="fas fa-fw fa-bullhorn"></i>
                     <span>Announcement</span>
                 </a>
             </li>
-             <!-- Nav Item - Pages Collapse Menu -->
+
+            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('modules') }}">
                     <i class="fas fa-fw fa-book"></i>
@@ -133,26 +133,14 @@ td{
                 </a>
             </li>
 
-             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('course') }}" >
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Courses</span>
-                </a>
-            </li>
-
-             <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
                     <i class="fas fa-folder"></i>
                     <span>Section</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('users') }}">
-                    <i class="fas fa-fw fa-key"></i>
-                    <span>Portal Accounts</span>
-                </a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('subject_bank') }}">
                     <i class="fas fa-folder-open"></i>
@@ -173,11 +161,10 @@ td{
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-user-graduate"></i>
-                    <span>Students</span>
+                    <span>Enrollment</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ url_for('view_students') }}">Students Account</a>
                         <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
                         <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
                         <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
@@ -186,12 +173,6 @@ td{
             </li>
 
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('view_teachers') }}" >
-                    <i class="fas fa-user"></i>
-                    <span>Teachers</span></a>
-                    
-            </li>
 
 
             <!-- Divider -->
@@ -204,6 +185,7 @@ td{
          
 
         </ul>
+
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -252,17 +234,24 @@ td{
                 <!-- End of Topbar -->
                 <div class="container-fluid">
             
-                <div class="flash">
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                            {% for message in messages %}
-                                <li>{{ message }}</li>
-                            {% endfor %}
-                    {% endif %}
-                {% endwith %}
-            </div>
+            
             <div class="container">
-                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  <div class="mt-4">
+                    <ul class="flashes list-unstyled">
+                    {% for category, message in messages %}
+                      <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+              {% endwith %}
                     <div class="row">
                                            <div class="col-md-6 offset-md-6">
                                                <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
@@ -298,6 +287,10 @@ td{
                                                     <i class="fas fa-archive"></i> 
                                                     Accepted
                                                 </a>
+                                                <a href="{{ url_for('view_rejected_tesda_enrollies') }}" class="btn btn-danger btn-sm" style="margin-left: 10px; margin-bottom: 10px;">
+                                                    <i class="fas fa-ban"></i> 
+                                                    Rejected
+                                                </a>
                                             </div>
                                         </div>
                                         
@@ -329,28 +322,26 @@ td{
                                                                 <td>
                                                                     <a href="{{ url_for('archive_enrollie_tesda', enrollie_id=enrollies.id) }}" class="btn btn-primary">Accept</a>
                                                                     <button class="btn btn-info show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">Show Info</button>
+                                                                    <form action="{{ url_for('reject_tesda_enrollies', enrollie_id=enrollies.id) }}" method="post" style="display: inline;">
+                                                                        <button type="submit" class="btn btn-danger">Reject</button>
+                                                                    </form>
                                                                 </td>
                                                             </tr>
                                                             <!-- Hidden additional info for each enrollie -->
                                                             <tr id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
                                                                 <td colspan="3">
-                                                                    <strong>Name:</strong> {{ enrollies.first_name }} {{ enrollies.middle_name }} {{ enrollies.last_name }}<br>
+                                                                    <strong>Name:</strong> {{ enrollies.first_name }}&nbsp;{{ enrollies.middle_name }}&nbsp;{{ enrollies.last_name }}&nbsp;{{ enrollies.suffix }}<br>
                                                                     <strong>Year:</strong> {{ enrollies.year }}<br>
                                                                     <strong>Course:</strong> {{ enrollies.track_strand }}<br>
                                                                     <strong>Address:</strong> {{ enrollies.address }}<br>
                                                                     <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
                                                                     <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
-                                                                    <strong>Place of Birth:</strong> {{ enrollies.place_of_birth }}<br>
                                                                     <strong>Gender:</strong> {{ enrollies.gender }}<br>
-                                                                    <strong>Nationality:</strong> {{ enrollies.nationality }}<br>
-                                                                    <strong>Religion:</strong> {{ enrollies.religion }}<br>
                                                                     <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
                                                                     <strong>Grade Last Completed:</strong> {{ enrollies.grade_last_completed }}<br>
                                                                     <strong>Academic Achievements:</strong> {{ enrollies.academic_achievements }}<br>
                                                                     <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
                                                                     <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
-                                                                    <strong>Parent Occupation:</strong> {{ enrollies.parent_occupation }}<br>
-                                                                    <strong>Special Needs:</strong> {{ enrollies.special_needs }}<br>
                                                                 </td>
                                                                 
                                                             </tr>

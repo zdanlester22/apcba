@@ -232,7 +232,7 @@
                             <label for="first_name">First Name <span class="required" autocomplete="off">*</span></label>
                             {{ form.first_name(placeholder='Enter your first name', required=True) }}
                         </div>
-    
+            
                         <div>
                             <label for="middle_name">Middle Name</label>
                             {{ form.middle_name(placeholder='Enter your middle name') }}
@@ -248,81 +248,65 @@
                             <label for="suffix">Suffix</label>
                             {{ form.suffix(placeholder='Enter your suffix') }}
                         </div>
+                        
                         <div>
                             <label for="email">Email Address <span class="required">*</span></label>
-                            {{ form.email(placeholder='Enter your email address', required=True, autocomplete='off') }}
+                            {{ form.email(class="form-control", placeholder="Enter your email address", required=true) }}
                         </div>
+                
+                        <div>
+                            <label for="address">Address <span class="required">*</span></label>
+                            {{ form.address(class="form-control", placeholder="Enter your home address", required=true) }}
+                        </div>
+                
+                        <div>
+                            <label for="year">Year <span class="required">*</span></label>
+                            {{ form.year(class="form-control", required=true) }}
+                        </div>
+                
+            
                         <div>
                             <label for="track_strand">Track & Strand<span class="required">*</span></label>
                             {{ form.track_strand(class="form-control", required=true) }}
                         </div>
-                        <div>
-                            <label for="year">Year <span class="required">*</span></label>
-                            {{ form.year(placeholder='Enter your academic year', required=True) }}
-                        </div>
-                        <div>
-                            <label for="address">Address <span class="required">*</span></label>
-                            {{ form.address(placeholder='Enter your address', required=True, autocomplete="off") }}
-                        </div>
+            
                         <div>
                             <label for="contact_number">Contact Number <span class="required">*</span></label>
-                            {{ form.contact_number(placeholder='Enter your contact number', required=True,autocomplete="off") }}
+                            {{ form.contact_number(class="form-control", placeholder="Enter your contact number", required=true) }}
                         </div>
+                
                         <div>
-                            <label for="date_of_birth">Date of Birth <span class="required">*</span></label>
-                            <input type="text" id="date_of_birth" name="date_of_birth" placeholder="YYYY-MM-DD" required autocomplete="off">
+                            <label for="date_of_birth">Date of Birth<span class="required">*</span></label>
+                            {{ form.date_of_birth(class="form-control", placeholder="YYYY-MM-DD", required=true) }}
                         </div>
-                        
-                        <div>
-                            <label for="place_of_birth">Place of Birth <span class="required">*</span></label>
-                            {{ form.place_of_birth(placeholder='Enter your place of birth', required=True, autocomplete="off") }}
-                        </div>
-                        <div>
-                            <label for="gender">Gender <span class="required">*</span></label>
-                            {{ form.gender(placeholder='Enter your gender', required=True) }}
-                        </div>
-                        <div>
-                            <label for="nationality">Nationality <span class="required">*</span></label>
-                            {{ form.nationality(placeholder='Enter your nationality', required=True, autocomplete="off") }}
-                        </div>
-                        <div>
-                            <label for="religion">Religion <span class="required">*</span></label>
-                            {{ form.religion(placeholder='Enter your religion', required=True, autocomplete="off") }}
-                        </div>
-                        
+                
             
-                        <h2>Education Information</h2>
+                
                         <div>
-                            <label for="previous_school_info">Previous School Info <span class="required">*</span></label>
-                            {{ form.previous_school_info(placeholder='Enter your previous school info', required=True, autocomplete="off") }}
+                            <label for="gender">Gender<span class="required">*</span></label>
+                            {{ form.gender(class="form-control", required=true) }}
                         </div>
+                
+             
+                <h2>Education Information</h2>
                         <div>
-                            <label for="grade_last_completed">Grade/Class Last Completed<span class="required">*</span></label>
-                            {{ form.grade_last_completed(placeholder='Enter your last completed grade', required=True, autocomplete="off") }}
+                            <label for="previous_school_info">Previous School Information<span class="required">*</span></label>
+                            {{ form.previous_school_info(class="form-control", placeholder="Enter your previous school info", required=true) }}
                         </div>
-                        <div>
-                            <label for="academic_achievements">Academic Achievements <span class="required">*</span></label>
-                            {{ form.academic_achievements(placeholder='Enter your academic achievements', required=True, autocomplete="off") }}
-                        </div>
-            
+                
+                
+                
                         <h2>Parent/Guardian Information</h2>
                         <div>
                             <label for="parent_names">Names of Parents/Guardians<span class="required">*</span></label>
-                            {{ form.parent_names(placeholder='Enter guardian name', required=True, autocomplete="off") }}
+                            {{ form.parent_names(class="form-control", placeholder="Enter guardian name", required=true) }}
                         </div>
+                
                         <div>
-                            <label for="parent_contact_info">Guardian Contact Number <span class="required">*</span></label>
-                            <input type="text" id="parent_contact_info" name="parent_contact_info" placeholder='Enter guardian contact number' required autocomplete="off">
+                            <label for="parent_contact_info">Guardian Contact Number<span class="required">*</span></label>
+                            {{ form.parent_contact_info(class="form-control", placeholder="Enter guardian contact number", required=true) }}
                         </div>
-                        <div>
-                            <label for="parent_occupation">Guardian Occupation <span class="required">*</span></label>
-                            {{ form.parent_occupation(placeholder='Enter guardian occupation', required=True, autocomplete="off") }}
-                        </div>
-                        
-                        <div>
-                            <label for="special_needs">Special Needs <span class="required">*</span></label>
-                            {{ form.special_needs(placeholder='Specify any special needs, if applicable', required=True, autocomplete="off") }}
-                        </div>
+             
                         
             
                         <button type="submit">Enroll</button>

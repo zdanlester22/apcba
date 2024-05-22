@@ -31,9 +31,6 @@
 
     <!-- Custom inline styles -->
     <style type="text/css">
-         img{
-            width: 50px;
-        }
         .bg-color{
             background-color:#374c60 ;
         }
@@ -52,7 +49,38 @@
 td{
     border: 1px solid #ccc;
 }
+.bg-color{
+            background-color:#374c60 ;
+        } 
+        img{
+            width: 50px;
+        }
+        .flash {
+            position: fixed;
+            right: 0;
+            top: 0;
+            margin-top: 50px;
+            margin-right: 30px;
+            z-index: 10;
+            background-color: #374c60;
+            color: #fff;
+            border: 2px solid #374c60;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            padding: 10px;
+        }
+        .flash li{
+            list-style: none;
+            text-align: center;
+            margin-right: 25px;
+        }
+        .fade-in {
+            /* CSS class to fade in flash messages */
+            opacity: 1 !important; /* Override opacity to 1 */
+        }
     </style>
+    
 </head>
 
 <body id="page-top">
@@ -169,6 +197,7 @@ td{
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                     <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Portal V1.0</h5>
+
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
@@ -189,7 +218,8 @@ td{
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                              
+                    
+                               
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ url_for('logout') }}" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -202,9 +232,35 @@ td{
 
                 </nav>
                 <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
-                <div class="container">
+                <div class="container-fluid">
+            
+                <div class="flash">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div class="container">
+                <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mt-4">
+        <ul class="flashes list-unstyled">
+        {% for category, message in messages %}
+          <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endwith %}
                 
                     <div class="row">
                                            <div class="col-md-6 offset-md-6">
@@ -217,20 +273,28 @@ td{
                                            </div>
                                        </div>
                                        <!-- Page Heading -->
-                                       <h1 class="h3 mb-2 text-gray-800">Enrollment SHS</h1>
-                                       
+                                       <h1 class="h3 mb-2 text-gray-800">Enrollment COLLEGE</h1>
+                                       <div class="row">
+                                    
+                                    
+                                    </div>
                                        
                                        
                                        <!-- DataTales Example -->
                                        <div class="card shadow mb-4">
                                         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                                            <h6 class="m-0 font-weight-bold text-primary">Accepted Enrollment List</h6>
+                                            <h6 class="m-0 font-weight-bold text-primary">Rejected Enrollment list</h6>
+                                            <div class="form-group mb-0">
+                                                <a href="{{ url_for('view_archived_enrollies') }}" class="btn btn-primary btn-sm" style="margin-left: 10px; margin-bottom: 10px;">
+                                                    <i class="fas fa-archive"></i> 
+                                                    Accepted
+                                                </a>
+                                            </div>
                                         </div>
-                                            
                                         
-                                           <div class="card-body">
-                                               <div class="table-responsive">
-                                                   <table id="courseTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table id="rejectedEnrolliesTable" class="table table-bordered" width="100%" cellspacing="0">
                                                     <thead>
                                                         <tr>
                                                             <th>First Name</th>
@@ -243,45 +307,52 @@ td{
                                                     </thead>
                                                     <tbody>
                                                         <tr id="noResultsRow" style="display: none;">
-                                                            <td colspan="9" class="text-center">No results</td>
+                                                            <td colspan="6" class="text-center">No rejected enrollments</td>
                                                         </tr>
-                                                        {% for enrollies in archived_shs_enrollies_list %}
-                                                        <tr>
-                                                            <td>{{ enrollies.first_name }}</td>
-                                                                <td>{{ enrollies.middle_name }}</td>
-                                                                <td>{{ enrollies.last_name }}</td>
-                                                                <td>{{ enrollies.suffix }}</td>
-                                                            <td>{{ enrollies.email }}</td>
-                                                            <td>
-                                            
-                                                                <button class="btn btn-info btn-sm show-info-btn" onclick="toggleInfo('{{ enrollies.id }}')">
-                                                                    <i class="fas fa-info-circle"></i> Show Info
-                                                                </button>
-                                                                
-                                                            </td>
-                                                        </tr>
-                                                        <!-- Hidden additional info for each enrollie -->
-                                                        <tr id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
-                                                            <td colspan="3">
-                                                                <strong>Name:</strong> {{ enrollies.first_name }}&nbsp;{{ enrollies.middle_name }}&nbsp;{{ enrollies.last_name }}&nbsp;{{ enrollies.suffix }}<br>
-                                                                <strong>Year:</strong> {{ enrollies.year }}<br>
-                                                                <strong>Course:</strong> {{ enrollies.track_strand }}<br>
-                                                                <strong>Contact:</strong> {{ enrollies.contact_number }}<br>
-                                                                <strong>Birthday:</strong> {{ enrollies.date_of_birth }}<br>
-                                                                <strong>Gender:</strong> {{ enrollies.gender }}<br>
-                                                                <strong>Previous School Info:</strong> {{ enrollies.previous_school_info }}<br>
-                                                                <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
-                                                                <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
-                                                            </td>
-                                                        </tr>
-                                                        {% endfor %}
+                                                        {% if rejected_enrollies_list %}
+                                                        {% for enrollie in rejected_enrollies_list %}
+
+                                                                <tr>
+                                                                    <td>{{ enrollie.first_name }}</td>
+                                                                    <td>{{ enrollie.middle_name }}</td>
+                                                                    <td>{{ enrollie.last_name }}</td>
+                                                                    <td>{{ enrollie.suffix }}</td>
+                                                                    <td>{{ enrollie.email }}</td>
+                                                                    <td>
+                                                                        <!-- Optionally, you can add a button to undo rejection -->
+                                                                    
+                                                                        <button class="btn btn-info show-info-btn" onclick="toggleInfo('{{ enrollie.id }}')">Show Info</button>
+                                                                    </td>
+                                                                </tr>
+                                                                <!-- Hidden additional info for each rejected enrollment -->
+                                                                <tr id="additional-info-{{ enrollie.id }}" class="additional-info" style="display:none;">
+                                                                    <td colspan="6" style="padding: 15px; border: 1px solid #ddd;">
+                                                                        <div style="font-family: Arial, sans-serif; line-height: 1.5;">
+                                                                            <p style="margin: 0;"><strong>Name:</strong> {{ enrollie.first_name }} {{ enrollie.middle_name }} {{ enrollie.last_name }} {{ enrollie.suffix }}</p>
+                                                                            <p style="margin: 0;"><strong>Year:</strong> {{ enrollie.year }}</p>
+                                                                            <p style="margin: 0;"><strong>Course:</strong> {{ enrollie.track_strand }}</p>
+                                                                            <p style="margin: 0;"><strong>Address:</strong> {{ enrollie.address }}</p>
+                                                                            <p style="margin: 0;"><strong>Contact:</strong> {{ enrollie.contact_number }}</p>
+                                                                            <p style="margin: 0;"><strong>Birthday:</strong> {{ enrollie.date_of_birth }}</p>
+                                                                            <p style="margin: 0;"><strong>Gender:</strong> {{ enrollie.gender }}</p>
+                                                                            <p style="margin: 0;"><strong>Previous School Info:</strong> {{ enrollie.previous_school_info }}</p>
+                                                                            <p style="margin: 0;"><strong>Parents Name:</strong> {{ enrollie.parent_names }}</p>
+                                                                            <p style="margin: 0;"><strong>Parent Contact:</strong> {{ enrollie.parent_contact_info }}</p>
+                                                                        </div>
+                                                                    </td>
+                                                                    
+                                                                </tr>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            <tr>
+                                                                <td colspan="6">No rejected enrollments</td>
+                                                            </tr>
+                                                        {% endif %}
                                                     </tbody>
                                                 </table>
-                                                </div>
-                                                
-                                                   </div>
-                                               </div>
-                    
+                                            </div>
+                                        </div>
+                                       </div>
                     
                     <div id="myModal" class="modal fade" role="dialog">
                         <div class="modal-dialog">
@@ -304,10 +375,10 @@ td{
             </div>
             <!-- End of Main Content -->
 
-          
+            <!-- Footer -->
+           
 
         </div>
-        <!-- End of Content Wrapper -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto ">
@@ -315,6 +386,9 @@ td{
                 </div>
             </div>
         </footer>
+        <!-- End of Footer -->
+        <!-- End of Content Wrapper -->
+
     </div>
     <!-- End of Page Wrapper -->
 
@@ -427,7 +501,7 @@ function filterTable() {
     var input, filter, table, tr, nameColumn, emailColumn, i, noResultsRow;
     input = document.getElementById("searchInput");
     filter = input.value.toUpperCase();
-    table = document.getElementById("collegeTable");
+    table = document.getElementById("rejectedEnrolliesTable");
     tr = table.getElementsByTagName("tr");
     noResultsRow = document.getElementById("noResultsRow");
     var noResults = true;
@@ -443,23 +517,18 @@ function filterTable() {
                 noResults = false;
             } else {
                 tr[i].style.display = "none";
-                // Hide the additional info row if it's available
-                var additionalInfo = document.getElementById("additional-info-" + tr[i].dataset.enrolleeId);
-                if (additionalInfo) {
-                    additionalInfo.style.display = "none";
-                }
             }
         }
     }
 
-    if (noResults) {
-        noResultsRow.style.display = ""; 
-    } else {
-        noResultsRow.style.display = "none"; 
+    // If no results found, display "No results" row
+    if (noResultsRow) {
+        if (noResults) {
+            noResultsRow.style.display = "";
+        } else {
+            noResultsRow.style.display = "none";
+        }
     }
 }
-
-
-    </script>
-
+</script>
 </html>

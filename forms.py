@@ -140,9 +140,9 @@ class EnrollmentForm(FlaskForm):
 
 class EnrolliesForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
-    middle_name = StringField('Middle Name')
+    middle_name = StringField('Middle Name', validators=[Optional()])
     last_name = StringField('Last Name', validators=[DataRequired()])
-    suffix = StringField('Suffix')
+    suffix = StringField('Suffix', validators=[Optional()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     track_strand_choices = [
         ('BTVTED','Bachelor of Technical Vocational Teachers Education (BTVTED)'),
@@ -152,21 +152,21 @@ class EnrolliesForm(FlaskForm):
     track_strand = SelectField('Track & Strand', choices=track_strand_choices, validators=[DataRequired()])
 
     address = StringField('Home Address', validators=[DataRequired()])
-    year_choices = [ ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year')]
-    year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
+    year_choices = [
+        ('First Year', 'First Year'), 
+        ('Second Year', 'Second Year'), 
+        ('Third Year', 'Third Year'), 
+        ('Fourth Year', 'Fourth Year')
+    ]
+    year = SelectField('Year', choices=year_choices, validators=[DataRequired()])
     contact_number = StringField('Contact Number', validators=[DataRequired()])
     date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
-    place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
     gender = SelectField('Gender', choices=[('male', 'Male'), ('female', 'Female')], validators=[DataRequired()])
-    nationality = StringField('Nationality', validators=[DataRequired()])
-    religion = StringField('Religion', validators=[DataRequired()])
-    previous_school_info = StringField('Previous School Information')
-    grade_last_completed = StringField('Grade/Class Last Completed')
-    academic_achievements = TextAreaField('Academic Achievements')
+    previous_school_info = StringField('Previous School Information', validators=[Optional()])
     parent_names = StringField('Names of Parents/Guardians', validators=[DataRequired()])
     parent_contact_info = StringField('Contact Information of Parents/Guardians', validators=[DataRequired()])
-    parent_occupation = StringField('Occupation of Parents/Guardians', validators=[DataRequired()])
-    special_needs = TextAreaField('Special Needs or Accommodations')
+
+
 
 class SeniorEnrolliesForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
@@ -180,17 +180,11 @@ class SeniorEnrolliesForm(FlaskForm):
     lrn = StringField('LRN (Learner Reference Number)', validators=[DataRequired(), Length(min=12, max=12)])
     contact_number = StringField('Contact Number', validators=[DataRequired()])
     date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
-    place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
     gender = SelectField('Gender', choices=[('male', 'Male'), ('female', 'Female')], validators=[DataRequired()])
-    nationality = StringField('Nationality', validators=[DataRequired()])
-    religion = StringField('Religion', validators=[DataRequired()])
     previous_school_info = StringField('Previous School Information')
-    grade_last_completed = StringField('Grade/Class Last Completed')
-    academic_achievements = TextAreaField('Academic Achievements')
     parent_names = StringField('Names of Parents/Guardians', validators=[DataRequired()])
     parent_contact_info = StringField('Contact Information of Parents/Guardians', validators=[DataRequired()])
-    parent_occupation = StringField('Occupation of Parents/Guardians', validators=[DataRequired()])
-    special_needs = TextAreaField('Special Needs or Accommodations')
+
     track_strand_choices = [
         ('GAs', 'General Academic Strand (GAs)'),
         ('STEM', 'STEM (Science, Technology, Engineering, Mathematics)'),
@@ -222,17 +216,11 @@ class TesdaEnrolliesForm(FlaskForm):
     year = SelectField('Year', choices=year_choices, validators=[validators.DataRequired()])
     contact_number = StringField('Contact Number', validators=[DataRequired()])
     date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
-    place_of_birth = StringField('Place of Birth', validators=[DataRequired()])
     gender = SelectField('Gender', choices=[('male', 'Male'), ('female', 'Female')], validators=[DataRequired()])
-    nationality = StringField('Nationality', validators=[DataRequired()])
-    religion = StringField('Religion', validators=[DataRequired()])
     previous_school_info = StringField('Previous School Information')
-    grade_last_completed = StringField('Grade/Class Last Completed')
-    academic_achievements = TextAreaField('Academic Achievements')
     parent_names = StringField('Names of Parents/Guardians', validators=[DataRequired()])
     parent_contact_info = StringField('Contact Information of Parents/Guardians', validators=[DataRequired()])
-    parent_occupation = StringField('Occupation of Parents/Guardians', validators=[DataRequired()])
-    special_needs = TextAreaField('Special Needs or Accommodations')
+
 
     
 class Period1Form(FlaskForm):

@@ -62,7 +62,7 @@ h2 {
         <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
@@ -88,14 +88,14 @@ h2 {
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-
             <li class="nav-item ">
                 <a class="nav-link collapsed" href="{{ url_for('announcement') }}">
                     <i class="fas fa-fw fa-bullhorn"></i>
                     <span>Announcement</span>
                 </a>
             </li>
-             <!-- Nav Item - Pages Collapse Menu -->
+
+            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('modules') }}">
                     <i class="fas fa-fw fa-book"></i>
@@ -103,26 +103,14 @@ h2 {
                 </a>
             </li>
 
-             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('course') }}" >
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Courses</span>
-                </a>
-            </li>
-
-             <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
-                    <i class="fas fa-fw fa-folder"></i>
+                    <i class="fas fa-folder"></i>
                     <span>Section</span>
                 </a>
             </li>
- 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('users') }}">
-                    <i class="fas fa-fw fa-key"></i>
-                    <span>Portal Accounts</span>
-                </a>
-            </li>
+
+
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('subject_bank') }}">
                     <i class="fas fa-folder-open"></i>
@@ -137,16 +125,16 @@ h2 {
             <div class="sidebar-heading">
                 Account Management
             </div>
+
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-user-graduate"></i>
-                    <span>Students</span>
+                    <span>Enrollment</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ url_for('view_students') }}">Students Account</a>
                         <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
                         <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
                         <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
@@ -155,11 +143,6 @@ h2 {
             </li>
 
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('view_teachers') }}" >
-                    <i class="fas fa-user"></i>
-                    <span>Teachers</span></a>
-            </li>
 
 
             <!-- Divider -->
@@ -172,6 +155,7 @@ h2 {
          
 
         </ul>
+
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -232,7 +216,22 @@ h2 {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Sections</h1>
                     </div>
-                
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mt-4">
+        <ul class="flashes list-unstyled">
+        {% for category, message in messages %}
+          <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endwith %}
                     <!-- Content Row -->
                 
                    <!-- Button trigger modal -->
