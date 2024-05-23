@@ -193,7 +193,7 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <!-- Page Heading -->
-                
+                    <h1 class="h3 mb-2 text-gray-800">Enrolled</h1>
                     <!-- Content Row -->
                     <div class="container">
                         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -274,17 +274,26 @@
                         <!-- Table -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <div class="row">
-                                    <div class="col-6">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
                                         <h6 class="m-0 font-weight-bold text-primary">Add student to their sections</h6>
                                     </div>
-                                    <div class="col-6 text-right">
-                                        <button class="btn btn-primary btn-sm show-button" data-toggle="modal" style="margin-bottom: 10px;" data-target="#enrollmentModal">
-                                            <i class="fas fa-user-plus"></i> Enroll 
-                                        </button>
+                                    <div class="col-md-6 text-right">
+                                        <div class="d-inline-block mr-2">
+                                            <button class="btn btn-primary btn-sm show-button" data-toggle="modal" data-target="#enrollmentModal">
+                                                <i class="fas fa-user-plus"></i> Enroll
+                                            </button>
+                                        </div>
+                                        <div class="d-inline-block">
+                                            <a href="{{ url_for('view_finished_enrollments') }}" class="btn btn-success btn-sm">
+                                                <i class="fas fa-check-circle"></i> Finished
+                                            </a>
+                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
+                            
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -292,6 +301,7 @@
                                         <th>Course</th>
                                         <th>Year</th>
                                         <th>Section Name</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -301,6 +311,15 @@
                                         <td>{{ enrollment.enrolled_course_rel.title }}</td>
                                         <td>{{ enrollment.year }}</td>
                                         <td>{{ enrollment.enrolled_section_rel.name }}</td>
+                                        <td>
+                                            <form action="{{ url_for('finish_enrollment', enrollment_id=enrollment.id) }}" method="POST">
+                                                <button type="submit" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-check-circle"></i> finish
+                                                </button>
+                                            </form>
+                                            
+                                            
+                            </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -309,7 +328,7 @@
                             <div class="d-flex justify-content-end">
                                 <ul class="pagination">
                                     <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
-                                        <a class="page-link" href="{{ url_for('enroll', page=pagination.prev_num) }}">&laquo;</a>
+                                        <a class="page-link" href="{{ url_for('view_finished_enrollments', page=pagination.next_num) }}">&laquo;</a>
                                     </li>
                                     {% for page_num in pagination.iter_pages() %}
                                         {% if page_num %}
@@ -319,7 +338,7 @@
                                                 </li>
                                             {% else %}
                                                 <li class="page-item">
-                                                    <a class="page-link" href="{{ url_for('enroll', page=page_num) }}">{{ page_num }}</a>
+                                                    <a class="page-link" href="{{ url_for('view_finished_enrollments', page=pagination.next_num) }}">{{ page_num }}</a>
                                                 </li>
                                             {% endif %}
                                         {% else %}
@@ -329,7 +348,7 @@
                                         {% endif %}
                                     {% endfor %}
                                     <li class="page-item mr-3 {% if not pagination.has_next %}disabled{% endif %}">
-                                        <a class="page-link" href="{{ url_for('enroll', page=pagination.next_num) }}">&raquo;</a>
+                                        <a class="page-link" href="{{ url_for('view_finished_enrollments', page=pagination.next_num) }}">&raquo;</a>
                                     </li>
                                 </ul>
                             </div>

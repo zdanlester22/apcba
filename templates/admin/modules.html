@@ -378,6 +378,7 @@
                              
                             
                                         <th>Download</th>
+                                        <th>View</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -414,6 +415,12 @@
                                                         </div>
                                                     </div>
                                                 </td>
+                                                <td>
+                                                    <a href="{{ url_for('view_module_pdf', module_id=module.id) }}" class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-file-pdf"></i> View PDF
+                                                    </a>
+                                                </td>
+                                                
                                             </tr>
                                         {% endfor %}
                                     </tbody>

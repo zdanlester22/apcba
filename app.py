@@ -27,6 +27,7 @@ from models import Section
 import pytz
 import secrets
 from sqlalchemy import desc, asc
+from flask import Response
 
 
 
@@ -237,12 +238,13 @@ def dashboard():
         inactive_student_count = student_count - active_student_count
 
         # Calculate counts of students enrolled in each year
-        grade_11_count = Enrollment.query.filter_by(year='Grade 11').count()
-        grade_12_count = Enrollment.query.filter_by(year='Grade 12').count()
-        first_year_count = Enrollment.query.filter_by(year='First Year').count()
-        second_year_count = Enrollment.query.filter_by(year='Second Year').count()
-        third_year_count = Enrollment.query.filter_by(year='Third Year').count()
-        fourth_year_count = Enrollment.query.filter_by(year='Fourth Year').count()
+        grade_11_count = Enrollment.query.filter(Enrollment.year == 'Grade 11', Enrollment.is_finished == False).count()
+        grade_12_count = Enrollment.query.filter(Enrollment.year == 'Grade 12', Enrollment.is_finished == False).count()
+        first_year_count = Enrollment.query.filter(Enrollment.year == 'First Year', Enrollment.is_finished == False).count()
+        second_year_count = Enrollment.query.filter(Enrollment.year == 'Second Year', Enrollment.is_finished == False).count()
+        third_year_count = Enrollment.query.filter(Enrollment.year == 'Third Year', Enrollment.is_finished == False).count()
+        fourth_year_count = Enrollment.query.filter(Enrollment.year == 'Fourth Year', Enrollment.is_finished == False).count()
+
 
         # Render the admin dashboard template
         return render_template('admin/dashboard.html', student_count=student_count, teacher_count=teacher_count, 
@@ -979,6 +981,42 @@ def view_students():
         total_students = query.count()
         students_pagination = query.paginate(page=page, per_page=8)
         return render_template('admin/view_students.html', authenticated=True, students_pagination=students_pagination, search_query=search_query, total_students=total_students)
+
+@app.route('/admin/view_student_details/<int:student_id>', methods=['GET'])
+@login_required
+def view_student_details(student_id):
+    if current_user.role != 'admin':
+        flash('You are not authorized to view student details.', 'danger')
+        return redirect(url_for('dashboard'))
+    
+    # Fetch student details including associated user
+    student = db.session.query(Student, User).join(User).filter(Student.id == student_id).first_or_404()
+    
+    # Fetch the student's enrollment details
+    enrollments = Enrollment.query.filter_by(student_id=student_id).all()
+    
+    # Fetch the student's grades
+    grades = Grades.query.filter_by(student_id=student_id).all()
+
+    # Fetch all teachers
+    teachers = Teacher.query.all()
+
+    # Dictionary to store teacher names and their subjects
+    teacher_subjects = {}
+
+    # Loop through each teacher
+    for teacher in teachers:
+        # Get the teacher's name
+        teacher_name = f"{teacher.last_name} {teacher.first_name}"
+
+        # Get the subjects taught by the teacher
+        subjects_taught = [subject.title for subject in teacher.subjects]
+
+        # Store the teacher's subjects in the dictionary
+        teacher_subjects[teacher_name] = subjects_taught
+
+    # Pass all necessary data to the template
+    return render_template('admin/view_student_details.html', student=student, enrollments=enrollments, grades=grades, teacher_subjects=teacher_subjects)
 
 
 
@@ -2012,25 +2050,23 @@ def modules():
     form_module = ModuleForm()
     courses = Course.query.all()
     form_module.course_id.choices = [(course.id, course.title) for course in courses]
-    
+
     if form_module.validate_on_submit():
         # Extract form data
         title = form_module.title.data
         year = form_module.year.data
         course_id = form_module.course_id.data
         pdf_file = form_module.pdf_file.data
-        pdf_filename = f"{title.replace(' ', '_')}.pdf"
 
-        # Save PDF file to uploads directory
-        os.makedirs(os.path.join('uploads', 'documents'), exist_ok=True)
-        pdf_file.save(os.path.join('uploads', 'documents', pdf_filename))
+        # Read PDF file data
+        pdf_data = pdf_file.read()
 
         # Create a new Module instance and add it to the database
         new_module = Module(
             title=title,
             year=year,
             course_id=course_id,
-            pdf_filename=pdf_filename,
+            pdf_data=pdf_data  # Save PDF data to the database
         )
         db.session.add(new_module)
         db.session.commit()
@@ -2040,7 +2076,6 @@ def modules():
 
         # Redirect the user to the modules page to display the updated list
         return redirect(url_for('modules'))
-
     # Pagination
     page = request.args.get('page', 1, type=int)
     per_page = 10
@@ -2071,6 +2106,20 @@ def modules():
     
     return render_template('admin/modules.html', form_module=form_module, modules=modules, pagination=pagination, courses=courses, years=years)
 
+
+@app.route('/admin/modules/view_pdf/<int:module_id>')
+@login_required
+def view_module_pdf(module_id):
+    module = Module.query.get_or_404(module_id)
+    pdf_data = module.pdf_data
+
+    # Check if PDF data exists
+    if pdf_data:
+        # Serve the PDF file as a response
+        return Response(pdf_data, mimetype='application/pdf')
+    else:
+        # If PDF data doesn't exist, return an error message or redirect to an error page
+        return 'PDF file not found', 404
 
 @app.route('/student/modules', methods=['GET'])
 @login_required
@@ -2139,7 +2188,7 @@ def enroll():
     per_page = 8  # Number of items per page
 
     # Paginate the existing enrollments
-    existing_enrollments_pagination = Enrollment.query.paginate(page=page, per_page=per_page, error_out=False)
+    existing_enrollments_pagination = Enrollment.query.filter_by(is_finished=False).paginate(page=page, per_page=per_page, error_out=False)
     existing_enrollments = existing_enrollments_pagination.items
 
     if form.validate_on_submit():
@@ -2166,6 +2215,20 @@ def enroll():
         pagination=existing_enrollments_pagination
     )
 
+@app.route('/admin/enrollments/finish/<int:enrollment_id>', methods=['POST'])
+@login_required
+def finish_enrollment(enrollment_id):
+    enrollment = Enrollment.query.get_or_404(enrollment_id)
+    enrollment.is_finished = True
+    db.session.commit()
+    flash('Enrollment has been marked as finished successfully!', 'success')
+    return redirect(url_for('enroll'))
+
+@app.route('/admin/enrollments/finished')
+@login_required
+def view_finished_enrollments():
+    finished_enrollments = Enrollment.query.filter_by(is_finished=True).all()
+    return render_template('admin/finished_enrollments.html', enrollments=finished_enrollments)
 
 
 @app.route('/enrolled_subjects/<int:student_id>', methods=['GET'])

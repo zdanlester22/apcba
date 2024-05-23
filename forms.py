@@ -123,7 +123,7 @@ class ModuleForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     year = StringField('Year', validators=[DataRequired()])
     course_id = SelectField('Course', coerce=int, validators=[DataRequired()])
-    pdf_file = FileField('PDF File', validators=[DataRequired()])
+    pdf_file = FileField('PDF File', validators=[FileAllowed(['pdf'], 'Only PDF files are allowed!')])
 
 class EnrollmentForm(FlaskForm):
     student_id = SelectField('Student', choices=[], coerce=int)

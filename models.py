@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from datetime import datetime
-
+from sqlalchemy import LargeBinary
 db = SQLAlchemy()
 
 
@@ -140,7 +140,7 @@ class Module(db.Model):
     year = db.Column(db.String, nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     course = db.relationship('Course', backref='modules')
-    pdf_filename = db.Column(db.String(255), nullable=False)
+    pdf_data = db.Column(LargeBinary, nullable=False)
 
 
 class Enrollment(db.Model):
@@ -150,9 +150,11 @@ class Enrollment(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
     year = db.Column(db.String(20), nullable=False)
+    is_finished = db.Column(db.Boolean, default=False)  # New field to track if finished
     enrolled_student_rel = db.relationship('Student', back_populates='enrollments', single_parent=True)
     enrolled_course_rel = db.relationship('Course', backref='enrollments_course')
     enrolled_section_rel = db.relationship('Section', backref='enrollments_section')
+
 
     
 

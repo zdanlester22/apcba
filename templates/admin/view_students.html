@@ -244,6 +244,10 @@
                                                 </button>
                                                 {% endif %}
                                             </form>
+                                            <a href="{{ url_for('view_student_details', student_id=student.id) }}" class="btn btn-primary">View Student Details</a>
+
+
+
                                         </td>
                                     </tr>
                                     {% endfor %}
