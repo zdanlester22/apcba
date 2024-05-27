@@ -338,6 +338,47 @@ td{
                                                     </tbody>
                                                     
                                                 </table>
+                                                <div class="d-flex justify-content-end">
+                                                <nav aria-label="Page navigation">
+                                                    <ul class="pagination justify-content-center">
+                                                        {% if pagination.has_prev %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="{{ url_for('view_enrollies', page=pagination.prev_num) }}" aria-label="Previous">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                                <span class="sr-only">Previous</span>
+                                                            </a>
+                                                        </li>
+                                                        {% else %}
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link" href="#" aria-label="Previous">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                                <span class="sr-only">Previous</span>
+                                                            </a>
+                                                        </li>
+                                                        {% endif %}
+                                                        {% for page_num in pagination.iter_pages() %}
+                                                        <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                                            <a class="page-link" href="{{ url_for('view_enrollies', page=page_num) }}">{{ page_num }}</a>
+                                                        </li>
+                                                        {% endfor %}
+                                                        {% if pagination.has_next %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="{{ url_for('view_enrollies', page=pagination.next_num) }}" aria-label="Next">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </li>
+                                                        {% else %}
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link" href="#" aria-label="Next">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </nav>
+                                            </div>
                                                 
                                                 </div>
                                                 
@@ -469,37 +510,45 @@ function toggleSidebar() {
     $('#myModal').modal('show');
 }
 function filterTable() {
-    var input, filter, table, tr, nameColumn, emailColumn, i, noResultsRow;
+    var input, filter, table, tr, firstNameColumn, middleNameColumn, lastNameColumn, emailColumn, noResultsRow;
     input = document.getElementById("searchInput");
     filter = input.value.toUpperCase();
-    table = document.getElementById("collegeTable");
+    table = document.getElementById("courseTable");
     tr = table.getElementsByTagName("tr");
     noResultsRow = document.getElementById("noResultsRow");
+
     var noResults = true;
 
-    for (i = 1; i < tr.length; i++) {
-        nameColumn = tr[i].getElementsByTagName("td")[0]; // Index 0 for name column
-        emailColumn = tr[i].getElementsByTagName("td")[1]; // Index 1 for email column
-        if (nameColumn && emailColumn) {
-            var nameValue = nameColumn.textContent || nameColumn.innerText;
+    for (var i = 1; i < tr.length; i++) {
+        firstNameColumn = tr[i].getElementsByTagName("td")[0]; // Index 0 for first name column
+        middleNameColumn = tr[i].getElementsByTagName("td")[1]; // Index 1 for middle name column
+        lastNameColumn = tr[i].getElementsByTagName("td")[2]; // Index 2 for last name column
+        emailColumn = tr[i].getElementsByTagName("td")[4]; // Index 4 for email column
+
+        if (firstNameColumn && middleNameColumn && lastNameColumn && emailColumn) {
+            var firstNameValue = firstNameColumn.textContent || firstNameColumn.innerText;
+            var middleNameValue = middleNameColumn.textContent || middleNameColumn.innerText;
+            var lastNameValue = lastNameColumn.textContent || lastNameColumn.innerText;
             var emailValue = emailColumn.textContent || emailColumn.innerText;
-            if (nameValue.toUpperCase().indexOf(filter) > -1 || emailValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
+
+            // Concatenate all column values for filtering
+            var allValues = firstNameValue + " " + middleNameValue + " " + lastNameValue + " " + emailValue;
+
+            // Check if the filter text is found in any column
+            if (allValues.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = ""; // Show row if match found
                 noResults = false;
             } else {
-                tr[i].style.display = "none";
+                tr[i].style.display = "none"; // Hide row if no match found
             }
         }
     }
 
-    // If no results found, display "No results" row
+    // Show or hide the "No results" row based on the noResults variable
     if (noResultsRow) {
-        if (noResults) {
-            noResultsRow.style.display = "";
-        } else {
-            noResultsRow.style.display = "none";
-        }
+        noResultsRow.style.display = noResults ? "" : "none";
     }
 }
+
 </script>
 </html>

@@ -256,7 +256,7 @@ td{
                     <div class="row">
                                            <div class="col-md-6 offset-md-6">
                                                <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
-                                                   <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
                                                    <div class="input-group-append">
                                                        <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
                                                    </div>
@@ -297,7 +297,7 @@ td{
                                         
                                            <div class="card-body">
                                                <div class="table-responsive">
-                                                   <table id="shsTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <table id="shsTable" class="table table-bordered" width="100%" cellspacing="0">
                                                     <thead>
                                                         <tr>
                                                             <th>First Name</th>
@@ -330,7 +330,7 @@ td{
                                                             </tr>
                                                             <!-- Hidden additional info for each enrollie -->
                                                             <tr id="additional-info-{{ enrollies.id }}" class="additional-info" style="display:none;">
-                                                                <td colspan="3">
+                                                                <td colspan="6">
                                                                     <strong>Name:</strong> {{ enrollies.first_name }}&nbsp;{{ enrollies.middle_name }}&nbsp;{{ enrollies.last_name }}&nbsp;{{ enrollies.suffix }}<br>
                                                                     <strong>Year:</strong> {{ enrollies.year }}<br>
                                                                     <strong>Course:</strong> {{ enrollies.track_strand }}<br>
@@ -344,17 +344,65 @@ td{
                                                                     <strong>Parents Name:</strong> {{ enrollies.parent_names }}<br>
                                                                     <strong>Parent Contact:</strong> {{ enrollies.parent_contact_info }}<br>
                                                                 </td>
-                                                                
                                                             </tr>
                                                             {% endfor %}
-                                                            {% else %}
+                                                        {% else %}
                                                             <tr>
                                                                 <td colspan="6">No Enrollies</td>
                                                             </tr>
                                                         {% endif %}
                                                     </tbody>
-                                                    
                                                 </table>
+<!-- Pagination controls -->
+<div class="d-flex justify-content-end">
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if pagination.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('view_senior_enrollies', page=pagination.prev_num) }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
+        {% for page_num in pagination.iter_pages() %}
+            {% if page_num %}
+                {% if page_num == pagination.page %}
+                    <li class="page-item active">
+                        <a class="page-link">{{ page_num }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('view_senior_enrollies', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">...</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('view_senior_enrollies', page=pagination.next_num) }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+</div>
                                                 
                                                 </div>
                                                 
@@ -447,7 +495,7 @@ td{
 
 </body>
 <script>
-function toggleSidebar() {
+    function toggleSidebar() {
         var sidebar = document.querySelector('.sidebar');
         var form = document.querySelector('.container');
         var table = document.querySelector('.enrollies-table');
@@ -461,7 +509,7 @@ function toggleSidebar() {
             table.style.width = 'calc(100% - 300px)';
             table.style.marginLeft = '300px';
             button.style.marginLeft = '0'; // Reset button position
-            text.style.marginLeft = '-340px'
+            text.style.marginLeft = '-340px';
         } else {
             // Hide the sidebar
             sidebar.style.display = 'none';
@@ -470,73 +518,85 @@ function toggleSidebar() {
             table.style.marginLeft = 'auto';
             table.style.marginRight = 'auto';
             button.style.marginLeft = '-230px'; // Reset button position
-            text.style.marginLeft = '-820px'
+            text.style.marginLeft = '-820px';
         }
     }
     
     document.addEventListener("DOMContentLoaded", function () {
-            // Select the flash div
-            var flashDiv = document.querySelector(".flash");
+        // Select the flash div
+        var flashDiv = document.querySelector(".flash");
 
-            // Function to add fade-in class
-            function fadeInFlash() {
-                flashDiv.classList.add("fade-in");
-            }
-
-            // Function to remove fade-in class after 3 seconds
-            function fadeOutFlash() {
-                setTimeout(function () {
-                    flashDiv.classList.remove("fade-in");
-                }, 3000); // 3 seconds delay
-            }
-
-            // Call the functions
-            fadeInFlash();
-            fadeOutFlash();
-        });
-        function toggleInfo(enrollieId) {
-    var modal = document.getElementById('myModal');
-    var modalInfoContent = document.getElementById('modal-info-content');
-    var enrollies = document.getElementById(`additional-info-${enrollieId}`);
-
-    // Populate modal content
-    modalInfoContent.innerHTML = enrollies.innerHTML;
-
-    // Show modal
-    $('#myModal').modal('show');
-}
-function filterTable() {
-    var input, filter, table, tr, nameColumn, emailColumn, i, noResultsRow;
-    input = document.getElementById("searchInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("collegeTable");
-    tr = table.getElementsByTagName("tr");
-    noResultsRow = document.getElementById("noResultsRow");
-    var noResults = true;
-
-    for (i = 1; i < tr.length; i++) {
-        nameColumn = tr[i].getElementsByTagName("td")[0]; // Index 0 for name column
-        emailColumn = tr[i].getElementsByTagName("td")[1]; // Index 1 for email column
-        if (nameColumn && emailColumn) {
-            var nameValue = nameColumn.textContent || nameColumn.innerText;
-            var emailValue = emailColumn.textContent || emailColumn.innerText;
-            if (nameValue.toUpperCase().indexOf(filter) > -1 || emailValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-                noResults = false;
-            } else {
-                tr[i].style.display = "none";
-            }
+        // Function to add fade-in class
+        function fadeInFlash() {
+            flashDiv.classList.add("fade-in");
         }
+
+        // Function to remove fade-in class after 3 seconds
+        function fadeOutFlash() {
+            setTimeout(function () {
+                flashDiv.classList.remove("fade-in");
+            }, 3000); // 3 seconds delay
+        }
+
+        // Call the functions
+        fadeInFlash();
+        fadeOutFlash();
+    });
+
+    function toggleInfo(enrollieId) {
+        var modal = document.getElementById('myModal');
+        var modalInfoContent = document.getElementById('modal-info-content');
+        var enrollies = document.getElementById(`additional-info-${enrollieId}`);
+
+        // Populate modal content
+        modalInfoContent.innerHTML = enrollies.innerHTML;
+
+        // Show modal
+        $('#myModal').modal('show');
     }
 
-    // If no results found, display "No results" row
-    if (noResultsRow) {
-        if (noResults) {
-            noResultsRow.style.display = "";
-        } else {
-            noResultsRow.style.display = "none";
+    </script>
+    <script>
+        function filterTable() {
+            var input, filter, table, tr, firstNameColumn, middleNameColumn, lastNameColumn, emailColumn, noResultsRow;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("shsTable");
+            tr = table.getElementsByTagName("tr");
+            noResultsRow = document.getElementById("noResultsRow");
+        
+            var noResults = true;
+        
+            for (var i = 1; i < tr.length; i++) {
+                firstNameColumn = tr[i].getElementsByTagName("td")[0]; // Index 0 for first name column
+                middleNameColumn = tr[i].getElementsByTagName("td")[1]; // Index 1 for middle name column
+                lastNameColumn = tr[i].getElementsByTagName("td")[2]; // Index 2 for last name column
+                emailColumn = tr[i].getElementsByTagName("td")[4]; // Index 3 for email column
+        
+                if (firstNameColumn && middleNameColumn && lastNameColumn && emailColumn) {
+                    var firstNameValue = firstNameColumn.textContent || firstNameColumn.innerText;
+                    var middleNameValue = middleNameColumn.textContent || middleNameColumn.innerText;
+                    var lastNameValue = lastNameColumn.textContent || lastNameColumn.innerText;
+                    var emailValue = emailColumn.textContent || emailColumn.innerText;
+        
+                    // Concatenate all column values for filtering
+                    var allValues = firstNameValue + " " + middleNameValue + " " + lastNameValue + " " + emailValue;
+        
+                    // Check if the filter text is found in any column
+                    if (allValues.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = ""; // Show row if match found
+                        noResults = false;
+                    } else {
+                        tr[i].style.display = "none"; // Hide row if no match found
+                    }
+                }
+            }
+        
+            // Show or hide the "No results" row based on the noResults variable
+            if (noResultsRow) {
+                noResultsRow.style.display = noResults ? "" : "none";
+            }
         }
-    }
-}
-</script>
+        </script>
+        
 </html>

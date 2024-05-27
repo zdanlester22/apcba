@@ -420,8 +420,27 @@ def senior_enrollies():
 @app.route('/admin/view_senior_enrollies')
 @login_required
 def view_senior_enrollies():
-    enrollies_list = SeniorEnrollies.query.filter_by(is_archived=False, is_rejected=False).all()
-    return render_template('admin/view_senior_enrollies.html', enrollies_list=enrollies_list)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of enrollies per page
+
+    # Fetch filtering parameters from the frontend
+    search_query = request.args.get('search_query', '').strip()
+
+    # Query enrollies with optional filtering
+    query = SeniorEnrollies.query.filter_by(is_archived=False, is_rejected=False)
+    
+    if search_query:
+        # Add filtering conditions based on search query
+        query = query.filter(
+            (SeniorEnrollies.first_name.ilike(f'%{search_query}%')) |
+            (SeniorEnrollies.middle_name.ilike(f'%{search_query}%')) |
+            (SeniorEnrollies.last_name.ilike(f'%{search_query}%')) |
+            (SeniorEnrollies.email.ilike(f'%{search_query}%'))
+        )
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    enrollies_list = pagination.items
+    return render_template('admin/view_senior_enrollies.html', enrollies_list=enrollies_list, pagination=pagination)
 
 
 
@@ -476,9 +495,12 @@ def tesda_enrollies():
 
 @app.route('/admin/view_tesda_enrollies')
 def view_tesda_enrollies():
-    
-    enrollies_list = TesdaEnrollies.query.filter_by(is_archived=False, is_rejected=False).all()
-    return render_template('admin/view_tesda_enrollies.html', enrollies_list=enrollies_list)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of enrollies per page
+    enrollies_pagination = TesdaEnrollies.query.filter_by(is_archived=False, is_rejected=False).paginate(page=page, per_page=per_page)
+    enrollies_list = enrollies_pagination.items
+    return render_template('admin/view_tesda_enrollies.html', enrollies_list=enrollies_list, enrollies_pagination=enrollies_pagination)
+
 #########################################
 @app.route('/web/enrollies', methods=['GET', 'POST'])
 def enrollies():
@@ -590,13 +612,29 @@ def archive_enrollie_shs(enrollie_id):
             db.session.commit()
 
             try:
-                # Sending email
+                # Sending HTML email
                 msg = Message(
                     'Enrollment Accepted',
                     sender=app.config['MAIL_USERNAME'],
                     recipients=[enrollie.email]
                 )
-                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
+                msg.html = f"""
+                <html>
+                    <body>
+                        <div style="background-color: #374c60; padding: 20px; text-align: center;">
+                            <h1 style="color: white; margin: 0;">APCBA</h1>
+                        </div>
+                        <div style="padding: 20px;">
+                            <p>Dear {enrollie.first_name},</p>
+                            <p style="font-size: 16px;">Congratulations! Your enrollment has been <span style="color: green; font-weight: bold;">accepted</span>.</p>
+                            <p style="font-size: 14px;">
+                                <strong>Best regards,</strong><br>
+                                Admin
+                            </p>
+                        </div>
+                    </body>
+                </html>
+                """
                 mail.send(msg)
 
                 flash('Archived and email sent successfully!', 'success')
@@ -616,6 +654,7 @@ def archive_enrollie_shs(enrollie_id):
         flash('Enrollie not found.', 'error')
 
     return redirect(url_for('view_senior_enrollies'))
+
 
 
 #################
@@ -688,7 +727,23 @@ def archive_enrollie_tesda(enrollie_id):
                     sender=app.config['MAIL_USERNAME'],
                     recipients=[enrollie.email]
                 )
-                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
+                msg.html = f"""
+                <html>
+                    <body>
+                        <div style="background-color: #374c60; padding: 20px; text-align: center;">
+                            <h1 style="color: white; margin: 0;">APCBA</h1>
+                        </div>
+                        <div style="padding: 20px;">
+                            <p>Dear {enrollie.first_name},</p>
+                            <p style="font-size: 16px;">Congratulations! Your enrollment has been <span style="color: green; font-weight: bold;">accepted</span>.</p>
+                            <p style="font-size: 14px;">
+                                <strong>Best regards,</strong><br>
+                                Admin
+                            </p>
+                        </div>
+                    </body>
+                </html>
+                """
                 mail.send(msg)
                 flash('Archived and email sent successfully!', 'success')
             except Exception as email_error:
@@ -707,6 +762,7 @@ def archive_enrollie_tesda(enrollie_id):
         flash('Enrollie not found.', 'error')
 
     return redirect(url_for('view_tesda_enrollies'))
+
 
 @app.route('/admin/view_archived_tesda')
 def view_archived_tesda():
@@ -778,7 +834,23 @@ def archive_enrollie(enrollie_id):
                     sender=app.config['MAIL_USERNAME'],
                     recipients=[enrollie.email]
                 )
-                msg.body = f"Dear {enrollie.first_name},\n\nCongratulations! Your enrollment has been accepted.\n\nBest regards,\nThe Team"
+                msg.html = f"""
+                <html>
+                    <body>
+                        <div style="background-color: #374c60; padding: 20px; text-align: center;">
+                            <h1 style="color: white; margin: 0;">APCBA</h1>
+                        </div>
+                        <div style="padding: 20px;">
+                            <p>Dear {enrollie.first_name},</p>
+                            <p style="font-size: 16px;">Congratulations! Your enrollment has been <span style="color: green; font-weight: bold;">accepted</span>.</p>
+                            <p style="font-size: 14px;">
+                                <strong>Best regards,</strong><br>
+                                Admin
+                            </p>
+                        </div>
+                    </body>
+                </html>
+                """
                 mail.send(msg)
                 flash('Archived and email sent successfully!', 'success')
             except Exception as email_error:
@@ -841,11 +913,14 @@ def view_rejected_tesda_enrollies():
 
 
 
-@app.route('/admin/enrollies')
+@app.route('/admin/enrollies', methods=['GET'])
+@login_required
 def view_enrollies():
-    
-    enrollies_list = Enrollies.query.filter_by(is_archived=False, is_rejected=False).all()
-    return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of items per page
+    pagination = Enrollies.query.filter_by(is_archived=False, is_rejected=False).paginate(page=page, per_page=per_page)
+    enrollies_list = pagination.items
+    return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list, pagination=pagination)
 
 @app.route('/admin/view_archived_enrollies')
 def view_archived_enrollies():
