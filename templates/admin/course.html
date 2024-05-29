@@ -278,7 +278,33 @@
                                            <!-- Page Heading -->
                                            <h1 class="h3 mb-2 text-gray-800">Courses</h1>
                                            
-                                           
+                                           <div class="col-md-6">
+                                            <form class="form-inline" method="get" action="{{ url_for('course') }}">
+                                                <!-- Sort by dropdown -->
+                                                <div class="form-group mb-2 mr-2">
+                                                    <label for="sort_by" class="mr-2">Sort by:</label>
+                                                    <select name="sort_by" id="sort_by" class="form-control form-control-sm">
+                                                        <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Course</option>
+                                                        <option value="abbreviation" {% if sort_by == 'abbreviation' %}selected{% endif %}>Abbreviation</option>
+                                                        <option value="year" {% if sort_by == 'year' %}selected{% endif %}>Year</option>
+                                                        <!-- Add more options for other sorting fields if needed -->
+                                                    </select>
+                                                </div>
+                                                <!-- Sort order dropdown -->
+                                                <div class="form-group mb-2 mr-2">
+                                                    <label for="sort_order" class="mr-2">Order:</label>
+                                                    <select name="sort_order" id="sort_order" class="form-control form-control-sm">
+                                                        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
+                                                        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
+                                                    </select>
+                                                </div>
+                                                <!-- Submit button -->
+                                                <button type="submit" class="btn btn-primary btn-sm mb-2">
+                                                    <i class="fas fa-sort"></i> Sort
+                                                </button>
+                                            </form>
+                                        </div>
+                                        
                                            <!-- DataTales Example -->
                                            <div class="card shadow mb-4">
                                             <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -297,30 +323,15 @@
                                                             <tr>
                                                                 <th>
                                                                     Course Title
-                                                                    <a href="{{ url_for('course', sort_by='title', sort_order='asc') }}" style="text-decoration: none;">
-                                                                        <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                                    </a>
-                                                                    <a href="{{ url_for('course', sort_by='title', sort_order='desc') }}" style="text-decoration: none;">
-                                                                        <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                                    </a>
+                                                                  
                                                                 </th>
                                                                 <th>
                                                                     Abbreviation
-                                                                    <a href="{{ url_for('course', sort_by='abbreviation', sort_order='asc') }}" style="text-decoration: none;">
-                                                                        <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                                    </a>
-                                                                    <a href="{{ url_for('course', sort_by='abbreviation', sort_order='desc') }}" style="text-decoration: none;">
-                                                                        <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                                    </a>
+                                                                 
                                                                 </th>
                                                                 <th>
                                                                     Year
-                                                                    <a href="{{ url_for('course', sort_by='year', sort_order='asc') }}" style="text-decoration: none;">
-                                                                        <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                                    </a>
-                                                                    <a href="{{ url_for('course', sort_by='year', sort_order='desc') }}" style="text-decoration: none;">
-                                                                        <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                                    </a>
+                                                                   
                                                                 </th>
                                                                 <th>Semesters</th>
                                                                 <th>Type</th>
@@ -343,8 +354,8 @@
                                                                 <td class="small">{{ course.course_type }}</td>
                                                                 <td class="small">{{ 'Active' if course.is_active else 'Inactive' }}</td>
                                                                 <td class="text-center">
-                                                                    <a href="{{ url_for('update_course', course_id=course.id) }}">
-                                                                        <i class="fas fa-edit"></i>
+                                                                    <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn-primary btn-sm">
+                                                                        <i class="fas fa-edit"></i>Update
                                                                     </a>
                                                                 </td>
                                                                 

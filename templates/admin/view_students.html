@@ -193,6 +193,23 @@
                 <!-- Begin Page Content -->
              <!-- /.container-fluid -->
              <div class="container-fluid">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                          <div class="mt-4">
+                            <ul class="flashes list-unstyled">
+                            {% for category, message in messages %}
+                              <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </li>
+                            {% endfor %}
+                            </ul>
+                          </div>
+                        {% endif %}
+                      {% endwith %}
+                      
                 <div class="row">
                     <div class="col-md-6 offset-md-6">
                         <form method="GET" action="{{ url_for('view_students') }}" class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
@@ -206,6 +223,33 @@
                 <!-- Page Heading -->
                 <h1 class="h3 mb-2 text-gray-800">Student</h1>
                 <!-- DataTales Example -->
+                <div class="col-md-6">
+                    <form class="form-inline" method="get" action="{{ url_for('view_students') }}">
+                        <!-- Sort by dropdown -->
+                        <div class="form-group mb-2 mr-2">
+                            <label for="sort_by" class="mr-2">Sort by:</label>
+                            <select name="sort_by" id="sort_by" class="form-control form-control-sm">
+                                <option value="last_name" {% if sort_by == 'last_name' %}selected{% endif %}>Last Name</option>
+                                <option value="first_name" {% if sort_by == 'first_name' %}selected{% endif %}>First Name</option>
+                                <option value="middle_name" {% if sort_by == 'middle_name' %}selected{% endif %}>Middle Name</option>
+                               
+                                <!-- Add more options for other sorting fields if needed -->
+                            </select>
+                        </div>
+                        <!-- Sort order dropdown -->
+                        <div class="form-group mb-2 mr-2">
+                            <label for="sort_order" class="mr-2">Order:</label>
+                            <select name="sort_order" id="sort_order" class="form-control form-control-sm">
+                                <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
+                                <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
+                            </select>
+                        </div>
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary btn-sm mb-2">
+                            <i class="fas fa-sort"></i> Sort
+                        </button>
+                    </form>
+                </div>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">List of Students</h6>
@@ -233,22 +277,33 @@
                                         <td>{{ student.suffix }}</td>
                                         <td>{{ "Active" if student.active else "Inactive" }}</td>
                                         <td>
-                                            <form action="{{ url_for('toggle_active_student', student_id=student.id) }}" method="post">
-                                                {% if student.active %}
-                                                <button type="submit" class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-user-slash"></i> Deactivate
-                                                </button>
-                                                {% else %}
-                                                <button type="submit" class="btn btn-sm btn-success">
-                                                    <i class="fas fa-user-check"></i> Activate
-                                                </button>
-                                                {% endif %}
-                                            </form>
-                                            <a href="{{ url_for('view_student_details', student_id=student.id) }}" class="btn btn-primary">View Student Details</a>
-
-
-
+                                            <div class="d-flex justify-content-center">
+                                                <div class="btn-group" role="group" aria-label="Student Actions">
+                                                    <form action="{{ url_for('toggle_active_student', student_id=student.id) }}" method="post">
+                                                        {% if student.active %}
+                                                        <button type="submit" class="btn btn-sm btn-danger mr-1">
+                                                            <i class="fas fa-user-slash"></i> Deactivate
+                                                        </button>
+                                                        {% else %}
+                                                        <button type="submit" class="btn btn-sm btn-success mr-1">
+                                                            <i class="fas fa-user-check"></i> Activate
+                                                        </button>
+                                                        {% endif %}
+                                                    </form>
+                                                    <a href="{{ url_for('view_student_details', student_id=student.id) }}" class="btn btn-sm btn-primary mr-1">
+                                                        <i class="fas fa-user"></i> Details
+                                                    </a>
+                                        
+                                                    <form action="{{ url_for('graduate_student', student_id=student.id) }}" method="post">
+                                                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-user"></i> graduate</button>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </td>
+                                        
+                                        
+                                        
+                                        
                                     </tr>
                                     {% endfor %}
                                 </tbody>

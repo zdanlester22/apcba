@@ -1,34 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
     <meta name="description" content="">
     <meta name="author" content="">
-
      <!-- Core plugin CSS -->
      <link href="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}" rel="stylesheet">
  
      <!-- Custom styles for this template -->
      <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
-
      <title>APCBA-PORTAL</title>
-
     <!-- Custom fonts for this template-->
     
     <!-- Font Awesome CSS -->
     <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
-
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
-
     <!-- Custom inline styles -->
     <style type="text/css">
         .bg-color{
@@ -56,7 +48,6 @@
             list-style: none;
             text-align: center;
             margin-left: 10px;
-
         }
         .fade-in {
             /* CSS class to fade in flash messages */
@@ -64,15 +55,11 @@
         }
     </style>
 </head>
-
 <body id="page-top">
-
     <!-- Page Wrapper -->
     <div id="wrapper">
-
         <!-- Sidebar -->
         <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
-
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
@@ -80,34 +67,30 @@
                 </div>
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
-
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
                 <a class="nav-link" href="{{ url_for('dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
-
             <!-- Heading -->
             <div class="sidebar-heading">
                 Class Management
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
+
             <li class="nav-item ">
                 <a class="nav-link collapsed" href="{{ url_for('announcement') }}">
                     <i class="fas fa-fw fa-bullhorn"></i>
                     <span>Announcement</span>
                 </a>
             </li>
-
-            <!-- Nav Item - Pages Collapse Menu -->
+             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('modules') }}">
                     <i class="fas fa-fw fa-book"></i>
@@ -115,38 +98,38 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+             
+
+             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
                     <i class="fas fa-folder"></i>
                     <span>Section</span>
                 </a>
             </li>
 
-
+        
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('subject_bank') }}">
                     <i class="fas fa-folder-open"></i>
                     <span>Subject Bank</span>
                 </a>
             </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
-
             <!-- Heading -->
             <div class="sidebar-heading">
                 Account Management
             </div>
-
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-user-graduate"></i>
-                    <span>Enrollment</span>
+                    <span>Students</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+                        
                         <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
                         <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
                         <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
@@ -155,39 +138,32 @@
             </li>
 
             <!-- Nav Item - Charts -->
+            
 
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
          
-
         </ul>
         <!-- End of Sidebar -->
-
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
             <!-- Main Content -->
             <div id="content">
-
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                     <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Portal V1.0</h5>
-
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <div class="topbar-divider d-none d-sm-block"></div>
-
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -207,21 +183,33 @@
                                 </a>
                             </div>
                         </li>
-
                     </ul>
-
                 </nav>
                 <!-- End of Topbar -->
-
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h4 mb-0 text-gray-800">Announcement</h1>
                     </div>
    <div class="row">
-                            
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mt-4">
+        <ul class="flashes list-unstyled">
+        {% for category, message in messages %}
+          <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endwith %}
+                        </div>
                     <!-- Content Row -->
                     <div class="row">
 
@@ -245,6 +233,7 @@
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="announcement-modal-label">Post an Announcement</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
@@ -269,26 +258,10 @@
 
 
                         <div class="container">
-                            {% with messages = get_flashed_messages(with_categories=true) %}
-                            {% if messages %}
-                              <div class="mt-4">
-                                <ul class="flashes list-unstyled">
-                                {% for category, message in messages %}
-                                  <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                      <span aria-hidden="true">&times;</span>
-                                    </button>
-                                  </li>
-                                {% endfor %}
-                                </ul>
-                              </div>
-                            {% endif %}
-                          {% endwith %}
                             <div class="row">
                                 <div class="col-md-12">
                                     <ul class="list-unstyled announcements">
-                                        {% for announcement in announcements %}
+                                         {% for announcement in announcements %}
                                         <li class="announcement-item hide-delete mb-3">
                                             <div class="card">
                                                 <div class="card-body">
@@ -333,7 +306,6 @@
                         
                         
                         
-
                     </div>
                         </div>
                     </div>
@@ -341,7 +313,6 @@
                 <!-- /.container-fluid -->
             </div>
             <!-- End of Main Content -->
-
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -351,18 +322,14 @@
                 </div>
             </footer>
             <!-- End of Footer -->
-
         </div>
         <!-- End of Content Wrapper -->
-
     </div>
     <!-- End of Page Wrapper -->
-
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -378,50 +345,39 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="{{ url_for('logout') }}">Logout</a>
-
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Bootstrap core JavaScript-->
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
   <!-- Core plugin JavaScript-->
   <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-
   <!-- Custom scripts for all pages-->
   <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
-
   <!-- Page level plugins -->
   <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
-
   <!-- Page level custom scripts -->
   <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
   <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
-
-
 </body>
 <script>
      document.addEventListener("DOMContentLoaded", function() {
         var titleInput = document.getElementById("title");
         var contentTextarea = document.getElementById("content");
-
         titleInput.addEventListener("input", function() {
             if (this.value.length > 75) {
                 this.value = this.value.slice(0, 75);
             }
         });
-
         contentTextarea.addEventListener("input", function() {
             if (this.value.length > 1000) {
                 this.value = this.value.slice(0, 1000);
             }
         });
     });
-
          window.history.replaceState({}, document.title, window.location.href.split('?')[0]);
         function toggleAnnouncementForm() {
          var modal = document.getElementById('announcement-modal');
@@ -460,25 +416,20 @@
  document.addEventListener("DOMContentLoaded", function () {
             // Select the flash div
             var flashDiv = document.querySelector(".flash");
-
             // Function to add fade-in class
             function fadeInFlash() {
                 flashDiv.classList.add("fade-in");
             }
-
             // Function to remove fade-in class after 3 seconds
             function fadeOutFlash() {
                 setTimeout(function () {
                     flashDiv.classList.remove("fade-in");
                 }, 3000); // 3 seconds delay
             }
-
             // Call the functions
             fadeInFlash();
             fadeOutFlash();
         });
-
     </script>
  
-
 </html>

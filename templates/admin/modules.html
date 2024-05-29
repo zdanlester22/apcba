@@ -237,44 +237,74 @@
                       </div>
                     {% endif %}
                   {% endwith %}
-                    <div class="row">
-    <div class="col-md-6 mt-2">
-        <div class="input-group mt-4">
-            <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
-            <div class="input-group-append">
-                <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 filter-course">
-        <div class="form-group">
-            <label for="courseFilter">Filter by Course:</label>
-            <select class="form-control" id="courseFilter" onchange="filterTable()">
-                <option value="">All Courses</option>
-                <!-- Populate options dynamically with courses -->
-                {% for course in courses %}
-                    <option value="{{ course.title }}">{{ course.title }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="yearFilter">Filter by Year:</label>
-            <select class="form-control" id="yearFilter" onchange="filterTable()">
-                <option value="">All Year</option>
-                <!-- Populate options dynamically with years -->
-                {% for year in years %}
-                    <option value="{{ year }}">{{ year }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-</div>         
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Modules</h1>
+                  <div class="row">
+                    <div class="col-md-6 offset-md-6">
+                        <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Modules</h1>
+                </div>
+                
+              
+                <div class="row">
+                    
+                    <div class="col-md-6">
+                        <form class="form-inline" method="get" action="{{ url_for('modules') }}">
+                            <div class="form-group mb-2 mr-2">
+                                <label for="sort_by" class="mr-2">Sort by:</label>
+                                <select name="sort_by" id="sort_by" class="form-control form-control-sm">
+                                    <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title</option>
+                                    <option value="course_id" {% if sort_by == 'course_id' %}selected{% endif %}>Course ID</option>
+                                    <option value="year" {% if sort_by == 'year' %}selected{% endif %}>Year</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-2 mr-2">
+                                <label for="sort_order" class="mr-2">Order:</label>
+                                <select name="sort_order" id="sort_order" class="form-control form-control-sm">
+                                    <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
+                                    <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm mb-2">
+                                <i class="fas fa-sort"></i> Sort
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="courseFilter">Filter by Course:</label>
+                            <select class="form-control form-control-sm" id="courseFilter" onchange="filterTable()">
+                                <option value="">All Courses</option>
+                                <!-- Populate options dynamically with courses -->
+                                {% for course in courses %}
+                                    <option value="{{ course.title }}">{{ course.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="yearFilter">Filter by Year:</label>
+                            <select class="form-control form-control-sm" id="yearFilter" onchange="filterTable()">
+                                <option value="">All Year</option>
+                                <!-- Populate options dynamically with years -->
+                                {% for year in years %}
+                                    <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+               
+                
+                    <!-- Page Heading -->
+                    
                     <!-- Content Row -->
                     <div class="row">
                         {% block content %}
@@ -327,6 +357,7 @@
                                 </div>
                             </div>
                         </div>
+                       
                         <!-- Button to open modal -->
                         <div class="table-responsive">
                             <!-- Table -->
@@ -350,30 +381,15 @@
                                         <tr>
                                             <th>
                                                 Title
-                                                <a href="{{ url_for('modules', sort_by='title', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('modules', sort_by='title', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                               
                                             </th>
                                             <th>
                                                Year
-                                                <a href="{{ url_for('modules', sort_by='year', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('modules', sort_by='year', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                              
                                             </th>
                                             <th>
                                                 Course
-                                                <a href="{{ url_for('modules', sort_by='course', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('modules', sort_by='course', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                                
                                             </th>
                              
                             

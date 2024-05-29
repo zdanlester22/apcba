@@ -216,6 +216,47 @@ h2 {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Sections</h1>
                     </div>
+                    <div class="row justify-content-between align-items-center mt-3">
+                        <div class="col-md-6">
+                            <form class="form-inline" method="get" action="{{ url_for('manage_section') }}">
+                                <div class="form-group mb-2 mr-2">
+                                    <label for="sort_by" class="mr-2">Sort by:</label>
+                                    <select name="sort_by" id="sort_by" class="form-control form-control-sm">
+                                        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name</option>
+                                        <option value="capacity" {% if sort_by == 'capacity' %}selected{% endif %}>Capacity</option>
+                                        <option value="school_year" {% if sort_by == 'school_year' %}selected{% endif %}>School Year</option>
+                                        <option value="year" {% if sort_by == 'year' %}selected{% endif %}>Year</option>
+                                        <option value="course_id" {% if sort_by == 'course_id' %}selected{% endif %}>Course</option>
+                                        <option value="teacher_id" {% if sort_by == 'teacher_id' %}selected{% endif %}>Teacher</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-2 mr-2">
+                                    <label for="sort_order" class="mr-2">Order:</label>
+                                    <select name="sort_order" id="sort_order" class="form-control form-control-sm">
+                                        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
+                                        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm mb-2">
+                                    <i class="fas fa-sort"></i> Sort
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="courseFilter">Filter by Course:</label>
+                                <select class="form-control form-control-sm" id="courseFilter" onchange="filterTable()">
+                                    <option value="">All Courses</option>
+                                    <!-- Populate options dynamically with courses -->
+                                    {% for course in courses %}
+                                        <option value="{{ course.id }}">{{ course.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
                     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       <div class="mt-4">
@@ -315,64 +356,27 @@ h2 {
                                         <tr>
                                             <th>
                                                 Title
-                                                <a href="{{ url_for('manage_section', sort_by='name', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
                                                 
-                                                
-                                                <a href="{{ url_for('manage_section', sort_by='name', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
                                             </th>
                                             <th>
                                                Capacity
-                                                <a href="{{ url_for('manage_section', sort_by='capacity', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('manage_section', sort_by='capacity', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                               
                                             </th>
                                             <th>
                                                 Course
-                                                <a href="{{ url_for('manage_section', sort_by='course', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('manage_section', sort_by='course', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                               
                                             </th>
                                             <th>School_Year
-                                                <a href="{{ url_for('manage_section', sort_by='school_year', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('manage_section', sort_by='school_year', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                               
                                             </th>
                                             <th>Year
-                                                <a href="{{ url_for('manage_section', sort_by='year', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('manage_section', sort_by='year', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                               
                                             </th>
                                             <th>Type
-                                                <a href="{{ url_for('manage_section', sort_by='type', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('manage_section', sort_by='type', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                               
                                             </th>
                                             <th>Teacher
-                                                <a href="{{ url_for('manage_section', sort_by='teacher', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-up fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('manage_section', sort_by='teacher', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-arrow-down fa-xs" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                               
                                             </th>
                                             <th>Action</th>
                                         </tr>

@@ -70,34 +70,30 @@
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
-
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
                 <div class="sidebar-brand-text mx-3">Admin</div>
             </a>
-
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
                 <a class="nav-link" href="{{ url_for('dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
-
             <!-- Heading -->
             <div class="sidebar-heading">
                 Class Management
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
+
             <li class="nav-item ">
                 <a class="nav-link collapsed" href="{{ url_for('announcement') }}">
                     <i class="fas fa-fw fa-bullhorn"></i>
@@ -112,12 +108,7 @@
                 </a>
             </li>
 
-             <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('course') }}" >
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Courses</span>
-                </a>
-            </li>
+             
 
              <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
@@ -126,29 +117,19 @@
                 </a>
             </li>
 
-            
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ url_for('users') }}">
-                    <i class="fas fa-fw fa-key"></i>
-                    <span>Portal Accounts</span>
-                </a>
-            </li>
+        
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('subject_bank') }}">
                     <i class="fas fa-folder-open"></i>
                     <span>Subject Bank</span>
                 </a>
             </li>
-
-
             <!-- Divider -->
             <hr class="sidebar-divider">
-
             <!-- Heading -->
             <div class="sidebar-heading">
                 Account Management
             </div>
-
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
@@ -158,7 +139,7 @@
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{{ url_for('view_students') }}">Students Account</a>
+                        
                         <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
                         <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
                         <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
@@ -167,22 +148,16 @@
             </li>
 
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('view_teachers') }}" >
-                    <i class="fas fa-user"></i>
-                    <span>Teachers</span></a>
-            </li>
+            
 
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
          
-
         </ul>
         <!-- End of Sidebar -->
 
@@ -237,6 +212,7 @@
                             <h1 class="h3 mb-2 text-gray-800">Accounts</h1>
                         
                         </div>
+                        
                         {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
                           <div class="mt-4">
@@ -300,13 +276,38 @@
                     </div>
                     <!-- Page Heading -->
                     
-                    
+                    <div class="col-md-6">
+                        <form class="form-inline" method="get" action="{{ url_for('users') }}">
+                            <!-- Sort by dropdown -->
+                            <div class="form-group mb-2 mr-2">
+                                <label for="sort_by" class="mr-2">Sort by:</label>
+                                <select name="sort_by" id="sort_by" class="form-control form-control-sm">
+                                    <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name</option>
+                                    <option value="email" {% if sort_by == 'email' %}selected{% endif %}>Email</option>
+                                </select>
+                            </div>
+                            <!-- Sort order dropdown -->
+                            <div class="form-group mb-2 mr-2">
+                                <label for="sort_order" class="mr-2">Order:</label>
+                                <select name="sort_order" id="sort_order" class="form-control form-control-sm">
+                                    <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
+                                    <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
+                                </select>
+                            </div>
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary btn-sm mb-2">
+                                <i class="fas fa-sort"></i> Sort
+                            </button>
+                        </form>
+                    </div>
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">User Accounts</h6>
                             
                         </div>
+                      
+                        
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="userTable" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -314,21 +315,11 @@
                                         <tr>
                                             <th>
                                                 Email 
-                                                <a href="{{ url_for('users', sort_by='email', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('users', sort_by='email', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                               
                                             </th>
                                             <th>
                                                 Name 
-                                                <a href="{{ url_for('users', sort_by='name', sort_order='asc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-up" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
-                                                <a href="{{ url_for('users', sort_by='name', sort_order='desc') }}" style="text-decoration: none;">
-                                                    <i class="fas fa-sort-alpha-down" style="vertical-align: middle; color: #5A5A5A;"></i>
-                                                </a>
+                                             
                                             </th>
                                             
                                             
@@ -358,10 +349,12 @@
                                             <td class="small">{{ user.role }}</td>
                                             {% if user.role != 'admin' %}
                                             <td class="text-center">
-                                                <a href="{{ url_for('update_user', user_id=user.id) }}">
-                                                    <i class="fas fa-edit"></i>
+                                                <a href="{{ url_for('update_user', user_id=user.id) }}" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-edit"></i> Update
                                                 </a>
                                             </td>
+                                            
+                                            
                                             {% endif %}
                                         </tr>
                                         {% endfor %}

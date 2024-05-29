@@ -417,7 +417,7 @@ def senior_enrollies():
 
     return render_template('web/senior_enrollies.html', form=form)
 
-@app.route('/admin/view_senior_enrollies')
+@app.route('/admin/view_senior_enrollies', methods=['GET'])
 @login_required
 def view_senior_enrollies():
     page = request.args.get('page', 1, type=int)
@@ -425,6 +425,8 @@ def view_senior_enrollies():
 
     # Fetch filtering parameters from the frontend
     search_query = request.args.get('search_query', '').strip()
+    sort_by = request.args.get('sort_by', 'last_name', type=str)
+    sort_order = request.args.get('sort_order', 'asc', type=str)
 
     # Query enrollies with optional filtering
     query = SeniorEnrollies.query.filter_by(is_archived=False, is_rejected=False)
@@ -438,9 +440,20 @@ def view_senior_enrollies():
             (SeniorEnrollies.email.ilike(f'%{search_query}%'))
         )
 
+    # Sorting
+    if sort_by == 'first_name':
+        query = query.order_by(SeniorEnrollies.first_name.asc() if sort_order == 'asc' else SeniorEnrollies.first_name.desc())
+    elif sort_by == 'middle_name':
+        query = query.order_by(SeniorEnrollies.middle_name.asc() if sort_order == 'asc' else SeniorEnrollies.middle_name.desc())
+    elif sort_by == 'last_name':
+        query = query.order_by(SeniorEnrollies.last_name.asc() if sort_order == 'asc' else SeniorEnrollies.last_name.desc())
+    elif sort_by == 'email':
+        query = query.order_by(SeniorEnrollies.email.asc() if sort_order == 'asc' else SeniorEnrollies.email.desc())
+
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     enrollies_list = pagination.items
-    return render_template('admin/view_senior_enrollies.html', enrollies_list=enrollies_list, pagination=pagination)
+    return render_template('admin/view_senior_enrollies.html', enrollies_list=enrollies_list, pagination=pagination, sort_by=sort_by, sort_order=sort_order, search_query=search_query)
+
 
 
 
@@ -492,14 +505,38 @@ def tesda_enrollies():
 
 
 
-
 @app.route('/admin/view_tesda_enrollies')
+@login_required
 def view_tesda_enrollies():
     page = request.args.get('page', 1, type=int)
     per_page = 10  # Number of enrollies per page
-    enrollies_pagination = TesdaEnrollies.query.filter_by(is_archived=False, is_rejected=False).paginate(page=page, per_page=per_page)
+
+    # Fetch sorting parameters from the request
+    sort_by = request.args.get('sort_by', 'last_name', type=str)
+    sort_order = request.args.get('sort_order', 'asc', type=str)
+
+    # Base query
+    query = TesdaEnrollies.query.filter_by(is_archived=False, is_rejected=False)
+
+    # Apply sorting
+    if sort_by == 'first_name':
+        query = query.order_by(TesdaEnrollies.first_name.asc() if sort_order == 'asc' else TesdaEnrollies.first_name.desc())
+    elif sort_by == 'middle_name':
+        query = query.order_by(TesdaEnrollies.middle_name.asc() if sort_order == 'asc' else TesdaEnrollies.middle_name.desc())
+    elif sort_by == 'last_name':
+        query = query.order_by(TesdaEnrollies.last_name.asc() if sort_order == 'asc' else TesdaEnrollies.last_name.desc())
+    elif sort_by == 'email':
+        query = query.order_by(TesdaEnrollies.email.asc() if sort_order == 'asc' else TesdaEnrollies.email.desc())
+
+    # Pagination
+    enrollies_pagination = query.paginate(page=page, per_page=per_page, error_out=False)
     enrollies_list = enrollies_pagination.items
-    return render_template('admin/view_tesda_enrollies.html', enrollies_list=enrollies_list, enrollies_pagination=enrollies_pagination)
+
+    return render_template('admin/view_tesda_enrollies.html', 
+                           enrollies_list=enrollies_list, 
+                           enrollies_pagination=enrollies_pagination,
+                           sort_by=sort_by,
+                           sort_order=sort_order)
 
 #########################################
 @app.route('/web/enrollies', methods=['GET', 'POST'])
@@ -657,12 +694,6 @@ def archive_enrollie_shs(enrollie_id):
 
 
 
-#################
-@app.route('/admin/view_archived_shs')
-def view_archived_shs():
-    archived_shs_enrollies_list = SeniorEnrollies.query.filter_by(is_archived=True).all()
-    return render_template('admin/view_archived_shs.html', archived_shs_enrollies_list=archived_shs_enrollies_list)
-
 @app.route('/admin/accepeted_enrollie_TESDA/<int:enrollie_id>')
 @login_required
 def archive_enrollie_tesda(enrollie_id):
@@ -764,10 +795,6 @@ def archive_enrollie_tesda(enrollie_id):
     return redirect(url_for('view_tesda_enrollies'))
 
 
-@app.route('/admin/view_archived_tesda')
-def view_archived_tesda():
-    archived_tesda_enrollies_list = TesdaEnrollies.query.filter_by(is_archived=True).all()
-    return render_template('admin/view_archived_tesda.html', archived_tesda_enrollies_list=archived_tesda_enrollies_list)
 
 #########
 @app.route('/admin/accepeted_enrollie_College/<int:enrollie_id>')
@@ -881,8 +908,11 @@ def reject_enrollies(enrollie_id):
 
 @app.route('/admin/rejected_enrollies')
 def view_rejected_enrollies():
-    rejected_enrollies_list = Enrollies.query.filter_by(is_rejected=True).all()
-    return render_template('admin/view_rejected_enrollies.html', rejected_enrollies_list=rejected_enrollies_list)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of items per page
+    pagination = Enrollies.query.filter_by(is_rejected=True).paginate(page=page, per_page=per_page)
+    rejected_enrollies_list = pagination.items
+    return render_template('admin/view_rejected_enrollies.html', rejected_enrollies_list=rejected_enrollies_list, pagination=pagination)
 
 @app.route('/admin/senior_enrollies/reject/<int:enrollie_id>', methods=['POST'])
 def reject_senior_enrollies(enrollie_id):
@@ -894,8 +924,11 @@ def reject_senior_enrollies(enrollie_id):
 
 @app.route('/admin/rejected_senior_enrollies')
 def view_rejected_senior_enrollies():
-    rejected_senior_enrollies_list = SeniorEnrollies.query.filter_by(is_rejected=True).all()
-    return render_template('admin/view_rejected_senior_enrollies.html', rejected_senior_enrollies_list=rejected_senior_enrollies_list)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of items per page
+    pagination = SeniorEnrollies.query.filter_by(is_rejected=True).paginate(page=page, per_page=per_page)
+    rejected_senior_enrollies_list = pagination.items
+    return render_template('admin/view_rejected_senior_enrollies.html', rejected_senior_enrollies_list=rejected_senior_enrollies_list, pagination=pagination)
 
 @app.route('/admin/tesda_enrollies/reject/<int:enrollie_id>', methods=['POST'])
 def reject_tesda_enrollies(enrollie_id):
@@ -907,8 +940,11 @@ def reject_tesda_enrollies(enrollie_id):
 
 @app.route('/admin/rejected_tesda_enrollies')
 def view_rejected_tesda_enrollies():
-    rejected_tesda_enrollies_list = TesdaEnrollies.query.filter_by(is_rejected=True).all()
-    return render_template('admin/view_rejected_tesda_enrollies.html', rejected_tesda_enrollies_list=rejected_tesda_enrollies_list)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of items per page
+    pagination = TesdaEnrollies.query.filter_by(is_rejected=True).paginate(page=page, per_page=per_page)
+    rejected_tesda_enrollies_list = pagination.items
+    return render_template('admin/view_rejected_tesda_enrollies.html', rejected_tesda_enrollies_list=rejected_tesda_enrollies_list, pagination=pagination)
 
 
 
@@ -918,17 +954,129 @@ def view_rejected_tesda_enrollies():
 def view_enrollies():
     page = request.args.get('page', 1, type=int)
     per_page = 10  # Number of items per page
-    pagination = Enrollies.query.filter_by(is_archived=False, is_rejected=False).paginate(page=page, per_page=per_page)
-    enrollies_list = pagination.items
-    return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list, pagination=pagination)
+    sort_by = request.args.get('sort_by', 'last_name', type=str)
+    sort_order = request.args.get('sort_order', 'asc', type=str)
+    
+    query = Enrollies.query.filter_by(is_archived=False, is_rejected=False)
 
+    if sort_by == 'first_name':
+        if sort_order == 'asc':
+            query = query.order_by(Enrollies.first_name.asc())
+        else:
+            query = query.order_by(Enrollies.first_name.desc())
+    elif sort_by == 'middle_name':
+        if sort_order == 'asc':
+            query = query.order_by(Enrollies.middle_name.asc())
+        else:
+            query = query.order_by(Enrollies.middle_name.desc())
+    elif sort_by == 'last_name':
+        if sort_order == 'asc':
+            query = query.order_by(Enrollies.last_name.asc())
+        else:
+            query = query.order_by(Enrollies.last_name.desc())
+    elif sort_by == 'suffix':
+        if sort_order == 'asc':
+            query = query.order_by(Enrollies.suffix.asc())
+        else:
+            query = query.order_by(Enrollies.suffix.desc())
+    elif sort_by == 'email':
+        if sort_order == 'asc':
+            query = query.order_by(Enrollies.email.asc())
+        else:
+            query = query.order_by(Enrollies.email.desc())
+
+    pagination = query.paginate(page=page, per_page=per_page)
+    enrollies_list = pagination.items
+
+    return render_template('admin/view_enrollies.html', enrollies_list=enrollies_list, pagination=pagination, sort_by=sort_by, sort_order=sort_order)
 @app.route('/admin/view_archived_enrollies')
+@login_required
 def view_archived_enrollies():
-    archived_enrollies_list = Enrollies.query.filter_by(is_archived=True).all()
-    return render_template('admin/view_archived_enrollies.html', archived_enrollies_list=archived_enrollies_list)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of items per page
+    sort_by = request.args.get('sort_by', 'last_name', type=str)
+    sort_order = request.args.get('sort_order', 'asc', type=str)
+
+    query = Enrollies.query.filter_by(is_archived=True)
+
+    if sort_by == 'first_name':
+        query = query.order_by(Enrollies.first_name.asc() if sort_order == 'asc' else Enrollies.first_name.desc())
+    elif sort_by == 'middle_name':
+        query = query.order_by(Enrollies.middle_name.asc() if sort_order == 'asc' else Enrollies.middle_name.desc())
+    elif sort_by == 'last_name':
+        query = query.order_by(Enrollies.last_name.asc() if sort_order == 'asc' else Enrollies.last_name.desc())
+    elif sort_by == 'email':
+        query = query.order_by(Enrollies.email.asc() if sort_order == 'asc' else Enrollies.email.desc())
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    archived_enrollies_list = pagination.items
+
+    return render_template('admin/view_archived_enrollies.html', 
+                           archived_enrollies_list=archived_enrollies_list, 
+                           pagination=pagination, 
+                           sort_by=sort_by, 
+                           sort_order=sort_order)
+
+@app.route('/admin/view_archived_shs')
+@login_required
+def view_archived_shs():
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of items per page
+    sort_by = request.args.get('sort_by', 'last_name', type=str)
+    sort_order = request.args.get('sort_order', 'asc', type=str)
+
+    query = SeniorEnrollies.query.filter_by(is_archived=True)
+
+    if sort_by == 'first_name':
+        query = query.order_by(SeniorEnrollies.first_name.asc() if sort_order == 'asc' else SeniorEnrollies.first_name.desc())
+    elif sort_by == 'middle_name':
+        query = query.order_by(SeniorEnrollies.middle_name.asc() if sort_order == 'asc' else SeniorEnrollies.middle_name.desc())
+    elif sort_by == 'last_name':
+        query = query.order_by(SeniorEnrollies.last_name.asc() if sort_order == 'asc' else SeniorEnrollies.last_name.desc())
+    elif sort_by == 'email':
+        query = query.order_by(SeniorEnrollies.email.asc() if sort_order == 'asc' else SeniorEnrollies.email.desc())
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    archived_shs_enrollies_list = pagination.items
+
+    return render_template('admin/view_archived_shs.html', 
+                           archived_shs_enrollies_list=archived_shs_enrollies_list, 
+                           pagination=pagination, 
+                           sort_by=sort_by, 
+                           sort_order=sort_order)
+
+@app.route('/admin/view_archived_tesda')
+@login_required
+def view_archived_tesda():
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of items per page
+    sort_by = request.args.get('sort_by', 'last_name', type=str)
+    sort_order = request.args.get('sort_order', 'asc', type=str)
+
+    query = TesdaEnrollies.query.filter_by(is_archived=True)
+
+    if sort_by == 'first_name':
+        query = query.order_by(TesdaEnrollies.first_name.asc() if sort_order == 'asc' else TesdaEnrollies.first_name.desc())
+    elif sort_by == 'middle_name':
+        query = query.order_by(TesdaEnrollies.middle_name.asc() if sort_order == 'asc' else TesdaEnrollies.middle_name.desc())
+    elif sort_by == 'last_name':
+        query = query.order_by(TesdaEnrollies.last_name.asc() if sort_order == 'asc' else TesdaEnrollies.last_name.desc())
+    elif sort_by == 'email':
+        query = query.order_by(TesdaEnrollies.email.asc() if sort_order == 'asc' else TesdaEnrollies.email.desc())
+
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    archived_tesda_enrollies_list = pagination.items
+
+    return render_template('admin/view_archived_tesda.html', 
+                           archived_tesda_enrollies_list=archived_tesda_enrollies_list, 
+                           pagination=pagination, 
+                           sort_by=sort_by, 
+                           sort_order=sort_order)
 
 
 from sqlalchemy import desc  # Import the desc function for descending sorting
+
+from sqlalchemy import func
 
 @app.route('/admin/users', methods=['GET', 'POST'])
 @login_required
@@ -958,8 +1106,9 @@ def users():
     sort_order = request.args.get('sort_order', default='asc', type=str)
 
     if sort_by == 'name':
-        users_query = users_query.order_by(func.concat(User.last_name, ' ', User.first_name, ' ', User.middle_name))
-        if sort_order == 'desc':
+        if sort_order == 'asc':
+            users_query = users_query.order_by(func.concat(User.last_name, ' ', User.first_name, ' ', User.middle_name))
+        else:
             users_query = users_query.order_by(desc(func.concat(User.last_name, ' ', User.first_name, ' ', User.middle_name)))
     elif sort_by == 'email':
         if sort_order == 'asc':
@@ -985,7 +1134,10 @@ def view_teachers():
     page = request.args.get('page', 1, type=int)
     per_page = 8  # Number of items per page
     search_query = request.args.get('search', '', type=str)
+    sort_by = request.args.get('sort_by', 'last_name', type=str)
+    sort_order = request.args.get('sort_order', 'asc', type=str)
 
+    # Set up the base query
     if search_query:
         teachers_query = Teacher.query.filter(
             Teacher.last_name.ilike(f'%{search_query}%') |
@@ -995,6 +1147,23 @@ def view_teachers():
     else:
         teachers_query = Teacher.query
 
+    # Apply sorting
+    if sort_order == 'asc':
+        if sort_by == 'last_name':
+            teachers_query = teachers_query.order_by(asc(Teacher.last_name))
+        elif sort_by == 'first_name':
+            teachers_query = teachers_query.order_by(asc(Teacher.first_name))
+        elif sort_by == 'middle_name':
+            teachers_query = teachers_query.order_by(asc(Teacher.middle_name))
+    else:
+        if sort_by == 'last_name':
+            teachers_query = teachers_query.order_by(desc(Teacher.last_name))
+        elif sort_by == 'first_name':
+            teachers_query = teachers_query.order_by(desc(Teacher.first_name))
+        elif sort_by == 'middle_name':
+            teachers_query = teachers_query.order_by(desc(Teacher.middle_name))
+
+    # Paginate the results
     teachers_pagination = teachers_query.paginate(page=page, per_page=per_page, error_out=False)
 
     # Check for AJAX request
@@ -1017,7 +1186,10 @@ def view_teachers():
                            teachers=teachers_pagination.items, 
                            pagination=teachers_pagination,
                            total_teachers=teachers_query.count(),
-                           search_query=search_query)
+                           search_query=search_query,
+                           sort_by=sort_by,
+                           sort_order=sort_order)
+
 
 @app.route('/students', methods=['GET'])
 @login_required
@@ -1028,6 +1200,8 @@ def view_students():
 
     page = request.args.get('page', 1, type=int)
     search_query = request.args.get('search', '', type=str)
+    sort_by = request.args.get('sort_by', default='last_name', type=str)
+    sort_order = request.args.get('sort_order', default='asc', type=str)
     
     if current_user.role == 'teacher':
         teacher = Teacher.query.filter_by(teacher_id=current_user.id).first()
@@ -1053,9 +1227,34 @@ def view_students():
                 Student.suffix.ilike(f'%{search_query}%')
             )
         
+        # Sorting
+        if sort_by == 'last_name':
+            if sort_order == 'asc':
+                query = query.order_by(Student.last_name.asc())
+            else:
+                query = query.order_by(Student.last_name.desc())
+        elif sort_by == 'first_name':
+            if sort_order == 'asc':
+                query = query.order_by(Student.first_name.asc())
+            else:
+                query = query.order_by(Student.first_name.desc())
+        elif sort_by == 'middle_name':
+            if sort_order == 'asc':
+                query = query.order_by(Student.middle_name.asc())
+            else:
+                query = query.order_by(Student.middle_name.desc())
+        
         total_students = query.count()
         students_pagination = query.paginate(page=page, per_page=8)
-        return render_template('admin/view_students.html', authenticated=True, students_pagination=students_pagination, search_query=search_query, total_students=total_students)
+        return render_template('admin/view_students.html', authenticated=True, students_pagination=students_pagination, search_query=search_query, total_students=total_students, sort_by=sort_by, sort_order=sort_order)
+
+@app.route('/graduate_student/<int:student_id>', methods=['POST'])
+def graduate_student(student_id):
+    student = Student.query.get_or_404(student_id)
+    student.is_graduate = True  # Set is_graduate to True
+    db.session.commit()
+    flash(f'Student {student.first_name} {student.last_name} has been marked as graduated.', 'success')
+    return redirect(url_for('view_students'))
 
 @app.route('/admin/view_student_details/<int:student_id>', methods=['GET'])
 @login_required
@@ -1601,12 +1800,21 @@ def manage_section():
     if section_name_filter:
         sections_query = sections_query.filter(Section.name.ilike(f'%{section_name_filter}%'))
 
+    # Define the sorting criteria
     if sort_by == 'name':
         sorting_criteria = Section.name
     elif sort_by == 'capacity':
         sorting_criteria = Section.capacity
+    elif sort_by == 'school_year':
+        sorting_criteria = Section.school_year
+    elif sort_by == 'year':
+        sorting_criteria = Section.year
+    elif sort_by == 'course_id':
+        sorting_criteria = Section.course_id
+    elif sort_by == 'teacher_id':
+        sorting_criteria = Section.teacher_id
     else:
-        sorting_criteria = Section.name
+        sorting_criteria = Section.name  # Default sorting
 
     if sort_order == 'asc':
         sections_query = sections_query.order_by(asc(sorting_criteria))
@@ -1650,7 +1858,8 @@ def manage_section():
     pagination = Pagination(page=page, per_page=per_page, total=total_sections_count, css_framework='bootstrap4')
 
     return render_template('admin/manage_section.html', sections=sections, courses=serialized_courses,
-                       form_section=form_section, form_subject=form_subject, pagination=pagination)
+                           form_section=form_section, form_subject=form_subject, pagination=pagination)
+
 
 
 @app.route('/archive_section/<int:section_id>', methods=['POST'])
@@ -1742,20 +1951,22 @@ def subject_bank():
     sort_order = request.args.get('sort_order', 'asc')  # Default sorting order is ascending
 
     # Construct the sorting criteria dynamically
+    sorting_criteria = None
     if sort_by == 'course':
         sorting_criteria = Course.id
     else:
         sorting_criteria = getattr(Subject, sort_by)
 
-    subjects_query = Subject.query  # Initialize subjects_query with the base query
-
     if sort_order == 'asc':
-        subjects_query = subjects_query.order_by(asc(sorting_criteria))
+        sorting_criteria = sorting_criteria.asc()
     else:
-        subjects_query = subjects_query.order_by(desc(sorting_criteria))
+        sorting_criteria = sorting_criteria.desc()
+
+    subjects_query = Subject.query  # Initialize subjects_query with the base query
+    subjects_query = subjects_query.order_by(sorting_criteria)  # Apply the sorting criteria
 
     # Handle search query
-    search_query = request.args.get('search_query', '')
+    search_query = request.args.get('search', '')  # Changed from 'search_query' to 'search'
     if search_query:
         subjects_query = subjects_query.filter(or_(Subject.abbreviation.ilike(f"%{search_query}%"), Subject.title.ilike(f"%{search_query}%")))
 
@@ -1805,7 +2016,6 @@ def subject_bank():
         course_subjects[course.id] = course.subjects
     
     return render_template('admin/subject_bank.html', courses=courses, course_subjects=course_subjects, years=years, subjects=subjects, pagination=pagination)
-
 
 @app.route('/admin/subject_bank/edit/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
@@ -2299,12 +2509,59 @@ def finish_enrollment(enrollment_id):
     flash('Enrollment has been marked as finished successfully!', 'success')
     return redirect(url_for('enroll'))
 
+
+
 @app.route('/admin/enrollments/finished')
 @login_required
 def view_finished_enrollments():
-    finished_enrollments = Enrollment.query.filter_by(is_finished=True).all()
-    return render_template('admin/finished_enrollments.html', enrollments=finished_enrollments)
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of items per page
 
+    # Get sorting parameters
+    sort_by = request.args.get('sort_by', 'id')  # Default sort by id
+    sort_order = request.args.get('sort_order', 'asc')  # Default sort order ascending
+    search_query = request.args.get('search', '')  # Get search query
+
+    # Determine sort order dynamically
+    if sort_order == 'desc':
+        order = desc
+    else:
+        order = asc
+
+    # Join with Student table if sorting by name
+    if sort_by in ['student_name']:
+        if sort_order == 'desc':
+            order = db.desc
+        else:
+            order = db.asc
+
+        # Sorting by multiple columns for the name
+        order_criteria = [
+            order(Student.last_name),
+            order(Student.first_name),
+            order(Student.middle_name),
+            order(Student.suffix)
+        ]
+        query = Enrollment.query.join(Student).filter(Enrollment.is_finished == True).order_by(*order_criteria)
+    else:
+        order_criteria = [order(getattr(Enrollment, sort_by))]
+        query = Enrollment.query.filter_by(is_finished=True).order_by(*order_criteria)
+
+    # Apply search filter
+    if search_query:
+        search_filter = or_(
+            Student.first_name.ilike(f'%{search_query}%'),
+            Student.last_name.ilike(f'%{search_query}%'),
+            Student.middle_name.ilike(f'%{search_query}%'),
+            Student.suffix.ilike(f'%{search_query}%')
+        )
+        query = query.join(Student).filter(search_filter)
+
+    # Fetch paginated and sorted enrollments
+    pagination = query.paginate(page=page, per_page=per_page)
+    finished_enrollments = pagination.items
+
+    return render_template('admin/finished_enrollments.html', enrollments=finished_enrollments, pagination=pagination, sort_by=sort_by, sort_order=sort_order, search=search_query)
 
 @app.route('/enrolled_subjects/<int:student_id>', methods=['GET'])
 @login_required

@@ -231,8 +231,10 @@ class Student(db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     suffix = db.Column(db.String(10))
     active = db.Column(db.Boolean, default=True, nullable=False)
+    is_graduate = db.Column(db.Boolean, default=False, nullable=False)  # Add this line
     grades = db.relationship('Grades', back_populates='student', lazy=True)
     enrollments = db.relationship('Enrollment', back_populates='enrolled_student_rel', lazy=True)
+
 
 
 class Course(db.Model):

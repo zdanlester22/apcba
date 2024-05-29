@@ -202,7 +202,35 @@
                             </form>
                         </div>
                     </div>
+                    
                     <h1 class="h3 mb-2 text-gray-800">Teacher</h1>
+                    <div class="col-md-6">
+                        <form class="form-inline" method="get" action="{{ url_for('view_teachers') }}">
+                            <!-- Sort by dropdown -->
+                            <div class="form-group mb-2 mr-2">
+                                <label for="sort_by" class="mr-2">Sort by:</label>
+                                <select name="sort_by" id="sort_by" class="form-control form-control-sm">
+                                    <option value="last_name" {% if sort_by == 'last_name' %}selected{% endif %}>Last Name</option>
+                                    <option value="first_name" {% if sort_by == 'first_name' %}selected{% endif %}>First Name</option>
+                                    <option value="middle_name" {% if sort_by == 'middle_name' %}selected{% endif %}>Middle Name</option>
+                                    <!-- Add more options for other sorting fields if needed -->
+                                </select>
+                            </div>
+                            <!-- Sort order dropdown -->
+                            <div class="form-group mb-2 mr-2">
+                                <label for="sort_order" class="mr-2">Order:</label>
+                                <select name="sort_order" id="sort_order" class="form-control form-control-sm">
+                                    <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
+                                    <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
+                                </select>
+                            </div>
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary btn-sm mb-2">
+                                <i class="fas fa-sort"></i> Sort
+                            </button>
+                        </form>
+                    </div>
+                    
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">List of Teachers</h6>
