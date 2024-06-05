@@ -60,6 +60,7 @@ class Announcement(db.Model):
     timestamp = db.Column(db.TIMESTAMP, default=db.func.current_timestamp())
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     author = db.relationship('User', backref='announcements')
+    archived = db.Column(db.Boolean, default=False)
 
 
 class Certificate(db.Model):
@@ -90,7 +91,11 @@ class Section(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.teacher_id'))
     teacher = db.relationship('Teacher', back_populates='section', uselist=False)
     enrollments = db.relationship('Enrollment', backref='section', lazy=True)
-    subjects = db.relationship('Subject', secondary=section_subject_association, back_populates='sections', lazy='dynamic')  # Establish many-to-many relationship with Subject
+    subjects = db.relationship('Subject', secondary=section_subject_association, back_populates='sections', lazy='dynamic')
+    is_archived = db.Column(db.Boolean, default=False)
+
+
+    
 
 
 class Subject(db.Model):
@@ -119,8 +124,9 @@ class Teacher(db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     suffix = db.Column(db.String(10))
     active = db.Column(db.Boolean, default=True, nullable=False)
-    section = db.relationship('Section', back_populates='teacher', uselist=False) 
+    section = db.relationship('Section', back_populates='teacher', uselist=False)
     subjects = db.relationship('Subject', secondary='subject_teacher_association', back_populates='teachers')
+
 
 
 
@@ -141,6 +147,7 @@ class Module(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     course = db.relationship('Course', backref='modules')
     pdf_data = db.Column(LargeBinary, nullable=False)
+    archived = db.Column(db.Boolean, default=False)
 
 
 class Enrollment(db.Model):
@@ -248,6 +255,7 @@ class Course(db.Model):
     semesters = db.Column(db.String(20), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     sections = db.relationship('Section', back_populates='course', lazy=True)
+    archived = db.Column(db.Boolean, default=False)
 
 
 

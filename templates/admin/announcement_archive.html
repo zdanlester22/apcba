@@ -188,174 +188,25 @@
                 <!-- End of Topbar -->
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h4 mb-0 text-gray-800">Announcement</h1>
-                    </div>
-   <div class="row">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="mt-4">
-        <ul class="flashes list-unstyled">
-        {% for category, message in messages %}
-          <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </li>
-        {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-  {% endwith %}
-                        </div>
-                    <!-- Content Row -->
+                    <h1 class="h4 mb-0 text-gray-800">Archived Announcements</h1>
                     <div class="row">
-
-                     
-                        <div class="container">
-                            <div class="row justify-content-end">
-                                <div class="col-md-6">
-                                    <button id="butbut" class="btn btn-primary btn-sm btn-block mb-2" data-toggle="modal" data-target="#announcement-modal" style="width: 250px; margin-left: 53%;">
-                                        <i class="fas fa-bullhorn mr-2" style="font-size: 16px;"></i> <!-- Icon with margin and smaller size -->
-                                        Post an Announcement
-                                    </button>
-                                </div>
-                                <div class="mb-3">
-                                    <a class="nav-link btn btn-danger btn-sm d-flex align-items-center justify-content-center" href="{{ url_for('archive') }}" style="color: white; height: 31px;">
-                                        <i class="fas fa-archive"></i>
-                                        <span class="ml-1">View Archived</span>
-                                    </a>
-                                </div>
-                                
-                                
-                            </div>
-                        </div>
-                        
-                        
-                        <!-- Modal -->
-                        <div class="modal fade" id="announcement-modal" tabindex="-1" role="dialog" aria-labelledby="announcement-modal-label" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="announcement-modal-label">Post an Announcement</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div> 
-                                    <div class="modal-body">
-                                        <form id="announcement-form" method="POST" action="{{ url_for('announcement') }}">
-                                            {{ form.hidden_tag() }}
-                                            <div class="form-group">
-                                                <label for="title">Announcement Title</label>
-                                                <input type="text" id="title" name="title" size="25" maxlength="75" required class="form-control">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="content">Content</label>
-                                                <textarea id="content" name="content" required style="height: 200px;" maxlength="1000" class="form-control"></textarea>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
-                                        </form>
+                        <div class="col-md-12">
+                            <ul class="list-unstyled announcements">
+                                {% for announcement in announcements %}
+                                <li class="announcement-item mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ announcement.title }}</h5>
+                                            <p class="card-text">{{ announcement.content }}</p>
+                                            <p class="card-text"><small class="text-muted">Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small></p>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-
-
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <ul class="list-unstyled announcements">
-                                        <!-- Existing announcement item template -->
-{% for announcement in announcements %}
-<li class="announcement-item hide-delete mb-3">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{ announcement.title }}</h5>
-            <p class="card-text">{{ announcement.content }}</p>
-            <p class="card-text"><small class="text-muted">Posted by {{ announcement.author.name }} on {{ announcement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small></p>
-            <div class="update-delete-buttons">
-                <button type="button" class="btn btn-primary btn-sm edit-button" data-toggle="modal" data-target="#editModal{{ announcement.id }}" data-announcement-id="{{ announcement.id }}">
-                    <i class="fas fa-edit mr-1"></i>Edit
-                </button>                
-                <!-- New Archive button -->
-                <button type="button" class="btn btn-warning btn-sm archive-button" data-toggle="modal" data-target="#archiveConfirmationModal{{ announcement.id }}">
-                    <i class="fas fa-archive mr-1" style="font-size: 14px;"></i>Archive
-                </button>
-            </div>
-        </div>
-    </div>
-</li>
-<!-- Edit Modal -->
-<div class="modal fade" id="editModal{{ announcement.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ announcement.id }}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel{{ announcement.id }}">Edit Announcement</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm{{ announcement.id }}" method="POST" action="{{ url_for('announcement') }}">
-                    {{ form.hidden_tag() }}
-                    <input type="hidden" name="edit_id" value="{{ announcement.id }}"> <!-- Include the announcement ID for editing -->
-                    <div class="form-group">
-                        <label for="editTitle{{ announcement.id }}">Title</label>
-                        <input type="text" class="form-control" id="editTitle{{ announcement.id }}" name="title" value="{{ announcement.title }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="editContent{{ announcement.id }}">Content</label>
-                        <textarea class="form-control" id="editContent{{ announcement.id }}" name="content" rows="3">{{ announcement.content }}</textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Re-post</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-<!-- Archive Confirmation Modal -->
-<div class="modal fade" id="archiveConfirmationModal{{ announcement.id }}" tabindex="-1" role="dialog" aria-labelledby="archiveConfirmationModalLabel{{ announcement.id }}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="archiveConfirmationModalLabel{{ announcement.id }}">Confirm Archiving</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to archive this announcement?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <a href="{{ url_for('archive_announcement', announcement_id=announcement.id) }}" class="btn btn-danger">Archive</a> <!-- Actual archive action -->
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %}
-
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
-                        
-                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <!-- /.container-fluid -->
-            </div>
             <!-- End of Main Content -->
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
@@ -475,20 +326,5 @@
             fadeOutFlash();
         });
     </script>
-    <script>
-        $('.edit-button').click(function() {
-            var announcementId = $(this).data('announcement-id');
-            $('input[name="edit_id"]').val(announcementId);
-        });
-    </script>
-    {% block scripts %}
-    <script>
-        // Function to remove flash messages after 3 seconds
-        setTimeout(function() {
-            $('.alert').alert('close');
-        }, 3000);
-    </script>
-    {% endblock %}
-    
  
 </html>

@@ -1360,17 +1360,34 @@ def delete_student(student_id):
 
 
 
+####################Announcement Section###################################
 @app.route('/announcement', methods=['GET', 'POST'])
 @login_required
 def announcement():
     form = AnnouncementForm()
 
     if form.validate_on_submit():
-        announcement = Announcement(title=form.title.data, content=form.content.data, author_id=current_user.id)
-        db.session.add(announcement)
-        db.session.commit()
-        flash('Announcement has been posted successfully', 'success')
-    announcements = Announcement.query.order_by(Announcement.timestamp.desc()).all()
+        if request.form.get('edit_id'):  # Check if edit ID is present in the form data
+            # Extract the announcement ID from the form data
+            announcement_id = int(request.form['edit_id'])
+            # Retrieve the announcement to be edited from the database
+            announcement = Announcement.query.get_or_404(announcement_id)
+            # Update the announcement with the new data
+            announcement.title = form.title.data
+            announcement.content = form.content.data
+            db.session.commit()
+            flash('Announcement has been re-posted successfully', 'success')
+            return redirect(url_for('announcement'))
+        else:
+            # Create a new announcement
+            announcement = Announcement(title=form.title.data, content=form.content.data, author_id=current_user.id)
+            db.session.add(announcement)
+            db.session.commit()
+            flash('Announcement has been posted successfully', 'success')
+            return redirect(url_for('announcement'))
+
+
+    announcements = Announcement.query.filter_by(archived=False).order_by(Announcement.timestamp.desc()).all()
 
     if current_user.is_authenticated:
         if current_user.role == 'student':
@@ -1385,6 +1402,32 @@ def announcement():
         return redirect(url_for('login'))
 
     return render_template(template, user=current_user, form=form, announcements=announcements)
+
+
+
+
+@app.route('/archive_announcement/<int:announcement_id>')
+@login_required
+def archive_announcement(announcement_id):
+    announcement = Announcement.query.get_or_404(announcement_id)
+    if announcement.author_id != current_user.id and current_user.role != 'admin':
+        flash('You do not have permission to archive this announcement.', 'danger')
+        return redirect(url_for('announcement'))
+
+    announcement.archived = True
+    db.session.commit()
+    flash('Announcement has been archived successfully.', 'success')
+    return redirect(url_for('announcement'))
+
+
+@app.route('/archive')
+@login_required
+def archive():
+    archived_announcements = Announcement.query.filter_by(archived=True).order_by(Announcement.timestamp.desc()).all()
+    return render_template('admin/announcement_archive.html', user=current_user, announcements=archived_announcements)
+
+
+##############End Announcement Section#####################################33
 
 @app.route('/admin/register', methods=['GET', 'POST'])
 @login_required
@@ -1707,6 +1750,8 @@ def teacher_account():
 
     return render_template('teacher/teacher_account.html', form=form)
 #######################################################################################################################################################################################
+
+###############################COURSE SECTION##############################################
 @app.route('/courses', methods=['GET', 'POST'])
 @login_required
 def course():
@@ -1720,7 +1765,8 @@ def course():
             year=form_course.year.data,
             Class=form_course.Class.data,
             semesters=form_course.semesters.data,
-            is_active=form_course.is_active.data
+            is_active=form_course.is_active.data,
+            archived=False  # Ensure the new course is not archived by default
         )
         db.session.add(new_course)
         db.session.commit()
@@ -1732,32 +1778,36 @@ def course():
     offset = (page - 1) * per_page
 
     # Assuming Course is your SQLAlchemy model
-    total_courses = Course.query.count()
+    total_courses = Course.query.filter_by(archived=False).count()
 
     # Sorting
     sort_by = request.args.get('sort_by', default='title', type=str)
     sort_order = request.args.get('sort_order', default='asc', type=str)
 
+    query = Course.query.filter_by(archived=False)
+
     if sort_by == 'title':
         if sort_order == 'asc':
-            courses = Course.query.order_by(Course.title.asc()).offset(offset).limit(per_page).all()
+            query = query.order_by(Course.title.asc())
         else:
-            courses = Course.query.order_by(Course.title.desc()).offset(offset).limit(per_page).all()
+            query = query.order_by(Course.title.desc())
     elif sort_by == 'abbreviation':
         if sort_order == 'asc':
-            courses = Course.query.order_by(Course.abbreviation.asc()).offset(offset).limit(per_page).all()
+            query = query.order_by(Course.abbreviation.asc())
         else:
-            courses = Course.query.order_by(Course.abbreviation.desc()).offset(offset).limit(per_page).all()
+            query = query.order_by(Course.abbreviation.desc())
     elif sort_by == 'year':
         if sort_order == 'asc':
-            courses = Course.query.order_by(Course.year.asc()).offset(offset).limit(per_page).all()
+            query = query.order_by(Course.year.asc())
         else:
-            courses = Course.query.order_by(Course.year.desc()).offset(offset).limit(per_page).all()
-    
+            query = query.order_by(Course.year.desc())
+
+    courses = query.offset(offset).limit(per_page).all()
 
     pagination = Pagination(page=page, per_page=per_page, total=total_courses, css_framework='bootstrap4')
 
     return render_template('admin/course.html', courses=courses, form_course=form_course, pagination=pagination)
+
 
 
 @app.route('/update_course/<int:course_id>', methods=['GET', 'POST'])
@@ -1781,7 +1831,42 @@ def update_course(course_id):
 
     return render_template('admin/update_course.html', form=form, course=course)
 
-##########################################################################################################################################################################################
+@app.route('/courses/archive/<int:course_id>', methods=['POST'])
+@login_required
+def archive_course(course_id):
+    course = Course.query.get_or_404(course_id)
+    course.archived = True
+    db.session.commit()
+    flash('Course archived successfully!', 'success')
+    return redirect(url_for('course'))
+
+@app.route('/courses/archived', methods=['GET'])
+@login_required
+def archived_courses():
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    offset = (page - 1) * per_page
+
+    total_courses = Course.query.filter_by(archived=True).count()
+    courses = Course.query.filter_by(archived=True).offset(offset).limit(per_page).all()
+
+    pagination = Pagination(page=page, per_page=per_page, total=total_courses, css_framework='bootstrap4')
+
+    return render_template('admin/archived_courses.html', courses=courses, pagination=pagination)
+
+@app.route('/courses/unarchive/<int:course_id>', methods=['POST'])
+@login_required
+def unarchive_course(course_id):
+    course = Course.query.get_or_404(course_id)
+    course.archived = False
+    db.session.commit()
+    flash('Course unarchived successfully!', 'success')
+    return redirect(url_for('archived_courses'))
+
+
+#######################END COURSE SECTION##############################################33
+
+################################################MANAGE SECTION##########################################################################################################################################
 @app.route('/manage_section', methods=['GET', 'POST'])
 def manage_section():
     form_section = SectionForm()
@@ -1874,6 +1959,7 @@ def archive_section(section_id):
     # Redirect back to the manage section page or wherever appropriate
     return redirect(url_for('manage_section'))
 
+###########################END MANAGE SECTION###############################
 
 
 @app.route('/subjects/add', methods=['POST'])
@@ -2328,13 +2414,12 @@ def add_semester():
 
 
 
-################################################################################################################################################################################################################    
+###########################MODULE SECTION##################################### 
 @app.route('/admin/modules', methods=['GET', 'POST'])
 @login_required
 def modules():
     form_module = ModuleForm()
     courses = Course.query.all()
-    form_module.course_id.choices = [(course.id, course.title) for course in courses]
 
     if form_module.validate_on_submit():
         # Extract form data
@@ -2361,6 +2446,7 @@ def modules():
 
         # Redirect the user to the modules page to display the updated list
         return redirect(url_for('modules'))
+
     # Pagination
     page = request.args.get('page', 1, type=int)
     per_page = 10
@@ -2377,19 +2463,77 @@ def modules():
         sorting_criteria = getattr(Module, sort_by)
 
     if sort_order == 'asc':
-        modules = Module.query.join(Course).order_by(asc(sorting_criteria)).offset(offset).limit(per_page).all()
+        modules = Module.query.join(Course).filter(Module.archived == False).order_by(asc(sorting_criteria)).offset(offset).limit(per_page).all()
     else:
-        modules = Module.query.join(Course).order_by(desc(sorting_criteria)).offset(offset).limit(per_page).all()
+        modules = Module.query.join(Course).filter(Module.archived == False).order_by(desc(sorting_criteria)).offset(offset).limit(per_page).all()
 
     # Calculate total count for pagination
-    total_modules_count = Module.query.count()
+    total_modules_count = Module.query.filter_by(archived=False).count()
 
     # Extract distinct years from the modules
-    years = list(set([module.year for module in modules]))
+    years = sorted(set([module.year for module in modules]))  # Define years after querying modules
 
     pagination = Pagination(page=page, per_page=per_page, total=total_modules_count, css_framework='bootstrap4')
     
     return render_template('admin/modules.html', form_module=form_module, modules=modules, pagination=pagination, courses=courses, years=years)
+
+
+@app.route('/admin/archive_module/<int:module_id>', methods=['POST'])
+@login_required
+def archive_module(module_id):
+    module = Module.query.get_or_404(module_id)
+    module.archived = True
+    db.session.commit()
+    flash('Module has been archived successfully.', 'success')
+    return redirect(url_for('modules'))
+
+@app.route('/admin/archived_modules')
+@login_required
+def archived_modules():
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    offset = (page - 1) * per_page
+
+    archived_modules = Module.query.filter_by(archived=True).offset(offset).limit(per_page).all()
+    total_archived_count = Module.query.filter_by(archived=True).count()
+
+    pagination = Pagination(page=page, per_page=per_page, total=total_archived_count, css_framework='bootstrap4')
+
+    return render_template('admin/archived_modules.html', modules=archived_modules, pagination=pagination)
+
+
+@app.route('/admin/edit_module/<int:module_id>', methods=['GET', 'POST'])
+@login_required
+def edit_module(module_id):
+    module = Module.query.get_or_404(module_id)
+    form_module = ModuleForm()
+    
+    # Populate the course_id choices
+    courses = Course.query.all()
+    form_module.course_id.choices = [(course.id, course.title) for course in courses]
+    
+    if form_module.validate_on_submit():
+        module.title = form_module.title.data
+        module.year = form_module.year.data
+        module.course_id = form_module.course_id.data
+        if form_module.pdf_file.data:
+            module.pdf_data = form_module.pdf_file.data.read()
+            module.pdf_filename = form_module.pdf_file.data.filename
+
+        db.session.commit()
+        flash('Module has been updated successfully.', 'success')
+        return redirect(url_for('modules'))
+    
+    # Populate the form with the current module data
+    if request.method == 'GET':
+        form_module.title.data = module.title
+        form_module.year.data = module.year
+        form_module.course_id.data = module.course_id
+    
+    return render_template('admin/edit_module.html', form_module=form_module, module=module)
+
+
+
 
 
 @app.route('/admin/modules/view_pdf/<int:module_id>')
@@ -2448,6 +2592,8 @@ def download_module(pdf_filename):
     directory = os.path.join('uploads', 'documents')
     flash('Downloaded successfully!', 'success')
     return send_from_directory(directory, pdf_filename, as_attachment=True)
+
+##################################MODULE SECTION END#####################################
 
 ###################################################################################ENROLLMENT###############################################################################################################
 @app.route('/enroll', methods=['GET', 'POST'])

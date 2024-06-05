@@ -313,6 +313,9 @@
                                                     <button type="button" class="btn btn-primary btn-sm add-course-btn" data-toggle="modal" data-target="#add-course-modal">
                                                         <i class="fas fa-plus"></i> Add Course
                                                     </button>
+                                                    <a href="{{ url_for('archived_courses') }}" class="btn btn-danger btn-sm">
+                                                        <i class="fas fa-archive"></i> Archived
+                                                    </a>
                                                 </div>
                                             </div>
                                             
@@ -357,7 +360,15 @@
                                                                     <a href="{{ url_for('update_course', course_id=course.id) }}" class="btn-primary btn-sm">
                                                                         <i class="fas fa-edit"></i>Update
                                                                     </a>
+                                                                    <form action="{{ url_for('archive_course', course_id=course.id) }}" method="post" style="display: inline; margin-left: 5px;">
+                                                                        <button type="button" class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target="#archiveCourseModal{{ course.id }}" style="height: 27px;">
+                                                                            <i class="fas fa-archive"></i> Archive
+                                                                        </button>
+                                                                        
+                                                                    </form>
                                                                 </td>
+                                                                
+
                                                                 
                                                             </tr>
                                                             {% endfor %}
@@ -374,6 +385,31 @@
                                                     
                                                        </div>
                                                    </div>
+                                                   <!-- Modals -->
+    {% for course in courses %}
+    <div class="modal fade" id="archiveCourseModal{{ course.id }}" tabindex="-1" role="dialog" aria-labelledby="archiveCourseModalLabel{{ course.id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="archiveCourseModalLabel{{ course.id }}">Archive Course</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to archive the course "{{ course.title }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <form method="POST" action="{{ url_for('archive_course', course_id=course.id) }}">
+                        {{ form_course.hidden_tag() }}
+                        <button type="submit" class="btn btn-danger">Archive</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
                                                </div>
                                            </div>
                                        
@@ -682,6 +718,11 @@
 
    
    
+    </script>
+    <script>
+        setTimeout(function() {
+            $('.flashes .alert').alert('close');
+        }, 3000);  // 3000 milliseconds = 3 seconds
     </script>
 
 </html>
