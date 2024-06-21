@@ -6,6 +6,15 @@ from wtforms.fields import StringField, SubmitField, IntegerField, DateField, Te
 from wtforms.validators import DataRequired, NumberRange, Length, InputRequired, EqualTo
 from wtforms.fields import FloatField, TimeField
 
+class SubjectForm(FlaskForm):
+    course_id = SelectField('Select Course', coerce=int, validators=[DataRequired()])
+    abbreviation = StringField('Abbreviation', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired()])
+    unit = IntegerField('Unit', validators=[DataRequired()])
+    year = SelectField('Year', coerce=int, validators=[DataRequired()])
+    semester = SelectField('Semester', choices=[('1st Semester', 'Semester 1'), ('2nd Semester', 'Semester 2'), ('Summer', 'Summer')], validators=[DataRequired()])
+    submit = SubmitField('Add Subject')
+
 
 
 class LoginForm(FlaskForm):
@@ -102,6 +111,8 @@ class SectionForm(FlaskForm):
             (teacher.id, f"{teacher.first_name} {teacher.middle_name} {teacher.last_name} {teacher.suffix}".strip())
             for teacher in teachers
         ]
+
+
 
 
 class TeacherForm(FlaskForm):
@@ -240,6 +251,9 @@ class ScheduleForm(FlaskForm):
     start_time = StringField('Start Time', validators=[InputRequired()])
     end_time = StringField('End Time', validators=[InputRequired()])
     room = StringField('Room')
+    subject_id = IntegerField('Subject ID', validators=[InputRequired()])  # Include subject_id field
+    teacher_id = IntegerField('Teacher ID', validators=[InputRequired()])  # Include teacher_id field
+    section_id = IntegerField('Section ID', validators=[InputRequired()])  # Include section_id field
     submit = SubmitField('Add Schedule')
 
 class ChangePasswordForm(FlaskForm):

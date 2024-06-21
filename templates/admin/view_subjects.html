@@ -221,13 +221,87 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <!-- Add Schedule Button -->
-        <button class="btn btn-primary mb-4" data-toggle="modal" data-target="#addScheduleModal">
-            Add Schedule
-        </button>
-
-                   <!-- Modal for adding a new schedule -->
-<div class="modal fade" id="addScheduleModal" tabindex="-1" role="dialog" aria-labelledby="addScheduleModalLabel" aria-hidden="true">
+                    <!-- Flash messages section -->
+    <!-- Flash message container -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+                    <div class="row">
+                        <!-- Left side: List of subjects with "+" button -->
+<div class="col-md-4">
+    <div class="list-group">
+        {% for subject in subjects %}
+        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#addScheduleModal" data-subject-id="{{ subject.id }}" data-subject-title="{{ subject.title }}" data-subject-abbreviation="{{ subject.abbreviation }}" data-subject-unit="{{ subject.unit }}">
+            {{ subject.title }} ({{subject.abbreviation}})
+            <button class="btn btn-sm btn-success">+</button>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+                
+                       <!-- Right side: Schedule table -->
+<div class="col-md-8">
+    <!-- Display the list of schedules in a table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Schedule Table for {{ section.name }}</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="scheduleTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Abbreviation</th>
+                            <th>Subject Title</th>
+                            <th>Teacher</th>
+                            <th>Day of Week</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Unit</th>
+                            <th>Room</th>
+                            <th>Action</th> <!-- New column for actions -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for schedule in schedules %}
+                        <tr>
+                            <td>{{ schedule.subject.abbreviation }}</td>
+                            <td>{{ schedule.subject.title }}</td>
+                            <td id="teacher-{{ schedule.id }}">{{ schedule.teacher.first_name }} {{ schedule.teacher.last_name }}</td>
+                            <td>{{ schedule.day_of_week }}</td>
+                            <td>{{ schedule.start_time }}</td>
+                            <td>{{ schedule.end_time }}</td>
+                            <td>{{ schedule.subject.unit }}</td>
+                            <td>{{ schedule.room }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#assignTeacherModal" data-schedule-id="{{ schedule.id }}">Assign Teacher</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+                
+<div id="addScheduleModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addScheduleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -236,128 +310,90 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form id="addScheduleForm" method="POST" action="{{ url_for('add_semester') }}">
+            <form id="addScheduleForm" method="POST" action="/add_schedule">
+                {{ form.hidden_tag() }}  <!-- CSRF token included -->
+                <div class="modal-body">
                     <div class="form-group">
-                        <input type="hidden" id="subject_id" name="subject_id">
-                        <label for="subjectSelect">Subject</label>
-                        <select class="form-control" id="subject-select" name="subject_id"> <!-- Change name to subject_id -->
-                            <option value="">Choose a subject you want to add a schedule</option>
-                            {% for subject in subjects %}
-                            <option value="{{ subject.id }}" data-abbreviation="{{ subject.abbreviation }}" data-title="{{ subject.title }}" data-unit="{{ subject.unit }}">{{ subject.title }}</option>
-                            {% endfor %}
-                        </select>
-            
-                        <div class="form-group mt-3">
-                            <label for="abbreviation">Abbreviation:</label>
-                            <input type="text" class="form-control" id="abbreviation" name="abbreviation" readonly>
+                        <label for="day_of_week">Day of Week</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="monday" name="day_of_week" value="Monday">
+                            <label class="form-check-label" for="monday">Monday</label>
                         </div>
-            
-                        <div class="form-group">
-                            <label for="unit">Unit:</label>
-                            <input type="text" class="form-control" id="unit" name="unit" readonly>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="tuesday" name="day_of_week" value="Tuesday">
+                            <label class="form-check-label" for="tuesday">Tuesday</label>
                         </div>
-                        <div class="form-group">
-                            <label for="dayOfWeek">Day of Week</label>
-                            <select multiple class="form-control" id="dayOfWeek" name="dayOfWeek">
-                                <option value="Monday">Monday</option>
-                                <option value="Tuesday">Tuesday</option>
-                                <option value="Wednesday">Wednesday</option>
-                                <option value="Thursday">Thursday</option>
-                                <option value="Friday">Friday</option>
-                            </select>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="wednesday" name="day_of_week" value="Wednesday">
+                            <label class="form-check-label" for="wednesday">Wednesday</label>
                         </div>
-                        <div class="form-group">
-                            <label for="selectedDays">Selected Days</label>
-                            <input type="text" class="form-control" id="selectedDays" name="selectedDays" readonly>
-                        </div>                        
-                        
-                        
-                        
-                        
-                        
-                        <div class="form-group col-md-6">
-                            <label for="startTime">Start Time</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="dropdown-menu">
-                                    </div>
-                                </div>
-                                <input type="time" class="form-control" id="startTime" name="startTime">
-                            </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="thursday" name="day_of_week" value="Thursday">
+                            <label class="form-check-label" for="thursday">Thursday</label>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="endTime">End Time</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                </div>
-                                <input type="time" class="form-control" id="endTime" name="endTime">
-                            </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="friday" name="day_of_week" value="Friday">
+                            <label class="form-check-label" for="friday">Friday</label>
                         </div>
-                        
-                        
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="start_time">Start Time</label>
+                        <input type="time" id="start_time" name="start_time" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time">End Time</label>
+                        <input type="time" id="end_time" name="end_time" class="form-control" required>
+                    </div>
                     <div class="form-group">
                         <label for="room">Room</label>
-                        <input type="text" class="form-control" id="room" name="room" required>
+                        <input type="text" id="room" name="room" class="form-control" required>
                     </div>
-                    <select class="form-control mb-3" name="teacher_id">
-                        <option value="">Select Teacher</option>
-                        {% for teacher in teachers %}
-                        <option value="{{ teacher.id }}">{{ teacher.first_name }} {{ teacher.last_name }}</option>
-                        {% endfor %}
-                    </select>
+                    <input type="hidden" id="subject_id" name="subject_id" value="">
                     <input type="hidden" id="section_id" name="section_id" value="{{ section.id }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Add Schedule</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-</div>
 
-<!-- Display the list of schedules in a table -->
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Schedule Table for {{section.name}}</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Abbreviation</th>
-                        <th>Subject Title</th>
-                        <th>Teacher</th>
-                        <th>Day of Week</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Unit</th>
-                        <th>Room</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for schedule in schedules %}
-                    <tr>
-                        <td>{{ schedule.subject.abbreviation }}</td> <!-- Fetch abbreviation from Subject object -->
-                        <td>{{ schedule.subject.title }}</td> <!-- Fetch title from Subject object -->
-                        <td>{{ schedule.teacher.first_name }} {{ schedule.teacher.last_name }}</td>
-                        <td>{{ schedule.day_of_week }}</td>
-                        <td>{{ schedule.start_time }}</td>
-                        <td>{{ schedule.end_time }}</td>
-                        <td>{{ schedule.subject.unit }}</td> <!-- Fetch unit from Subject object -->
-                        <td>{{ schedule.room }}</td>
-                        
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<!--Assign Teacher-->
+<div id="assignTeacherModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="assignTeacherModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignTeacherModalLabel">Assign Teacher</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="assignTeacherForm" method="POST" action="/assign_teacher">
+                {{ form.hidden_tag() }}  <!-- CSRF token included -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="teacher_id">Teacher</label>
+                        <select id="teacher_id" name="teacher_id" class="form-control" required>
+                            {% for teacher in teachers %}
+                            <option value="{{ teacher.id }}">{{ teacher.first_name }} {{ teacher.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="hidden" id="schedule_id" name="schedule_id" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Assign Teacher</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<!-- End of schedule table -->
 
 
-            </div>
             <!-- End of Main Content -->
             <!-- Footer -->
             <!-- End of Footer -->
@@ -424,113 +460,156 @@
 
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    
-     document.addEventListener("DOMContentLoaded", function () {
-            // Your JavaScript code here
-        });
+    $(document).ready(function() {
+        console.log("Document ready function executed");
 
         function disableSubmit(button) {
-        // Disable all submit buttons
-        var allButtons = document.querySelectorAll('button[type="submit"]');
-        allButtons.forEach(function(btn) {
-            if (btn !== button) {
-                btn.disabled = true;
-                // Optionally, you can change the text of the disabled buttons to indicate submission in progress
-                btn.textContent = 'Adding Schedule...';
-            }
+            console.log("disableSubmit function called");
+            var allButtons = document.querySelectorAll('button[type="submit"]');
+            allButtons.forEach(function(btn) {
+                if (btn !== button) {
+                    btn.disabled = true;
+                    btn.textContent = 'Adding Schedule...';
+                }
+            });
+        }
+
+        $('#addScheduleForm').submit(function(event) {
+            console.log("Form submit triggered");
+            event.preventDefault();
+            disableSubmit(document.querySelector('button[type="submit"]'));
+
+            var formData = $(this).serializeArray();
+
+            // Remove any existing 'day_of_week' entries
+            formData = formData.filter(function(item) {
+                return item.name !== 'day_of_week';
+            });
+
+            // Get selected days and add them as a single 'day_of_week' entry
+            var dayOfWeek = $('input[name="day_of_week"]:checked').map(function() {
+                return $(this).val();
+            }).get().join('/');
+            formData.push({ name: 'day_of_week', value: dayOfWeek });
+
+            $.ajax({
+                type: 'POST',
+                url: '/add_schedule',
+                data: $.param(formData),
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token() }}");
+                },
+                success: function(response) {
+                    console.log("AJAX request successful", response);
+                    if (response.status === 'success') {
+                        $('#addScheduleModal').modal('hide');
+                        
+                        // Wait for the modal to completely hide before reloading the page
+                        $('#addScheduleModal').on('hidden.bs.modal', function () {
+                            console.log('Modal hidden, reloading the page.');
+                            location.reload(true);  // true to force reload from server
+                        });
+
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX request failed", status, error);
+                    alert('An error occurred. Please try again.');
+                },
+                complete: function() {
+                    $('button[type="submit"]').prop('disabled', false).text('Add Schedule');
+                }
+            });
         });
+
+        $('#addScheduleModal').on('show.bs.modal', function(event) {
+            console.log("Modal show event triggered");
+            var button = $(event.relatedTarget);
+            var subjectId = button.data('subject-id');
+            var subjectTitle = button.data('subject-title');
+            var teacherName = button.data('teacher-name');
+            var abbreviation = button.data('subject-abbreviation');
+            var unit = button.data('subject-unit');
+
+            var modal = $(this);
+            modal.find('.modal-title').text('Add Schedule for ' + subjectTitle);
+            modal.find('#subject_id').val(subjectId);
+            modal.find('#teacher').text(teacherName);
+            modal.find('#abbreviation').val(abbreviation);
+            modal.find('#unit').val(unit);
+        });
+
+        $('.list-group-item').click(function() {
+            console.log("List group item clicked");
+            var subjectId = $(this).data('subject-id');
+            var abbreviation = $(this).data('subject-abbreviation');
+            var unit = $(this).data('subject-unit');
+            $('#subject_id').val(subjectId);
+            $('#abbreviation').val(abbreviation);
+            $('#unit').val(unit);
+        });
+
+        // Automatically remove flash messages after 3 seconds
+        setTimeout(function() {
+            $('.alert-container .alert').remove();
+        }, 3000);
+
+        document.addEventListener("DOMContentLoaded", function() {
+    function convertTo12Hour(time) {
+        var [hour, minute] = time.split(':');
+        var ampm = hour >= 12 ? 'PM' : 'AM';
+        hour = hour % 12 || 12;  // Convert 0 to 12 for 12 AM
+        return `${hour}:${minute} ${ampm}`;
     }
-document.addEventListener("DOMContentLoaded", function () {
-            // Select the flash div
-            var flashDiv = document.querySelector(".flash");
 
-            // Function to add fade-in class
-            function fadeInFlash() {
-                flashDiv.classList.add("fade-in");
-            }
-
-            // Function to remove fade-in class after 3 seconds
-            function fadeOutFlash() {
-                setTimeout(function () {
-                    flashDiv.classList.remove("fade-in");
-                }, 3000); // 3 seconds delay
-            }
-
-            // Call the functions
-            fadeInFlash();
-            fadeOutFlash();
-        });
-
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const subjectSelect = document.getElementById('subject-select');
-    const abbreviationInput = document.getElementById('abbreviation');
-    const unitInput = document.getElementById('unit');
-
-    subjectSelect.addEventListener('change', function() {
-        const selectedOption = subjectSelect.options[subjectSelect.selectedIndex];
-        abbreviationInput.value = selectedOption.dataset.abbreviation;
-        unitInput.value = selectedOption.dataset.unit;
+    document.querySelectorAll('td.time').forEach(function(td) {
+        var time = td.textContent;
+        td.textContent = convertTo12Hour(time);
     });
 });
 
+    });
     </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const dayOfWeekSelect = document.getElementById("dayOfWeek");
-            const selectedDaysInput = document.getElementById("selectedDays");
-            
-            // Event listener for changes in the dayOfWeek select element
-            dayOfWeekSelect.addEventListener("change", function() {
-                const selectedOptions = Array.from(dayOfWeekSelect.selectedOptions).map(option => option.value);
-                const formattedDays = formatSelectedDays(selectedOptions);
-                selectedDaysInput.value = formattedDays;
-            });
-    
-            // Function to format selected days as "M/W/F"
-            function formatSelectedDays(selectedDays) {
-                const abbreviations = {
-                    "Monday": "M",
-                    "Tuesday": "T",
-                    "Wednesday": "W",
-                    "Thursday": "Th",
-                    "Friday": "F"
-                };
-    
-                return selectedDays.map(day => abbreviations[day]).join("/");
-            }
-        });
-    </script>    
     <script>
         $(document).ready(function() {
-            $('#startTimePicker, #endTimePicker').on('change', function() {
-                var timePickerId = $(this).attr('id');
-                var timeInputId = '#' + timePickerId.replace('Picker', '');
-                var timeValue = $(this).val();
-                $(timeInputId).val(timeValue);
+            $('#assignTeacherModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var scheduleId = button.data('schedule-id');
+                var modal = $(this);
+                modal.find('#schedule_id').val(scheduleId);
             });
-            $('#startTime, #endTime').on('input', function() {
-                var timeInputId = $(this).attr('id');
-                var timePickerId = '#' + timeInputId + 'Picker';
-                var timeValue = $(this).val();
-                $(timePickerId).val(timeValue);
+    
+            $('#assignTeacherForm').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serializeArray();
+    
+                $.ajax({
+                    type: 'POST',
+                    url: '/assign_teacher',
+                    data: $.param(formData),
+                    beforeSend: function(xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token() }}");
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            var teacherName = response.teacher.first_name + ' ' + response.teacher.last_name;
+                            $('#teacher-' + response.schedule_id).text(teacherName);
+                            $('#assignTeacherModal').modal('hide');
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('An error occurred. Please try again.');
+                    }
+                });
             });
-        });
-    </script>
-    <script>
-        document.getElementById('subject-select').addEventListener('change', function() {
-            var selectedOption = this.options[this.selectedIndex];
-            document.getElementById('subject_id').value = selectedOption.value;
-        });
-    </script>
-    <script>
-        document.getElementById('subject-select').addEventListener('change', function() {
-            var selectedOption = this.options[this.selectedIndex];
-            document.getElementById('subject_id').value = selectedOption.value;
-            document.getElementById('abbreviation').value = selectedOption.dataset.abbreviation;
-            document.getElementById('unit').value = selectedOption.dataset.unit;
         });
     </script>
     

@@ -11,7 +11,7 @@ from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from flask_paginate import Pagination, get_page_parameter
 from datetime import datetime, timedelta
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email
 import os
@@ -34,6 +34,7 @@ from flask import Response
 #'mysql+mysqlconnector://root:@localhost/apcba'
 #'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 app.config['SECRET_KEY'] = 'somethingdan'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apcba_raur_user:RdGTEi7roBWoYfW56OYbOHipLEFzUX4e@dpg-cnaanhgl5elc73962nlg-a.oregon-postgres.render.com/apcba_raur'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -1872,6 +1873,7 @@ def manage_section():
     form_section = SectionForm()
     form_subject = SubjectForm()
 
+    # Filters for searching and sorting
     course_id_filter = request.args.get('course_id', type=int)
     section_name_filter = request.args.get('section_name', type=str)
     sort_by = request.args.get('sort_by', 'name')
@@ -1886,64 +1888,94 @@ def manage_section():
         sections_query = sections_query.filter(Section.name.ilike(f'%{section_name_filter}%'))
 
     # Define the sorting criteria
-    if sort_by == 'name':
-        sorting_criteria = Section.name
-    elif sort_by == 'capacity':
-        sorting_criteria = Section.capacity
-    elif sort_by == 'school_year':
-        sorting_criteria = Section.school_year
-    elif sort_by == 'year':
-        sorting_criteria = Section.year
-    elif sort_by == 'course_id':
-        sorting_criteria = Section.course_id
-    elif sort_by == 'teacher_id':
-        sorting_criteria = Section.teacher_id
-    else:
-        sorting_criteria = Section.name  # Default sorting
+    sorting_criteria = {
+        'name': Section.name,
+        'capacity': Section.capacity,
+        'school_year': Section.school_year,
+        'year': Section.year,
+        'course_id': Section.course_id,
+        'teacher_id': Section.teacher_id
+    }.get(sort_by, Section.name)  # Default sorting is by name
 
     if sort_order == 'asc':
         sections_query = sections_query.order_by(asc(sorting_criteria))
     else:
         sections_query = sections_query.order_by(desc(sorting_criteria))
 
+    # Pagination
     per_page = 10
     offset = (page - 1) * per_page
     sections = sections_query.offset(offset).limit(per_page).all()
 
+    # Populate the form choices
     courses = Course.query.all()
     serialized_courses = [{'id': course.id, 'title': course.title, 'semesters': course.semesters} for course in courses]
     form_section.course_id.choices = [(course.id, course.title) for course in courses]
+    
     teachers = Teacher.query.all()
-    form_section.set_teacher_choices(teachers)
+    form_section.teacher_id.choices = [(teacher.id, f"{teacher.first_name} {teacher.last_name}") for teacher in teachers]
 
     if form_section.validate_on_submit():
         selected_teacher_id = form_section.teacher_id.data
+        teacher = Teacher.query.get(selected_teacher_id)
 
-        new_section = Section(
-            name=form_section.name.data,
-            capacity=form_section.capacity.data,
-            school_year=form_section.school_year.data,
-            year=form_section.year.data,
-            course_id=form_section.course_id.data,
-            teacher_id=selected_teacher_id
-        )
+        # Debugging statements
+        app.logger.debug(f"Form data: {form_section.data}")
+        app.logger.debug(f"Selected teacher_id: {selected_teacher_id}")
+        app.logger.debug(f"Teacher exists: {teacher is not None}")
 
-        selected_course = Course.query.get(form_section.course_id.data)
-        subjects = selected_course.subjects
-        new_section.subjects.extend(subjects)
+        # Log all existing teacher IDs for debugging
+        existing_teacher_ids = [teacher.id for teacher in Teacher.query.all()]
+        app.logger.debug(f"Existing teacher IDs: {existing_teacher_ids}")
 
-        db.session.add(new_section)
-        db.session.commit()
-        flash('Section created successfully!', 'success')
+        if not teacher:
+            flash(f"Error: Teacher with ID {selected_teacher_id} does not exist.", "danger")
+            return redirect(url_for('manage_section'))
+
+        try:
+            new_section = Section(
+                name=form_section.name.data,
+                capacity=form_section.capacity.data,
+                school_year=form_section.school_year.data,
+                year=form_section.year.data,
+                course_id=form_section.course_id.data,
+                teacher_id=selected_teacher_id,
+                is_archived=False
+            )
+
+            selected_course = Course.query.get(form_section.course_id.data)
+            if selected_course:
+                subjects = selected_course.subjects
+                new_section.subjects.extend(subjects)
+
+            db.session.add(new_section)
+            db.session.commit()
+            flash('Section created successfully!', 'success')
+        except IntegrityError as e:
+            db.session.rollback()
+            flash(f"Database error: {e.orig}", "danger")
+            app.logger.error(f"Database error: {e.orig}")
 
         return redirect(url_for('manage_section'))
 
     total_sections_count = sections_query.count()
-
     pagination = Pagination(page=page, per_page=per_page, total=total_sections_count, css_framework='bootstrap4')
 
-    return render_template('admin/manage_section.html', sections=sections, courses=serialized_courses,
+    # Fetch sections with their associated teachers
+    sections_with_teachers = []
+    for section in sections:
+        teacher = Teacher.query.get(section.teacher_id)
+        teacher_name = f"{teacher.last_name} {teacher.first_name} {teacher.middle_name}" if teacher else "N/A"
+        sections_with_teachers.append({
+            'section': section,
+            'teacher_name': teacher_name,
+            'teacher': teacher
+        })
+
+    return render_template('admin/manage_section.html', sections=sections_with_teachers, courses=serialized_courses,
                            form_section=form_section, form_subject=form_subject, pagination=pagination)
+
+
 
 
 
@@ -2022,13 +2054,13 @@ def assign_teacher_to_subject(subject_id):
     return render_template('admin/assign_teacher_to_subject.html', form=form, subject=subject, teachers=teachers)
 
 
-from sqlalchemy import or_
-
 @app.route('/admin/subject_bank', methods=['GET', 'POST'])
 @login_required
 def subject_bank():
+    form = SubjectForm()
+
     # Pagination setup
-    page = request.args.get('page', 1, type=int)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
     offset = (page - 1) * per_page
 
@@ -2037,24 +2069,18 @@ def subject_bank():
     sort_order = request.args.get('sort_order', 'asc')  # Default sorting order is ascending
 
     # Construct the sorting criteria dynamically
-    sorting_criteria = None
-    if sort_by == 'course':
-        sorting_criteria = Course.id
-    else:
-        sorting_criteria = getattr(Subject, sort_by)
-
+    sorting_criteria = getattr(Subject, sort_by)
     if sort_order == 'asc':
         sorting_criteria = sorting_criteria.asc()
     else:
         sorting_criteria = sorting_criteria.desc()
 
-    subjects_query = Subject.query  # Initialize subjects_query with the base query
-    subjects_query = subjects_query.order_by(sorting_criteria)  # Apply the sorting criteria
+    subjects_query = Subject.query.order_by(sorting_criteria)
 
     # Handle search query
-    search_query = request.args.get('search', '')  # Changed from 'search_query' to 'search'
+    search_query = request.args.get('search', '')
     if search_query:
-        subjects_query = subjects_query.filter(or_(Subject.abbreviation.ilike(f"%{search_query}%"), Subject.title.ilike(f"%{search_query}%")))
+        subjects_query = subjects_query.filter(Subject.abbreviation.ilike(f"%{search_query}%") | Subject.title.ilike(f"%{search_query}%"))
 
     # Apply pagination to the final query
     subjects = subjects_query.offset(offset).limit(per_page).all()
@@ -2064,15 +2090,15 @@ def subject_bank():
 
     pagination = Pagination(page=page, per_page=per_page, total=total_subject_count, css_framework='bootstrap4')
 
-    if request.method == 'POST':
+    if form.validate_on_submit():
         # Get form data
-        course_id = request.form.get('course_id')
-        abbreviation = request.form.get('abbreviation')
-        title = request.form.get('title')
-        unit = request.form.get('unit')
-        semester = request.form.get('semester')
-        year = request.form.get('year')
-        
+        course_id = form.course_id.data
+        abbreviation = form.abbreviation.data
+        title = form.title.data
+        unit = form.unit.data
+        semester = form.semester.data
+        year = form.year.data
+
         # Create a new subject
         subject = Subject(
             abbreviation=abbreviation,
@@ -2082,26 +2108,25 @@ def subject_bank():
             semester=semester,
             year=year
         )
-        
+
         # Add the subject to the database
         db.session.add(subject)
         db.session.commit()
-        
+
         flash('Subject added successfully', 'success')
         return redirect(url_for('subject_bank'))
 
     # Fetch all courses from the database
     courses = Course.query.all()
-    
+
     # Fetch distinct years from the Course table
-    years = set(course.year for course in courses)
-    
-    # Fetch subjects for each course
-    course_subjects = {}
-    for course in courses:
-        course_subjects[course.id] = course.subjects
-    
-    return render_template('admin/subject_bank.html', courses=courses, course_subjects=course_subjects, years=years, subjects=subjects, pagination=pagination)
+    years = sorted(set(course.year for course in courses))
+
+    # Set the form choices for courses and years
+    form.course_id.choices = [(course.id, course.title) for course in courses]
+    form.year.choices = [(year, year) for year in years]
+
+    return render_template('admin/subject_bank.html', form=form, courses=courses, subjects=subjects, pagination=pagination)
 
 @app.route('/admin/subject_bank/edit/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
@@ -2271,44 +2296,74 @@ def my_students(subject_id):
 
 from sqlalchemy import and_
 
-@app.route('/add_schedule/<int:subject_id>', methods=['GET', 'POST'])
+
+###################SCHEDULE SECTION###########################
+@app.route('/add_schedule', methods=['POST'])
 @login_required
-def add_schedule(subject_id):
-    subject = Subject.query.get(subject_id)
-    form = ScheduleForm(request.form)  # Instantiate the schedule form
+def add_schedule():
+    form = ScheduleForm(request.form)
+    
+    current_app.logger.info(f"Received form data: {request.form}")
 
     if form.validate_on_submit():
-        # Extract schedule details from the form
-        day_of_week = '/'.join(request.form.getlist('day_of_week'))
+        subject_id = form.subject_id.data
+        day_of_week_list = request.form.get('day_of_week').split('/')  # Split the concatenated days
         start_time = form.start_time.data
         end_time = form.end_time.data
         room = form.room.data
+        teacher_id = form.teacher_id.data
+        section_id = form.section_id.data
+
+        concatenated_days = '/'.join(day_of_week_list)
 
         try:
-            # Check for existing schedule for the same subject
-            existing_schedule = Schedule.query.filter(and_(Schedule.day_of_week == day_of_week, Schedule.subject_id == subject_id)).first()
+            # Check if a schedule already exists with the same subject, time, and concatenated days
+            existing_schedule = Schedule.query.filter_by(
+                subject_id=subject_id, day_of_week=concatenated_days,
+                start_time=start_time, end_time=end_time
+            ).first()
+
             if existing_schedule:
-                flash(f'A schedule already exists for {subject.title}. Please choose a different time.', 'error')
-            else:
-                # Create a new schedule object
-                new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, room=room, subject_id=subject_id)
+                flash(f'A schedule already exists for {concatenated_days} at the specified time.', 'error')
+                return jsonify({'status': 'error', 'message': f'A schedule already exists for {concatenated_days} at the specified time.'})
 
-                # Add the new schedule to the database
-                db.session.add(new_schedule)
-                db.session.commit()
+            new_schedule = Schedule(
+                day_of_week=concatenated_days, start_time=start_time,
+                end_time=end_time, room=room, subject_id=subject_id,
+                teacher_id=teacher_id, section_id=section_id
+            )
 
-                flash('Schedule added successfully', 'success')
+            db.session.add(new_schedule)
+            db.session.commit()
+
+            teacher = Teacher.query.get(teacher_id)
+            subject = Subject.query.get(subject_id)
+
+            flash('Schedule added successfully', 'success')
+            return jsonify({
+                'status': 'success',
+                'message': 'Schedule added successfully',
+                'schedule': {
+                    'abbreviation': subject.abbreviation,
+                    'title': subject.title,
+                    'teacher': f'{teacher.first_name} {teacher.last_name}',
+                    'day_of_week': concatenated_days,
+                    'start_time': start_time,
+                    'end_time': end_time,
+                    'unit': subject.unit,
+                    'room': room
+                }
+            })
+
         except Exception as e:
             db.session.rollback()
             current_app.logger.error(f"Error adding schedule: {str(e)}")
             flash('An error occurred while adding the schedule. Please try again later.', 'error')
+            return jsonify({'status': 'error', 'message': 'An error occurred while adding the schedule. Please try again later.'})
 
-        # Redirect to the subjects page after adding the schedule
-        return redirect(url_for('view_subjects', section_id=subject.sections[0].id, course_id=subject.course_id))
-
-
-    return render_template('admin/add_schedule.html', subject=subject, form=form)
-
+    current_app.logger.error(f"Form validation errors: {form.errors}")
+    flash('Invalid form submission. Please check the form and try again.', 'error')
+    return jsonify({'status': 'error', 'message': 'Invalid form submission. Please check the form and try again.'})
 
 
 @app.route('/update_schedule/<int:schedule_id>', methods=['GET', 'POST'])
@@ -2342,7 +2397,6 @@ def update_schedule(schedule_id):
     return render_template('admin/update_schedule.html', form=form, schedule=schedule)
 
 
-  
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
@@ -2353,16 +2407,18 @@ def view_subjects():
     section = Section.query.get(section_id)
 
     # Fetch subjects associated with the course and section using the many-to-many relationship
-    subjects_query = Subject.query.join(Section.subjects).filter(
-        Section.id == section_id,
-        Subject.course_id == course_id
-    )
+    subjects_query = Subject.query.filter_by(course_id=course_id).join(Section.subjects).filter(Section.id == section_id)
     subjects = subjects_query.all()
 
     teachers = Teacher.query.all()
 
     # Fetch schedules related to the specific section
     schedules = Schedule.query.filter_by(section_id=section_id).all()
+
+    # Format the start and end times to 12-hour format with AM/PM
+    for schedule in schedules:
+        schedule.start_time = datetime.strptime(schedule.start_time, '%H:%M').strftime('%I:%M %p')
+        schedule.end_time = datetime.strptime(schedule.end_time, '%H:%M').strftime('%I:%M %p')
 
     current_app.logger.info(f"Number of subjects found: {len(subjects)}")
 
@@ -2372,9 +2428,8 @@ def view_subjects():
     form = ScheduleForm()
 
     return render_template('admin/view_subjects.html', subjects=subjects, section=section, form=form, teachers=teachers, schedules=schedules)
-
-
-
+    
+#####################END SCHEDULE SECTION###############################
 
 @app.route('/add_semester', methods=['POST'])
 @login_required

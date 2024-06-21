@@ -103,7 +103,7 @@ h2 {
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" >
                 <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
                     <i class="fas fa-folder"></i>
                     <span>Section</span>
@@ -201,223 +201,54 @@ h2 {
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-6 offset-md-6">
-                            <div class="input-group mb-3" style="width: 300px; position: absolute; right: 0;">
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search..." onkeyup="filterTable()">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Sections</h1>
-                    </div>
-                    <div class="row justify-content-between align-items-center mt-3">
-                        <div class="col-md-6">
-                            <form class="form-inline" method="get" action="{{ url_for('manage_section') }}">
-                                <div class="form-group mb-2 mr-2">
-                                    <label for="sort_by" class="mr-2">Sort by:</label>
-                                    <select name="sort_by" id="sort_by" class="form-control form-control-sm">
-                                        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name</option>
-                                        <option value="capacity" {% if sort_by == 'capacity' %}selected{% endif %}>Capacity</option>
-                                        <option value="school_year" {% if sort_by == 'school_year' %}selected{% endif %}>School Year</option>
-                                        <option value="year" {% if sort_by == 'year' %}selected{% endif %}>Year</option>
-                                        <option value="course_id" {% if sort_by == 'course_id' %}selected{% endif %}>Course</option>
-                                        <option value="teacher_id" {% if sort_by == 'teacher_id' %}selected{% endif %}>Teacher</option>
-                                    </select>
-                                </div>
-                                <div class="form-group mb-2 mr-2">
-                                    <label for="sort_order" class="mr-2">Order:</label>
-                                    <select name="sort_order" id="sort_order" class="form-control form-control-sm">
-                                        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Ascending</option>
-                                        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Descending</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-sm mb-2">
-                                    <i class="fas fa-sort"></i> Sort
-                                </button>
-                            </form>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="courseFilter">Filter by Course:</label>
-                                <select class="form-control form-control-sm" id="courseFilter" onchange="filterTable()">
-                                    <option value="">All Courses</option>
-                                    <!-- Populate options dynamically with courses -->
-                                    {% for course in courses %}
-                                        <option value="{{ course.id }}">{{ course.title }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="mt-4">
-        <ul class="flashes list-unstyled">
-        {% for category, message in messages %}
-          <li class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </li>
-        {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-  {% endwith %}
-                    <!-- Content Row -->
-                
-                   <!-- Button trigger modal -->
-  
-  <!-- Modal -->
-  <div class="modal fade" id="addSectionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add Section</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Archived Sections</h1>
+
+    <!-- Archived Sections Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Archived Sections</h6>
         </div>
-        <div class="modal-body">
-            <form method="POST" action="{{ url_for('manage_section') }}" class="form">
-                {{ form_section.hidden_tag() }}
-                <div class="form-group">
-                    <label for="name" class="form-control-label">Section Name</label>
-                    {{ form_section.name(class="form-control", maxlength="30", oninput="limitInputLength(this, 30, 'name-char-count')") }}
-                    <span class="char-count" id="name-char-count">0/30</span>
-                </div>
-                <div class="form-group">
-                    <label for="school_year" class="form-control-label">School Year</label>
-                    {{ form_section.school_year(class="form-control") }}
-                </div>
-                <div class="form-group">
-                    <label for="year" class="form-control-label">Year</label>
-                    {{ form_section.year(class="form-control") }}
-                </div>
-                <div class="form-group">
-                    <label for="capacity" class="form-control-label">Capacity</label>
-                    {{ form_section.capacity(class="form-control", maxlength="2", oninput="limitInputToNumbers(this); limitInputLength(this, 2, 'capacity-char-count')") }}
-                    <span class="char-count" id="capacity-char-count">0/2</span>
-                </div>
-                <div class="form-group">
-                    <label for="course_id" class="form-control-label">Course</label>
-                    <select name="course_id" id="course_id" class="form-control">
-                        {% for course in courses %}
-                            {% if course.semester == selected_semester %}
-                                <option value="{{ course.id }}">{{ course.title }}</option>
-                            {% endif %}
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Capacity</th>
+                            <th>Course</th>
+                            <th>School Year</th>
+                            <th>Year</th>
+                            <th>Teacher</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for section in sections %}
+                        <tr>
+                            <td>{{ section.name }}</td>
+                            <td>{{ section.capacity }}</td>
+                            <td>{{ section.course.title }}</td>
+                            <td>{{ section.school_year }}</td>
+                            <td>{{ section.year }}</td>
+                            <td>{{ section.teacher.full_name }}</td>
+                            <td>
+                                <form action="{{ url_for('unarchive_section', section_id=section.id) }}" method="post" onsubmit="return confirm('Are you sure you want to unarchive this section?');">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-undo"></i> Unarchive
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                         {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="teacher_id" class="form-control-label">Teacher</label>
-                    {{ form_section.teacher_id(class="form-control") }}
-                </div>
-                <button type="submit" class="btn btn-primary">Create Section</button>
-            </form>
-            
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  
-
-
-                    <div class="table-responsive">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h6 class="m-0 font-weight-bold text-primary">List of Section</h6>
-                                    </div>
-                                    <div class="col-auto">
-                                        <form method="get" action="{{ url_for('manage_section') }}">
-
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSectionModal">
-                                                <i class="fas fa-plus"></i> Section
-                                              </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <table id="sectionTable" class="table table-bordered" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Title</th>
-                                            <th>Capacity</th>
-                                            <th>Course</th>
-                                            <th>School_Year</th>
-                                            <th>Year</th>
-                                            <th>Type</th>
-                                            <th>Teacher</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr id="noResultsRow" style="display: none;">
-                                            <td colspan="9" class="text-center">No results</td>
-                                        </tr>
-                                        {% for item in sections %}
-                                        <tr>
-                                            <td class="small">{{ item.section.name }}</td>
-                                            <td class="small">{{ item.section.capacity }}</td>
-                                            <td class="small">{{ item.section.course.title }}</td>
-                                            <td class="small">{{ item.section.school_year }}</td>
-                                            <td class="small">{{ item.section.year }}</td>
-                                            <td class="small">{{ item.section.course.course_type }}</td>
-                                            <td class="small">{{ item.teacher_name }}</td>
-                                            <td>
-                                                <div style="display: flex;">
-                                                    <form method="GET" action="{{ url_for('view_subjects') }}">
-                                                        <input type="hidden" name="section_id" value="{{ item.section.id }}">
-                                                        <input type="hidden" name="course_id" value="{{ item.section.course.id }}">
-                                                        <button type="submit" class="btn btn-primary btn-sm" style="background-color: #b4b150; border: none; margin-right: 5px;">
-                                                            <i class="fas fa-calendar-alt"></i> Schedule
-                                                        </button>
-                                                    </form>
-                                                    <form action="{{ url_for('archive_section', section_id=item.section.id) }}" method="post" onsubmit="return confirm('Are you sure you want to archive this section?');">
-                                                        <button type="submit" class="btn btn-danger btn-sm">
-                                                            <i class="fas fa-archive"></i> Archive
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                                <p>Showing {{ sections|length }} out of {{ pagination.total }} sections</p>
-                                
-<div class="row justify-content-end">
-    <div class="col-auto">
-        {% if pagination %}
-            {{ pagination.links }}
-        {% endif %}
     </div>
 </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.container-fluid -->
-            </div>
-            <!-- End of Main Content -->
+<!--End Page Content-->
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
