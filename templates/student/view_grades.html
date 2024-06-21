@@ -230,9 +230,7 @@
                                 {% endwith %}
                             </div>
                     </div>
-                    <button class="btn btn-primary btn-sm" onclick="printDiv('printableArea')">
-                        <i class="fas fa-print"></i> Print
-                    </button>
+                   
                     <div class="row">
 
                         <div class="container mt-7 no-horizontal-margin">
@@ -275,7 +273,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>Subject</th>
-                                                                <th>Teacher</th>
+                                                    
                                                                 <th>Period 1</th>
                                                                 <th>Period 2</th>
                                                                 <th>Period 3</th>
@@ -289,11 +287,7 @@
                                                                     {% set subject_grades = grades|selectattr('subject', '==', subject)|list %}
                                                                     <tr>
                                                                         <td>{{ subject.title }}</td>
-                                                                        <td>
-                                                                            {% for teacher in subject.teachers %}
-                                                                                {{ teacher.last_name }}{% if not loop.last %}, {% endif %}
-                                                                            {% endfor %}
-                                                                        </td>
+                                                                        
                                                                         {% if subject_grades %}
                                                                             {% for grade in subject_grades %}
                                                                                 <td>{{ grade.period_1 }}</td>

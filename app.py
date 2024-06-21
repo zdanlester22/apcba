@@ -1994,26 +1994,6 @@ def archive_section(section_id):
 ###########################END MANAGE SECTION###############################
 
 
-@app.route('/subjects/add', methods=['POST'])
-@login_required
-def add_subject():
-    form_subject = SubjectForm()
-    
-    if form_subject.validate_on_submit():
-        new_subject = Subject(
-            abbreviation=form_subject.abbreviation.data,
-            title=form_subject.title.data,
-            unit=form_subject.unit.data,
-            section_id=form_subject.section_id.data
-        )
-        db.session.add(new_subject)
-        db.session.commit()
-        flash('Subject added successfully!', 'success')
-    else:
-        flash('Failed to add subject. Please check the form inputs.', 'danger')
-    
-    return redirect(url_for('manage_section'))
-
 
 @app.route('/assign_teacher_to_subject/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
@@ -2057,41 +2037,63 @@ def assign_teacher_to_subject(subject_id):
 @app.route('/admin/subject_bank', methods=['GET', 'POST'])
 @login_required
 def subject_bank():
-    form = SubjectForm()
-
     # Pagination setup
-    page = request.args.get(get_page_parameter(), type=int, default=1)
+    page = request.args.get('page', 1, type=int)
     per_page = 10
     offset = (page - 1) * per_page
 
-    # Sorting
+    # Sorting setup
     sort_by = request.args.get('sort_by', 'title')  # Default sorting by title
     sort_order = request.args.get('sort_order', 'asc')  # Default sorting order is ascending
 
     # Construct the sorting criteria dynamically
-    sorting_criteria = getattr(Subject, sort_by)
+    sorting_criteria = None
+    if sort_by == 'course':
+        sorting_criteria = Course.id
+    else:
+        sorting_criteria = getattr(Subject, sort_by)
+
     if sort_order == 'asc':
         sorting_criteria = sorting_criteria.asc()
     else:
         sorting_criteria = sorting_criteria.desc()
 
-    subjects_query = Subject.query.order_by(sorting_criteria)
+    # Base query for subjects
+    subjects_query = Subject.query
 
     # Handle search query
     search_query = request.args.get('search', '')
     if search_query:
-        subjects_query = subjects_query.filter(Subject.abbreviation.ilike(f"%{search_query}%") | Subject.title.ilike(f"%{search_query}%"))
+        subjects_query = subjects_query.filter(or_(Subject.abbreviation.ilike(f"%{search_query}%"), Subject.title.ilike(f"%{search_query}%")))
 
-    # Apply pagination to the final query
+    # Apply sorting
+    subjects_query = subjects_query.order_by(sorting_criteria)
+
+    # Apply pagination
     subjects = subjects_query.offset(offset).limit(per_page).all()
 
-    # Calculate total count for pagination
+    # Total count for pagination
     total_subject_count = subjects_query.count()
 
+    # Pagination object
     pagination = Pagination(page=page, per_page=per_page, total=total_subject_count, css_framework='bootstrap4')
 
+    # Handle form submission (POST request)
+    form = SubjectForm()
+
+    # Fetch all courses and years for filtering
+    courses = Course.query.all()
+    years = set(course.year for course in courses)
+
+    # Prepare course subjects for display
+    course_subjects = {course.id: course.subjects for course in courses}
+
+    # Populate choices for course_id, year, and semester in the form
+    form.course_id.choices = [(course.id, course.title) for course in courses]
+    form.year.choices = [(year, year) for year in years]
+    form.semester.choices = [('1st Semester', 'Semester 1'), ('2nd Semester', 'Semester 2'), ('Summer', 'Summer')]
+
     if form.validate_on_submit():
-        # Get form data
         course_id = form.course_id.data
         abbreviation = form.abbreviation.data
         title = form.title.data
@@ -2099,7 +2101,7 @@ def subject_bank():
         semester = form.semester.data
         year = form.year.data
 
-        # Create a new subject
+        # Create new subject instance
         subject = Subject(
             abbreviation=abbreviation,
             title=title,
@@ -2109,25 +2111,14 @@ def subject_bank():
             year=year
         )
 
-        # Add the subject to the database
+        # Add and commit to the database
         db.session.add(subject)
         db.session.commit()
 
         flash('Subject added successfully', 'success')
         return redirect(url_for('subject_bank'))
 
-    # Fetch all courses from the database
-    courses = Course.query.all()
-
-    # Fetch distinct years from the Course table
-    years = sorted(set(course.year for course in courses))
-
-    # Set the form choices for courses and years
-    form.course_id.choices = [(course.id, course.title) for course in courses]
-    form.year.choices = [(year, year) for year in years]
-
-    return render_template('admin/subject_bank.html', form=form, courses=courses, subjects=subjects, pagination=pagination)
-
+    return render_template('admin/subject_bank.html', form=form, courses=courses, course_subjects=course_subjects, years=years, subjects=subjects, pagination=pagination)
 @app.route('/admin/subject_bank/edit/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
 def edit_subject(subject_id):
@@ -2298,72 +2289,44 @@ from sqlalchemy import and_
 
 
 ###################SCHEDULE SECTION###########################
-@app.route('/add_schedule', methods=['POST'])
+@app.route('/add_schedule/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
-def add_schedule():
-    form = ScheduleForm(request.form)
-    
-    current_app.logger.info(f"Received form data: {request.form}")
+def add_schedule(subject_id):
+    subject = Subject.query.get(subject_id)
+    form = ScheduleForm(request.form)  # Instantiate the schedule form
 
     if form.validate_on_submit():
-        subject_id = form.subject_id.data
-        day_of_week_list = request.form.get('day_of_week').split('/')  # Split the concatenated days
+        # Extract schedule details from the form
+        day_of_week = '/'.join(request.form.getlist('day_of_week'))
         start_time = form.start_time.data
         end_time = form.end_time.data
         room = form.room.data
-        teacher_id = form.teacher_id.data
-        section_id = form.section_id.data
-
-        concatenated_days = '/'.join(day_of_week_list)
 
         try:
-            # Check if a schedule already exists with the same subject, time, and concatenated days
-            existing_schedule = Schedule.query.filter_by(
-                subject_id=subject_id, day_of_week=concatenated_days,
-                start_time=start_time, end_time=end_time
-            ).first()
-
+            # Check for existing schedule for the same subject
+            existing_schedule = Schedule.query.filter(and_(Schedule.day_of_week == day_of_week, Schedule.subject_id == subject_id)).first()
             if existing_schedule:
-                flash(f'A schedule already exists for {concatenated_days} at the specified time.', 'error')
-                return jsonify({'status': 'error', 'message': f'A schedule already exists for {concatenated_days} at the specified time.'})
+                flash(f'A schedule already exists for {subject.title}. Please choose a different time.', 'error')
+            else:
+                # Create a new schedule object
+                new_schedule = Schedule(day_of_week=day_of_week, start_time=start_time, end_time=end_time, room=room, subject_id=subject_id)
 
-            new_schedule = Schedule(
-                day_of_week=concatenated_days, start_time=start_time,
-                end_time=end_time, room=room, subject_id=subject_id,
-                teacher_id=teacher_id, section_id=section_id
-            )
+                # Add the new schedule to the database
+                db.session.add(new_schedule)
+                db.session.commit()
 
-            db.session.add(new_schedule)
-            db.session.commit()
-
-            teacher = Teacher.query.get(teacher_id)
-            subject = Subject.query.get(subject_id)
-
-            flash('Schedule added successfully', 'success')
-            return jsonify({
-                'status': 'success',
-                'message': 'Schedule added successfully',
-                'schedule': {
-                    'abbreviation': subject.abbreviation,
-                    'title': subject.title,
-                    'teacher': f'{teacher.first_name} {teacher.last_name}',
-                    'day_of_week': concatenated_days,
-                    'start_time': start_time,
-                    'end_time': end_time,
-                    'unit': subject.unit,
-                    'room': room
-                }
-            })
-
+                flash('Schedule added successfully', 'success')
         except Exception as e:
             db.session.rollback()
             current_app.logger.error(f"Error adding schedule: {str(e)}")
             flash('An error occurred while adding the schedule. Please try again later.', 'error')
-            return jsonify({'status': 'error', 'message': 'An error occurred while adding the schedule. Please try again later.'})
 
-    current_app.logger.error(f"Form validation errors: {form.errors}")
-    flash('Invalid form submission. Please check the form and try again.', 'error')
-    return jsonify({'status': 'error', 'message': 'Invalid form submission. Please check the form and try again.'})
+        # Redirect to the subjects page after adding the schedule
+        return redirect(url_for('view_subjects', section_id=subject.sections[0].id, course_id=subject.course_id))
+
+
+    return render_template('admin/add_schedule.html', subject=subject, form=form)
+
 
 
 @app.route('/update_schedule/<int:schedule_id>', methods=['GET', 'POST'])
@@ -2400,34 +2363,26 @@ def update_schedule(schedule_id):
 @app.route('/view_subjects', methods=['GET'])
 @login_required
 def view_subjects():
+    schedule = Schedule.query.first()   
     section_id = request.args.get('section_id', type=int)
-    course_id = request.args.get('course_id', type=int)
-    current_app.logger.info(f"section_id: {section_id}, course_id: {course_id}")
-
+    current_app.logger.info(f"section_id: {section_id}")
+    
     section = Section.query.get(section_id)
+    
+    # Fetch subjects associated with the section using the many-to-many relationship
+    subjects = Subject.query.join(section_subject_association).filter(
+        section_subject_association.c.section_id == section_id
+    ).all()
 
-    # Fetch subjects associated with the course and section using the many-to-many relationship
-    subjects_query = Subject.query.filter_by(course_id=course_id).join(Section.subjects).filter(Section.id == section_id)
-    subjects = subjects_query.all()
-
-    teachers = Teacher.query.all()
-
-    # Fetch schedules related to the specific section
-    schedules = Schedule.query.filter_by(section_id=section_id).all()
-
-    # Format the start and end times to 12-hour format with AM/PM
-    for schedule in schedules:
-        schedule.start_time = datetime.strptime(schedule.start_time, '%H:%M').strftime('%I:%M %p')
-        schedule.end_time = datetime.strptime(schedule.end_time, '%H:%M').strftime('%I:%M %p')
+    # Fetch schedules for each subject
+    for subject in subjects:
+        subject.schedules = Schedule.query.filter_by(subject_id=subject.id).all()
 
     current_app.logger.info(f"Number of subjects found: {len(subjects)}")
 
-    for subject in subjects:
-        current_app.logger.info(f"Subject: {subject.title}, ID: {subject.id}")
-
     form = ScheduleForm()
-
-    return render_template('admin/view_subjects.html', subjects=subjects, section=section, form=form, teachers=teachers, schedules=schedules)
+    
+    return render_template('admin/view_subjects.html', subjects=subjects, section=section, form=form, schedule=schedule)
     
 #####################END SCHEDULE SECTION###############################
 

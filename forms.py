@@ -7,14 +7,12 @@ from wtforms.validators import DataRequired, NumberRange, Length, InputRequired,
 from wtforms.fields import FloatField, TimeField
 
 class SubjectForm(FlaskForm):
-    course_id = SelectField('Select Course', coerce=int, validators=[DataRequired()])
+    course_id = SelectField('Course', choices=[], validators=[DataRequired()])
     abbreviation = StringField('Abbreviation', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
     unit = IntegerField('Unit', validators=[DataRequired()])
-    year = SelectField('Year', coerce=int, validators=[DataRequired()])
-    semester = SelectField('Semester', choices=[('1st Semester', 'Semester 1'), ('2nd Semester', 'Semester 2'), ('Summer', 'Summer')], validators=[DataRequired()])
-    submit = SubmitField('Add Subject')
-
+    year = SelectField('Year', choices=[], validators=[DataRequired()])
+    semester = SelectField('Semester', choices=[], validators=[DataRequired()])
 
 
 class LoginForm(FlaskForm):
@@ -84,12 +82,6 @@ class CourseForm(FlaskForm):
     course_type = SelectField('Type', choices=[('SHS', 'SHS'), ('College', 'College'), ('TESDA', 'TESDA')], validators=[DataRequired()])
     is_active = BooleanField('Active', default=True)
     submit = SubmitField('Create Course')
-
-class SubjectForm(FlaskForm):
-    abbreviation = StringField('Abbreviation', validators=[DataRequired()])
-    title = StringField('Title', validators=[DataRequired()])
-    unit = IntegerField('Unit', validators=[DataRequired()])
-    course_id = SelectField('Course', coerce=int, validators=[DataRequired()])
 
     
 class FilterForm(FlaskForm):
@@ -251,9 +243,6 @@ class ScheduleForm(FlaskForm):
     start_time = StringField('Start Time', validators=[InputRequired()])
     end_time = StringField('End Time', validators=[InputRequired()])
     room = StringField('Room')
-    subject_id = IntegerField('Subject ID', validators=[InputRequired()])  # Include subject_id field
-    teacher_id = IntegerField('Teacher ID', validators=[InputRequired()])  # Include teacher_id field
-    section_id = IntegerField('Section ID', validators=[InputRequired()])  # Include section_id field
     submit = SubmitField('Add Schedule')
 
 class ChangePasswordForm(FlaskForm):

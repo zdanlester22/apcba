@@ -283,10 +283,7 @@ class Schedule(db.Model):
     room = db.Column(db.String(50))  
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
     subject = db.relationship('Subject', back_populates='schedules', lazy=True)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
-    teacher = db.relationship('Teacher', backref='schedules', lazy=True)
-    section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
-    section = db.relationship('Section', backref='schedules', lazy=True)
+   
 
 
 

@@ -79,7 +79,7 @@
         <ul class="navbar-nav bg-color sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image Alt Text">
                 </div>
@@ -105,14 +105,14 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
+
             <li class="nav-item ">
                 <a class="nav-link collapsed" href="{{ url_for('announcement') }}">
                     <i class="fas fa-fw fa-bullhorn"></i>
                     <span>Announcement</span>
                 </a>
             </li>
-
-            <!-- Nav Item - Pages Collapse Menu -->
+             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('modules') }}">
                     <i class="fas fa-fw fa-book"></i>
@@ -120,13 +120,15 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+
+             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('manage_section') }}">
                     <i class="fas fa-folder"></i>
                     <span>Section</span>
                 </a>
             </li>
 
+         
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ url_for('subject_bank') }}">
@@ -146,12 +148,13 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>Enrollment</span>
+                aria-expanded="true" aria-controls="collapsePages">
+                <i class="fas fa-user-graduate"></i>
+                <span>Enrollment</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+                      
                         <a class="collapse-item" href="{{ url_for('enroll') }}">Enrolled</a>
                         <a class="collapse-item" href="{{ url_for('view_enrollies') }}">Enrollees</a>
                         <a class="collapse-item" href="{{ url_for('register') }}">Register</a>
@@ -159,7 +162,7 @@
                 </div>
             </li>
 
-            <!-- Nav Item - Charts -->
+          
 
 
             <!-- Divider -->
@@ -172,7 +175,6 @@
          
 
         </ul>
-
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -183,7 +185,6 @@
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <h5 style="font-weight: bold; font-style: italic;">Welcome to the APCBA Portal V1.0</h5>
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -221,179 +222,102 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <!-- Flash messages section -->
-    <!-- Flash message container -->
-    <div class="container mt-3">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="alert-container">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-    </div>
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Add Schedule</h1>
+                    </div>
                     <div class="row">
-                        <!-- Left side: List of subjects with "+" button -->
-<div class="col-md-4">
-    <div class="list-group">
-        {% for subject in subjects %}
-        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-toggle="modal" data-target="#addScheduleModal" data-subject-id="{{ subject.id }}" data-subject-title="{{ subject.title }}" data-subject-abbreviation="{{ subject.abbreviation }}" data-subject-unit="{{ subject.unit }}">
-            {{ subject.title }} ({{subject.abbreviation}})
-            <button class="btn btn-sm btn-success">+</button>
-        </a>
-        {% endfor %}
-    </div>
-</div>
-                
-                       <!-- Right side: Schedule table -->
-<div class="col-md-8">
-    <!-- Display the list of schedules in a table -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Schedule Table for {{ section.name }}</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="scheduleTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Abbreviation</th>
-                            <th>Subject Title</th>
-                            <th>Teacher</th>
-                            <th>Day of Week</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Unit</th>
-                            <th>Room</th>
-                            <th>Action</th> <!-- New column for actions -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for schedule in schedules %}
-                        <tr>
-                            <td>{{ schedule.subject.abbreviation }}</td>
-                            <td>{{ schedule.subject.title }}</td>
-                            <td id="teacher-{{ schedule.id }}">{{ schedule.teacher.first_name }} {{ schedule.teacher.last_name }}</td>
-                            <td>{{ schedule.day_of_week }}</td>
-                            <td>{{ schedule.start_time }}</td>
-                            <td>{{ schedule.end_time }}</td>
-                            <td>{{ schedule.subject.unit }}</td>
-                            <td>{{ schedule.room }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#assignTeacherModal" data-schedule-id="{{ schedule.id }}">Assign Teacher</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                
-                
-                
+                        <div class="flash">
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                        {% for message in messages %}
+                                            <li>{{ message }}</li>
+                                        {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <!-- Content Row -->
+                    <div class="container">
+                        <div class="row">
+                            <div class="container mt-5">
+                                {% if subjects %}
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Abbreviation</th>
+                                                <th>Title</th>
+                                                <th>Unit</th>
+                                                <th>Schedule</th>
+                                                <th>Teacher</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for subject in subjects %}
+                                                <tr>
+                                                    <td>{{ subject.abbreviation }}</td>
+                                                    <td>{{ subject.title }}</td>
+                                                    <td>{{ subject.unit }}</td>
+                                                    <td>
+                                                        <ul class="list-unstyled">
+                                                            {% if subject.schedules %}
+                                                                {% for schedule in subject.schedules %}
+                                                                    <li>{{ schedule.day_of_week }} -{{ schedule.room }}- {{ schedule.start_time }} to {{ schedule.end_time }}</li>
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                <li>No schedule available for this subject.</li>
+                                                            {% endif %}
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        {% if subject.teachers %}
+                                                            {% for teacher in subject.teachers %}
+                                                                {{ teacher.last_name  }} {{ teacher.first_name  }} {{ teacher.middle_name  }} {{ teacher.suffix }},<br>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            
+                                                        <a href="{{ url_for('assign_teacher_to_subject', subject_id=subject.id) }}" class="btn btn-primary btn-sm">
+                                                            <i class="fas fa-user-plus"></i> Assign Teacher
+                                                        </a>
+                                                        
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group" role="group">
+                                                            <a href="{{ url_for('add_schedule', subject_id=subject.id) }}" class="btn btn-primary btn-sm" style="padding: 5px 10px; font-size: 12px; width: 100px;">
+                                                                <i class="fas fa-plus"></i> Schedule
+                                                            </a>
+                                                            
+                                                            {% for schedule in subject.schedules %}
+                                                                <form action="{{ url_for('update_schedule', schedule_id=schedule.id) }}" method="get" style="margin: 0;">
+                                                                    <button type="submit" class="btn btn-primary btn-sm" style="padding: 5px 10px; font-size: 12px; width: 100px; margin-left: 5px;">
+                                                                        <i class="fas fa-pencil-alt"></i> Update
+                                                                    </button>
+                                                                </form>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </td>
+                                                    
+                                                    
+                                                    
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
+                            {% else %}
+                                <p>No subjects available for the selected section and course.</p>
+                            {% endif %}
+                            
+                            </div>
+                        </div>
+                    </div>
+                <!-- /.container-fluid -->
             </div>
-        </div>
-    </div>
-</div>
-                
-<div id="addScheduleModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addScheduleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addScheduleModalLabel">Add Schedule</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="addScheduleForm" method="POST" action="/add_schedule">
-                {{ form.hidden_tag() }}  <!-- CSRF token included -->
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="day_of_week">Day of Week</label><br>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="monday" name="day_of_week" value="Monday">
-                            <label class="form-check-label" for="monday">Monday</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="tuesday" name="day_of_week" value="Tuesday">
-                            <label class="form-check-label" for="tuesday">Tuesday</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="wednesday" name="day_of_week" value="Wednesday">
-                            <label class="form-check-label" for="wednesday">Wednesday</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="thursday" name="day_of_week" value="Thursday">
-                            <label class="form-check-label" for="thursday">Thursday</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="friday" name="day_of_week" value="Friday">
-                            <label class="form-check-label" for="friday">Friday</label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="start_time">Start Time</label>
-                        <input type="time" id="start_time" name="start_time" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="end_time">End Time</label>
-                        <input type="time" id="end_time" name="end_time" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="room">Room</label>
-                        <input type="text" id="room" name="room" class="form-control" required>
-                    </div>
-                    <input type="hidden" id="subject_id" name="subject_id" value="">
-                    <input type="hidden" id="section_id" name="section_id" value="{{ section.id }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add Schedule</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!--Assign Teacher-->
-<div id="assignTeacherModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="assignTeacherModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="assignTeacherModalLabel">Assign Teacher</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="assignTeacherForm" method="POST" action="/assign_teacher">
-                {{ form.hidden_tag() }}  <!-- CSRF token included -->
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="teacher_id">Teacher</label>
-                        <select id="teacher_id" name="teacher_id" class="form-control" required>
-                            {% for teacher in teachers %}
-                            <option value="{{ teacher.id }}">{{ teacher.first_name }} {{ teacher.last_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <input type="hidden" id="schedule_id" name="schedule_id" value="">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Assign Teacher</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
             <!-- End of Main Content -->
             <!-- Footer -->
             <!-- End of Footer -->
@@ -459,158 +383,44 @@
 
 
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    $(document).ready(function() {
-        console.log("Document ready function executed");
+    
+     document.addEventListener("DOMContentLoaded", function () {
+            // Your JavaScript code here
+        });
 
         function disableSubmit(button) {
-            console.log("disableSubmit function called");
-            var allButtons = document.querySelectorAll('button[type="submit"]');
-            allButtons.forEach(function(btn) {
-                if (btn !== button) {
-                    btn.disabled = true;
-                    btn.textContent = 'Adding Schedule...';
-                }
-            });
-        }
-
-        $('#addScheduleForm').submit(function(event) {
-            console.log("Form submit triggered");
-            event.preventDefault();
-            disableSubmit(document.querySelector('button[type="submit"]'));
-
-            var formData = $(this).serializeArray();
-
-            // Remove any existing 'day_of_week' entries
-            formData = formData.filter(function(item) {
-                return item.name !== 'day_of_week';
-            });
-
-            // Get selected days and add them as a single 'day_of_week' entry
-            var dayOfWeek = $('input[name="day_of_week"]:checked').map(function() {
-                return $(this).val();
-            }).get().join('/');
-            formData.push({ name: 'day_of_week', value: dayOfWeek });
-
-            $.ajax({
-                type: 'POST',
-                url: '/add_schedule',
-                data: $.param(formData),
-                beforeSend: function(xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token() }}");
-                },
-                success: function(response) {
-                    console.log("AJAX request successful", response);
-                    if (response.status === 'success') {
-                        $('#addScheduleModal').modal('hide');
-                        
-                        // Wait for the modal to completely hide before reloading the page
-                        $('#addScheduleModal').on('hidden.bs.modal', function () {
-                            console.log('Modal hidden, reloading the page.');
-                            location.reload(true);  // true to force reload from server
-                        });
-
-                    } else {
-                        alert(response.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX request failed", status, error);
-                    alert('An error occurred. Please try again.');
-                },
-                complete: function() {
-                    $('button[type="submit"]').prop('disabled', false).text('Add Schedule');
-                }
-            });
+        // Disable all submit buttons
+        var allButtons = document.querySelectorAll('button[type="submit"]');
+        allButtons.forEach(function(btn) {
+            if (btn !== button) {
+                btn.disabled = true;
+                // Optionally, you can change the text of the disabled buttons to indicate submission in progress
+                btn.textContent = 'Adding Schedule...';
+            }
         });
-
-        $('#addScheduleModal').on('show.bs.modal', function(event) {
-            console.log("Modal show event triggered");
-            var button = $(event.relatedTarget);
-            var subjectId = button.data('subject-id');
-            var subjectTitle = button.data('subject-title');
-            var teacherName = button.data('teacher-name');
-            var abbreviation = button.data('subject-abbreviation');
-            var unit = button.data('subject-unit');
-
-            var modal = $(this);
-            modal.find('.modal-title').text('Add Schedule for ' + subjectTitle);
-            modal.find('#subject_id').val(subjectId);
-            modal.find('#teacher').text(teacherName);
-            modal.find('#abbreviation').val(abbreviation);
-            modal.find('#unit').val(unit);
-        });
-
-        $('.list-group-item').click(function() {
-            console.log("List group item clicked");
-            var subjectId = $(this).data('subject-id');
-            var abbreviation = $(this).data('subject-abbreviation');
-            var unit = $(this).data('subject-unit');
-            $('#subject_id').val(subjectId);
-            $('#abbreviation').val(abbreviation);
-            $('#unit').val(unit);
-        });
-
-        // Automatically remove flash messages after 3 seconds
-        setTimeout(function() {
-            $('.alert-container .alert').remove();
-        }, 3000);
-
-        document.addEventListener("DOMContentLoaded", function() {
-    function convertTo12Hour(time) {
-        var [hour, minute] = time.split(':');
-        var ampm = hour >= 12 ? 'PM' : 'AM';
-        hour = hour % 12 || 12;  // Convert 0 to 12 for 12 AM
-        return `${hour}:${minute} ${ampm}`;
     }
+document.addEventListener("DOMContentLoaded", function () {
+            // Select the flash div
+            var flashDiv = document.querySelector(".flash");
 
-    document.querySelectorAll('td.time').forEach(function(td) {
-        var time = td.textContent;
-        td.textContent = convertTo12Hour(time);
-    });
-});
+            // Function to add fade-in class
+            function fadeInFlash() {
+                flashDiv.classList.add("fade-in");
+            }
 
-    });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#assignTeacherModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var scheduleId = button.data('schedule-id');
-                var modal = $(this);
-                modal.find('#schedule_id').val(scheduleId);
-            });
-    
-            $('#assignTeacherForm').submit(function(event) {
-                event.preventDefault();
-                var formData = $(this).serializeArray();
-    
-                $.ajax({
-                    type: 'POST',
-                    url: '/assign_teacher',
-                    data: $.param(formData),
-                    beforeSend: function(xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token() }}");
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            var teacherName = response.teacher.first_name + ' ' + response.teacher.last_name;
-                            $('#teacher-' + response.schedule_id).text(teacherName);
-                            $('#assignTeacherModal').modal('hide');
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert('An error occurred. Please try again.');
-                    }
-                });
-            });
+            // Function to remove fade-in class after 3 seconds
+            function fadeOutFlash() {
+                setTimeout(function () {
+                    flashDiv.classList.remove("fade-in");
+                }, 3000); // 3 seconds delay
+            }
+
+            // Call the functions
+            fadeInFlash();
+            fadeOutFlash();
         });
+
     </script>
-    
+
 </html>
